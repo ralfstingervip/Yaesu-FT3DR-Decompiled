@@ -1,10 +1,11 @@
 # FT3DR/FT3DE firmware ver 1.02: static decompile notes
 
-This repository holds the owner's static-analysis notes, IDA Python scripts and IDA outputs for the
-Yaesu FT3DR/FT3DE handheld firmware, version 1.02. It is owner-side static analysis only. Nothing
-in this repository talks to a radio. There is no serial, USB or radio access code here.
+Independent static-analysis notes static-analysis notes, IDA Python scripts, and outputs for the Yaesu FT3DR/FT3DE handheld radio firmware (v1.02).
+⚠️ Key Details:
+• Scope: Strictly owner-side, passive static analysis.
+• Hardware Interaction: None. There is no serial, USB, or radio communication code included.
+• Disclaimer: This is an unofficial project with no affiliation to or endorsement from Yaesu.
 
-This is an independent project. It has no affiliation with Yaesu and Yaesu does not endorse it.
 
 ## The two cores
 
