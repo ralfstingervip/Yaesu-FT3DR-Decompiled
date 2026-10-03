@@ -1,0 +1,52 @@
+
+;---- func 0x343e8..0x34478
+0343e8  6a 10 8e a0 73 70        btst    #7, @0xFFFF8EA0:16                   <- 341b0,343e4
+0343ee  46 38                    bne     loc_34428:8                          
+0343f0  6a 10 8e a0 73 60        btst    #6, @0xFFFF8EA0:16                   
+0343f6  46 16                    bne     loc_3440E:8                          
+0343f8  6a 10 8e a0 73 60        btst    #6, @0xFFFF8EA0:16                   
+0343fe  47 06                    beq     loc_34406:8                          
+034400  6a 0c 8d d5              mov.b   @0xFFFF8DD5:16, r4l                  
+034404  40 04                    bra     loc_3440A:8                          
+034406  6a 0c 8d 20              mov.b   @0xFFFF8D20:16, r4l                  <- 343fe
+03440a  46 4c                    bne     loc_34458:8                          <- 34404
+03440c  40 44                    bra     loc_34452:8                          
+03440e  6a 10 8e a0 73 60        btst    #6, @0xFFFF8EA0:16                   <- 343f6
+034414  47 06                    beq     loc_3441C:8                          
+034416  6a 0c 8d d5              mov.b   @0xFFFF8DD5:16, r4l                  
+03441a  40 04                    bra     loc_34420:8                          
+03441c  6a 0c 8d 20              mov.b   @0xFFFF8D20:16, r4l                  <- 34414
+034420  47 24                    beq     loc_34446:8                          <- 3441a
+034422  ac 02                    cmp.b   #2, r4l                              
+034424  47 20                    beq     loc_34446:8                          
+034426  40 30                    bra     loc_34458:8                          
+034428  6a 0c 8d 20              mov.b   @0xFFFF8D20:16, r4l                  <- 343ee
+03442c  46 06                    bne     loc_34434:8                          
+03442e  6a 0c 8d d5              mov.b   @0xFFFF8DD5:16, r4l                  
+034432  47 12                    beq     loc_34446:8                          
+034434  6a 0c 8d 20              mov.b   @0xFFFF8D20:16, r4l                  <- 3442c
+034438  47 02                    beq     loc_3443C:8                          
+03443a  40 1c                    bra     loc_34458:8                          
+03443c  6a 0c 8d d5              mov.b   @0xFFFF8DD5:16, r4l                  <- 34438
+034440  47 04                    beq     loc_34446:8                          
+034442  ac 02                    cmp.b   #2, r4l                              
+034444  46 12                    bne     loc_34458:8                          
+034446  6a 0c 8a a0              mov.b   @0xFFFF8AA0:16, r4l                  <- 34420,34424,34432,34440
+03444a  46 0c                    bne     loc_34458:8                          
+03444c  6a 0c 8d d5              mov.b   @0xFFFF8DD5:16, r4l                  
+034450  46 06                    bne     loc_34458:8                          
+034452  6a 0c 89 bb              mov.b   @0xFFFF89BB:16, r4l                  <- 3440c
+034456  47 0c                    beq     loc_34464:8                          
+034458  7f 59 72 40              bclr    #4, @0x59:8                          <- 3440a,34426,3443a,34444,3444a,34450,348e6
+03445c  fc 00                    mov.b   #0, r4l                              
+03445e  6a 8c b0 ac              mov.b   r4l, @0xFFFFB0AC:16                  
+034462  40 12                    bra     locret_34476:8                       
+034464  6a 10 b0 a4 73 20        btst    #2, @0xFFFFB0A4:16                   <- 34456,34510
+03446a  47 0a                    beq     locret_34476:8                       
+03446c  7f 59 70 40              bset    #4, @0x59:8                          <- 348da
+034470  fc 03                    mov.b   #3, r4l                              
+034472  6a 8c b0 ac              mov.b   r4l, @0xFFFFB0AC:16                  
+034476  54 70                    rts                                          <- 34462,3446a
+034478  54 70                    rts                                          <- 3447e
+03447a  6b 04 95 b2              mov.w   @0xFFFF95B2:16, r4                   
+03447e  46 f8                    bne     locret_34478:8                       

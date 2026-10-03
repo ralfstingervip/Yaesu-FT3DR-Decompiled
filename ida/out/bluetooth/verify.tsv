@@ -1,0 +1,344 @@
+image	addr	file_off	expected	actual	result	insn	note
+SUB	FFF3B652	0x33B652	66 21	66 21	PASS	mov.l   #2, r1	sender: channel 2
+SUB	FFF3B654	0x33B654	05 d9 f8 f9	05 d9 f8 f9	PASS	bsr.a   sub_FFEDAF2D	sender: ring writer sub_FFEDAF2D
+SUB	FFF36CB7	0x336CB7	05 e4 49 00	05 e4 49 00	PASS	bsr.a   sub_FFF3B69B	tick fan-out calls BT pump sub_FFF3B69B
+SUB	FFF3B6CF	0x33B6CF	fb ee 28 c0 08	fb ee 28 c0 08	PASS	mov.l   #8C028h, r14	pump: power-up countdown end -> P87
+SUB	FFF3B6D4	0x33B6D4	f0 e7	f0 e7	PASS	bset    #7, [r14].b	pump: bset #7 P8.PODR
+SUB	FFF3B71C	0x33B71C	39 29 e1	39 29 e1	PASS	bsr.w   sub_FFF39845	pump: deferred LINK via sub_FFF39845
+SUB	FFF3B74C	0x33B74C	39 c9 f9	39 c9 f9	PASS	bsr.w   sub_FFF3B115	pump: level detector sub_FFF3B115 every 2nd pass
+SUB	FFF3B74F	0x33B74F	39 d0 e9	39 d0 e9	PASS	bsr.w   sub_FFF3A11F	pump: line reader sub_FFF3A11F
+SUB	FFF3B760	0x33B760	39 f9 ea	39 f9 ea	PASS	bsr.w   sub_FFF3A259	pump: classifier B dispatch sub_FFF3A259
+SUB	FFF3B770	0x33B770	39 94 ea	39 94 ea	PASS	bsr.w   sub_FFF3A204	pump: classifier A dispatch sub_FFF3A204
+SUB	FFF3B784	0x33B784	39 0a f3	39 0a f3	PASS	bsr.w   sub_FFF3AA8E	pump: ack-timeout retry sub_FFF3AA8E (timer 3)
+SUB	FFF3B798	0x33B798	39 cc e8	39 cc e8	PASS	bsr.w   sub_FFF3A064	pump: HELLO timeout sub_FFF3A064 (timer 1)
+SUB	FFF3B7AC	0x33B7AC	39 de e8	39 de e8	PASS	bsr.w   sub_FFF3A08A	pump: operation timeout sub_FFF3A08A (timer 2)
+SUB	FFF3B7AF	0x33B7AF	05 6f dd ff	05 6f dd ff	PASS	bsr.a   sub_FFF3951E	pump: SCO idle manager sub_FFF3951E
+SUB	FFF3A1D4	0x33A1D4	05 7c 10 fa	05 7c 10 fa	PASS	bsr.a   sub_FFEDB250	line reader: get 1 byte from channel 2
+SUB	FFF3A189	0x33A189	75 5e ff	75 5e ff	PASS	cmp     #-1, r14	line reader: 256-byte cap (cmp #0FFh, IDA prints #-1)
+SUB	FFF3A1AE	0x33A1AE	61 a1	61 a1	PASS	cmp     #0Ah, r1	line reader: LF ends line
+SUB	FFF3A3F6	0x33A3F6	61 61	61 61	PASS	cmp     #6, r1	classifier A: indices 1..5
+SUB	FFF3A404	0x33A404	39 2c 12	39 2c 12	PASS	bsr.w   sub_FFF3B630	classifier A: unmatched line answered ERROR\r\n
+SUB	FFF3A398	0x33A398	61 81	61 81	PASS	cmp     #8, r1	classifier B: indices 1..7
+SUB	FFF3A2FF	0x33A2FF	fb e2 78 05 01 00	fb e2 78 05 01 00	PASS	mov.l   #10578h, r14	classifier B: RXAT gated on [10578]
+SUB	FFF3A31D	0x33A31D	fb e2 78 05 01 00	fb e2 78 05 01 00	PASS	mov.l   #10578h, r14	classifier B: ERAT gated on [10578]
+SUB	FFF3A41A	0x33A41A	75 51 4f	75 51 4f	PASS	cmp     #4Fh, r1 ; 'O'	HELL: 'O'
+SUB	FFF3A468	0x33A468	39 c8 11	39 c8 11	PASS	bsr.w   sub_FFF3B630	HELL: echo HELL%c
+SUB	FFF3A473	0x33A473	f8 e4 02	f8 e4 02	PASS	mov.b   #2, [r14]	HELL: 122AD=2
+SUB	FFF3A4AB	0x33A4AB	61 8e	61 8e	PASS	cmp     #8, r14	FIND: list full at 8
+SUB	FFF3A4B9	0x33A4B9	39 77 11	39 77 11	PASS	bsr.w   sub_FFF3B630	FIND: FIND=OVER reply
+SUB	FFF3A50B	0x33A50B	61 c1	61 c1	PASS	cmp     #0Ch, r1	FIND: 12 address chars
+SUB	FFF3A57F	0x33A57F	61 f1	61 f1	PASS	cmp     #0Fh, r1	FIND: name loop bound j<=15
+SUB	FFF3A599	0x33A599	3c 1c 00	3c 1c 00	PASS	mov.b   #0, 0Ch[r1]	FIND: terminator at entry+0x0C+j (j=16 -> +0x1C)
+SUB	FFF3A622	0x33A622	39 0e 10	39 0e 10	PASS	bsr.w   sub_FFF3B630	FIND: FIND=<sum4> reply
+SUB	FFF3A2DF	0x33A2DF	7f 8f	7f 8f	PASS	smovf	FIND: list copied to [683B0] (smovf)
+SUB	FFF3A2FB	0x33A2FB	7f 1e	7f 1e	PASS	jsr     r14	FIND: scan callback(1)
+SUB	FFF3A654	0x33A654	75 51 30	75 51 30	PASS	cmp     #30h, r1 ; '0'	PAIR: '0'
+SUB	FFF3A678	0x33A678	39 b8 0f	39 b8 0f	PASS	bsr.w   sub_FFF3B630	PAIR: PAIR=0 echo
+SUB	FFF3A6AD	0x33A6AD	66 31	66 31	PASS	mov.l   #3, r1	PAIR=0: link cb(3) after own LINK=0
+SUB	FFF3A6BE	0x33A6BE	66 91	66 91	PASS	mov.l   #9, r1	PAIR=0: link cb(9) remote drop
+SUB	FFF3A75F	0x33A75F	39 d1 0e	39 d1 0e	PASS	bsr.w   sub_FFF3B630	PAIR: PAIR=<sum4> reply
+SUB	FFF3A77B	0x33A77B	f8 e4 05	f8 e4 05	PASS	mov.b   #5, [r14]	PAIR=<addr>: 122AE=5 linked
+SUB	FFF3A786	0x33A786	66 11	66 11	PASS	mov.l   #1, r1	PAIR=<addr>: link cb(1)
+SUB	FFF3A7B7	0x33A7B7	39 79 0e	39 79 0e	PASS	bsr.w   sub_FFF3B630	SCOI: echo SCOI=%c
+SUB	FFF3A7C0	0x33A7C0	75 51 30	75 51 30	PASS	cmp     #30h, r1 ; '0'	SCOI: '0'
+SUB	FFF3A7ED	0x33A7ED	66 31	66 31	PASS	mov.l   #3, r1	SCOI=0: cb(3) if 12CC2==1
+SUB	FFF3A7F2	0x33A7F2	66 51	66 51	PASS	mov.l   #5, r1	SCOI=0: cb(5) otherwise
+SUB	FFF3A805	0x33A805	75 51 31	75 51 31	PASS	cmp     #31h, r1 ; '1'	SCOI: '1'
+SUB	FFF3A820	0x33A820	66 11	66 11	PASS	mov.l   #1, r1	SCOI=1: cb(1)
+SUB	FFF3A849	0x33A849	39 e7 0d	39 e7 0d	PASS	bsr.w   sub_FFF3B630	ERAT: echo ERAT=
+SUB	FFF3A893	0x33A893	61 61	61 61	PASS	cmp     #6, r1	ERAT: up to 6 chars
+SUB	FFF3A8B4	0x33A8B4	66 51	66 51	PASS	mov.l   #5, r1	ERAT: TXAT cb(5)
+SUB	FFF3A8CF	0x33A8CF	75 51 2b	75 51 2b	PASS	cmp     #2Bh, r1 ; '+'	ERRO: '+'
+SUB	FFF3A927	0x33A927	39 09 0d	39 09 0d	PASS	bsr.w   sub_FFF3B630	ERRO: ERROR+SCOI echo
+SUB	FFF3A946	0x33A946	66 21	66 21	PASS	mov.l   #2, r1	ERRO: SCOL cb(2)
+SUB	FFF3A972	0x33A972	39 be 0c	39 be 0c	PASS	bsr.w   sub_FFF3B630	RXAT: echo RXAT=
+SUB	FFF3A9BC	0x33A9BC	61 c1	61 c1	PASS	cmp     #0Ch, r1	RXAT: up to 12 chars
+SUB	FFF3AA79	0x33AA79	66 61	66 61	PASS	mov.l   #6, r1	RXAT CKPD=200: TXAT cb(6)
+SUB	FFF3AA96	0x33AA96	60 1e	60 1e	PASS	sub     #1, r14	retry: index = [1054A]-1
+SUB	FFF3AA9A	0x33AA9A	25 05	25 05	PASS	bleu.b  loc_FFF3AA9F	retry: 11 cases
+SUB	FFF3AC7B	0x33AC7B	39 b5 09	39 b5 09	PASS	bsr.w   sub_FFF3B630	retry: ACK ERROR\r\n
+SUB	FFF3AD5E	0x33AD5E	75 51 30	75 51 30	PASS	cmp     #30h, r1 ; '0'	SCAN=: '0'
+SUB	FFF3ADA9	0x33ADA9	66 31	66 31	PASS	mov.l   #3, r1	SCAN=0: scan cb(3)
+SUB	FFF3ADE4	0x33ADE4	66 51	66 51	PASS	mov.l   #5, r1	SCAN=1: scan cb(5)
+SUB	FFF3AE11	0x33AE11	45 1e 05	45 1e 05	PASS	cmp     5[r1], r14	LINK=: checksum compare
+SUB	FFF3AE6E	0x33AE6E	66 51	66 51	PASS	mov.l   #5, r1	LINK=: cb(5) match
+SUB	FFF3AE74	0x33AE74	66 61	66 61	PASS	mov.l   #6, r1	LINK=: cb(6) mismatch
+SUB	FFF3AE86	0x33AE86	f8 e4 00	f8 e4 00	PASS	mov.b   #0, [r14]	SCOL=: ack only (clear pending)
+SUB	FFF3AEB4	0x33AEB4	fb e2 78 05 01 00	fb e2 78 05 01 00	PASS	mov.l   #10578h, r14	TXAT=1: 10578=1
+SUB	FFF3AECB	0x33AECB	66 11	66 11	PASS	mov.l   #1, r1	TXAT=1: cb(1)
+SUB	FFF3AEDA	0x33AEDA	fb e2 78 05 01 00	fb e2 78 05 01 00	PASS	mov.l   #10578h, r14	TXAT=0: 10578=0
+SUB	FFF3AF7B	0x33AF7B	66 11	66 11	PASS	mov.l   #1, r1	PINF=: cb(1) match
+SUB	FFF3AF81	0x33AF81	66 21	66 21	PASS	mov.l   #2, r1	PINF=: cb(2) mismatch
+SUB	FFF39771	0x339771	3c 05 01	3c 05 01	PASS	mov.b   #1, 10h+var_B[sp]	SCAN sender: arg 1
+SUB	FFF397C5	0x3397C5	39 6b 1e	39 6b 1e	PASS	bsr.w   sub_FFF3B630	SCAN=1 send
+SUB	FFF397EC	0x3397EC	fb 2a b8 0b	fb 2a b8 0b	PASS	mov.l   #0BB8h, r2	SCAN: timer 2 = 3000
+SUB	FFF39802	0x339802	3c 05 00	3c 05 00	PASS	mov.b   #0, 8+var_3[sp]	SCAN stop: arg 0
+SUB	FFF39825	0x339825	39 0b 1e	39 0b 1e	PASS	bsr.w   sub_FFF3B630	SCAN=0 send
+SUB	FFF3989D	0x33989D	39 71 17	39 71 17	PASS	bsr.w   sub_FFF3B00E	LINK mode 0 -> LINK=1
+SUB	FFF398FC	0x3398FC	39 8d 16	39 8d 16	PASS	bsr.w   sub_FFF3AF89	LINK mode 1 -> LINK=<addr>
+SUB	FFF3991A	0x33991A	fb 2a d0 07	fb 2a d0 07	PASS	mov.l   #7D0h, r2	LINK: timer 2 = 2000
+SUB	FFF399C0	0x3399C0	f8 ea e8 03	f8 ea e8 03	PASS	mov.l   #3E8h, [r14]	deferred LINK: 683A8=1000
+SUB	FFF39A23	0x339A23	39 0d 1c	39 0d 1c	PASS	bsr.w   sub_FFF3B630	LINK=0 send (sub_FFF399F9)
+SUB	FFF39A5D	0x339A5D	39 d3 1b	39 d3 1b	PASS	bsr.w   sub_FFF3B630	LINK=0 send (sub_FFF39A53)
+SUB	FFF39ADB	0x339ADB	39 55 1b	39 55 1b	PASS	bsr.w   sub_FFF3B630	SCOL=1 send
+SUB	FFF39B14	0x339B14	fb 2a e8 03	fb 2a e8 03	PASS	mov.l   #3E8h, r2	SCOL=1: timer 2 = 1000
+SUB	FFF39B5D	0x339B5D	39 d3 1a	39 d3 1a	PASS	bsr.w   sub_FFF3B630	SCOL=0 send (sub_FFF39B27)
+SUB	FFF39B68	0x339B68	f8 e5 01	f8 e5 01	PASS	mov.w   #1, [r14]	SCOL=0: 12CC2=1
+SUB	FFF39B90	0x339B90	39 a0 1a	39 a0 1a	PASS	bsr.w   sub_FFF3B630	SCOL=0 send (sub_FFF39B86)
+SUB	FFF39BB3	0x339BB3	3c 05 01	3c 05 01	PASS	mov.b   #1, 0Ch+var_7[sp]	TXAT arg 1
+SUB	FFF39BE8	0x339BE8	39 48 1a	39 48 1a	PASS	bsr.w   sub_FFF3B630	TXAT=1 send
+SUB	FFF39BF6	0x339BF6	fb e2 c4 83 06 00	fb e2 c4 83 06 00	PASS	mov.l   #683C4h, r14	TXAT cb slot 683C4
+SUB	FFF39C13	0x339C13	3c 05 00	3c 05 00	PASS	mov.b   #0, 8+var_3[sp]	TXAT arg 0 (sub_FFF39C11)
+SUB	FFF39C48	0x339C48	39 e8 19	39 e8 19	PASS	bsr.w   sub_FFF3B630	TXAT=0 send
+SUB	FFF3AFD4	0x33AFD4	39 5c 06	39 5c 06	PASS	bsr.w   sub_FFF3B630	LINK=<12 hex> send
+SUB	FFF3B01A	0x33B01A	39 16 06	39 16 06	PASS	bsr.w   sub_FFF3B630	LINK=1 send
+SUB	FFF3B05B	0x33B05B	39 d5 05	39 d5 05	PASS	bsr.w   sub_FFF3B630	PINF=0 send
+SUB	FFF3B0DB	0x33B0DB	39 55 05	39 55 05	PASS	bsr.w   sub_FFF3B630	PINF=0,<12 hex> send
+SUB	FFF397E5	0x3397E5	66 52	66 52	PASS	mov.l   #5, r2	ack timer 3 = 5
+SUB	FFF396D2	0x3396D2	fb 2a f4 01	fb 2a f4 01	PASS	mov.l   #1F4h, r2	HELLO wait timer 1 = 500
+SUB	FFF396B9	0x3396B9	fb ee 22 c0 08	fb ee 22 c0 08	PASS	mov.l   #8C022h, r14	power-on: P22 set
+SUB	FFF396BE	0x3396BE	f0 e2	f0 e2	PASS	bset    #2, [r14].b	power-on: bset #2
+SUB	FFF396F8	0x3396F8	fb ee 22 c0 08	fb ee 22 c0 08	PASS	mov.l   #8C022h, r14	power-off: P22 clear
+SUB	FFF39E43	0x339E43	3d 10 c0	3d 10 c0	PASS	mov.w   #-40h, [r1]	CMT3 CMCR=0FFC0h
+SUB	FFF39E4B	0x339E4B	f9 e9 02 5f ea	f9 e9 02 5f ea	PASS	mov.w   #-15A1h, 4[r14]	CMT3 CMCOR=0EA5Fh
+SUB	FFF3B12E	0x33B12E	fb ee 22 c0 08	fb ee 22 c0 08	PASS	mov.l   #8C022h, r14	level >= threshold: P24 set
+SUB	FFF3B133	0x33B133	f0 e4	f0 e4	PASS	bset    #4, [r14].b	bset #4 P2.PODR
+SUB	FFF3B136	0x33B136	fb ee 22 c0 08	fb ee 22 c0 08	PASS	mov.l   #8C022h, r14	level < threshold: P24 clear
+SUB	FFF3B178	0x33B178	7f 1e	7f 1e	PASS	jsr     r14	level cb(1)
+SUB	FFF3B1F1	0x33B1F1	7f 1e	7f 1e	PASS	jsr     r14	level cb(2)
+SUB	FFF3B11A	0x33B11A	05 c5 a8 fd	05 c5 a8 fd	PASS	bsr.a   sub_FFF159DF	level read sub_FFF159DF
+SUB	FFF15A09	0x315A09	fb e2 10 25 01 00	fb e2 10 25 01 00	PASS	mov.l   #12510h, r14	ADC result 12510
+SUB	FFEDCE2A	0x2DCE2A	75 51 d5	75 51 d5	PASS	cmp     #-2Bh, r1	dispatcher: F3D5 compare
+SUB	FFEDCE43	0x2DCE43	05 f5 b4 05	05 f5 b4 05	PASS	bsr.a   sub_FFF38338	dispatcher: F3D5 -> sub_FFF38338
+SUB	FFEDCFB6	0x2DCFB6	f5 e7 1d	f5 e7 1d	PASS	btst    #7, 1Dh[r14].b	dispatcher: frame+0x18 bit 7 (BT on)
+SUB	FFEDCFBA	0x2DCFBA	05 3a ad 05	05 3a ad 05	PASS	bsr.a   sub_FFF37CF4	dispatcher: BT off -> sub_FFF37CF4
+SUB	FFEDCFBF	0x2DCFBF	05 fa ac 05	05 fa ac 05	PASS	bsr.a   sub_FFF37CB9	dispatcher: BT on -> sub_FFF37CB9
+SUB	FFEDCFD8	0x2DCFD8	75 51 d6	75 51 d6	PASS	cmp     #-2Ah, r1	dispatcher: F3D6 compare
+SUB	FFEDCFDD	0x2DCFDD	75 51 d3	75 51 d3	PASS	cmp     #-2Dh, r1	dispatcher: F3D3 compare
+SUB	FFEDCFE2	0x2DCFE2	75 51 d2	75 51 d2	PASS	cmp     #-2Eh, r1	dispatcher: F3D2 compare
+SUB	FFEDCFF1	0x2DCFF1	05 97 ad 05	05 97 ad 05	PASS	bsr.a   sub_FFF37D88	dispatcher: F3D2 -> sub_FFF37D88
+SUB	FFEDCFFF	0x2DCFFF	05 93 b2 05	05 93 b2 05	PASS	bsr.a   sub_FFF38292	dispatcher: F3D3 -> sub_FFF38292
+SUB	FFEDD00D	0x2DD00D	05 fa b0 05	05 fa b0 05	PASS	bsr.a   sub_FFF38107	dispatcher: F3D6 -> sub_FFF38107
+SUB	FFEDD019	0x2DD019	05 f2 b4 05	05 f2 b4 05	PASS	bsr.a   sub_FFF3850B	dispatcher: every frame -> sub_FFF3850B
+SUB	FFEDD025	0x2DD025	05 dd b3 05	05 dd b3 05	PASS	bsr.a   sub_FFF38402	dispatcher: every frame -> sub_FFF38402
+SUB	FFF37CC6	0x337CC6	75 5e 15	75 5e 15	PASS	cmp     #15h, r14	BT on: only when 122A6==15h
+SUB	FFF37CD7	0x337CD7	05 c4 19 00	05 c4 19 00	PASS	bsr.a   sub_FFF3969B	BT on: sub_FFF3969B (power-up)
+SUB	FFF37D0C	0x337D0C	05 d9 19 00	05 d9 19 00	PASS	bsr.a   sub_FFF396E5	BT off: sub_FFF396E5
+SUB	FFF37DB5	0x337DB5	59 1e 21	59 1e 21	PASS	movu.b  21h[r1], r14	F3D2: sub-op = frame+0x21
+SUB	FFF37E40	0x337E40	05 7c 1c 00	05 7c 1c 00	PASS	bsr.a   sub_FFF39ABC	F3D2/0: SCOL=1
+SUB	FFF37ECB	0x337ECB	05 bb 1c 00	05 bb 1c 00	PASS	bsr.a   sub_FFF39B86	F3D2/1: SCOL=0 then deferred LINK=0
+SUB	FFF37ED1	0x337ED1	05 28 1b 00	05 28 1b 00	PASS	bsr.a   sub_FFF399F9	F3D2/1: LINK=0
+SUB	FFF37EF0	0x337EF0	fb e2 bc 2c 01 00	fb e2 bc 2c 01 00	PASS	mov.l   #12CBCh, r14	F3D2/1: 12CBC=3 (no E6)
+SUB	FFF37FB0	0x337FB0	05 78 55 fa	05 78 55 fa	PASS	bsr.a   sub_FFEDD528	F3D2/2: E6(0)
+SUB	FFF37FEC	0x337FEC	05 3c 55 fa	05 3c 55 fa	PASS	bsr.a   sub_FFEDD528	F3D2/2: E5(0)
+SUB	FFF38007	0x338007	05 27 19 00	05 27 19 00	PASS	bsr.a   sub_FFF3992E	F3D2/2: deferred re-link
+SUB	FFF380E1	0x3380E1	05 64 17 00	05 64 17 00	PASS	bsr.a   sub_FFF39845	F3D2/3: LINK=<addr>
+SUB	FFF380F9	0x3380F9	f8 e4 03	f8 e4 03	PASS	mov.b   #3, [r14]	F3D2/3: 122A7=3
+SUB	FFF382B2	0x3382B2	51 1e 21	51 1e 21	PASS	and     21h[r1], r14	F3D3: frame+0x21 bit 7
+SUB	FFF382EC	0x3382EC	05 7e 14 00	05 7e 14 00	PASS	bsr.a   sub_FFF3976A	F3D3: start scan
+SUB	FFF3831C	0x33831C	05 e4 14 00	05 e4 14 00	PASS	bsr.a   sub_FFF39800	F3D3: stop scan
+SUB	FFF38359	0x338359	61 91	61 91	PASS	cmp     #9, r1	F3D5: frame+8 == 9
+SUB	FFF383DE	0x3383DE	05 8a 18 00	05 8a 18 00	PASS	bsr.a   sub_FFF39C68	F3D5: PINF=0,<addr>
+SUB	FFF381A8	0x3381A8	05 9d 16 00	05 9d 16 00	PASS	bsr.a   sub_FFF39845	F3D6: LINK=<addr> when 122A7==1
+SUB	FFF38215	0x338215	05 13 53 fa	05 13 53 fa	PASS	bsr.a   sub_FFEDD528	F3D6: E6(0)
+SUB	FFF38251	0x338251	05 d7 52 fa	05 d7 52 fa	PASS	bsr.a   sub_FFEDD528	F3D6: E5(0)
+SUB	FFF3826C	0x33826C	05 c2 16 00	05 c2 16 00	PASS	bsr.a   sub_FFF3992E	F3D6: deferred re-link
+SUB	FFF38422	0x338422	b2 19	b2 19	PASS	movu.b  9[r1], r1	every frame: frame+9 & 20h
+SUB	FFF38467	0x338467	39 7b 00	39 7b 00	PASS	bsr.w   sub_FFF384E2	every frame: TXAT=1 once per link
+SUB	FFF384AE	0x3384AE	05 0e 16 00	05 0e 16 00	PASS	bsr.a   sub_FFF39ABC	every frame: SCOL=1
+SUB	FFF384E9	0x3384E9	fb 12 16 92 f3 ff	fb 12 16 92 f3 ff	PASS	mov.l   #sub_FFF39216, r1	TXAT callback = sub_FFF39216
+SUB	FFF3851F	0x33851F	75 21 20	75 21 20	PASS	and     #20h, r1 ; ' '	header: frame+0x18 & 20h -> 1229D
+SUB	FFF3852E	0x33852E	75 21 40	75 21 40	PASS	and     #40h, r1 ; '@'	header: frame+0x18 & 40h -> 1229E
+SUB	FFF3853D	0x33853D	64 31	64 31	PASS	and     #3, r1	header: frame+0x18 & 3 -> VOX mode
+SUB	FFF38627	0x338627	fb e2 b8 2c 01 00	fb e2 b8 2c 01 00	PASS	mov.l   #12CB8h, r14	header: 12CB8=2 (BT off edge)
+SUB	FFF3865A	0x33865A	fb e2 b8 2c 01 00	fb e2 b8 2c 01 00	PASS	mov.l   #12CB8h, r14	header: 12CB8=2 (BT on edge)
+SUB	FFF3873B	0x33873B	05 30 16 00	05 30 16 00	PASS	bsr.a   sub_FFF39D6B	detector start sub_FFF39D6B(1)
+SUB	FFF38759	0x338759	fb e2 b8 2c 01 00	fb e2 b8 2c 01 00	PASS	mov.l   #12CB8h, r14	detector running: 12CB8=1
+SUB	FFF387B0	0x3387B0	05 bb 15 00	05 bb 15 00	PASS	bsr.a   sub_FFF39D6B	detector stop sub_FFF39D6B(2)
+SUB	FFF387B6	0x3387B6	fb e2 b8 2c 01 00	fb e2 b8 2c 01 00	PASS	mov.l   #12CB8h, r14	detector stopped: 12CB8=2
+SUB	FFF38AEA	0x338AEA	05 3e 4a fa	05 3e 4a fa	PASS	bsr.a   sub_FFEDD528	E4 builder send
+SUB	FFF38C9E	0x338C9E	05 8a 48 fa	05 8a 48 fa	PASS	bsr.a   sub_FFEDD528	E4 code 3 direct send
+SUB	FFF38B2F	0x338B2F	75 41 12	75 41 12	PASS	mov.l   #12h, r1	E4 code 12h (scan result)
+SUB	FFF38B4A	0x338B4A	75 41 11	75 41 11	PASS	mov.l   #11h, r1	E4 code 11h (scan timeout)
+SUB	FFF38B5E	0x338B5E	75 41 13	75 41 13	PASS	mov.l   #13h, r1	E4 code 13h
+SUB	FFF38B91	0x338B91	66 91	66 91	PASS	mov.l   #9, r1	E4 code 9 (PINF result)
+SUB	FFF38CCF	0x338CCF	66 01	66 01	PASS	mov.l   #0, r1	E4 code 0 (connected)
+SUB	FFF38D63	0x338D63	66 51	66 51	PASS	mov.l   #5, r1	E4 code 5 (connect failed)
+SUB	FFF38EAB	0x338EAB	66 21	66 21	PASS	mov.l   #2, r1	E4 code 2 (link lost)
+SUB	FFF38EF2	0x338EF2	66 11	66 11	PASS	mov.l   #1, r1	E4 code 1 (disconnected)
+SUB	FFF3920F	0x33920F	f8 e4 15	f8 e4 15	PASS	mov.b   #15h, [r14]	module absent: 122A6=15h
+SUB	FFF38FD2	0x338FD2	05 56 45 fa	05 56 45 fa	PASS	bsr.a   sub_FFEDD528	E6 site: SCO up with 122A0==3
+SUB	FFF3906F	0x33906F	05 b9 44 fa	05 b9 44 fa	PASS	bsr.a   sub_FFEDD528	E6 site: SCO closed by radio
+SUB	FFF39284	0x339284	05 a4 42 fa	05 a4 42 fa	PASS	bsr.a   sub_FFEDD528	E6 site: CKPD key (save mode)
+SUB	FFF39312	0x339312	05 16 42 fa	05 16 42 fa	PASS	bsr.a   sub_FFEDD528	E6 site: CKPD key (12CB8==2)
+SUB	FFF393B6	0x3393B6	05 72 41 fa	05 72 41 fa	PASS	bsr.a   sub_FFEDD528	E6 site: CKPD unkey (save mode)
+SUB	FFF393F4	0x3393F4	05 34 41 fa	05 34 41 fa	PASS	bsr.a   sub_FFEDD528	E6 site: CKPD unkey (12CB8==2)
+SUB	FFF38FA0	0x338FA0	05 88 45 fa	05 88 45 fa	PASS	bsr.a   sub_FFEDD528	E5 site: SCO up with 122A0==4
+SUB	FFF3903D	0x33903D	05 eb 44 fa	05 eb 44 fa	PASS	bsr.a   sub_FFEDD528	E5 site: SCO closed, 122A0==1
+SUB	FFF39095	0x339095	05 93 44 fa	05 93 44 fa	PASS	bsr.a   sub_FFEDD528	E5 site: SCO closed, 122A0==4
+SUB	FFF394CF	0x3394CF	05 59 40 fa	05 59 40 fa	PASS	bsr.a   sub_FFEDD528	E5 site: level cb(1) -> E5(1)
+SUB	FFF39516	0x339516	05 12 40 fa	05 12 40 fa	PASS	bsr.a   sub_FFEDD528	E5 site: level cb(2) -> E5(0)
+SUB	FFF39225	0x339225	61 61	61 61	PASS	cmp     #6, r1	CKPD cb: code 6 only
+SUB	FFF39232	0x339232	75 5e 20	75 5e 20	PASS	cmp     #20h, r14 ; ' '	CKPD cb: 1229D == 20h
+SUB	FFF39240	0x339240	61 2f	61 2f	PASS	cmp     #2, r15	CKPD cb: 12CBC == 2 -> unkey branch
+SUB	FFF392DF	0x3392DF	61 2e	61 2e	PASS	cmp     #2, r14	CKPD cb: 12CB8 == 2
+SUB	FFF39482	0x339482	05 3a 06 00	05 3a 06 00	PASS	bsr.a   sub_FFF39ABC	VOX level: SCOL=1 (1251E==2)
+SUB	FFF3959C	0x33959C	76 0e e8 03	76 0e e8 03	PASS	cmp     #3E8h, r14	SCO idle close after 1000 passes
+SUB	FFF3953A	0x33953A	05 ed 05 00	05 ed 05 00	PASS	bsr.a   sub_FFF39B27	SCO close request 1229C
+MAIN	00007C92	0x007C92	6a 10 89 20 73 00	6a 10 89 20 73 00	PASS	btst    #0, @0xFFFF8920:16	FF3D7D: BT on test
+MAIN	00007C9A	0x007C9A	f4 20	f4 20	PASS	mov.b   #0x20, r4h ; ' '	FF3D7D: b5 = BT on
+MAIN	00007C9C	0x007C9C	6a 0c bb 70	6a 0c bb 70	PASS	mov.b   @0xFFFFBB70:16, r4l	FF3D7D: BB70 link state
+MAIN	00007CA4	0x007CA4	f4 40	f4 40	PASS	mov.b   #0x40, r4h ; '@'	FF3D7D: b6 when BB70!=0
+MAIN	00007CB0	0x007CB0	6a ab 00 ff 3d 7d	6a ab 00 ff 3d 7d	PASS	mov.b   r3l, @0xFF3D7D:32	store FF3D7D
+MAIN	00007DC8	0x007DC8	6a 10 89 20 77 00	6a 10 89 20 77 00	PASS	bld     #0, @0xFFFF8920:16	FF3D8C b7 <- FF8920.b0
+MAIN	00007DCE	0x007DCE	67 7b	67 7b	PASS	bst     #7, r3l	bst #7
+MAIN	00007DD8	0x007DD8	55 58	55 58	PASS	bsr     sub_7E32:8	bsr sub_7E32 when BT on
+MAIN	00007DDA	0x007DDA	6a 0d 89 bb	6a 0d 89 bb	PASS	mov.b   @0xFFFF89BB:16, r5l	VOX level FF89BB
+MAIN	00007DE0	0x007DE0	f5 01	f5 01	PASS	mov.b   #1, r5h	mode 1 (VOX on)
+MAIN	00007DEE	0x007DEE	f5 02	f5 02	PASS	mov.b   #2, r5h	mode 2 (VOX on, BT on)
+MAIN	00007DF0	0x007DF0	8d 02	8d 02	PASS	add.b   #2, r5l	index +2 when BT on
+MAIN	00007DF4	0x007DF4	6a 0c 89 bc	6a 0c 89 bc	PASS	mov.b   @0xFFFF89BC:16, r4l	VOX delay FF89BC
+MAIN	00007DF8	0x007DF8	ec 07	ec 07	PASS	and.b   #7, r4l	and #7
+MAIN	00007DFE	0x007DFE	6a ab 00 ff 3d 8c	6a ab 00 ff 3d 8c	PASS	mov.b   r3l, @0xFF3D8C:32	store FF3D8C
+MAIN	00007E0A	0x007E0A	78 50 6a 2b 00 00 7e 2c	78 50 6a 2b 00 00 7e 2c	PASS	mov.b   @(0x7E2C:32,er5), r3l	table 0x7E2C[index]
+MAIN	00007E12	0x007E12	6a ab 00 ff 3d 8d	6a ab 00 ff 3d 8d	PASS	mov.b   r3l, @0xFF3D8D:32	store FF3D8D
+MAIN	00007E32	0x007E32	6a 0c 89 bb	6a 0c 89 bb	PASS	mov.b   @0xFFFF89BB:16, r4l	sub_7E32: VOX
+MAIN	00007E38	0x007E38	6a 10 89 20 73 70	6a 10 89 20 73 70	PASS	btst    #7, @0xFFFF8920:16	FF8920.b7
+MAIN	00007E40	0x007E40	6a 0c bb 70	6a 0c bb 70	PASS	mov.b   @0xFFFFBB70:16, r4l	BB70
+MAIN	00007E48	0x007E48	70 6b	70 6b	PASS	bset    #6, r3l	b6 (SCO wanted, always-on mode)
+MAIN	00007E4C	0x007E4C	70 5b	70 5b	PASS	bset    #5, r3l	b5 (save mode)
+MAIN	00007E4E	0x007E4E	6a 10 bb 8f 77 70	6a 10 bb 8f 77 70	PASS	bld     #7, @0xFFFFBB8F:16	BB8F.b7
+MAIN	00007E54	0x007E54	67 eb	67 eb	PASS	bist    #6, r3l	bist #6
+MAIN	0000D2B2	0x00D2B2	fc 01	fc 01	PASS	mov.b   #1, r4l	F3D6: BBE5=1
+MAIN	0000D2C2	0x00D2C2	79 04 f3 d6	79 04 f3 d6	PASS	mov.w   #0xF3D6, r4	opcode F3D6
+MAIN	0000D2D6	0x00D2D6	55 24	55 24	PASS	bsr     sub_D2FC:8	shared payload sub_D2FC
+MAIN	0000D2D8	0x00D2D8	5e 00 b6 b6	5e 00 b6 b6	PASS	jsr     sub_B6B6:24	send now sub_B6B6
+MAIN	0000D2E8	0x00D2E8	79 04 f3 d2	79 04 f3 d2	PASS	mov.w   #0xF3D2, r4	opcode F3D2
+MAIN	0000D318	0x00D318	6a 10 89 20 77 00	6a 10 89 20 77 00	PASS	bld     #0, @0xFFFF8920:16	FF3D94 <- FF8920.b0
+MAIN	0000D32E	0x00D32E	6a 0c 8e af	6a 0c 8e af	PASS	mov.b   @0xFFFF8EAF:16, r4l	sub-op FF8EAF
+MAIN	0000D332	0x00D332	68 ec	68 ec	PASS	mov.b   r4l, @er6	-> FF3D95 (frame+0x21)
+MAIN	0000D334	0x00D334	6a 0c 8e b0	6a 0c 8e b0	PASS	mov.b   @0xFFFF8EB0:16, r4l	selected record FF8EB0
+MAIN	0000D340	0x00D340	7a 15 00 ff aa ec	7a 15 00 ff aa ec	PASS	add.l   #0xFFAAEC, er5	record base FFAAEC
+MAIN	0000D34A	0x00D34A	7a 06 00 ff 3d 96	7a 06 00 ff 3d 96	PASS	mov.l   #0xFF3D96, er6	-> FF3D96 (frame+0x22)
+MAIN	0000D38C	0x00D38C	6a 10 bb 8f 73 00	6a 10 bb 8f 73 00	PASS	btst    #0, @0xFFFFBB8F:16	F3D3: BB8F.b0 pending delete
+MAIN	0000D392	0x00D392	58 60 01 1e	58 60 01 1e	PASS	bne     loc_D4B4:16	-> F3D5 path
+MAIN	0000D3C0	0x00D3C0	79 04 f3 d3	79 04 f3 d3	PASS	mov.w   #0xF3D3, r4	opcode F3D3
+MAIN	0000D3F6	0x00D3F6	ac 01	ac 01	PASS	cmp.b   #1, r4l	BB8E==1 (search)
+MAIN	0000D3FA	0x00D3FA	70 7b	70 7b	PASS	bset    #7, r3l	bit 7 = search
+MAIN	0000D402	0x00D402	68 eb	68 eb	PASS	mov.b   r3l, @er6	-> FF3D95
+MAIN	0000D4B4	0x00D4B4	6a 18 bb 8f 72 00	6a 18 bb 8f 72 00	PASS	bclr    #0, @0xFFFFBB8F:16	clear BB8F.b0
+MAIN	0000D4BA	0x00D4BA	6a 18 bb 8f 70 10	6a 18 bb 8f 70 10	PASS	bset    #1, @0xFFFFBB8F:16	set BB8F.b1
+MAIN	0000D4CA	0x00D4CA	79 04 f3 d5	79 04 f3 d5	PASS	mov.w   #0xF3D5, r4	opcode F3D5
+MAIN	0000D4FA	0x00D4FA	fc 09	fc 09	PASS	mov.b   #9, r4l	frame+8 = 9
+MAIN	0000D50C	0x00D50C	7a 15 00 ff aa ec	7a 15 00 ff aa ec	PASS	add.l   #0xFFAAEC, er5	record base FFAAEC
+MAIN	0000D516	0x00D516	7a 06 00 ff 3d 7d	7a 06 00 ff 3d 7d	PASS	mov.l   #0xFF3D7D, er6	-> FF3D7D (frame+9)
+MAIN	0000D52C	0x00D52C	79 0b f3 d4	79 0b f3 d4	PASS	mov.w   #0xF3D4, e3	F3D4 (setup item)
+MAIN	0000D526	0x00D526	6a 10 89 20 77 70	6a 10 89 20 77 70	PASS	bld     #7, @0xFFFF8920:16	F3D4 bit = FF8920.b7
+MAIN	000482BE	0x0482BE	6a 18 ba 92 70 40	6a 18 ba 92 70 40	PASS	bset    #4, @0xFFFFBA92:16	E5: set BA92.b4
+MAIN	000482C8	0x0482C8	6a 8c bb 92	6a 8c bb 92	PASS	mov.b   r4l, @0xFFFFBB92:16	E5: FFBB92 (only reference)
+MAIN	000480FE	0x0480FE	7a 06 00 ff bb 71	7a 06 00 ff bb 71	PASS	mov.l   #0xFFBB71, er6	E4: 29 B -> FFBB71
+MAIN	000481E8	0x0481E8	6a 8c bb 91	6a 8c bb 91	PASS	mov.b   r4l, @0xFFFFBB91:16	E6: FFBB91
+MAIN	0000FD30	0x00FD30	6a 0c bb 91	6a 0c bb 91	PASS	mov.b   @0xFFFFBB91:16, r4l	E6 consumer reads FFBB91
+MAIN	00073082	0x073082	78 b0 6b 26 00 07 30 8c	78 b0 6b 26 00 07 30 8c	PASS	mov.l   @(off_7308C:32,er3), er6	BB90 state table
+MAIN	000730A2	0x0730A2	47 2c	47 2c	PASS	beq     sub_730D0:8	state 0: BT off
+MAIN	000730AE	0x0730AE	6a 8c 8e af	6a 8c 8e af	PASS	mov.b   r4l, @0xFFFF8EAF:16	8EAF=2 (BT on, not linked)
+MAIN	000730FC	0x0730FC	6a 0c bb 71	6a 0c bb 71	PASS	mov.b   @0xFFFFBB71:16, r4l	state 1: E4 code
+MAIN	00073100	0x073100	ac 01	ac 01	PASS	cmp.b   #1, r4l	code 1 (module ready)
+MAIN	00073118	0x073118	5e 00 d2 b2	5e 00 d2 b2	PASS	jsr     sub_D2B2:24	state 2: send F3D6
+MAIN	0007312A	0x07312A	6a 10 bb 8f 73 10	6a 10 bb 8f 73 10	PASS	btst    #1, @0xFFFFBB8F:16	state 3: BB8F.b1 (delete pending)
+MAIN	0007314C	0x07314C	78 b0 6b 26 00 07 31 62	78 b0 6b 26 00 07 31 62	PASS	mov.l   @(off_73162:32,er3), er6	BB8E jump table
+MAIN	00073184	0x073184	ac 10	ac 10	PASS	cmp.b   #0x10, r4l	scan: code 10h ignored
+MAIN	00073188	0x073188	ac 11	ac 11	PASS	cmp.b   #0x11, r4l	scan: code 11h
+MAIN	000731AA	0x0731AA	fc 1d	fc 1d	PASS	mov.b   #0x1D, r4l	alert tone AAE0=1Dh
+MAIN	0007318C	0x07318C	ac 12	ac 12	PASS	cmp.b   #0x12, r4l	scan: code 12h
+MAIN	00073194	0x073194	55 2a	55 2a	PASS	bsr     sub_731C0:8	add found device sub_731C0
+MAIN	000731D4	0x0731D4	fe 1c	fe 1c	PASS	mov.b   #0x1C, r6l	compare 1Ch bytes
+MAIN	00073202	0x073202	ac 05	ac 05	PASS	cmp.b   #5, r4l	list full at 5
+MAIN	00073246	0x073246	7b d4 59 8f	7b d4 59 8f	PASS	eepmov.w	copy record into list
+MAIN	0007324E	0x07324E	5e 03 cd a0	5e 03 cd a0	PASS	jsr     sub_3CDA0:24	save list sub_3CDA0
+MAIN	00073292	0x073292	ac 03	ac 03	PASS	cmp.b   #3, r4l	connecting: code 3
+MAIN	000732C2	0x0732C2	5e 00 d2 b2	5e 00 d2 b2	PASS	jsr     sub_D2B2:24	send F3D6
+MAIN	000732DA	0x0732DA	ac 05	ac 05	PASS	cmp.b   #5, r4l	linking: code 5
+MAIN	000732FC	0x0732FC	fc 06	fc 06	PASS	mov.b   #6, r4l	popup BBE1=6
+MAIN	00073322	0x073322	ac 02	ac 02	PASS	cmp.b   #2, r4l	linked: code 2 (lost)
+MAIN	0007336C	0x07336C	ac 09	ac 09	PASS	cmp.b   #9, r4l	delete: code 9
+MAIN	0007337C	0x07337C	1a 0c	1a 0c	PASS	dec.b   r4l	delete: count--
+MAIN	0003CDA4	0x03CDA4	79 06 00 8e	79 06 00 8e	PASS	mov.w   #0x8E, r6	len 8Eh
+MAIN	0003CDA8	0x03CDA8	7a 00 00 01 ea 00	7a 00 00 01 ea 00	PASS	mov.l   #loc_1EA00, er0	EEPROM address 1EA00h
+MAIN	0003CDAE	0x03CDAE	7a 01 00 ff aa ea	7a 01 00 ff aa ea	PASS	mov.l   #0xFFAAEA, er1	src FFAAEA
+MAIN	0003CDB4	0x03CDB4	5e 03 bf 4c	5e 03 bf 4c	PASS	jsr     sub_3BF4C:24	EEPROM writer sub_3BF4C
+MAIN	00073424	0x073424	6a 10 89 20 73 70	6a 10 89 20 73 70	PASS	btst    #7, @0xFFFF8920:16	save mode only
+MAIN	0007342C	0x07342C	6a 0c 94 c0	6a 0c 94 c0	PASS	mov.b   @0xFFFF94C0:16, r4l	TX active FF94C0==1
+MAIN	00073484	0x073484	6a 18 bb 8f 70 70	6a 18 bb 8f 70 70	PASS	bset    #7, @0xFFFFBB8F:16	BB8F.b7 = SCO not needed
+MAIN	0007348C	0x07348C	fc 64	fc 64	PASS	mov.b   #0x64, r4l ; 'd'	hold timer 100
+MAIN	000734A0	0x0734A0	6a 18 bb 8f 72 70	6a 18 bb 8f 72 70	PASS	bclr    #7, @0xFFFFBB8F:16	clear BB8F.b7
+MAIN	0002C0A8	0x02C0A8	6a 8c bb 8e	6a 8c bb 8e	PASS	mov.b   r4l, @0xFFFFBB8E:16	menu: connect BB8E=2
+MAIN	0002C0AE	0x02C0AE	6a 8c 8e af	6a 8c 8e af	PASS	mov.b   r4l, @0xFFFF8EAF:16	8EAF=3
+MAIN	0002C0E2	0x02C0E2	6a 8c bb 8e	6a 8c bb 8e	PASS	mov.b   r4l, @0xFFFFBB8E:16	menu: search start BB8E=1
+MAIN	0002C0EE	0x02C0EE	6a 8c bb 8e	6a 8c bb 8e	PASS	mov.b   r4l, @0xFFFFBB8E:16	menu: search stop BB8E=0
+MAIN	0002C0FA	0x02C0FA	6a 18 bb 8f 70 00	6a 18 bb 8f 70 00	PASS	bset    #0, @0xFFFFBB8F:16	menu: delete BB8F.b0
+MAIN	0002C19E	0x02C19E	6a 8c bb 8e	6a 8c bb 8e	PASS	mov.b   r4l, @0xFFFFBB8E:16	menu: connect BB8E=2
+MAIN	000078A0	0x0078A0	00 00 d3 8c	00 00 d3 8c	PASS	.long sub_D38C	sender table: sub_D38C
+MAIN	000078A4	0x0078A4	00 00 d2 de	00 00 d2 de	PASS	.long sub_D2DE	sender table: sub_D2DE
+MAIN	000078A8	0x0078A8	00 00 d5 26	00 00 d5 26	PASS	.long sub_D526	sender table: sub_D526
+SUB	FFEE11D9	0x2E11D9	05 d2 5a 05	05 d2 5a 05	PASS	bsr.a sub_FFF36CAB (callers listing)	TPU0 vector-135 ISR vec_intb_135 calls the tick fan-out
+SUB	FFF391F9	0x3391F9	66 11	66 11	PASS	mov.l #1, r1	HELLO cb(0): E4 code 1 (module ready)
+SUB	FFF39209	0x339209	fb e2 a6 22 01 00	fb e2 a6 22 01 00	PASS	mov.l #122A6h, r14	HELLO cb(-1): module absent
+SUB	FFF15839	0x315839	fb ee 00 90 08	fb ee 00 90 08	PASS	mov.l #89000h, r14	ADC S12AD0 ADCSR
+MAIN	000732DE	0x0732DE	ac 00	ac 00	PASS	cmp.b #0, r4l	linking: code 0 = connected
+MAIN	00010690	0x010690	6a 10 89 20 73 00	6a 10 89 20 73 00	PASS	btst #0, @0xFFFF8920:16	VOX keyer: Bluetooth on?
+MAIN	0001069E	0x01069E	7f 50 70 60	7f 50 70 60	PASS	bset #6, @0x50:8	VOX keyer: BT off -> set 0xFFFF50.b6
+MAIN	000106AA	0x0106AA	7f 50 72 60	7f 50 72 60	PASS	bclr #6, @0x50:8	VOX keyer: BT on -> clear 0xFFFF50.b6
+MAIN	0003914C	0x03914C	6a 0c bb 70	6a 0c bb 70	PASS	mov.b @0xFFFFBB70:16, r4l	audio path: BT link state
+MAIN	00039162	0x039162	7f 59 72 20	7f 59 72 20	PASS	bclr #2, @0x59:8	audio path: BT linked -> clear 0xFFFF59.b2
+MAIN	000391AC	0x0391AC	7f 59 72 20	7f 59 72 20	PASS	bclr #2, @0x59:8	audio path (2nd copy): BT linked -> clear 0xFFFF59.b2
+MAIN	0002C0C8	0x02C0C8	6a 18 89 20 70 00	6a 18 89 20 70 00	PASS	bset #0, @0xFFFF8920:16	DEVICE LIST connect/search forces Bluetooth ON
+MAIN	00007E2C	0x007E2C	00 28 14 2d 18 00	00 28 14 2d 18 00	PASS	table	VOX threshold table -> FF3D8D
+SUB	FFECE2CC	0x2CE2CC	00 00 f4 01 01 00 e8 03 02 00 dc 05 03 00 d0 07 04 00 c4 09 05 00 b8 0b	00 00 f4 01 01 00 e8 03 02 00 dc 05 03 00 d0 07 04 00 c4 09 05 00 b8 0b	PASS	table	VOX hang table {u16 idx,u16 ticks}x6: 500..3000 (/10 per detector step)
+SUB	FFEDA7A0	0x2DA7A0	70 ae f4 ff 75 ae f4 ff 7a ae f4 ff 7f ae f4 ff 84 ae f4 ff 89 ae f4 ff 8e ae f4 ff 92 ae f4 ff 97 ae f4 ff 9c ae f4 ff a1 ae f4 ff a6 ae f4 ff ab ae f4 ff b0 ae f4 ff 00 00 00 00	70 ae f4 ff 75 ae f4 ff 7a ae f4 ff 7f ae f4 ff 84 ae f4 ff 89 ae f4 ff 8e ae f4 ff 92 ae f4 ff 97 ae f4 ff 9c ae f4 ff a1 ae f4 ff a6 ae f4 ff ab ae f4 ff b0 ae f4 ff 00 00 00 00	PASS	table	14 token pointers + terminator (copied to RAM 69550/69568)
+MAIN	0002C12C	0x02C12C	00 02 c0 d4 00 02 c0 a0 00 02 c0 fa	00 02 c0 d4 00 02 c0 a0 00 02 c0 fa	PASS	table	DEVICE LIST key actions: search / connect / delete
+SUB	FFF4AE75	0x34AE75	53 43 41 4e 00	53 43 41 4e 00	PASS	string	'SCAN\x00'
+SUB	FFF4AE7A	0x34AE7A	4c 49 4e 4b 00	4c 49 4e 4b 00	PASS	string	'LINK\x00'
+SUB	FFF4AE7F	0x34AE7F	53 43 4f 4c 00	53 43 4f 4c 00	PASS	string	'SCOL\x00'
+SUB	FFF4AE84	0x34AE84	54 58 41 54 00	54 58 41 54 00	PASS	string	'TXAT\x00'
+SUB	FFF4AE89	0x34AE89	50 49 4e 46 00	50 49 4e 46 00	PASS	string	'PINF\x00'
+SUB	FFF4AE92	0x34AE92	48 45 4c 4c 00	48 45 4c 4c 00	PASS	string	'HELL\x00'
+SUB	FFF4AE97	0x34AE97	50 41 49 52 00	50 41 49 52 00	PASS	string	'PAIR\x00'
+SUB	FFF4AE9C	0x34AE9C	46 49 4e 44 00	46 49 4e 44 00	PASS	string	'FIND\x00'
+SUB	FFF4AEA1	0x34AEA1	45 52 41 54 00	45 52 41 54 00	PASS	string	'ERAT\x00'
+SUB	FFF4AEA6	0x34AEA6	52 58 41 54 00	52 58 41 54 00	PASS	string	'RXAT\x00'
+SUB	FFF4AEAB	0x34AEAB	53 43 4f 49 00	53 43 4f 49 00	PASS	string	'SCOI\x00'
+SUB	FFF4AEB0	0x34AEB0	45 52 52 4f 00	45 52 52 4f 00	PASS	string	'ERRO\x00'
+SUB	FFF4AEB5	0x34AEB5	53 43 41 4e 3d 25 64 0d 0a 00	53 43 41 4e 3d 25 64 0d 0a 00	PASS	string	'SCAN=%d\r\n\x00'
+SUB	FFF4AEBF	0x34AEBF	4c 49 4e 4b 3d 30 0d 0a 00	4c 49 4e 4b 3d 30 0d 0a 00	PASS	string	'LINK=0\r\n\x00'
+SUB	FFF4AEC8	0x34AEC8	53 43 4f 4c 3d 31 0d 0a 00	53 43 4f 4c 3d 31 0d 0a 00	PASS	string	'SCOL=1\r\n\x00'
+SUB	FFF4AED1	0x34AED1	53 43 4f 4c 3d 30 0d 0a 00	53 43 4f 4c 3d 30 0d 0a 00	PASS	string	'SCOL=0\r\n\x00'
+SUB	FFF4AEDA	0x34AEDA	54 58 41 54 3d 25 64 0d 0a 00	54 58 41 54 3d 25 64 0d 0a 00	PASS	string	'TXAT=%d\r\n\x00'
+SUB	FFF4AEE4	0x34AEE4	45 52 52 4f 52 0d 0a 00	45 52 52 4f 52 0d 0a 00	PASS	string	'ERROR\r\n\x00'
+SUB	FFF4AEEC	0x34AEEC	48 45 4c 4c 25 63 0d 0a 00	48 45 4c 4c 25 63 0d 0a 00	PASS	string	'HELL%c\r\n\x00'
+SUB	FFF4AEF5	0x34AEF5	46 49 4e 44 3d 4f 56 45 52 0d 0a 00	46 49 4e 44 3d 4f 56 45 52 0d 0a 00	PASS	string	'FIND=OVER\r\n\x00'
+SUB	FFF4AF01	0x34AF01	46 49 4e 44 3d 25 63 25 63 25 63 25 63 0d 0a 00	46 49 4e 44 3d 25 63 25 63 25 63 25 63 0d 0a 00	PASS	string	'FIND=%c%c%c%c\r\n\x00'
+SUB	FFF4AF11	0x34AF11	50 41 49 52 3d 30 0d 0a 00	50 41 49 52 3d 30 0d 0a 00	PASS	string	'PAIR=0\r\n\x00'
+SUB	FFF4AF1A	0x34AF1A	50 41 49 52 3d 25 63 25 63 25 63 25 63 0d 0a 00	50 41 49 52 3d 25 63 25 63 25 63 25 63 0d 0a 00	PASS	string	'PAIR=%c%c%c%c\r\n\x00'
+SUB	FFF4AF2A	0x34AF2A	53 43 4f 49 3d 25 63 0d 0a 00	53 43 4f 49 3d 25 63 0d 0a 00	PASS	string	'SCOI=%c\r\n\x00'
+SUB	FFF4AF34	0x34AF34	45 52 41 54 3d 00	45 52 41 54 3d 00	PASS	string	'ERAT=\x00'
+SUB	FFF4AF3A	0x34AF3A	25 63 00	25 63 00	PASS	string	'%c\x00'
+SUB	FFF4AF3D	0x34AF3D	0d 0a 00	0d 0a 00	PASS	string	'\r\n\x00'
+SUB	FFF4AF40	0x34AF40	45 52 52 4f 52 2b 53 43 4f 49 00	45 52 52 4f 52 2b 53 43 4f 49 00	PASS	string	'ERROR+SCOI\x00'
+SUB	FFF4AF4B	0x34AF4B	52 58 41 54 3d 00	52 58 41 54 3d 00	PASS	string	'RXAT=\x00'
+SUB	FFF4AF51	0x34AF51	41 43 4b 20 45 52 52 4f 52 0d 0a 00	41 43 4b 20 45 52 52 4f 52 0d 0a 00	PASS	string	'ACK ERROR\r\n\x00'
+SUB	FFF4AF5D	0x34AF5D	4c 49 4e 4b 3d 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 0d 0a 00	4c 49 4e 4b 3d 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 0d 0a 00	PASS	string	'LINK=%c%c%c%c%c%c%c%c%c%c%c%c\r\n\x00'
+SUB	FFF4AF7D	0x34AF7D	4c 49 4e 4b 3d 31 0d 0a 00	4c 49 4e 4b 3d 31 0d 0a 00	PASS	string	'LINK=1\r\n\x00'
+SUB	FFF4AF86	0x34AF86	50 49 4e 46 3d 30 0d 0a 00	50 49 4e 46 3d 30 0d 0a 00	PASS	string	'PINF=0\r\n\x00'
+SUB	FFF4AF8F	0x34AF8F	50 49 4e 46 3d 30 2c 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 0d 0a 00	50 49 4e 46 3d 30 2c 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 25 63 0d 0a 00	PASS	string	'PINF=0,%c%c%c%c%c%c%c%c%c%c%c%c\r\n\x00'
+SUB	FFF3A7C5	0x33A7C5	fb e2 af 22 01 00	fb e2 af 22 01 00	PASS	mov.l   #122AFh, r14	SCOI=0: 122AF test
+SUB	FFF38059	0x338059	75 5e 24	75 5e 24	PASS	cmp     #24h, r14 ; '$'	F3D2/3: 122A8=='$' required
+SUB	FFF37E15	0x337E15	75 5e 19	75 5e 19	PASS	cmp     #19h, r14	122AB==19h (SCO open) test
+SUB	FFF38F0D	0x338F0D	fb e2 be 2c 01 00	fb e2 be 2c 01 00	PASS	mov.l   #12CBEh, r14	SCOL cb(1): 12CBE=2
+SUB	FFF38D10	0x338D10	75 5e 22	75 5e 22	PASS	cmp     #22h, r14 ; '"'	link retry bound 22h
+SUB	FFF38D00	0x338D00	3a a7 00	3a a7 00	PASS	beq.w   loc_FFF38DA7; I17: was sub_FFF38DA7 (lane-4 start)	link cb(2): 122A7==3 branch
+SUB	FFF38DAF	0x338DAF	61 2e	61 2e	PASS	cmp     #2, r14	link retry bound 2
+SUB	FFF38CB1	0x338CB1	fb e2 a5 22 01 00	fb e2 a5 22 01 00	PASS	mov.l   #122A5h, r14	connect cb(1): clear TXAT latch 122A5
+SUB	FFF38FF2	0x338FF2	05 07 0a 00	05 07 0a 00	PASS	bsr.a   sub_FFF399F9	SCO closed by radio: deferred LINK=0
+SUB	FFF39486	0x339486	fb e2 a0 22 01 00	fb e2 a0 22 01 00	PASS	mov.l   #122A0h, r14	122A0=4 (only writer)
+# 342/342 PASS; sha256 SUB b93570b3c2f69ccb51c113c893b4bc4c414cf78ceddde478748404e0768c6230 MAIN 8e3ecd05409b2c314ebed77320ece5930bf31c8333cd84aeef4f6b0264c1bcce

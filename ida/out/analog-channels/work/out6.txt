@@ -1,0 +1,83 @@
+### dis 010E70-010EB0 k1
+010E70  00 01 17 c8                     mov.l   #off_117C8, er5
+010E74  40 26                           bra     loc_10E9C:8
+010E76  5e 00 49 06                     jsr     sub_4906:24
+010E7A  46 16                           bne     loc_10E92:8
+010E7C  7a 05 00 01 27 6c               mov.l   #unk_1276C, er5
+010E82  40 18                           bra     loc_10E9C:8
+010E84  fc ff                           mov.b   #0xFF, r4l
+010E86  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+010E8A  fc 02                           mov.b   #2, r4l
+010E8C  6a 8c 8f 89                     mov.b   r4l, @0xFFFF8F89:16
+010E90  40 0c                           bra     locret_10E9E:8
+010E92  79 06 00 44                     mov.w   #0x44, r6 ; 'D'
+010E96  f3 00                           mov.b   #0, r3h
+010E98  52 63                           mulxu.w r6, er3
+010E9A  0a b5                           add.l   er3, er5
+010E9C  fc 00                           mov.b   #0, r4l
+010E9E  54 70                           rts
+010EA0  6e 0c 00 5a                     mov.b   @(0x5A:16,er0), r4l
+010EA4  73 1c                           btst    #1, r4l
+010EA6  47 08                           beq     loc_10EB0:8
+010EA8  6e 0c 00 54                     mov.b   @(0x54:16,er0), r4l
+010EAC  ac 00                           cmp.b   #0, r4l
+010EAE  47 04                           beq     loc_10EB4:8
+
+### dis 010F80-010FB0 k2
+010F80  46 18                           bne     loc_10F9A:8
+010F82  5e 02 1a 22                     jsr     sub_21A22:24
+010F86  7a 05 00 01 1d 18               mov.l   #off_11D18, er5
+010F8C  6e 0c 00 05                     mov.b   @(5:16,er0), r4l
+010F90  ac 00                           cmp.b   #0, r4l
+010F92  47 12                           beq     locret_10FA6:8
+010F94  7a 05 00 01 1b c4               mov.l   #off_11BC4, er5
+010F9A  1a 0b                           dec.b   r3l
+010F9C  79 06 00 44                     mov.w   #0x44, r6 ; 'D'
+010FA0  f3 00                           mov.b   #0, r3h
+010FA2  52 63                           mulxu.w r6, er3
+010FA4  0a b5                           add.l   er3, er5
+010FA6  54 70                           rts
+010FA8  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+010FAC  47 3e                           beq     loc_10FEC:8
+010FAE  4b 30                           bmi     loc_10FE0:8
+
+### dis 011010-011040 k3
+011010  fb 09                           mov.b   #9, r3l
+011012  6a 0c aa d3                     mov.b   @0xFFFFAAD3:16, r4l
+011016  ec 0f                           and.b   #0xF, r4l
+011018  46 0a                           bne     loc_11024:8
+01101A  6a 0c aa d4                     mov.b   @0xFFFFAAD4:16, r4l
+01101E  ec 01                           and.b   #1, r4l
+011020  46 02                           bne     loc_11024:8
+011022  fb 01                           mov.b   #1, r3l
+011024  7a 05 00 01 19 60               mov.l   #unk_11960, er5
+01102A  1a 0b                           dec.b   r3l
+01102C  79 06 00 44                     mov.w   #0x44, r6 ; 'D'
+011030  f3 00                           mov.b   #0, r3h
+011032  52 63                           mulxu.w r6, er3
+011034  0a b5                           add.l   er3, er5
+011036  54 70                           rts
+011038  72                              .byte 0x72
+011039  06                              .byte 6
+01103A  26                              .byte 0x26
+01103B  07                              .byte 7
+01103C  25                              .byte 0x25
+01103D  07                              .byte 7
+01103E  42                              .byte 0x42
+01103F  07                              .byte 7
+
+### dis 01D5A0-01D5D0 k4
+01D5A0  6a 10 a9 ee 73 70               btst    #7, @0xFFFFA9EE:16
+01D5A6  46 06                           bne     loc_1D5AE:8
+01D5A8  5e 01 c9 e8                     jsr     sub_1C9E8:24
+01D5AC  40 04                           bra     locret_1D5B2:8
+01D5AE  5e 03 ff a0                     jsr     sub_3FFA0:24
+01D5B2  54 70                           rts
+01D5B4  6e 0b 00 05                     mov.b   @(5:16,er0), r3l
+01D5B8  7a 05 00 01 15 ec               mov.l   #off_115EC, er5
+01D5BE  79 06 00 44                     mov.w   #0x44, r6 ; 'D'
+01D5C2  f3 00                           mov.b   #0, r3h
+01D5C4  52 63                           mulxu.w r6, er3
+01D5C6  0a b5                           add.l   er3, er5
+01D5C8  7a 04 00 00 00 30               mov.l   #0x30, er4 ; '0'
+01D5CE  0a c5                           add.l   er4, er5

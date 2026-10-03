@@ -1,0 +1,145 @@
+size 1048576 sha256 8e3ecd05409b2c314ebed77320ece5930bf31c8333cd84aeef4f6b0264c1bcce match True
+
+### sub_32650 raw 032640-032680
+69 5c 79 04 00 00 01 00 69 94 01 00 6d 71 54 70 6a 0c 80 0f f4 01 46 12 ab 08 47 04 ab 0b 46 0a 6a 0c 80 11 46 04 fc 02 40 02 fc 00 54 70 6a 0c aa d2 ec 9d 6a 8c aa d2 fc 00 6a 8c aa d3 6a 8c
+32650-3266E 6a 0c 80 0f f4 01 46 12 ab 08 47 04 ab 0b 46 0a 6a 0c 80 11 46 04 fc 02 40 02 fc 00 54 70
+
+### maps
+20C48 @020C48 stride=10 (0x000a) count=3
+  header 00 0a 00 03
+  row 0 @020C4C 82 40 00 00 84 89 95 00 00 00  824.00000 MHz .. 848.99500 MHz  pay 00 00
+  row 1 @020C56 86 90 00 00 89 39 95 00 00 01  869.00000 MHz .. 893.99500 MHz  pay 00 01
+  row 2 @020C60 94 01 00 00 96 50 95 00 00 02  940.10000 MHz .. 965.09500 MHz  pay 00 02
+  end 020C6A next8 00 0a 00 06 25 30 00 00
+20C6A @020C6A stride=10 (0x000a) count=6
+  header 00 0a 00 06
+  row 0 @020C6E 25 30 00 00 27 59 95 00 00 00  253.00000 MHz .. 275.99500 MHz  pay 00 00
+  row 1 @020C78 38 00 00 00 38 29 95 00 00 01  380.00000 MHz .. 382.99500 MHz  pay 00 01
+  row 2 @020C82 41 20 00 00 41 59 95 00 00 02  412.00000 MHz .. 415.99500 MHz  pay 00 02
+  row 3 @020C8C 81 00 00 00 84 59 95 00 00 03  810.00000 MHz .. 845.99500 MHz  pay 00 03
+  row 4 @020C96 86 00 00 00 90 09 95 00 00 04  860.00000 MHz .. 900.99500 MHz  pay 00 04
+  row 5 @020CA0 91 50 00 00 96 09 95 00 00 05  915.00000 MHz .. 960.99500 MHz  pay 00 05
+  end 020CAA next8 00 00 00 00 00 02 0c ea
+
+### replacement words (12 each)
+1E21A @01E21A
+  [0] @01E21A 82 30  as BCD high -> 823.00000 MHz
+  [1] @01E21C 86 80  as BCD high -> 868.00000 MHz
+  [2] @01E21E 94 01  as BCD high -> 940.10000 MHz
+  [3] @01E220 27 60  as BCD high -> 276.00000 MHz
+  [4] @01E222 38 30  as BCD high -> 383.00000 MHz
+  [5] @01E224 41 60  as BCD high -> 416.00000 MHz
+  [6] @01E226 84 60  as BCD high -> 846.00000 MHz
+  [7] @01E228 90 10  as BCD high -> 901.00000 MHz
+1E22C @01E22C
+  [0] @01E22C 25 20  as BCD high -> 252.00000 MHz
+  [1] @01E22E 37 90  as BCD high -> 379.00000 MHz
+  [2] @01E230 41 10  as BCD high -> 411.00000 MHz
+  [3] @01E232 80 90  as BCD high -> 809.00000 MHz
+  [4] @01E234 85 90  as BCD high -> 859.00000 MHz
+  [5] @01E236 91 40  as BCD high -> 914.00000 MHz
+  [6] @01E238 6a 10  as BCD high -> non-bcd 6a100000
+  [7] @01E23A aa e1  as BCD high -> non-bcd aae10000
+1E200-1E250 50 00 94 00 00 00 94 00 00 00 94 00 00 00 84 90 89 40 96 60 84 90 89 40 96 60 82 30 86 80 94 01 27 60 38 30 41 60 84 60 90 10 96 10 25 20 37 90 41 10 80 90 85 90 91 40 6a 10 aa e1 73 20 46 1e 6a 10 89 bf 73 30 47 16 6e 0c 00 01 ac 0b 47 0e
+
+### ff92ce / ff92d6 / 8010 / bit4
+ff92ce count=5
+  034791 aa 7a 06 00 ff 92 ce 5e 03
+  034E4B ae 7a 06 00 ff 92 ce 5e 03
+  035D9F aa 7a 06 00 ff 92 ce 5e 03
+  03F4BD 72 7a 05 00 ff 92 ce 55 cc
+  03F4D5 ae 7a 05 00 ff 92 ce 55 a4
+ff92d6 count=5
+  0347A3 aa 7a 06 00 ff 92 d6 5e 03
+  034E5D ae 7a 06 00 ff 92 d6 5e 03
+  035DB1 aa 7a 06 00 ff 92 d6 5e 03
+  03F4C5 cc 7a 05 00 ff 92 d6 55 c4
+  03F4E3 be 7a 05 00 ff 92 d6 55 96
+abs 8010 in 34E42..3F4EA count=0
+imm 1E220 count=2
+  01E168 46 3c 7a 05 00 01 e2 20 6a 10
+  01E354 46 34 7a 05 00 01 e2 20 6a 10
+  bit4-near 010674 6e 5c 00 86 73 4c 47 84
+  bit4-near 034E66 6e 0c 00 86 70 4c 6e 8c
+  bit4-near 034E74 6e 0c 00 86 72 4c 6e 8c
+
+### immediates
+imm 20C48 count=4
+  01E128 7a 06 00 02 0c 48 5e 03 f5 b2
+  01E320 7a 06 00 02 0c 48 5e 03 f5 b2
+  032612 7a 06 00 02 0c 48 5e 03 f5 b2
+  032AE2 7a 06 00 02 0c 48 5e 03 f5 b2
+imm 20C6A count=4
+  01E15C 7a 06 00 02 0c 6a 5e 03 f5 b2
+  01E348 7a 06 00 02 0c 6a 5e 03 f5 b2
+  032626 7a 06 00 02 0c 6a 5e 03 f5 b2
+  032AFE 7a 06 00 02 0c 6a 5e 03 f5 b2
+imm 1E21A count=3
+  01E14E 7a 05 00 01 e2 1a 40 26 01 00
+  01E33A 7a 05 00 01 e2 1a 40 26 01 00
+  03261E 7a 05 00 01 e2 1a 40 12 7a 06
+imm 1E22C count=3
+  01E176 7a 05 00 01 e2 2c 7a 63 00 00
+  01E362 7a 05 00 01 e2 2c 7a 63 00 00
+  032632 7a 05 00 01 e2 2c 7a 63 00 00
+jsr sub_32650 count=4
+  01E114 00 04 5e 03 26 50 58 70 00 86
+  01E30E 00 04 5e 03 26 50 47 72 ac 02
+  01E5A8 00 04 5e 03 26 50 ac 02 47 3a
+  032ACC 0d 4b 5e 03 26 50 47 3c ac 02
+jsr sub_3F5B2 count=33
+  01E12C 0c 48 5e 03 f5 b2 46 70 7a 05
+  01E160 0c 6a 5e 03 f5 b2 46 3c 7a 05
+  01E324 0c 48 5e 03 f5 b2 46 5c 7a 05
+  01E34C 0c 6a 5e 03 f5 b2 46 34 7a 05
+  01E57C 00 1a 5e 03 f5 b2 47 10 fc 00
+  01E670 0b fc 5e 03 f5 b2 47 3c 7a 06
+  01E6A8 0c 3c 5e 03 f5 b2 47 08 fc 00
+  01E720 14 80 5e 03 f5 b2 47 04 f3 ff
+  022244 21 c0 5e 03 f5 b2 47 02 fb 03
+  022270 21 c0 5e 03 f5 b2 54 70 01 00
+  0222A8 21 c0 5e 03 f5 b2 47 02 fb 03
+  02F89E 00 42 5e 03 f5 b2 46 06 7f 52
+  02F8D0 00 42 5e 03 f5 b2 46 08 6a 18
+  02F96E 0b 00 5e 03 f5 b2 40 10 01 00
+  02F980 0b a4 5e 03 f5 b2 79 02 00 00
+  031346 00 42 5e 03 f5 b2 46 06 7f 52
+  031378 00 42 5e 03 f5 b2 46 08 6a 18
+  031416 24 42 5e 03 f5 b2 40 10 01 00
+  031428 24 e6 5e 03 f5 b2 79 02 00 00
+  032616 0c 48 5e 03 f5 b2 46 2e 7a 05
+  03262A 0c 6a 5e 03 f5 b2 46 1a 7a 05
+  0326DE 00 42 5e 03 f5 b2 6e 0c 00 86
+  032AE6 0c 48 5e 03 f5 b2 01 00 6d 73
+  032B02 0c 6a 5e 03 f5 b2 01 00 6d 73
+  0347D4 aa aa 5e 03 f5 b2 6a 8b aa d0
+  035DE2 aa aa 5e 03 f5 b2 6a 8b aa d0
+  037944 79 88 5e 03 f5 b2 46 06 6a 18
+  037CA2 7e 50 5e 03 f5 b2 58 60 00 e0
+  03D2DE 21 a8 5e 03 f5 b2 47 2a 40 12
+  03D2F2 21 f6 5e 03 f5 b2 47 16 01 00
+  03F534 f6 66 5e 03 f5 b2 46 08 01 00
+  03FE7A 21 72 5e 03 f5 b2 46 32 40 12
+  03FE8E 21 c0 5e 03 f5 b2 46 1e ab 83
+jsr sub_3F4A2 count=1
+  002DC8 07 60 5e 03 f4 a2 54 70 6a 18
+
+### bit4 reader context 010660-0106C0
+00 ff 90 f0 47 9a 6e 5c 00 01 46 94 6e 5c 00 93 ac 03 45 96 6e 5c 00 86 73 4c 47 84 6e 5c 00 90 ac 02 46 86 6a 0c bb 93 46 06 fc 01 6a 8c bb 93 6a 10 89 20 73 00 46 12 7e 50 73 60 46 10 7f 50 70 60 fc 03 6a 8c 95 a4 40 04 7f 50 72 60 6a 0b bb 93 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 01
+
+MASK file ida/out/main-final4/final4_proven_mask.bin len=1048576 set=368624
+MASK sub_32650 032650-03266E all 30 SET
+MASK bit4-window 010660-010690 all 48 SET
+MASK maps 020C48-020CAA absent 98 of 98: 020C48-020CAA
+MASK repl-words 01E21A-01E240 absent 18 of 38: 01E21A-01E22C
+MASK jt-34E32 034E32-034E42 absent 16 of 16: 034E32-034E42
+MASK jt-34EDE 034EDE-034EEE absent 16 of 16: 034EDE-034EEE
+MASK sub_3F5B2 03F5B2-03F5EE all 60 SET
+MASK copy-helpers 03F47E-03F4A2 all 36 SET
+MASK fill-call 002DC8-002DCC all 4 SET
+MASK refuse-226F0 0226F0-0226FC all 12 SET
+MASK call-224EE 0224EE-02250A all 28 SET
+
+SUB sha256 b93570b3c2f69ccb51c113c893b4bc4c414cf78ceddde478748404e0768c6230 size 4194304
+SUB 349073 53 49 4d 50 4c 45 58 00 2d 52 50 54 00 2b 52 50 54 00 44 55 50 4c 45 58
+SUB text SIMPLEX|-RPT|+RPT|DUPLEX

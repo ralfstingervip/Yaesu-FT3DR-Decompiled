@@ -1,0 +1,60 @@
+id	image	addr	file_off	expected	actual	result	meaning
+C01	M	04B46A	0x04B46A	f4 2a 68 e4 6e e4 00 01	f4 2a 68 e4 6e e4 00 01	PASS	mov.b #0x2A,r4h (04B46A); mov.b r4h,@er6 (04B46C); mov.b r4h,@(1,er6) (04B46E)
+C02	M	002098	0x002098	6a 18 aa 31 72 50 fc 00 6a 8c 80 04	6a 18 aa 31 72 50 fc 00 6a 8c 80 04	PASS	bclr #5,@AA31 ; mov.b #0,r4l (00209E) ; mov.b r4l,@FF8004 (0020A0)
+C03	M	0345AA	0x0345AA	6a 0c 8a a0 ac 01	6a 0c 8a a0 ac 01	PASS	mov.b @FF8AA0,r4l (0345AA) ; cmp.b #1,r4l (0345AE)
+C04	M	034B58	0x034B58	6a 0c 8a a0 ac 02	6a 0c 8a a0 ac 02	PASS	mov.b @FF8AA0,r4l (034B58) ; cmp.b #2,r4l (034B5C)
+C05	M	00F672	0x00F672	14 00 00 00 17 40 00 00 42 00 00 00 47 00 00 00 00 00 00 00 00 06	14 00 00 00 17 40 00 00 42 00 00 00 47 00 00 00 00 00 00 00 00 06	PASS	16-B BCD pair, then 00 00 00 00 (0x00F682) and 00 06 (0x00F686)
+C06	M	04954A	0x04954A	0c 2b 17 0b	0c 2b 17 0b	PASS	mov.b r2h,r3l (04954A) ; not.b r3l (04954C)
+C07	M	049556	0x049556	0c ab 17 0b	0c ab 17 0b	PASS	mov.b r2l,r3l (049556) ; not.b r3l (049558)
+C08	M	035F84	0x035F84	40 30 6a 10 b0 cc 73 00	40 30 6a 10 b0 cc 73 00	PASS	bra (035F84) ; btst #0,@B0CC (035F86, after the bra)
+C09	M	03F38E	0x03F38E	6a 04 80 10	6a 04 80 10	PASS	mov.b @FF8010,r4h
+C10	M	011006	0x011006	fb 04 6a 0c aa d1 ec 0c 46 14 fb 09 6a 0c aa d3 ec 0f 46 0a 6a 0c aa d4 ec 01 46 02 fb 01 7a 05 00 01 19 60 1a 0b 79 06 00 44	fb 04 6a 0c aa d1 ec 0c 46 14 fb 09 6a 0c aa d3 ec 0f 46 0a 6a 0c aa d4 ec 01 46 02 fb 01 7a 05 00 01 19 60 1a 0b 79 06 00 44	PASS	sub_10FA8: n=4 if AAD1&0x0C; n=9 if AAD3&0x0F or AAD4&0x01; else n=1; er5 = 0x011960 + (n-1)*0x44
+C11	M	073E80	0x073E80	aa e1 67 00 40 22 5e 03 4a 52 fc 01 40 06 5e 03 50 e4 fc 00	aa e1 67 00 40 22 5e 03 4a 52 fc 01 40 06 5e 03 50 e4 fc 00	PASS	'@' handler: jsr @0x034A52 (073E86) ; mov.b #1,r4l (073E8A) ; bra ; jsr @0x0350E4 (073E8E) ; mov.b #0,r4l (073E92)
+C12	M	073A28	0x073A28	6a 0b 97 fc 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 07 44 72 5d 60	6a 0b 97 fc 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 07 44 72 5d 60	PASS	mov.b @FF97FC,r3l (073A28) ; and.l #0xFF,er3 ; shll.l #2,er3 (073A32) ; mov.l @(0x074472,er3),er6 (073A34, 8 B) ; jsr @er6 (073A3C)
+C13	M	0743BA	0x0743BA	fc 01 6a 8c b0 cc	fc 01 6a 8c b0 cc	PASS	remote ']' arg 1: mov.b #1,r4l (0743BA) ; mov.b r4l,@FFB0CC (0743BC)
+C14	M	0743CA	0x0743CA	fc 00 6a 8c b0 cc	fc 00 6a 8c b0 cc	PASS	remote ']' arg 0: store at 0743CC (doc 106 l.131 cites the store; correct)
+C15	M	03023A	0x03023A	6a 18 aa d1 70 00 fc 05 6a 8c aa ce	6a 18 aa d1 70 00 fc 05 6a 8c aa ce	PASS	bset #0,@AAD1 ; mov.b #5,r4l (030240) ; mov.b r4l,@FFAACE (030242)
+C16	M	031CCC	0x031CCC	6a 18 aa d1 70 00 fc 05 6a 8c aa ce	6a 18 aa d1 70 00 fc 05 6a 8c aa ce	PASS	band-B twin: mov.b #5,r4l (031CD2) ; store (031CD4)
+C17	M	05AF34	0x05AF34	44 53 50 3e 43 50 55 3a 20 44 41 54 41 20 54 45 58 54 20 53 45 54	44 53 50 3e 43 50 55 3a 20 44 41 54 41 20 54 45 58 54 20 53 45 54	PASS	"DSP>CPU: DATA TEXT SET" (DSP->CPU direction)
+C18	M	05A07E	0x05A07E	6a 0b b0 b8 6b 83 b1 3e	6a 0b b0 b8 6b 83 b1 3e	PASS	builder sub_5A040: r3l = [B0B8] ; frame word 1C|B0B8 -> FFB13E
+C19	S	FFF3AEB4	0x33AEB4	fb e2 78 05 01 00 f8 e4 01	fb e2 78 05 01 00 f8 e4 01	PASS	SUB: TXAT=1 acknowledged (doc 107 l.151)
+C20	S	FFF3A8B4	0x33A8B4	66 51	66 51	PASS	SUB: ERAT callback code 5 (doc 107 l.207)
+C21	S	FFF4AEDA	0x34AEDA	54 58 41 54 3d 25 64 0d 0a 00	54 58 41 54 3d 25 64 0d 0a 00	PASS	"TXAT=%d\r\n"
+C22	S	FFEDC8FE	0x2DC8FE	b2 a9	b2 a9	PASS	SUB sub_FFEDC615 frame-checksum path (doc 109 l.210)
+C23	S	FFEDC902	0x2DC902	55 21 0c	55 21 0c	PASS	SUB: block number from frame +6..+7 (doc 109 l.210)
+C24	M	05C440	0x05C440	fc 03 6a 8c b0 b8	fc 03 6a 8c b0 b8	PASS	only B0B8 store: mov.b #3,r4l ; mov.b r4l,@FFB0B8 (05C442)
+C25	M	0359EA	0x0359EA	6a 0c 95 98 58 60 fe b2	6a 0c 95 98 58 60 fe b2	PASS	state 0x14: test FF9598 ; bne back to dispatch 0x0358A4
+C26	M	034A52	0x034A52	6a 18 aa 30 70 40 40 20	6a 18 aa 30 70 40 40 20	PASS	bset #4,@AA30 ; bra 0x034A7A
+C27	M	034A6A	0x034A6A	5e 03 58 72	5e 03 58 72	PASS	jsr @0x035872 (skipped by the 0x034A52 entry)
+C28	M	034A7A	0x034A7A	54 70	54 70	PASS	rts (bra target from 0x034A58)
+C29	M	073E58	0x073E58	6a 0c 94 c0 ac 01 46 4e	6a 0c 94 c0 ac 01 46 4e	PASS	'@' refuses unless FF94C0 == 1
+C30	M	0744B2	0x0744B2	00 07 3e 58	00 07 3e 58	PASS	table 0x074472 slot 0x10 -> sub_73E58
+C31	M	073A6A	0x073A6A	0c ac fd 30 18 dc 6a 8c 97 fc	0c ac fd 30 18 dc 6a 8c 97 fc	PASS	index = byte - 0x30 ; mov.b r4l,@FF97FC (073A70)
+C32	M	0475EC	0x0475EC	00 04 80 2e 00 04 81 1e	00 04 80 2e 00 04 81 1e	PASS	SUB->MAIN state table 0x0475C8 slot 9 = 0x04802E, slot 0xA = 0x04811E
+C33	M	04803C	0x04803C	aa e4	aa e4	PASS	sub_4802E re-sync: cmp.b #0xE4,r2l
+C34	M	04812C	0x04812C	aa e6	aa e6	PASS	sub_4811E re-sync: cmp.b #0xE6,r2l
+C35	M	026634	0x026634	79 24 f8 01	79 24 f8 01	PASS	ladder compare cmp.w #0xF801,r4
+C36	M	02653C	0x02653C	79 24 f3 c3	79 24 f3 c3	PASS	ladder compare cmp.w #0xF3C3,r4
+C37	M	0767BC	0x0767BC	54 13 01 20 6d f4	54 13 01 20 6d f4	PASS	rts/l er2-er3 (0767BC, decoder) then stm.l er4-er6,@-sp (0767BE)
+C38	M	034BDC	0x034BDC	fc 32 6a 8c 95 79	fc 32 6a 8c 95 79	PASS	FF9579 = 0x32 (500 ms per element)
+C39	M	067FEE	0x067FEE	fc 1e 6a 8c b0 b9	fc 1e 6a 8c b0 b9	PASS	B0B9 = 0x1E
+C40	M	0113E4	0x0113E4	00 06 64 c2	00 06 64 c2	PASS	key-table slot -> sub_664C2
+C41	M	010982	0x010982	5d 60	5d 60	PASS	jsr @er6 in sub_1079E (key dispatcher)
+C42	M	00FC66	0x00FC66	2a 4e ea 80	2a 4e ea 80	PASS	PTT: mov.b @0x4E:8,r2l ; and.b #0x80,r2l
+C43	M	00FC90	0x00FC90	aa 00 46 06	aa 00 46 06	PASS	state 0 advances when r2l == 0
+C44	M	00FC9C	0x00FC9C	aa 00 47 3a	aa 00 47 3a	PASS	state 1 emits the press only when r2l != 0
+C45	M	035BBA	0x035BBA	ac eb 45 54 ac ef 45 1c ac f4 45 20	ac eb 45 54 ac ef 45 1c ac f4 45 20	PASS	AN1 thresholds 0xEB / 0xEF / 0xF4
+C46	M	035BD2	0x035BD2	5e 03 4f 74 fc 01 6a 8c aa d9	5e 03 4f 74 fc 01 6a 8c aa d9	PASS	jsr sub_34F74 (TX end) ; AAD9 = 1
+X01				M whole content: FF956D writers	abs16 mov.b stores to FF956D: 11 (02F622 03111E 0341E4 03421A 03429A 0342BE 0342D2 034316 03433A 034860 039436); each preceded by fc 02: True; word/abs32 stores: 0/0	PASS	computed
+X02				M whole content: B0CC references	B0CC refs (abs16+abs32): 9 (002E18 0358CA 035A22 035EDC 035F86 073B3A 0743BC 0743C2 0743CC); in final4 proven 8, final6 proven 8; 0x035F86 proven6=0; mov.b stores 4 (002E18 073B3A 0743BC 0743CC)	PASS	computed
+X03				M 0x034E42-0x03F4EA: FF8010 references	abs16 FF8010 refs in 0x034E42-0x03F4EA: 03F38E; inside sub_34E42/sub_3F4A2: 0	PASS	computed
+X04				mask file sizes / values main-final3 vs main-final4	final3 proven/named sizes [505684, 505684]; final4 [1048576, 1048576]; values final3 [0, 1] final4 [0, 1]	PASS	computed
+X05				M TX-time tables 0x011960 event 15, n = 1,4,6,7,8,9	event-15 slot (table+0x3C): n=1 022718, n=4 03FFA0, n=6 022718, n=7 022718, n=8 022718, n=9 03FFA0; pair table 0x011038 (code->n, 12 pairs read by the r5l=0x0C loop): 72>6 26>7 25>7 42>7 45>7 70>7 DD>8 E1>8 E2>8 E3>8 E4>8 E7>8	PASS	computed
+X06				M sub_5A506 trace-formatter opcode ladder	sub_5A506 cmp.b #imm (ac xx) ladder 0x05A528-0x05A59F: 03 05 06 07 08 09 0A 18 1A 12 1D 0B 11 19 16 15 32 31 1F; 1C present: False	PASS	computed
+X07				M whole content: stores to FFB0B8	mov.b stores to FFB0B8: abs16 05C442, abs32 0	PASS	computed
+X08				M whole content: page compares F801 / F3C3	cmp.w #0xF801 sites ['026634']; cmp.w #0xF3C3 sites ['02653C']	PASS	computed
+X09				S Bluetooth line compare chain	SUB 75 51 imm8 (cmp #imm,r1) chain FFF3A9D3-FFF3AA5A = b'CKPD=200'	PASS	computed
+X10				decodable denominator re-derivation	items_h1 is_code 388484 (+6 = 388,490); window heads 99 / 318 B; window decodable 1088; 388,490 + 770 = 389260	PASS	computed
+X11				doc 95 text search	doc 95 text: occurrences of "388" / "denominator" / "%": none	PASS	computed
+X12				M branch targets 0x034A58 / 0x0359EE	bra at 0x034A58 -> 034A7A; bne/16 at 0x0359EE -> 0358A4	PASS	computed
+X13				doc 126 self-check of inline citations	doc 126 inline ADDR+bytes citations: 60 scanned, 4 quoted as-written slips, mismatches: none	PASS	computed

@@ -1,0 +1,31 @@
+# Handlers reachable through dispatcher 0x028CBC, with proposed names. All are reached code (live) unless noted.
+# addr	proposed_name	what it does (Confirmed from disasm)
+028CBC	touchkey_dispatch	reads button idx @0xFFBBC2; cmp/beq ladder -> loads record field +0/4/8/C/14/18/1C; jsr; rts
+026F08	touch_hittest	hit-test touch (er2=X<<16|Y) against zone table (er5) -> writes button idx to 0xFFBBC2
+026F48	touch_store_idx	store matched zone index to 0xFFBBC2; clears bit7 A9EE; A9ED=0x0A
+026F9C	touch_hittest2	sibling hit-test -> writes to 0xFFBBC4 (secondary coordinate)
+03FFA0	softkey_clear	no-op/clear: 0xFFAAE0=0, 0xFFA9ED=0xFF, clr bit1 0xFF817E (record +0x18 sentinel; ~400 callers)
+01A58C	char_rotate	buf[er2] in 0x40..0x7F -> map via byte_1BE32 -> store rotated char (on-screen alnum edit)
+029C40	softkey_set_aa30b6	bset #6 0xFFAA30 then sub_75F36 (scroll/redraw up)
+029C56	softkey_set_aa30b6_b	bset #6 0xFFAA30 (shared tail of 2A924/2A9F4)
+029C5C	softkey_set_aa30b7	bset #7 0xFFAA30 then sub_76080 (scroll/redraw down)
+029C70	edit_cursor_setup	er5 = 0xFFAE22 + 0xFFB3F4*16; store ptr->0xFFBC7C, col 0xFFAD99->0xFFBC82, width 0x10->0xFFBC83
+029C98	edit_apply_ae22	er1 = 0xFFAE22 + 0xFFB3F4*16 + 0xFFAD99; jsr sub_2A0F6 (apply/commit field)
+028A10	edit_cursor_setup_a574	col = 0xFFAD68-8 -> 0xFFBC82; ptr 0xFFA574 -> 0xFFBC7C; width 0x43 -> 0xFFBC83
+02A92E	edit_cursor_setup_bc7c	if 0xFFAD68>=2: col=AD68-2 ->0xFFBC82; ptr=sub_18894 ->0xFFBC7C; width 0x10; else softkey_clear
+02A9FE	edit_cursor_setup_ada2	if 0xFFAD68>=4: col=AD68-4 ->0xFFBC82; ptr 0xFFADA2 ->0xFFBC7C; width 0x3C; else softkey_clear
+02B548	edit_cursor_setup_ff061a	col=0xFFAD99 ->0xFFBC82; ptr 0xFF061A ->0xFFBC7C; width 0x50
+02B51E	edit_apply_ff061a	er1 = 0xFF061A + 0xFFAD99; jsr sub_2A0F6 (apply/commit field)
+2A0F6	field_commit	(shared) commit edited value at er1 (apply)
+75F36	list_scroll_up	(shared redraw/scroll)
+76080	list_scroll_down	(shared redraw/scroll)
+29732	kbd_char_enter	keys 10..19: er1=0xFFBA02; sel table by 0xFFB9E4; jsr loc_1BEF2 (enter char into edit buffer)
+1BEF2	char_enter_core	pick buffer (0xFFBC34 0/1/2 -> 0x1B1D0/0x1BCFE/0x1B352) ; sub_1A9EC ; inc 0xFFB9ED
+05E33E	kbd_variant_a	keys 4,5 variant (0xFFBA02 context)
+05E37C	kbd_variant_b	keys 4,5 variant (second record)
+156BC	edit_op_156bc	sub_15318 gate; sub_18AA6; A9ED=6; sub_1890C
+# record-local field stubs (named by I15 as uncredited/not-named -> now attributed):
+02A924	rec28C2A_f14	bsr 2A92E; if ok jsr 29C56 (scroll); rts   [I9-named, I15-credited]
+02A9F4	rec28C8A_f14	bsr 2A9FE; if ok jsr 29C56 (scroll); rts   [I9-named, I15-credited]
+028C4A	rec28C2A_f1C	jsr 2A92E; if ok set col/ptr; jsr 1A58C (char-rotate); rts  [I15-credited, newly named]
+028CAA	rec28C8A_f1C	jsr 2A9FE; if ok mov er5->er1; jsr 1A58C; rts  [I15-credited, newly named]

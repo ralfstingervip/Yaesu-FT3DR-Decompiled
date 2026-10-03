@@ -1,0 +1,13 @@
+session_entry	B0BE_code	script_table	entry_func	immediate_callers	top_of_chain	user_action	gate_flag
+05A1BE	0x02/0x0B/0x10	05B458/05BFBC	sub_5A1BE	03596A(sub_35872), 035EEE(sub_35F6A), 06CF3E(sub_6CF30)	sub_34966<-sub_34538<-sub_2070 (main loop)	PTT held for C4FM digital voice TX; B0C7=band digital submode picks DT0(0x02)/DT2(0x0B)/DT3(0x10)	PTT port 0xFFFF4D b3 low; link ready B0A4.b7 & !b3
+05A28A	0x0A	05BDA8	sub_5A28A	0359A8(sub_35872 AAD4.b0), 035F28(sub_35F6A), 05F73A/05F7BA/05F93E/05FA9A(data engines), 06CA8E/06CABA(sub_6CA6E node), 06D058(sub_6D052)	message/APRS send menu -> AAD4.b0 set by sub_5F7xx/sub_62xxx/sub_67xxx	Send a data/message/APRS packet (DT1 data-FR). AAD4.b0 = data-TX pending	AAD4.b0
+05A2F8	0x15	05C40A	sub_5A2F8	0359C8(sub_35872 B0CC.b0), 035F48(sub_35F6A)	PTT with B0CC.b0 set	TX in the mode where B0CC.b0 set (analog/tone 1C03 carrier path); B0CC written by sub_2DCE(boot band set), sub_73AFE(node), sub_74396(SUB IPC)	B0CC.b0
+06CF30	0x16	05C06A	sub_6CF30	06CF3E->05A1BE; sub_6CF30<-sub_1079E(010982)	WIRES-X / PDN host-link data header+block session (PC-driven), B0C7 forced 2	FF8DDE!=0 (node mode); B3D8.b7 clear
+06D052	0x17	05C200	sub_6D052	062DB2/062E2C/062EC4/062F6A/062FD8/06304C (message decode engines sub_62xxx<-sub_60656)	AUTOMATIC reply: radio auto-keys to answer a received data message (not a user keypress)	AAD4.b0 cleared then session armed; triggered by RX message class/letter
+0349E8	BB94	05EBD2	short-TX (sub_34966/sub_34538)	0349E8 sets BB94=1; gated FF89BB!=0	one-shot short keyup (FF89BB flag); FF89BB set by sub_2AA0(main loop) and sub_103C0(mode entry). No voice payload: 12,1A,TXON,hold 2s,18 STOP,9E,TXOFF	FF89BB!=0
+019962	B0C9.b7	05B19A	sub_19954	0191A8(sub_19158 settings apply), 073B58(node)	edit own callsign / DG-ID (sub_19954 writes FF8D26 block) -> resend 0x16 header to DSP	B0C9.b7
+05B208	B0AF/B0AE	05B1F8	sub_5B208	056D44(sub_56D16), 06973A(sub_696CA)	edit the DG-ID / radio-ID list (ID list editor) -> push 15 01 / 15 11 lists to DSP	B0AE.b7; needs B0DC>=0x041E
+req_12	B0AA.b7	n/a (single frame)	sub_5B210	~20 UI settings routines 0x019C5A..0x06CE60	any digital setting/mode change re-sends 0x12 mode frame	B0AA.b7 or BBF9.b7
+req_12	B0AC.b7	n/a (single frame)	sub_5B254	sub_492D4/sub_49400 (squelch/monitor)	squelch/monitor change re-sends 0x12	B0AC.b7
+req_1A	B0CE.b7	n/a (single frame)	sub_5B28C	sub_492D4(0492EC/04930A), sub_49400(049412)	MONI / mute -> 1A RX ENABLE/DISABLE to DSP	B0CE.b7
+req_32	B0CE.b3	n/a (single frame)	sub_5B2D8	sub_17822(01782E, only FF8DDE==0), sub_17990, sub_49344(049376)	AMS / digital-mode setup change -> resend 0x32	B0CE.b3

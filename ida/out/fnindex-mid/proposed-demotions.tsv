@@ -1,0 +1,36 @@
+# L3 proposals only - no mask, seed or DB was edited. Each range is final4-proven (final4_proven_mask.bin) and named; demotion = clear from proven mask (I12 convention: named unchanged; DATA-MISTYPED ranges should be retyped as data). byte_sum = sum of the image bytes in the range.
+start	end_excl	len	class	proven_bytes	named_bytes	byte_sum	sha256_16	note
+033790	0337A4	20	SPLIT-TAIL	20	20	2174	6842fc231560f22f	tail of routine 033780 (6e 0c 00 19 mov.b @(0x19,er0),r4l ... beq 0x337A2 at 03378E)
+0337AC	0337C0	20	SPLIT-TAIL	20	20	2117	a8206068441d5f4c	tail of block 0337A4 (6a 0c bc 8d ac 3f 47 12) whose only inbound edge is 033786 beq .+28 inside the dead routine 033780
+0337C8	0337DC	20	SPLIT-TAIL	20	20	2002	0dff10dfd7e62491	tail of routine 0337C0 (6a 0c bc 8d ac 3c 47 12)
+033B70	033B76	6	DATA-MISTYPED	6	6	293	20ca9dfd303e89c6	FF-terminated byte list 03 06 0d 10 ff (+pad 00): 033B4A 7a 05 00 03 3b 70 mov.l #0x33B70,er5 -> jsr 0x3F768 which scans
+03400E	034012	4	DATA-MISTYPED	4	4	163	fdea10912ad939b4	4-B lookup table 27 29 2a 29: 034004 7a 05 00 03 40 0e mov.l #0x3400E,er5
+03531E	03532E	16	DATA-MISTYPED	16	16	268	e8863ff9c541e98c	4 packed-BCD band bases 05000000 13700000 22200000 42000000 (50/137/222/420 MHz, 10-Hz units): loaded as mov.l #0x3531E/
+035422	035432	16	DATA-MISTYPED	16	16	1279	bccb0c55378b1dd1	byte tables read by mov.b @(0x35422/26/2A/2E:32,er2),r5h at 0353D0/035374/0353A2/035344 (78 20 6a 25 00 03 54 2x)
+03799E	0379E8	74	DATA-MISTYPED	74	74	2952	682ac014b3eaed9e	inside range table 0x037988 {u16 stride 8, u16 count 0x11, 17 x (lo,hi) packed-BCD dwords 14050000..46260000}
+037A02	037A14	18	DATA-MISTYPED	18	18	567	c837227b9692ccee	last records of table 0x037988 (45340000 45380000 45900000 46260000)
+03A9A2	03A9F6	84	DEAD	84	84	6895	660df13e15e23ef3	self-contained routine (stm
+03C668	03C99C	820	DEAD	820	820	27548	eadb217243340102	J14 64-B I2C page writer: 01 00 6d f0 6a 0a 81 6e 79 06 00 40 5c 00 fd 00 ... rts 03C99A
+03CDBE	03CDEA	44	DEAD	44	44	3682	c1aa065df2dc3252	two EEPROM-record wrappers 03CDBE/03CDD8 (bsr 0x3CE42
+03CDFC	03CE22	38	DEAD	38	38	2952	26bc9b5bd96f6e6f	03CDFC (14 B) 0 refs
+03D36E	03D37E	16	DEAD	16	16	1374	989ddd8c994a9e88	EEPROM-record wrapper (bsr 0x3D38E
+03D3A6	03D40E	104	DEAD	104	104	9125	bd551d1ae234abdb	three EEPROM-record wrappers 03D3A6/03D3E6/03D3FE (verify-and-rewrite FFAA10 vs FFAC9A)
+03D436	03D472	60	DEAD	60	60	5802	cd5cf979ee0cad13	EEPROM-record verify/rewrite wrapper (FFAA1A vs FFAC9A, 9 words)
+03D61C	03D64E	50	DEAD	50	50	4102	aab648802902091d	read/write wrappers 03D61C/03D62C + param leaf 03D63C (EEPROM 0xFFFC -> FF8005, 1 B)
+03D68A	03D6B0	38	DEAD	38	38	2838	c1f6f7eb3e3e7b0b	EEPROM read 0x31 B from 0xD07E to FF8D9E
+03D70E	03D74A	60	DEAD	60	60	4962	22a183edb628dd95	EEPROM read/write 0x20 B at 0xD480 <-> FFB05A
+03DC48	03DC7A	50	DEAD	50	50	4703	2d1413c4e3b2524a	load + count of non-0xFF records at FF95FD (24 x 15 B)
+03DDCA	03DDFC	50	DEAD	50	50	4388	dfa441963027fe9e	read/write wrappers 03DDCA/03DDDA + param leaf 03DDEA (EEPROM 0x1FA80 <-> FFBADE, 16 B)
+03FFCA	03FFE0	22	DEAD	22	22	2149	ce13fb62051f443f	8-bit sum of 63 B at FF8EA0
+045D1E	045D88	106	SPLIT-TAIL	106	106	7413	3080985f0bd40125	tail of NMEA field parser 045D18 (68 1b ab 2c 47 6a = mov.b @er1,r3l
+045D8E	045D96	8	SPLIT-TAIL	8	8	677	a7f4d9ea8b73ca4b	exit block of the same routine (pop er6
+045F88	045FBA	50	DEAD	50	50	3982	50423bfa663f5aa4	NMEA field parser
+046210	0463E8	472	DEAD	472	472	34057	020bbdc1d2ca1d60	three NMEA field parsers 046210/046290/04633C (+ internal 046216/04629C/046348)
+046532	04658E	92	SPLIT-TAIL	92	92	7110	656f1c34e5992235	tail of multi-entry decimal-digit formatter 046482-046601 (entries 046482/04648A/0464F0/0464F8/046500/04658E/046596/0465
+0465AE	046602	84	SPLIT-TAIL	84	84	7438	d2bcea3c4b47557d	same unreferenced formatter
+048B84	048B86	2	DEAD	2	2	196	6217bfa64d21284c	orphan rts 54 70 after the 'LON ' string 048B80
+04A394	04A3E2	78	SPLIT-TAIL	78	78	6405	3d49b639e5466783	fall-through continuation of head 04A390 (6b 8c a5 58 mov.w e4,@0xA558) which follows rts 04A38E and has 0 inbound refs
+04C3C8	04C3D2	10	DATA-MISTYPED	10	10	554	d3a221b1ab5cee01	bytes 02 03 04 ff 05 06 07 08 09 ff, part of FF-separated byte list 04C3C7.. after the 17 x 9-B APRS device-name table 0
+total	-	2532	ALL	-	-	160167	-	DATA-MISTYPED=144 DEAD=1960 SPLIT-TAIL=428
+045D88	045D8E	6	ADJACENT	6	6	334	2f03ee13657fdc49	ADJACENT proven-unreached: 0b 01 fc 00 40 06 inside dead routine 045D18-045D95 (target of 045D1C beq only)
+0460C2	046130	110	ADJACENT	110	110	9744	edce65ba5b48d09d	ADJACENT proven-unreached: block of sub_45FBA skipped by 0460C0 bra 0x46130; holds the only calls to 045F88/046210/046290/04633C

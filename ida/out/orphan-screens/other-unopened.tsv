@@ -1,0 +1,40 @@
+screen_id	notifier_0x782C	dial_0x12268	exit_0x19A9E	exit_saves_parsed	key_table	correction_saves_eeprom	what_the_code_shows
+0x08	04892 (rts)	-	-	-	127B0	no	rts notifier, all-3FFA0 key table: empty slot
+0x19	04EE2 (rts)	3FFA0	19444	-	12A14	no	exit 0x19444 only clears FFAA30 b6; no save; empty
+0x21	04892 (rts)	3FFA0	19474	R1 n=0x6 x16 @1947E; R1 n=0x9E @19486	12BAC	yes	16-char text editor (key slot 0 0x1AA46 edits FF8926 x16 via 0x1A94C); exit saves FF8926 x16 + R1 n=0x9E; rts notifier
+0x23	04892 (rts)	3FFA0	1948A	R1 n=0x79 x7 @19494; R1 n=0xA1 @194A2; R1 n=0xA0 @194AA	12BF0	yes	exit saves FF8999 x7, FF89C1, R1 n=0xA0; key slots 2/8/13 = rts stub 0x160EE; rts notifier
+0x24	04892 (rts)	3FFA0	194AE	R1 n=0x81 @194B8; R1 n=0x82 @194C6; R1 n=0xA0 @194CE	12C34	yes	exit saves FF89A1, FF89A2, R1 n=0xA0; key slots = rts stub 0x160EE; rts notifier
+0x25	0505A (rts)	3FFA0	193DA	-	12C78	no	rts notifier; key table 0x12C78 shared with 0x42/0x45; no save
+0x2F	04892 (rts)	3FFA0	193DA	-	12948	no	empty slot
+0x31	04892 (rts)	3FFA0	193DA	-	12DCC	no	empty slot (navigation-only key table)
+0x38	5E95C	5E84C	19A3E	R3 n=0xB7 x5 @19A48	12948	yes	DP-ID LIST edit variant: notifier 0x5E95C sends F364 with FF8DD7; dial rec 0x5E7D2 {0,1,FF8DD7}; exit saves R3 FF8DD7 x5 (live DP-ID LIST is 0x39, direct entry 0x1CEC8)
+0x3A	04892 (rts)	3FFA0	193DA	-	12948	no	empty slot
+0x3B	04892 (rts)	3FFA0	193DA	-	12E54	no	empty slot
+0x3C	04892 (rts)	3FFA0	193DA	-	12948	no	empty slot
+0x3D	04892 (rts)	3FFA0	193DA	-	12E98	no	empty slot
+0x42	05362	3FFA0	193DA	-	12C78	no	notifier 0x5362 -> 0xA0B6 sends F387 (+0x28/+0x1E words) via 0x7C20; SUB labels it HOME VFO (fallback, G3); no save
+0x46	04892 (rts)	3FFA0	193DA	-	12EDC	no	empty slot
+0x47	04892 (rts)	3FFA0	193DA	-	12948	no	empty slot
+0x48	04892 (rts)	3FFA0	193DA	-	12F20	no	empty slot
+0x50	0548A (rts)	3FFA0	1956E	R1 n=0x6A x2 @19578; R1 n=0xA1 @19580	12FEC	yes	exit saves FF898A x2 + R1 n=0xA1; key slots 4/6 0x19F8A (record editors 0x1A1AA..), slot 13 rts 0x1693C; rts notifier
+0x53	05586 (rts)	3FFA0	19584	R1 n=0x48 x4 @1958E; R1 n=0xA3 @19596	13074	yes	PAGER clone: key table 0x13074 = PAGER 0x52's; exit 0x19584 saves FF8968 x4 + R1 n=0xA3; notifier rts
+0x54	05586 (rts)	3FFA0	19584	R1 n=0x48 x4 @1958E; R1 n=0xA3 @19596	13074	yes	PAGER clone (as 0x53)
+0x69	05786 (rts)	16E86	193DA	-	12948	no	dial rec 0x16E9E {0,2,FF8EAD} then sub_24D42 if previous screen = 0x0B; FF8EAD is a live band-mode byte (13 readers); no save; only ref to id is the inert cmp #0x69 at 0x14EEC (doc 32)
+0x74	04892 (rts)	3FFA0	193DA	-	132D8	no	navigation key table, slot 8 0x1A0AC; empty
+0x75	04892 (rts)	3FFA0	193DA	-	1331C	no	navigation key table, slot 8 0x1A0B4; empty
+0x79	058F2 (rts)	3FFA0	196A0	R1 n=0x6C x2 @196AA	133A4	yes	memory editor: key slots 4/6 0x173EC, slot 13 0x17400 writes word FF898C; exit 0x196A0 saves FF898C x2; rts notifier
+0x7E	04892 (rts)	3FFA0	193DA	-	12948	no	empty slot
+0x83	44B36 (rts)	3FFA0	193DA	-	134B4	no	notifier 0x44B36 rts; key slot 4 0x44AC8 bnot #7,@FF8ABE + save 0x19858 (R2 FF8ABE block); slot 13 0x44AEA; no own save
+0x86	6FD0C	3FFA0	193DA	-	1353C	no	BACKUP sub-screen dispatcher: notifier 0x6FD0C reads FFADA1 (doc 49 Open 1); all 17 key slots 0x6FD56; no save
+0x8A	04892 (rts)	3FFA0	193DA	-	1364C	no	empty slot
+0xAA	05ADA (rts)	3FFA0	19882	R2 n=0x182 x3 @1988C	138B0	yes	exit saves R2 FF8C22 x3; key slots 3/7 list nav, slot 13 0x178AC (table 0x178CA); rts notifier
+0xAD	06408 (rts)	3FFA0	198AC	-	13B9C	no	key slots 0/1/4/6/13 = 0x18D12/0x19060/0x18C46/0x18CBA (text editors on FFADDE/FF8CFC); exit rts
+0xAF	06436 (rts)	3FFA0	19702	R2 n=0x25A x12 @19722	13C24	yes	key slots edit FF8CFC/FFADDE (0x18F4E, 0x18D74, 0x50D7E, 0x50B0A); exit 0x19702 (if FFAA30 b6) saves R2 FF8CFA x12; rts notifier
+0xB0	5E922 (rts)	3FFA0	198DC	R3 n=0x0 x2 @198E6; R3 n=0x6A @198EE; R3 n=0xB2 @198F6	13C68	yes	exit 0x198DC saves R3 FF8D20 x2, R3 n=0x6A, R3 n=0xB2; key slot 13 0x5E576 list editor; rts notifier
+0xB6	04892 (rts)	3FFA0	193DA	-	12948	no	empty slot
+0xBA	04892 (rts)	3FFA0	193DA	-	13E00	no	empty slot
+0xD8	04892 (rts)	3FFA0	193DA	-	14284	no	all-3FFA0 key table, exit rts (pop dispatch maps 0xD8..0xDB specially at 0x1916A)
+0xD9	04892 (rts)	3FFA0	193DA	-	142C8	no	key slot 14 = pop 0x3FF3A only
+0xDA	04892 (rts)	3FFA0	193DA	-	1430C	no	key slot 14 = pop 0x3FF3A only
+0xED	06942	-	-	-	14708	no	CORRECTION: opened. Pushed at 0x103DE after mov.b #0xED,r3l at 0x103EE (power-on handler 0x103E6, H9-reached). Notifier 0x6942 = mov.b #1,r3l; jsr 0x85DA (screen 0xEC uses r3l=0). Key slots: 0x0DC40 x16 (sets SP=0xFF7F00, writes 0x20 to FF8000; Inferred restart), slot 7 0x103F2 (zero-fills FF8970-FF8A1B, defaults 0xE58A, saves R1/R2/R3, then 0xDC32)
+0xEE	5E9E2	-	-	-	14790	no	CORRECTION: opened. Pushed at 0x103DE after mov.b #0xEE,r3l at 0x103D4 (power-on handler 0x103C0, H9-reached). Notifier 0x5E9E2 sends F008 via 0x8532 with two bytes chosen from [FFB0C4] (thresholds 5 and 7) and [FF813A]; key slot 3 0x5DCD8

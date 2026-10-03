@@ -1,0 +1,63 @@
+### imm 8C022
+FFEDC9AD  fb ee 22 c0 08                        mov.l   #8C022h, r14  | sub_FFEDC976@FFEDC976
+FFF36F7B  fb ee 22 c0 08                        mov.l   #8C022h, r14  | sub_FFF36F03@FFF36F03
+FFF396B9  fb ee 22 c0 08                        mov.l   #8C022h, r14  | sub_FFF3969B@FFF3969B
+FFF396F8  fb ee 22 c0 08                        mov.l   #8C022h, r14  | sub_FFF396E5@FFF396E5
+FFF39E11  fb ee 22 c0 08                        mov.l   #8C022h, r14  | sub_FFF39D6B@FFF39D6B
+FFF3B12E  fb ee 22 c0 08                        mov.l   #8C022h, r14  | sub_FFF3B115@FFF3B115
+FFF3B136  fb ee 22 c0 08                        mov.l   #8C022h, r14  | sub_FFF3B115@FFF3B115
+
+### imm 8C002
+FFF36F83  fb ee 02 c0 08                        mov.l   #8C002h, r14  | sub_FFF36F03@FFF36F03
+FFF36F8A  fb ee 02 c0 08                        mov.l   #8C002h, r14  | sub_FFF36F03@FFF36F03
+FFF36F91  fb ee 02 c0 08                        mov.l   #8C002h, r14  | sub_FFF36F03@FFF36F03
+FFF36F98  fb ee 02 c0 08                        mov.l   #8C002h, r14  | sub_FFF36F03@FFF36F03
+FFF36F9F  fb ee 02 c0 08                        mov.l   #8C002h, r14  | sub_FFF36F03@FFF36F03
+FFF36FA6  fb ee 02 c0 08                        mov.l   #8C002h, r14  | sub_FFF36F03@FFF36F03
+FFF36FAD  fb ee 02 c0 08                        mov.l   #8C002h, r14  | sub_FFF36F03@FFF36F03
+FFF36FB4  fb ee 02 c0 08                        mov.l   #8C002h, r14  | sub_FFF36F03@FFF36F03
+FFF373DA  fb ee 02 c0 08                        mov.l   #8C002h, r14  | sub_FFF36F03@FFF36F03
+
+### dis FFF3B0E0-FFF3B150 
+FFF3B0E0  34                                    add     #34h, sp, sp ; '4'
+FFF3B0E1  3c 03 00                              mov.b   #0, 8+var_5[sp]
+FFF3B0E4  2e 18                                 bra.b   loc_FFF3B0FC
+FFF3B0E6  b0 89                                 movu.b  8+var_5[sp], r1
+FFF3B0E8  a8 0a                                 mov.l   8+var_4[sp], r2
+FFF3B0EA  fe c2 1e                              movu.b  [r2, r1], r14
+FFF3B0ED  fb f2 4b 05 01 00                     mov.l   #1054Bh, r15
+FFF3B0F3  fe 0f 1e                              mov.b   r14, [r15, r1]
+FFF3B0F6  b0 89                                 movu.b  8+var_5[sp], r1
+FFF3B0F8  62 11                                 add     #1, r1
+FFF3B0FA  80 89                                 mov.b   r1, 8+var_5[sp]
+FFF3B0FC  b0 89                                 movu.b  8+var_5[sp], r1
+FFF3B0FE  61 c1                                 cmp     #0Ch, r1
+FFF3B100  29 e6                                 blt.b   loc_FFF3B0E6
+FFF3B102  fb e2 4a 05 01 00                     mov.l   #1054Ah, r14
+FFF3B108  f8 e4 0a                              mov.b   #0Ah, [r14]
+FFF3B10B  66 52                                 mov.l   #5, r2
+FFF3B10D  66 31                                 mov.l   #3, r1
+FFF3B10F  39 c9 ed                              bsr.w   sub_FFF39ED8
+FFF3B112  3f 6a 07                              rtsd    #1Ch, r6-r10
+FFF3B115  60 40                                 sub     #4, sp
+FFF3B117  71 01 02                              add     #4+var_2, sp, r1
+FFF3B11A  05 c5 a8 fd                           bsr.a   sub_FFF159DF
+FFF3B11E  fb 12 2c 25 01 00                     mov.l   #1252Ch, r1
+FFF3B124  b8 91                                 movu.w  4[r1], r1
+FFF3B126  6c 41                                 shll    #4, r1
+FFF3B128  b8 0a                                 movu.w  4+var_2[sp], r2
+FFF3B12A  47 12                                 cmp     r1, r2
+FFF3B12C  29 0a                                 blt.b   loc_FFF3B136
+FFF3B12E  fb ee 22 c0 08                        mov.l   #8C022h, r14
+FFF3B133  f0 e4                                 bset    #4, [r14].b
+FFF3B135  08                                    bra.s   loc_FFF3B13D
+FFF3B136  fb ee 22 c0 08                        mov.l   #8C022h, r14
+FFF3B13B  f0 ec                                 bclr    #4, [r14].b
+FFF3B13D  fb e2 c4 2c 01 00                     mov.l   #12CC4h, r14
+FFF3B143  5c ee                                 movu.w  [r14], r14
+FFF3B145  61 1e                                 cmp     #1, r14
+FFF3B147  20 35                                 beq.b   loc_FFF3B17C
+FFF3B149  61 4e                                 cmp     #4, r14
+FFF3B14B  20 60                                 beq.b   loc_FFF3B1AB
+FFF3B14D  61 2e                                 cmp     #2, r14
+FFF3B14F  3b a6 00                              bne.w   loc_FFF3B1F5

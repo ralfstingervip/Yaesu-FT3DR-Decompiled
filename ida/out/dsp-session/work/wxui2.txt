@@ -1,0 +1,139 @@
+008a00  2e                       .byte 0x2E ; .                               
+008a01  20                       .byte 0x20                                   
+008a02  56                       .byte 0x56 ; V                               
+008a03  20                       .byte 0x20                                   
+008a04  20                       .byte 0x20                                   
+008a05  56                       .byte 0x56 ; V                               
+008a06  6f                       .byte 0x6F ; o                               
+008a07  6c                       .byte 0x6C ; l                               
+008a08  74                       .byte 0x74 ; t                               
+008a09  20                       .byte 0x20                                   
+008a0a  20                       .byte 0x20                                   
+008a0b  44                       .byte 0x44 ; D                               
+008a0c  72                       .byte 0x72 ; r                               
+008a0d  79                       .byte 0x79 ; y                               
+008a0e  20                       .byte 0x20                                   
+008a0f  20                       .byte 0x20                                   
+008a10  2e                       .byte 0x2E ; .                               
+008a11  20                       .byte 0x20                                   
+008a12  56                       .byte 0x56 ; V                               
+008a13  20                       .byte 0x20                                   
+
+;---- func 0x8a14..0x8a70
+008a14  79 04 00 a4              mov.w   #0xA4, r4                            <- 88ea
+008a18  6b a4 00 ff 3d 72        mov.w   r4, @0xFF3D72:32                     
+008a1e  79 04 f1 14              mov.w   #0xF114, r4                          
+008a22  6b a4 00 ff 3d 74        mov.w   r4, @0xFF3D74:32                     
+008a28  79 04 00 9a              mov.w   #0x9A, r4                            
+008a2c  6b a4 00 ff 3d 76        mov.w   r4, @0xFF3D76:32                     
+008a32  5e 00 7c 20              jsr     sub_7C20:24                          
+008a36  5e 00 7e 7a              jsr     sub_7E7A:24                          
+008a3a  5e 00 89 6c              jsr     sub_896C:24                          
+008a3e  55 54                    bsr     sub_8A94:8                           
+008a40  fb 04                    mov.b   #4, r3l                              
+008a42  6a 10 8d e0 73 70        btst    #7, @0xFFFF8DE0:16                   
+008a48  46 12                    bne     loc_8A5C:8                           
+008a4a  fb 05                    mov.b   #5, r3l                              
+008a4c  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  
+008a50  4a 0a                    bpl     loc_8A5C:8                           
+008a52  6a 0c b2 a5              mov.b   @0xFFFFB2A5:16, r4l                  
+008a56  ac 02                    cmp.b   #2, r4l                              
+008a58  47 02                    beq     loc_8A5C:8                           
+008a5a  fb 07                    mov.b   #7, r3l                              
+008a5c  7a 06 00 ff 3e 02        mov.l   #0xFF3E02, er6                       <- 8a48,8a50,8a58
+008a62  68 eb                    mov.b   r3l, @er6                            
+008a64  7a 06 00 ff 3e 03        mov.l   #0xFF3E03, er6                       
+008a6a  5e 00 86 a0              jsr     loc_86A0:24                          
+008a6e  54 70                    rts                                          
+008a70  00                       .byte    0                                   
+008a71  00                       .byte    0                                   
+008a72  57                       .byte 0x57 ; W                               
+008a73  49                       .byte 0x49 ; I                               
+008a74  52                       .byte 0x52 ; R                               
+008a75  45                       .byte 0x45 ; E                               
+008a76  53                       .byte 0x53 ; S                               
+008a77  2d                       .byte 0x2D ; -                               
+008a78  58                       .byte 0x58 ; X                               
+008a79  20                       .byte 0x20                                   
+008a7a  50                       .byte 0x50 ; P                               
+008a7b  44                       .byte 0x44 ; D                               
+008a7c  4e                       .byte 0x4E ; N                               
+008a7d  20                       .byte 0x20                                   
+008a7e  20                       .byte 0x20                                   
+008a7f  20                       .byte 0x20                                   
+008a80  20                       .byte 0x20                                   
+008a81  20                       .byte 0x20                                   
+008a82  00                       .byte    0                                   
+008a83  00                       .byte    0                                   
+008a84  57                       .byte 0x57 ; W                               
+008a85  49                       .byte 0x49 ; I                               
+008a86  52                       .byte 0x52 ; R                               
+008a87  45                       .byte 0x45 ; E                               
+008a88  53                       .byte 0x53 ; S                               
+008a89  2d                       .byte 0x2D ; -                               
+008a8a  58                       .byte 0x58 ; X                               
+008a8b  20                       .byte 0x20                                   
+008a8c  4e                       .byte 0x4E ; N                               
+008a8d  4f                       .byte 0x4F ; O                               
+008a8e  44                       .byte 0x44 ; D                               
+008a8f  45                       .byte 0x45 ; E                               
+008a90  20                       .byte 0x20                                   
+008a91  20                       .byte 0x20                                   
+008a92  20                       .byte 0x20                                   
+008a93  20                       .byte 0x20                                   
+
+;---- func 0x8a94..0x8b7c
+008a94  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  <- 8a3e
+008a98  4a 26                    bpl     loc_8AC0:8                           
+008a9a  7a 05 00 00 8a 70        mov.l   #0x8A70, er5                         
+008aa0  6a 10 b3 d5 73 60        btst    #6, @0xFFFFB3D5:16                   
+008aa6  58 70 00 be              beq     loc_8B68:16                          
+008aaa  6a 0c b3 df              mov.b   @0xFFFFB3DF:16, r4l                  
+008aae  ac 06                    cmp.b   #6, r4l                              
+008ab0  45 72                    bcs     loc_8B24:8                           
+008ab2  ac 09                    cmp.b   #9, r4l                              
+008ab4  58 50 00 b0              bcs     loc_8B68:16                          
+008ab8  ac 0d                    cmp.b   #0xD, r4l                            
+008aba  58 40 00 aa              bcc     loc_8B68:16                          
+008abe  40 64                    bra     loc_8B24:8                           
+008ac0  fd 00                    mov.b   #0, r5l                              <- 8a98
+008ac2  6a 10 8d e0 73 70        btst    #7, @0xFFFF8DE0:16                   
+008ac8  47 42                    beq     loc_8B0C:8                           
+008aca  6a 10 b3 d5 73 60        btst    #6, @0xFFFFB3D5:16                   
+008ad0  47 12                    beq     loc_8AE4:8                           
+008ad2  6a 0c b3 df              mov.b   @0xFFFFB3DF:16, r4l                  
+008ad6  ac 05                    cmp.b   #5, r4l                              
+008ad8  47 4a                    beq     loc_8B24:8                           
+008ada  ac 03                    cmp.b   #3, r4l                              
+008adc  47 46                    beq     loc_8B24:8                           
+008ade  ac 04                    cmp.b   #4, r4l                              
+008ae0  47 42                    beq     loc_8B24:8                           
+008ae2  40 52                    bra     loc_8B36:8                           
+008ae4  79 04 00 12              mov.w   #0x12, r4                            <- 8ad0
+008ae8  7a 05 00 00 8a 82        mov.l   #0x8A82, er5                         
+008aee  7a 06 00 ff b0 5a        mov.l   #0xFFB05A, er6                       
+008af4  7b d4 59 8f              eepmov.w                                     <- 8afa
+008af8  0d 44                    mov.w   r4, r4                               
+008afa  46 f8                    bne     loc_8AF4:8                           
+008afc  6a 10 8d e0 73 60        btst    #6, @0xFFFF8DE0:16                   
+008b02  47 5e                    beq     loc_8B62:8                           
+008b04  fc 2a                    mov.b   #0x2A, r4l ; '*'                     
+008b06  6a 8c b0 69              mov.b   r4l, @0xFFFFB069:16                  
+008b0a  40 56                    bra     loc_8B62:8                           
+008b0c  6a 10 b3 d5 73 60        btst    #6, @0xFFFFB3D5:16                   <- 8ac8
+008b12  47 12                    beq     loc_8B26:8                           
+008b14  6a 0c b3 df              mov.b   @0xFFFFB3DF:16, r4l                  
+008b18  ac 06                    cmp.b   #6, r4l                              
+008b1a  45 08                    bcs     loc_8B24:8                           
+008b1c  ac 09                    cmp.b   #9, r4l                              
+008b1e  45 06                    bcs     loc_8B26:8                           
+008b20  ac 0d                    cmp.b   #0xD, r4l                            
+008b22  44 02                    bcc     loc_8B26:8                           
+008b24  0c cd                    mov.b   r4l, r5l                             <- 8ab0,8abe,8ad8,8adc,8ae0,8b1a
+008b26  f5 00                    mov.b   #0, r5h                              <- 8b12,8b1e,8b22
+008b28  79 04 00 12              mov.w   #0x12, r4                            
+008b2c  52 45                    mulxu.w r4, er5                              
+008b2e  7a 15 00 00 82 74        add.l   #0x8274, er5                         
+008b34  40 32                    bra     loc_8B68:8                           
+008b36  79 04 00 12              mov.w   #0x12, r4                            <- 8ae2
+008b3a  7a 05 00 00 83 04        mov.l   #0x8304, er5                         

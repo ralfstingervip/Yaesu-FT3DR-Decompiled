@@ -1,0 +1,34 @@
+055320 C fc 50                      mov.b   #0x50, r4l ; 'P'                       
+055322 C 40 06                      bra     loc_5532A:8                            
+055324 C fc 30                      mov.b   #0x30, r4l ; '0'                       <- 5531e
+055326 C 40 02                      bra     loc_5532A:8                            
+055328 C fc 18                      mov.b   #0x18, r4l                             <- 5531a
+05532a C 1d c4                      cmp.w   e4, r4                                 <- 55322,55326
+05532c C 47 3e                      beq     loc_5536C:8                            
+05532e C 6a 0c ee 27                mov.b   @0xFFFFEE27:16, r4l                    <- 5530c
+055332 C 73 5c                      btst    #5, r4l                                
+055334 C 46 36                      bne     loc_5536C:8                            
+055336 C 6a 0c 81 84                mov.b   @0xFFFF8184:16, r4l                    
+05533a C 6a 8c ee 18                mov.b   r4l, @0xFFFFEE18:16                    
+05533e C 6a 8c 81 85                mov.b   r4l, @0xFFFF8185:16                    
+055342 C 6a 04 89 ce                mov.b   @0xFFFF89CE:16, r4h                    
+055346 C 6a 84 ee 18                mov.b   r4h, @0xFFFFEE18:16                    
+05534a C 6a 0c 89 cd                mov.b   @0xFFFF89CD:16, r4l                    
+05534e C 47 0c                      beq     loc_5535C:8                            
+055350 C ac 01                      cmp.b   #1, r4l                                
+055352 C 47 04                      beq     loc_55358:8                            
+055354 C fc 50                      mov.b   #0x50, r4l ; 'P'                       
+055356 C 40 06                      bra     loc_5535E:8                            
+055358 C fc 30                      mov.b   #0x30, r4l ; '0'                       <- 55352
+05535a C 40 02                      bra     loc_5535E:8                            
+05535c C fc 18                      mov.b   #0x18, r4l                             <- 5534e
+05535e C 6a 8c ee 18                mov.b   r4l, @0xFFFFEE18:16                    <- 55356,5535a
+055362 C 6b 84 81 86                mov.w   r4, @0xFFFF8186:16                     
+055366 C fc 40                      mov.b   #0x40, r4l ; '@'                       
+055368 C 6a 8c ee 2c                mov.b   r4l, @0xFFFFEE2C:16                    
+05536c C 01 00 6b 04 81 52          mov.l   @0xFFFF8152:16, er4                    <- 5532c,55334
+055372 C 6b 06 81 58                mov.w   @0xFFFF8158:16, r6                     
+055376 C 1d 46                      cmp.w   r4, r6                                 
+055378 C 58 70 01 a0                beq     locret_5551C:16                        
+05537c C fe 08                      mov.b   #8, r6l                                
+05537e C 7a 05 00 ff 3d 6a          mov.l   #0xFF3D6A, er5                         

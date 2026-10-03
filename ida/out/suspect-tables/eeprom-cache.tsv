@@ -1,0 +1,13 @@
+role	address	bytes	detail
+bulk load (boot)	03DE20	01 30 6d f0 79 06 00 48 7a 00 00 01 a0 00 7a 01 00 ff 47 26 5e 03 bd ac 79 06 08 98 7a 00 00 01 a0 80 7a 01 00 ff 47 6e 5e 03 bd ac 01 30 6d 73	EEPROM 0x1A000 len 0x48 -> RAM 0xFF4726; EEPROM 0x1A080 len 0x898 -> RAM 0xFF476E; reader sub_3BDAC (I2C dev 0xA2/0xA3)
+caller of bulk load	00EF8C	5e 03 de 20	last call of sub_ED16 (settings load); sub_ED16 called from boot 0x00DD06 and from 0x0452BC (via 0x010594)
+bulk save	03DE52	01 30 6d f0 79 06 00 48 7a 00 00 01 a0 00 7a 01 00 ff 47 26 5e 03 bf 4c 79 06 08 98 7a 00 00 01 a0 80 7a 01 00 ff 47 6e 5e 03 bf 4c 01 30 6d 73	same two ranges written back with sub_3BF4C (I2C write)
+caller of bulk save	00E56E	79 06 00 48 7a 05 00 ff 47 26 fb 00 68 db 0b 05 1b 56 46 f8 79 06 08 98 7a 05 00 ff 47 6e fb 00 68 db 0b 05 1b 56 46 f8 5e 03 de 52	reset-to-defaults sub_DEFA: zero 0xFF4726[0x48] and 0xFF476E[0x898], then save (EEPROM markers invalid path 0x00DCD4)
+slot write-through	03DE96	01 30 6d f0 7a 00 00 01 a0 80 7a 01 00 ff 47 6e	er0=0x1A080+2n, er1=0xFF476E+2n (n = 16-bit r3); compares with 0xFF8ED6/D7 (or D8/D9 if 0xFF817E b0); if different: 0x03DEFE mov.w r4,@er1 then 2-byte EEPROM write
+slot read	03DF1C	01 30 6d f0 7a 00 00 01 a0 80 7a 01 00 ff 47 6e	loads slot n word into 0xFF8ED6/D7 (or 0xFF8ED8/D9)
+header word write/read	03DE84 / 03DF0A	01 30 6d f0 7a 00 00 01 a0 00 7a 01 00 ff 47 26	EEPROM 0x1A000+2*r3l <-> 0xFF4726 (header block, 0x48 B)
+band arrays write/read	03DEA8 / 03DF2E	01 30 6d f0 6e 0b 00 03 7a 00 00 01 a0 18 7a 01	EEPROM 0x1A018 / 0x1A030 (+2*band) <-> 0xFF473E / 0xFF4756
+channel save path	03A832	5e 03 de 96	jsr 0x3DE96 after the 32-byte channel record write (sub_3AD20)
+channel load path	03A5C2 / 03A604	5e 03 df 1c	jsr 0x3DF1C next to the 32-byte channel record read (sub_3AB80, EEPROM 0x2E80+0x20*n)
+value range	05E6CA / 05E6DA	6a 0c 8e d6 ac 64	each byte of the working word clamped to < 100 (cmp.b #0x64); Inferred: per-channel pair of 0..99 values, consistent with DG-ID TX/RX
+I2C device bytes	03C3AC / 03BE1C	fd a2 / fd a3	bank 1 (EEPROM 0x10000-0x1FFFF): 0xA2 write, 0xA3 read; bank 0 uses 0xA0 (0x03B180) / 0xA1 (0x03ABF0); address bytes r0h, r0l

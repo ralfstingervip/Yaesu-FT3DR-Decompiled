@@ -1,0 +1,2237 @@
+Lane K4 call chains, MAIN ver 1.02 (h8sxa, base 0: file offset = address). Disassembly from IDA DB K4_AUTOREPLY
+(seed J1_MAIN_FINAL3), job ida\jobs\k4_dump.py. Columns: address, first <=10 bytes, IDA disassembly.
+
+=== C1. 0x17 arm site sub_6D052 (PDN-mode WIRES-X request; bypasses PTT state machine)
+06D052  6a 18 aa d4 72 00               bclr    #0, @0xFFFFAAD4:16
+06D058  5e 05 a2 8a                     jsr     sub_5A28A:24
+06D05C  46 4c                           bne     loc_6D0AA:8
+06D05E  6a 0c aa e0                     mov.b   @0xFFFFAAE0:16, r4l
+06D062  6a 8c b3 12                     mov.b   r4l, @0xFFFFB312:16
+06D066  6a 18 aa d4 70 00               bset    #0, @0xFFFFAAD4:16
+06D06C  fc 00                           mov.b   #0, r4l
+06D06E  6a 8c b1 32                     mov.b   r4l, @0xFFFFB132:16
+06D072  6a 18 b0 bb 70 00               bset    #0, @0xFFFFB0BB:16
+06D078  6a 18 b0 bb 72 10               bclr    #1, @0xFFFFB0BB:16
+06D07E  6a 18 b3 d9 70 70               bset    #7, @0xFFFFB3D9:16
+06D084  6a 18 b3 d9 72 60               bclr    #6, @0xFFFFB3D9:16
+06D08A  fc 17                           mov.b   #0x17, r4l
+06D08C  6a 8c b0 b7                     mov.b   r4l, @0xFFFFB0B7:16
+06D090  6a 8c b0 be                     mov.b   r4l, @0xFFFFB0BE:16
+06D094  fc 02                           mov.b   #2, r4l
+06D096  6a 8c b0 c6                     mov.b   r4l, @0xFFFFB0C6:16
+06D09A  fc 00                           mov.b   #0, r4l
+06D09C  6a 8c b1 11                     mov.b   r4l, @0xFFFFB111:16
+06D0A0  6a 8c b1 13                     mov.b   r4l, @0xFFFFB113:16
+06D0A4  5e 03 09 f2                     jsr     sub_309F2:24
+06D0A8  40 04                           bra     loc_6D0AE:8
+06D0AA  5e 03 ff a0                     jsr     sub_3FFA0:24
+06D0AE  6a 10 aa d4 73 00               btst    #0, @0xFFFFAAD4:16
+06D0B4  54 70                           rts
+
+=== C2. Six WIRES-X request builders: FF8DDE<0 (PDN) -> sub_6D052 (0x17); else AAD4.b0 + sub_22FEE TX request + sub_631C4 (example sub_62DA4, ']q')
+062DA4  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+062DA8  4a 10                           bpl     loc_62DBA:8
+062DAA  6a 0c b3 e4                     mov.b   @0xFFFFB3E4:16, r4l
+062DAE  ac 04                           cmp.b   #4, r4l
+062DB0  46 60                           bne     locret_62E12:8
+062DB2  5e 06 d0 52                     jsr     sub_6D052:24
+062DB6  47 54                           beq     loc_62E0C:8
+062DB8  40 26                           bra     loc_62DE0:8
+062DBA  6a 18 aa d4 72 00               bclr    #0, @0xFFFFAAD4:16
+062DC0  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+062DC4  ac 01                           cmp.b   #1, r4l
+062DC6  58 70 00 42                     beq     loc_62E0C:16
+062DCA  5e 02 2f 78                     jsr     sub_22F78:24
+062DCE  58 70 00 3a                     beq     loc_62E0C:16
+062DD2  5e 02 2f ee                     jsr     sub_22FEE:24
+062DD6  58 60 00 32                     bne     loc_62E0C:16
+062DDA  6a 18 aa d4 70 00               bset    #0, @0xFFFFAAD4:16
+062DE0  fc 01                           mov.b   #1, r4l
+062DE2  6a 8c b1 2f                     mov.b   r4l, @0xFFFFB12F:16
+062DE6  fc 12                           mov.b   #0x12, r4l
+062DE8  6a 8c b0 b9                     mov.b   r4l, @0xFFFFB0B9:16
+062DEC  fc 0a                           mov.b   #0xA, r4l
+062DEE  f4 00                           mov.b   #0, r4h
+062DF0  7a 05 00 00 4c 14               mov.l   #0x4C14, er5
+062DF6  7a 06 00 ff 0c 3d               mov.l   #0xFF0C3D, er6
+062DFC  7b d4 59 8f                     eepmov.w
+062E00  0d 44                           mov.w   r4, r4
+062E02  46 f8                           bne     loc_62DFC:8
+062E04  fc ff                           mov.b   #0xFF, r4l
+062E06  68 ec                           mov.b   r4l, @er6
+062E08  5e 06 31 c4                     jsr     sub_631C4:24
+062E0C  6a 10 aa d4 73 00               btst    #0, @0xFFFFAAD4:16
+062E12  54 70                           rts
+
+=== C3. sub_631C4: common tail (AAD4.b7 only if FF8997!=0; data pointer B1D0=FF0C3D)
+0631C4  6a 0c 89 97                     mov.b   @0xFFFF8997:16, r4l
+0631C8  ac 00                           cmp.b   #0, r4l
+0631CA  47 0e                           beq     loc_631DA:8
+0631CC  6a 18 aa d4 70 70               bset    #7, @0xFFFFAAD4:16
+0631D2  6a 0c b3 12                     mov.b   @0xFFFFB312:16, r4l
+0631D6  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+0631DA  fc 00                           mov.b   #0, r4l
+0631DC  6a 8c b1 2e                     mov.b   r4l, @0xFFFFB12E:16
+0631E0  6a 0c b3 ea                     mov.b   @0xFFFFB3EA:16, r4l
+0631E4  6a 8c b2 73                     mov.b   r4l, @0xFFFFB273:16
+0631E8  fc 00                           mov.b   #0, r4l
+0631EA  6a 8c b2 74                     mov.b   r4l, @0xFFFFB274:16
+0631EE  6a 8c b2 87                     mov.b   r4l, @0xFFFFB287:16
+0631F2  5e 05 ca f0                     jsr     sub_5CAF0:24
+0631F6  0f e5                           mov.l   er6, er5
+0631F8  7a 35 00 ff 02 06               sub.l   #0xFF0206, er5
+0631FE  6a 8d b1 c3                     mov.b   r5l, @0xFFFFB1C3:16
+063202  7a 04 00 ff 0c 3d               mov.l   #0xFF0C3D, er4
+063208  01 00 6b 84 b1 d0               mov.l   er4, @0xFFFFB1D0:16
+06320E  fc 78                           mov.b   #0x78, r4l ; 'x'
+063210  6a 8c 95 99                     mov.b   r4l, @0xFFFF9599:16
+063214  54 70                           rts
+
+=== C4. sub_22F78 send precheck (digital band, DSP link B0A4.b2, own callsign FF8D26, channel busy -> A520)
+022F78  6a 10 8e a0 73 60               btst    #6, @0xFFFF8EA0:16
+022F7E  47 06                           beq     loc_22F86:8
+022F80  6a 0c 8d d5                     mov.b   @0xFFFF8DD5:16, r4l
+022F84  40 04                           bra     loc_22F8A:8
+022F86  6a 0c 8d 20                     mov.b   @0xFFFF8D20:16, r4l
+022F8A  47 58                           beq     loc_22FE4:8
+022F8C  6a 10 b0 a4 73 20               btst    #2, @0xFFFFB0A4:16
+022F92  47 50                           beq     loc_22FE4:8
+022F94  6a 0c 8d 26                     mov.b   @0xFFFF8D26:16, r4l
+022F98  4b 4a                           bmi     loc_22FE4:8
+022F9A  6a 10 8e a0 73 60               btst    #6, @0xFFFF8EA0:16
+022FA0  47 18                           beq     loc_22FBA:8
+022FA2  6a 0c 90 72                     mov.b   @0xFFFF9072:16, r4l
+022FA6  46 3c                           bne     loc_22FE4:8
+022FA8  6a 0c 90 7b                     mov.b   @0xFFFF907B:16, r4l
+022FAC  ac 03                           cmp.b   #3, r4l
+022FAE  45 20                           bcs     loc_22FD0:8
+022FB0  6a 0c 90 78                     mov.b   @0xFFFF9078:16, r4l
+022FB4  ac 02                           cmp.b   #2, r4l
+022FB6  46 22                           bne     loc_22FDA:8
+022FB8  40 16                           bra     loc_22FD0:8
+022FBA  6a 0c 8f 6a                     mov.b   @0xFFFF8F6A:16, r4l
+022FBE  46 24                           bne     loc_22FE4:8
+022FC0  6a 0c 8f 73                     mov.b   @0xFFFF8F73:16, r4l
+022FC4  ac 03                           cmp.b   #3, r4l
+022FC6  45 08                           bcs     loc_22FD0:8
+022FC8  6a 0c 8f 70                     mov.b   @0xFFFF8F70:16, r4l
+022FCC  ac 02                           cmp.b   #2, r4l
+022FCE  46 0a                           bne     loc_22FDA:8
+022FD0  fc 00                           mov.b   #0, r4l
+022FD2  6a 8c a5 20                     mov.b   r4l, @0xFFFFA520:16
+022FD6  fc 01                           mov.b   #1, r4l
+022FD8  40 12                           bra     locret_22FEC:8
+022FDA  fc 01                           mov.b   #1, r4l
+022FDC  6a 8c a5 20                     mov.b   r4l, @0xFFFFA520:16
+022FE0  fc 00                           mov.b   #0, r4l
+022FE2  40 08                           bra     locret_22FEC:8
+022FE4  fc 02                           mov.b   #2, r4l
+022FE6  6a 8c a5 20                     mov.b   r4l, @0xFFFFA520:16
+022FEA  fc 00                           mov.b   #0, r4l
+022FEC  54 70                           rts
+
+=== C5. sub_22FEE -> sub_2244C software TX request
+022FEE  6a 18 8e a0 72 30               bclr    #3, @0xFFFF8EA0:16
+022FF4  6a 0c aa e0                     mov.b   @0xFFFFAAE0:16, r4l
+022FF8  6a 8c b3 12                     mov.b   r4l, @0xFFFFB312:16
+022FFC  40 20                           bra     loc_2301E:8
+022FFE  6a 10 8e a0 73 60               btst    #6, @0xFFFF8EA0:16
+023004  47 18                           beq     loc_2301E:8
+023006  5e 02 10 d8                     jsr     sub_210D8:24
+02300A  5e 02 24 4c                     jsr     sub_2244C:24
+02300E  46 08                           bne     loc_23018:8
+023010  6a 18 8e a0 70 30               bset    #3, @0xFFFF8EA0:16
+023016  40 0a                           bra     loc_23022:8
+023018  5e 02 12 66                     jsr     sub_21266:24
+02301C  40 04                           bra     loc_23022:8
+02301E  5e 02 24 4c                     jsr     sub_2244C:24
+023022  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+023026  ac 02                           cmp.b   #2, r4l
+023028  46 06                           bne     loc_23030:8
+02302A  fc 00                           mov.b   #0, r4l
+02302C  6a 8c 94 c0                     mov.b   r4l, @0xFFFF94C0:16
+023030  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+023034  ac 01                           cmp.b   #1, r4l
+023036  54 70                           rts
+
+=== C6. sub_2244C = PTT-key handler (key tables 0x0110D4..0x014564): sets AACF=1, FF94C0=1
+02244C  6a 10 8e a0 73 60               btst    #6, @0xFFFF8EA0:16
+022452  47 06                           beq     loc_2245A:8
+022454  6a 0c 8d d5                     mov.b   @0xFFFF8DD5:16, r4l
+022458  40 04                           bra     loc_2245E:8
+02245A  6a 0c 8d 20                     mov.b   @0xFFFF8D20:16, r4l
+02245E  47 20                           beq     loc_22480:8
+022460  ac 01                           cmp.b   #1, r4l
+022462  47 16                           beq     loc_2247A:8
+022464  6a 10 8e a0 73 60               btst    #6, @0xFFFF8EA0:16
+02246A  47 06                           beq     loc_22472:8
+02246C  6a 0c 8e c5                     mov.b   @0xFFFF8EC5:16, r4l
+022470  40 04                           bra     loc_22476:8
+022472  6a 0c 8e b6                     mov.b   @0xFFFF8EB6:16, r4l
+022476  ac 04                           cmp.b   #4, r4l
+022478  44 04                           bcc     loc_2247E:8
+02247A  fc 01                           mov.b   #1, r4l
+02247C  40 02                           bra     loc_22480:8
+02247E  fc 00                           mov.b   #0, r4l
+022480  47 0a                           beq     loc_2248C:8
+022482  6a 10 b0 a4 73 20               btst    #2, @0xFFFFB0A4:16
+022488  58 70 00 c8                     beq     loc_22554:16
+02248C  6a 18 aa 39 72 20               bclr    #2, @0xFFFFAA39:16
+022492  5e 02 25 62                     jsr     sub_22562:24
+022496  58 60 00 c0                     bne     loc_2255A:16
+02249A  6a 10 89 bf 73 40               btst    #4, @0xFFFF89BF:16
+0224A0  47 0a                           beq     loc_224AC:8
+0224A2  6e 0c 00 90                     mov.b   @(0x90:16,er0), r4l
+0224A6  ac 02                           cmp.b   #2, r4l
+0224A8  58 60 00 a8                     bne     loc_22554:16
+0224AC  6a 0c 8e a6                     mov.b   @0xFFFF8EA6:16, r4l
+0224B0  47 52                           beq     loc_22504:8
+0224B2  4b 50                           bmi     loc_22504:8
+0224B4  73 1c                           btst    #1, r4l
+0224B6  46 0e                           bne     loc_224C6:8
+0224B8  6a 10 8e a0 73 60               btst    #6, @0xFFFF8EA0:16
+0224BE  46 44                           bne     loc_22504:8
+0224C0  58 00 00 8a                     bra     loc_2254E:16
+0224C4  40 3e                           bra     loc_22504:8
+0224C6  01 00 6b 05 81 2a               mov.l   @0xFFFF812A:16, er5
+0224CC  6e 5c 00 01                     mov.b   @(1:16,er5), r4l
+0224D0  5e 02 ea f2                     jsr     sub_2EAF2:24
+0224D4  47 2e                           beq     loc_22504:8
+0224D6  6a 18 8e a6 70 70               bset    #7, @0xFFFF8EA6:16
+0224DC  01 00 6b 00 81 2a               mov.l   @0xFFFF812A:16, er0
+0224E2  5e 03 2f a2                     jsr     sub_32FA2:24
+0224E6  6a 0c 89 92                     mov.b   @0xFFFF8992:16, r4l
+0224EA  ac 0a                           cmp.b   #0xA, r4l
+0224EC  46 12                           bne     loc_22500:8
+0224EE  5e 03 4d c2                     jsr     sub_34DC2:24
+0224F2  46 06                           bne     loc_224FA:8
+0224F4  5e 03 2f f4                     jsr     sub_32FF4:24
+0224F8  40 10                           bra     loc_2250A:8
+0224FA  5e 03 31 36                     jsr     sub_33136:24
+0224FE  40 4e                           bra     loc_2254E:8
+022500  5e 03 31 36                     jsr     sub_33136:24
+022504  5e 03 4d c2                     jsr     sub_34DC2:24
+022508  46 44                           bne     loc_2254E:8
+02250A  55 6e                           bsr     sub_2257A:8
+02250C  6a 18 aa d2 72 50               bclr    #5, @0xFFFFAAD2:16
+022512  6a 0c aa d1                     mov.b   @0xFFFFAAD1:16, r4l
+022516  ec 8a                           and.b   #0x8A, r4l
+022518  6a 8c aa d1                     mov.b   r4l, @0xFFFFAAD1:16
+02251C  6a 18 aa 34 72 10               bclr    #1, @0xFFFFAA34:16
+022522  fc ff                           mov.b   #0xFF, r4l
+022524  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+022528  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+02252E  01 00 6b 04 aa ae               mov.l   @0xFFFFAAAE:16, er4
+022534  01 00 6b 84 aa aa               mov.l   er4, @0xFFFFAAAA:16
+02253A  fc 01                           mov.b   #1, r4l
+02253C  6a 8c aa cf                     mov.b   r4l, @0xFFFFAACF:16
+022540  fc 01                           mov.b   #1, r4l
+022542  6a 8c 94 c0                     mov.b   r4l, @0xFFFF94C0:16
+022546  fc 00                           mov.b   #0, r4l
+022548  6a 8c aa b8                     mov.b   r4l, @0xFFFFAAB8:16
+02254C  40 0c                           bra     loc_2255A:8
+02254E  fc 02                           mov.b   #2, r4l
+022550  6a 8c 94 c0                     mov.b   r4l, @0xFFFF94C0:16
+022554  fc 1d                           mov.b   #0x1D, r4l
+022556  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+02255A  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+02255E  ac 01                           cmp.b   #1, r4l
+022560  54 70                           rts
+
+=== C7. TX state machine entry (AACF event, AAD4.b7 -> state 0x0D)
+034538  6a 0c 95 51                     mov.b   @0xFFFF9551:16, r4l
+03453C  46 1e                           bne     loc_3455C:8
+03453E  fc 08                           mov.b   #8, r4l
+034540  6a 8c 95 51                     mov.b   r4l, @0xFFFF9551:16
+034544  fc 01                           mov.b   #1, r4l
+034546  3c a0                           mov.b   r4l, @0xA0:8
+034548  7f a0 70 50                     bset    #5, @0xA0:8
+03454C  7e a0 73 50                     btst    #5, @0xA0:8
+034550  46 fa                           bne     loc_3454C:8
+034552  7f a0 72 70                     bclr    #7, @0xA0:8
+034556  2c 92                           mov.b   @0x92:8, r4l
+034558  6a 8c a9 96                     mov.b   r4l, @0xFFFFA996:16
+03455C  fc 00                           mov.b   #0, r4l
+03455E  6a 8c aa d7                     mov.b   r4l, @0xFFFFAAD7:16
+034562  6a 0a aa cf                     mov.b   @0xFFFFAACF:16, r2l
+034566  58 70 00 cc                     beq     loc_34636:16
+03456A  aa 04                           cmp.b   #4, r2l
+03456C  47 6a                           beq     loc_345D8:8
+03456E  aa 07                           cmp.b   #7, r2l
+034570  47 74                           beq     loc_345E6:8
+034572  aa 08                           cmp.b   #8, r2l
+034574  58 70 00 84                     beq     loc_345FC:16
+034578  6a 10 aa d3 73 20               btst    #2, @0xFFFFAAD3:16
+03457E  46 3c                           bne     loc_345BC:8
+034580  6a 10 aa d3 73 00               btst    #0, @0xFFFFAAD3:16
+034586  46 22                           bne     loc_345AA:8
+034588  6a 10 aa d4 73 70               btst    #7, @0xFFFFAAD4:16
+03458E  47 10                           beq     loc_345A0:8
+034590  6a 18 aa d4 72 70               bclr    #7, @0xFFFFAAD4:16
+034596  fc 0d                           mov.b   #0xD, r4l
+034598  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+03459C  58 00 00 96                     bra     loc_34636:16
+0345A0  fc 00                           mov.b   #0, r4l
+0345A2  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+0345A6  58 00 00 8c                     bra     loc_34636:16
+0345AA  6a 0c 8a a0                     mov.b   @0xFFFF8AA0:16, r4l
+0345AE  ac 01                           cmp.b   #1, r4l
+0345B0  46 00                           bne     loc_345B2:8
+0345B2  6a 0c 8c 52                     mov.b   @0xFFFF8C52:16, r4l
+0345B6  47 e8                           beq     loc_345A0:8
+0345B8  fc 4d                           mov.b   #0x4D, r4l ; 'M'
+0345BA  40 10                           bra     loc_345CC:8
+0345BC  6a 0c 8a a0                     mov.b   @0xFFFF8AA0:16, r4l
+0345C0  ac 01                           cmp.b   #1, r4l
+0345C2  46 00                           bne     loc_345C4:8
+0345C4  6a 0c 8c 53                     mov.b   @0xFFFF8C53:16, r4l
+0345C8  47 d6                           beq     loc_345A0:8
+0345CA  fc 4e                           mov.b   #0x4E, r4l ; 'N'
+0345CC  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+0345D0  fc 0d                           mov.b   #0xD, r4l
+0345D2  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+0345D6  40 5e                           bra     loc_34636:8
+0345D8  6a 0c aa d5                     mov.b   @0xFFFFAAD5:16, r4l
+0345DC  ac 02                           cmp.b   #2, r4l
+0345DE  45 56                           bcs     loc_34636:8
+0345E0  5e 03 4b 44                     jsr     sub_34B44:24
+0345E4  40 50                           bra     loc_34636:8
+0345E6  6a 0c aa d5                     mov.b   @0xFFFFAAD5:16, r4l
+0345EA  ac 02                           cmp.b   #2, r4l
+0345EC  44 06                           bcc     loc_345F4:8
+0345EE  5e 03 4f f4                     jsr     sub_34FF4:24
+0345F2  40 58                           bra     loc_3464C:8
+0345F4  fc 05                           mov.b   #5, r4l
+0345F6  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+0345FA  40 3a                           bra     loc_34636:8
+0345FC  6a 0c aa d5                     mov.b   @0xFFFFAAD5:16, r4l
+034600  ac 02                           cmp.b   #2, r4l
+034602  44 06                           bcc     loc_3460A:8
+034604  5e 03 4f f4                     jsr     sub_34FF4:24
+034608  40 42                           bra     loc_3464C:8
+03460A  ac 13                           cmp.b   #0x13, r4l
+03460C  47 28                           beq     loc_34636:8
+03460E  6a 10 aa d4 73 00               btst    #0, @0xFFFFAAD4:16
+034614  46 20                           bne     loc_34636:8
+034616  6a 18 b0 bb 72 00               bclr    #0, @0xFFFFB0BB:16
+03461C  6a 18 b0 bb 70 10               bset    #1, @0xFFFFB0BB:16
+034622  6a 0c aa d5                     mov.b   @0xFFFFAAD5:16, r4l
+034626  ac 14                           cmp.b   #0x14, r4l
+034628  47 da                           beq     loc_34604:8
+03462A  fc 11                           mov.b   #0x11, r4l
+03462C  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+034630  fc 64                           mov.b   #0x64, r4l ; 'd'
+034632  6a 8c 95 53                     mov.b   r4l, @0xFFFF9553:16
+034636  6a 0b aa d5                     mov.b   @0xFFFFAAD5:16, r3l
+03463A  7a 63 00 00 00 ff               and.l   #0xFF, er3
+034640  10 73                           shll.l  #2, er3
+034642  78 b0 6b 26 00 03 46 74         mov.l   @(off_34674:32,er3), er6
+03464A  5d 60                           jsr     @er6
+03464C  fc 00                           mov.b   #0, r4l
+03464E  6a 8c aa cf                     mov.b   r4l, @0xFFFFAACF:16
+
+=== C8. TX states 0/0x0D/0x0E -> sub_34782 -> AAD5=1
+0346C8  55 3c                           bsr     sub_34706:8
+0346CA  fc 0e                           mov.b   #0xE, r4l
+0346CC  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+0346D0  54 70                           rts
+0346D2  6a 0c aa e8                     mov.b   @0xFFFFAAE8:16, r4l
+0346D6  46 04                           bne     locret_346DC:8
+0346D8  5e 03 47 82                     jsr     sub_34782:24
+0346DC  54 70                           rts
+0346DE  6a 0c aa d5                     mov.b   @0xFFFFAAD5:16, r4l
+0346E2  ac 0e                           cmp.b   #0xE, r4l
+0346E4  46 0e                           bne     loc_346F4:8
+0346E6  fc ff                           mov.b   #0xFF, r4l
+0346E8  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+0346EC  fc 0f                           mov.b   #0xF, r4l
+0346EE  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+0346F2  40 04                           bra     locret_346F8:8
+0346F4  5e 03 ff a0                     jsr     sub_3FFA0:24
+0346F8  54 70                           rts
+0346FA  0c aa                           mov.b   r2l, r2l
+0346FC  47 06                           beq     locret_34704:8
+0346FE  55 06                           bsr     sub_34706:8
+034700  5e 03 47 82                     jsr     sub_34782:24
+034704  54 70                           rts
+034706  5e 02 f5 50                     jsr     sub_2F550:24
+03470A  5e 03 0f 00                     jsr     sub_30F00:24
+03470E  5e 03 30 f0                     jsr     sub_330F0:24
+034712  6a 18 aa d1 72 10               bclr    #1, @0xFFFFAAD1:16
+034718  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+03471C  4a 08                           bpl     loc_34726:8
+03471E  6a 10 b3 d6 73 20               btst    #2, @0xFFFFB3D6:16
+034724  46 04                           bne     loc_3472A:8
+034726  5e 03 0a 0c                     jsr     sub_30A0C:24
+03472A  fc 02                           mov.b   #2, r4l
+03472C  6a 8c b0 c6                     mov.b   r4l, @0xFFFFB0C6:16
+034730  fc 00                           mov.b   #0, r4l
+034732  6a 8c b1 11                     mov.b   r4l, @0xFFFFB111:16
+034736  6a 8c b1 13                     mov.b   r4l, @0xFFFFB113:16
+03473A  6a 18 b0 bb 72 00               bclr    #0, @0xFFFFB0BB:16
+034740  6a 18 b0 bb 72 10               bclr    #1, @0xFFFFB0BB:16
+034746  5e 03 90 80                     jsr     loc_39080:24
+03474A  fc 00                           mov.b   #0, r4l
+03474C  6a 8c a9 a8                     mov.b   r4l, @0xFFFFA9A8:16
+034750  6a 8c aa da                     mov.b   r4l, @0xFFFFAADA:16
+034754  6a 8c 95 51                     mov.b   r4l, @0xFFFF9551:16
+034758  6a 8c 8f 64                     mov.b   r4l, @0xFFFF8F64:16
+03475C  6a 8c 90 6c                     mov.b   r4l, @0xFFFF906C:16
+034760  6a 8c 91 74                     mov.b   r4l, @0xFFFF9174:16
+034764  fc 00                           mov.b   #0, r4l
+034766  6a 8c 8f 73                     mov.b   r4l, @0xFFFF8F73:16
+03476A  6a 8c 90 7b                     mov.b   r4l, @0xFFFF907B:16
+03476E  fc ff                           mov.b   #0xFF, r4l
+034770  6a 8c aa d8                     mov.b   r4l, @0xFFFFAAD8:16
+034774  fc 00                           mov.b   #0, r4l
+034776  6a 8c aa d9                     mov.b   r4l, @0xFFFFAAD9:16
+03477A  fc 00                           mov.b   #0, r4l
+03477C  6a 8c 95 5c                     mov.b   r4l, @0xFFFF955C:16
+034780  54 70                           rts
+034782  fc 00                           mov.b   #0, r4l
+034784  6a 8c bb 95                     mov.b   r4l, @0xFFFFBB95:16
+034788  01 00 6b 05 aa aa               mov.l   @0xFFFFAAAA:16, er5
+03478E  7a 06 00 ff 92 ce               mov.l   #0xFF92CE, er6
+034794  5e 03 f5 ee                     jsr     sub_3F5EE:24
+034798  44 24                           bcc     loc_347BE:8
+03479A  01 00 6b 05 aa aa               mov.l   @0xFFFFAAAA:16, er5
+0347A0  7a 06 00 ff 92 d6               mov.l   #0xFF92D6, er6
+0347A6  5e 03 f5 ee                     jsr     sub_3F5EE:24
+0347AA  45 62                           bcs     loc_3480E:8
+0347AC  6a 18 81 76 72 00               bclr    #0, @0xFFFF8176:16
+0347B2  5e 03 7a 3a                     jsr     sub_37A3A:24
+0347B6  7a 06 00 03 51 40               mov.l   #unk_35140, er6
+0347BC  40 10                           bra     loc_347CE:8
+0347BE  6a 18 81 76 70 00               bset    #0, @0xFFFF8176:16
+0347C4  5e 03 7a 3a                     jsr     sub_37A3A:24
+0347C8  7a 06 00 03 51 0a               mov.l   #unk_3510A, er6
+0347CE  01 00 6b 05 aa aa               mov.l   @0xFFFFAAAA:16, er5
+0347D4  5e 03 f5 b2                     jsr     sub_3F5B2:24
+0347D8  6a 8b aa d0                     mov.b   r3l, @0xFFFFAAD0:16
+0347DC  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+0347E0  4a 10                           bpl     loc_347F2:8
+0347E2  6a 10 8d e0 73 70               btst    #7, @0xFFFF8DE0:16
+0347E8  46 2c                           bne     loc_34816:8
+0347EA  6a 10 b3 d9 73 20               btst    #2, @0xFFFFB3D9:16
+0347F0  46 24                           bne     loc_34816:8
+0347F2  55 44                           bsr     sub_34838:8
+0347F4  55 76                           bsr     sub_3486C:8
+0347F6  fc 04                           mov.b   #4, r4l
+0347F8  6a 8c 95 68                     mov.b   r4l, @0xFFFF9568:16
+0347FC  6e 0c 00 8f                     mov.b   @(0x8F:16,er0), r4l
+034800  72 3c                           bclr    #3, r4l
+034802  6e 8c 00 8f                     mov.b   r4l, @(0x8F:16,er0)
+034806  fc 01                           mov.b   #1, r4l
+034808  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+03480C  40 06                           bra     locret_34814:8
+03480E  fc 03                           mov.b   #3, r4l
+034810  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+034814  54 70                           rts
+034816  6a 18 fb a5 70 60               bset    #6, @0xFFFFFBA5:16
+03481C  5e 03 5e 3c                     jsr     sub_35E3C:24
+034820  fc 04                           mov.b   #4, r4l
+034822  6a 8c 95 68                     mov.b   r4l, @0xFFFF9568:16
+034826  6e 0c 00 8f                     mov.b   @(0x8F:16,er0), r4l
+03482A  72 3c                           bclr    #3, r4l
+03482C  6e 8c 00 8f                     mov.b   r4l, @(0x8F:16,er0)
+034830  fc 01                           mov.b   #1, r4l
+034832  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+034836  54 70                           rts
+
+=== C9. TX state 1 sub_34966 (0xFFFF4D b3 check, PDN skip)
+034966  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+03496A  4a 10                           bpl     loc_3497C:8
+03496C  6a 10 8d e0 73 70               btst    #7, @0xFFFF8DE0:16
+034972  46 18                           bne     loc_3498C:8
+034974  6a 10 b3 d9 73 20               btst    #2, @0xFFFFB3D9:16
+03497A  46 10                           bne     loc_3498C:8
+03497C  6a 0c 95 6d                     mov.b   @0xFFFF956D:16, r4l
+034980  58 60 00 f6                     bne     locret_34A7A:16
+034984  7e 4d 73 30                     btst    #3, @0x4D:8
+034988  58 60 00 e4                     bne     loc_34A70:16
+03498C  6a 10 aa d3 73 20               btst    #2, @0xFFFFAAD3:16
+034992  46 6c                           bne     loc_34A00:8
+034994  6a 10 aa d3 73 00               btst    #0, @0xFFFFAAD3:16
+03499A  46 64                           bne     loc_34A00:8
+03499C  6a 10 8e a0 73 60               btst    #6, @0xFFFF8EA0:16
+0349A2  47 06                           beq     loc_349AA:8
+0349A4  6a 0c 8d d5                     mov.b   @0xFFFF8DD5:16, r4l
+0349A8  40 04                           bra     loc_349AE:8
+0349AA  6a 0c 8d 20                     mov.b   @0xFFFF8D20:16, r4l
+0349AE  47 20                           beq     loc_349D0:8
+0349B0  ac 01                           cmp.b   #1, r4l
+0349B2  47 16                           beq     loc_349CA:8
+0349B4  6a 10 8e a0 73 60               btst    #6, @0xFFFF8EA0:16
+0349BA  47 06                           beq     loc_349C2:8
+0349BC  6a 0c 8e c5                     mov.b   @0xFFFF8EC5:16, r4l
+0349C0  40 04                           bra     loc_349C6:8
+0349C2  6a 0c 8e b6                     mov.b   @0xFFFF8EB6:16, r4l
+0349C6  ac 04                           cmp.b   #4, r4l
+0349C8  44 04                           bcc     loc_349CE:8
+0349CA  fc 01                           mov.b   #1, r4l
+0349CC  40 02                           bra     loc_349D0:8
+0349CE  fc 00                           mov.b   #0, r4l
+0349D0  58 60 00 96                     bne     loc_34A6A:16
+0349D4  6a 0c 89 bb                     mov.b   @0xFFFF89BB:16, r4l
+0349D8  47 26                           beq     loc_34A00:8
+0349DA  fc 03                           mov.b   #3, r4l
+0349DC  6a 8c bb 95                     mov.b   r4l, @0xFFFFBB95:16
+0349E0  6a 18 b0 bb 70 00               bset    #0, @0xFFFFB0BB:16
+0349E6  fc 01                           mov.b   #1, r4l
+0349E8  6a 8c bb 94                     mov.b   r4l, @0xFFFFBB94:16
+0349EC  fc 00                           mov.b   #0, r4l
+0349EE  6a 8c b0 ac                     mov.b   r4l, @0xFFFFB0AC:16
+0349F2  fc 00                           mov.b   #0, r4l
+0349F4  6a 8c b0 bd                     mov.b   r4l, @0xFFFFB0BD:16
+0349F8  6a 8c b0 be                     mov.b   r4l, @0xFFFFB0BE:16
+0349FC  6a 8c b0 bf                     mov.b   r4l, @0xFFFFB0BF:16
+034A00  5e 03 4a 7c                     jsr     sub_34A7C:24
+034A04  5e 03 4b 30                     jsr     loc_34B30:24
+034A08  6a 18 aa 30 70 20               bset    #2, @0xFFFFAA30:16
+034A0E  6a 18 aa d1 72 70               bclr    #7, @0xFFFFAAD1:16
+034A14  5e 03 4b 44                     jsr     sub_34B44:24
+034A18  fc 02                           mov.b   #2, r4l
+034A1A  6a 8c aa d5                     mov.b   r4l, @0xFFFFAAD5:16
+034A1E  6a 10 aa d3 73 20               btst    #2, @0xFFFFAAD3:16
+034A24  46 3c                           bne     loc_34A62:8
+034A26  6a 10 aa d3 73 00               btst    #0, @0xFFFFAAD3:16
+034A2C  46 2c                           bne     loc_34A5A:8
+034A2E  6a 10 aa d1 73 20               btst    #2, @0xFFFFAAD1:16
+034A34  46 16                           bne     loc_34A4C:8
+034A36  6a 10 aa 36 73 30               btst    #3, @0xFFFFAA36:16
+034A3C  46 06                           bne     loc_34A44:8
+034A3E  5e 03 4c 34                     jsr     sub_34C34:24
+034A42  40 36                           bra     locret_34A7A:8
+034A44  fc 1f                           mov.b   #0x1F, r4l
+034A46  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+034A4A  40 2e                           bra     locret_34A7A:8
+034A4C  6a 18 aa d1 72 20               bclr    #2, @0xFFFFAAD1:16
+034A52  6a 18 aa 30 70 40               bset    #4, @0xFFFFAA30:16
+034A58  40 20                           bra     locret_34A7A:8
+034A5A  6a 18 a4 f0 70 60               bset    #6, @0xFFFFA4F0:16
+034A60  40 18                           bra     locret_34A7A:8
+034A62  6a 18 a4 f0 70 70               bset    #7, @0xFFFFA4F0:16
+034A68  40 10                           bra     locret_34A7A:8
+034A6A  5e 03 58 72                     jsr     sub_35872:24
+034A6E  40 0a                           bra     locret_34A7A:8
+034A70  6a 0c 95 68                     mov.b   @0xFFFF9568:16, r4l
+034A74  46 04                           bne     locret_34A7A:8
+034A76  5e 03 4f f4                     jsr     sub_34FF4:24
+034A7A  54 70                           rts
+
+=== C10. GM engine sub_6802A (activation, periodic beacon, letter dispatch, ACK sender call)
+06802A  6a 0c aa 2c                     mov.b   @0xFFFFAA2C:16, r4l
+06802E  ac 02                           cmp.b   #2, r4l
+068030  47 18                           beq     loc_6804A:8
+068032  ac 06                           cmp.b   #6, r4l
+068034  46 26                           bne     loc_6805C:8
+068036  6a 0c 95 60                     mov.b   @0xFFFF9560:16, r4l
+06803A  46 20                           bne     loc_6805C:8
+06803C  fc 07                           mov.b   #7, r4l
+06803E  6a 8c aa 2c                     mov.b   r4l, @0xFFFFAA2C:16
+068042  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+068048  40 12                           bra     loc_6805C:8
+06804A  6a 0c 95 60                     mov.b   @0xFFFF9560:16, r4l
+06804E  46 0c                           bne     loc_6805C:8
+068050  fc 03                           mov.b   #3, r4l
+068052  6a 8c aa 2c                     mov.b   r4l, @0xFFFFAA2C:16
+068056  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+06805C  6a 2c 00 ff 47 05               mov.b   @0xFF4705:32, r4l
+068062  ac 01                           cmp.b   #1, r4l
+068064  46 5c                           bne     loc_680C2:8
+068066  6a 0c b3 f3                     mov.b   @0xFFFFB3F3:16, r4l
+06806A  ac 01                           cmp.b   #1, r4l
+06806C  46 54                           bne     loc_680C2:8
+06806E  6a 2c 00 ff 47 15               mov.b   @0xFF4715:32, r4l
+068074  ac 01                           cmp.b   #1, r4l
+068076  46 4a                           bne     loc_680C2:8
+068078  5e 05 6d 7a                     jsr     sub_56D7A:24
+06807C  47 44                           beq     loc_680C2:8
+06807E  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+068084  79 04 00 10                     mov.w   #0x10, r4
+068088  7a 05 00 ff 47 06               mov.l   #0xFF4706, er5
+06808E  7a 06 00 ff 46 f6               mov.l   #0xFF46F6, er6
+068094  7b d4 59 8f                     eepmov.w
+068098  0d 44                           mov.w   r4, r4
+06809A  46 f8                           bne     loc_68094:8
+06809C  6a 0c b3 f4                     mov.b   @0xFFFFB3F4:16, r4l
+0680A0  6a 8c aa 2d                     mov.b   r4l, @0xFFFFAA2D:16
+0680A4  fc 04                           mov.b   #4, r4l
+0680A6  6a 8c b3 f3                     mov.b   r4l, @0xFFFFB3F3:16
+0680AA  79 04 00 10                     mov.w   #0x10, r4
+0680AE  7a 05 00 ff 46 f6               mov.l   #0xFF46F6, er5
+0680B4  7a 06 00 ff 47 16               mov.l   #0xFF4716, er6
+0680BA  7b d4 59 8f                     eepmov.w
+0680BE  0d 44                           mov.w   r4, r4
+0680C0  46 f8                           bne     loc_680BA:8
+0680C2  6a 10 bc 0b 73 70               btst    #7, @0xFFFFBC0B:16
+0680C8  58 60 00 58                     bne     locret_68124:16
+0680CC  6a 0a b3 f8                     mov.b   @0xFFFFB3F8:16, r2l
+0680D0  47 0a                           beq     loc_680DC:8
+0680D2  fc 00                           mov.b   #0, r4l
+0680D4  6a 8c b3 f8                     mov.b   r4l, @0xFFFFB3F8:16
+0680D8  6a 8c b3 f9                     mov.b   r4l, @0xFFFFB3F9:16
+0680DC  6a 2c 00 ff b3 f9               mov.b   @0xFFB3F9:32, r4l
+0680E2  46 42                           bne     loc_68126:8
+0680E4  0c aa                           mov.b   r2l, r2l
+0680E6  47 3c                           beq     locret_68124:8
+0680E8  aa 03                           cmp.b   #3, r2l
+0680EA  47 38                           beq     locret_68124:8
+0680EC  aa 02                           cmp.b   #2, r2l
+0680EE  47 1c                           beq     loc_6810C:8
+0680F0  fc 00                           mov.b   #0, r4l
+0680F2  6a 8c b4 16                     mov.b   r4l, @0xFFFFB416:16
+0680F6  fc 00                           mov.b   #0, r4l
+0680F8  6a 8c b4 17                     mov.b   r4l, @0xFFFFB417:16
+0680FC  79 04 00 64                     mov.w   #0x64, r4 ; 'd'
+068100  6b 84 95 be                     mov.w   r4, @0xFFFF95BE:16
+068104  fc 01                           mov.b   #1, r4l
+068106  6a 8c b3 f9                     mov.b   r4l, @0xFFFFB3F9:16
+06810A  40 18                           bra     locret_68124:8
+06810C  6b 04 95 be                     mov.w   @0xFFFF95BE:16, r4
+068110  79 24 00 c8                     cmp.w   #0xC8, r4
+068114  44 08                           bcc     loc_6811E:8
+068116  79 14 01 90                     add.w   #0x190, r4
+06811A  6b 84 95 be                     mov.w   r4, @0xFFFF95BE:16
+06811E  fc 01                           mov.b   #1, r4l
+068120  6a 8c b3 f9                     mov.b   r4l, @0xFFFFB3F9:16
+068124  54 70                           rts
+068126  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+06812A  ac 01                           cmp.b   #1, r4l
+06812C  58 70 01 10                     beq     locret_68240:16
+068130  6a 0c b3 fa                     mov.b   @0xFFFFB3FA:16, r4l
+068134  47 5a                           beq     loc_68190:8
+068136  f4 00                           mov.b   #0, r4h
+068138  6a 84 b3 fa                     mov.b   r4h, @0xFFFFB3FA:16
+06813C  ac 63                           cmp.b   #0x63, r4l ; 'c'
+06813E  47 46                           beq     loc_68186:8
+068140  ac 64                           cmp.b   #0x64, r4l ; 'd'
+068142  47 42                           beq     loc_68186:8
+068144  ac 65                           cmp.b   #0x65, r4l ; 'e'
+068146  47 38                           beq     loc_68180:8
+068148  ac 66                           cmp.b   #0x66, r4l ; 'f'
+06814A  47 34                           beq     loc_68180:8
+06814C  ac 69                           cmp.b   #0x69, r4l ; 'i'
+06814E  47 2a                           beq     loc_6817A:8
+068150  ac 30                           cmp.b   #0x30, r4l ; '0'
+068152  47 20                           beq     loc_68174:8
+068154  ac 72                           cmp.b   #0x72, r4l ; 'r'
+068156  47 16                           beq     loc_6816E:8
+068158  ac 52                           cmp.b   #0x52, r4l ; 'R'
+06815A  47 0c                           beq     loc_68168:8
+06815C  ac 73                           cmp.b   #0x73, r4l ; 's'
+06815E  47 02                           beq     loc_68162:8
+068160  40 2e                           bra     loc_68190:8
+068162  5e 06 95 e2                     jsr     nullsub_13:24
+068166  40 28                           bra     loc_68190:8
+068168  5e 06 95 e2                     jsr     nullsub_13:24
+06816C  40 22                           bra     loc_68190:8
+06816E  5e 06 95 e2                     jsr     nullsub_13:24
+068172  40 1c                           bra     loc_68190:8
+068174  5e 06 8d c0                     jsr     sub_68DC0:24
+068178  40 16                           bra     loc_68190:8
+06817A  5e 06 86 72                     jsr     sub_68672:24
+06817E  40 10                           bra     loc_68190:8
+068180  5e 06 84 68                     jsr     sub_68468:24
+068184  40 0a                           bra     loc_68190:8
+068186  6a 18 b4 20 72 20               bclr    #2, @0xFFFFB420:16
+06818C  5e 06 87 6e                     jsr     sub_6876E:24
+068190  6a 0c b3 ea                     mov.b   @0xFFFFB3EA:16, r4l
+068194  ac 07                           cmp.b   #7, r4l
+068196  47 04                           beq     loc_6819C:8
+068198  ac 13                           cmp.b   #0x13, r4l
+06819A  45 1a                           bcs     loc_681B6:8
+06819C  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+0681A0  ac 01                           cmp.b   #1, r4l
+0681A2  58 70 00 9a                     beq     locret_68240:16
+0681A6  6a 0c b2 67                     mov.b   @0xFFFFB267:16, r4l
+0681AA  47 0a                           beq     loc_681B6:8
+0681AC  f4 00                           mov.b   #0, r4h
+0681AE  6a 84 b2 67                     mov.b   r4h, @0xFFFFB267:16
+0681B2  5e 06 8e 9a                     jsr     sub_68E9A:24
+0681B6  6a 0c b3 fc                     mov.b   @0xFFFFB3FC:16, r4l
+0681BA  47 10                           beq     loc_681CC:8
+0681BC  fc 00                           mov.b   #0, r4l
+0681BE  6a 8c b3 fc                     mov.b   r4l, @0xFFFFB3FC:16
+0681C2  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+0681C8  5e 06 8a da                     jsr     sub_68ADA:24
+0681CC  5e 06 33 04                     jsr     sub_63304:24
+0681D0  6b 04 95 be                     mov.w   @0xFFFF95BE:16, r4
+0681D4  46 62                           bne     loc_68238:8
+0681D6  6a 10 ae 90 73 00               btst    #0, @0xFFFFAE90:16
+0681DC  46 5a                           bne     loc_68238:8
+0681DE  6a 10 ad 69 73 70               btst    #7, @0xFFFFAD69:16
+0681E4  46 52                           bne     loc_68238:8
+0681E6  6a 0c b3 f2                     mov.b   @0xFFFFB3F2:16, r4l
+0681EA  ac 03                           cmp.b   #3, r4l
+0681EC  46 4a                           bne     loc_68238:8
+0681EE  6a 0c b3 ea                     mov.b   @0xFFFFB3EA:16, r4l
+0681F2  7a 64 00 00 00 ff               and.l   #0xFF, er4
+0681F8  78 40 6a 2c 00 05 e0 44         mov.b   @(byte_5E044:32,er4), r4l
+068200  46 36                           bne     loc_68238:8
+068202  5e 03 4d c2                     jsr     sub_34DC2:24
+068206  46 30                           bne     loc_68238:8
+068208  5e 06 7a b0                     jsr     sub_67AB0:24
+06820C  47 2a                           beq     loc_68238:8
+06820E  fc 00                           mov.b   #0, r4l
+068210  6a 8c b4 16                     mov.b   r4l, @0xFFFFB416:16
+068214  fc 00                           mov.b   #0, r4l
+068216  6a 8c b4 17                     mov.b   r4l, @0xFFFFB417:16
+06821A  6a 0c b3 ef                     mov.b   @0xFFFFB3EF:16, r4l
+06821E  10 0c                           shll.b  r4l
+068220  7a 64 00 00 00 ff               and.l   #0xFF, er4
+068226  78 40 6b 24 00 05 df d0         mov.w   @(word_5DFD0:32,er4), r4
+06822E  6b 84 95 be                     mov.w   r4, @0xFFFF95BE:16
+068232  fc 32                           mov.b   #0x32, r4l ; '2'
+068234  6a 8c 95 59                     mov.b   r4l, @0xFFFF9559:16
+068238  55 08                           bsr     sub_68242:8
+06823A  6a 0c 8d d7                     mov.b   @0xFFFF8DD7:16, r4l
+06823E  47 00                           beq     locret_68240:8
+068240  54 70                           rts
+
+=== C11. sub_67AB0 GM beacon sender (B0B9=0x16 -> G 'c'/'d'), CSMA backoff
+067AB0  6a 18 aa d4 72 00               bclr    #0, @0xFFFFAAD4:16
+067AB6  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+067ABA  ac 01                           cmp.b   #1, r4l
+067ABC  58 70 00 a2                     beq     loc_67B62:16
+067AC0  6a 0c 95 5c                     mov.b   @0xFFFF955C:16, r4l
+067AC4  58 60 00 9a                     bne     loc_67B62:16
+067AC8  5e 02 2f 78                     jsr     sub_22F78:24
+067ACC  46 32                           bne     loc_67B00:8
+067ACE  6a 0c a5 20                     mov.b   @0xFFFFA520:16, r4l
+067AD2  ac 01                           cmp.b   #1, r4l
+067AD4  58 60 00 8a                     bne     loc_67B62:16
+067AD8  6a 0c b4 17                     mov.b   @0xFFFFB417:16, r4l
+067ADC  58 70 00 82                     beq     loc_67B62:16
+067AE0  fc 00                           mov.b   #0, r4l
+067AE2  6a 8c b4 17                     mov.b   r4l, @0xFFFFB417:16
+067AE6  6a 0c b4 16                     mov.b   @0xFFFFB416:16, r4l
+067AEA  0a 0c                           inc.b   r4l
+067AEC  6a 8c b4 16                     mov.b   r4l, @0xFFFFB416:16
+067AF0  ac 02                           cmp.b   #2, r4l
+067AF2  58 50 00 6c                     bcs     loc_67B62:16
+067AF6  fc 00                           mov.b   #0, r4l
+067AF8  6a 8c b4 16                     mov.b   r4l, @0xFFFFB416:16
+067AFC  58 00 00 62                     bra     loc_67B62:16
+067B00  6a 0c b4 17                     mov.b   @0xFFFFB417:16, r4l
+067B04  46 12                           bne     loc_67B18:8
+067B06  5e 06 82 76                     jsr     sub_68276:24
+067B0A  6b 83 95 c0                     mov.w   r3, @0xFFFF95C0:16
+067B0E  fc 01                           mov.b   #1, r4l
+067B10  6a 8c b4 17                     mov.b   r4l, @0xFFFFB417:16
+067B14  58 00 00 4a                     bra     loc_67B62:16
+067B18  6b 04 95 c0                     mov.w   @0xFFFF95C0:16, r4
+067B1C  58 60 00 42                     bne     loc_67B62:16
+067B20  5e 02 2f ee                     jsr     sub_22FEE:24
+067B24  58 60 00 3a                     bne     loc_67B62:16
+067B28  fc 00                           mov.b   #0, r4l
+067B2A  6a 8c b4 17                     mov.b   r4l, @0xFFFFB417:16
+067B2E  6a 0c b4 16                     mov.b   @0xFFFFB416:16, r4l
+067B32  0a 0c                           inc.b   r4l
+067B34  6a 8c b4 16                     mov.b   r4l, @0xFFFFB416:16
+067B38  ac 02                           cmp.b   #2, r4l
+067B3A  45 06                           bcs     loc_67B42:8
+067B3C  fc 00                           mov.b   #0, r4l
+067B3E  6a 8c b4 16                     mov.b   r4l, @0xFFFFB416:16
+067B42  6a 18 aa d4 70 00               bset    #0, @0xFFFFAAD4:16
+067B48  fc 16                           mov.b   #0x16, r4l
+067B4A  6a 8c b0 b9                     mov.b   r4l, @0xFFFFB0B9:16
+067B4E  fc 30                           mov.b   #0x30, r4l ; '0'
+067B50  6a ac 00 ff 14 89               mov.b   r4l, @0xFF1489:32
+067B56  fc ff                           mov.b   #0xFF, r4l
+067B58  6a ac 00 ff 14 8a               mov.b   r4l, @0xFF148A:32
+067B5E  5e 06 7f 6e                     jsr     sub_67F6E:24
+067B62  6a 10 aa d4 73 00               btst    #0, @0xFFFFAAD4:16
+067B68  54 70                           rts
+
+=== C12. sub_68276 backoff slot (callsign char + B47E -> byte_5DF52)
+068276  7a 05 00 ff 80 60               mov.l   #0xFF8060, er5
+06827C  6a 0c b4 16                     mov.b   @0xFFFFB416:16, r4l
+068280  47 1c                           beq     loc_6829E:8
+068282  ac 01                           cmp.b   #1, r4l
+068284  47 12                           beq     loc_68298:8
+068286  ac 02                           cmp.b   #2, r4l
+068288  47 08                           beq     loc_68292:8
+06828A  fc 00                           mov.b   #0, r4l
+06828C  6a 8c b4 16                     mov.b   r4l, @0xFFFFB416:16
+068290  40 0c                           bra     loc_6829E:8
+068292  6e 5c 00 02                     mov.b   @(2:16,er5), r4l
+068296  40 0a                           bra     loc_682A2:8
+068298  6e 5c 00 03                     mov.b   @(3:16,er5), r4l
+06829C  40 04                           bra     loc_682A2:8
+06829E  6e 5c 00 04                     mov.b   @(4:16,er5), r4l
+0682A2  ac 30                           cmp.b   #0x30, r4l ; '0'
+0682A4  45 14                           bcs     loc_682BA:8
+0682A6  ac 3a                           cmp.b   #0x3A, r4l ; ':'
+0682A8  45 12                           bcs     loc_682BC:8
+0682AA  ac 41                           cmp.b   #0x41, r4l ; 'A'
+0682AC  45 0c                           bcs     loc_682BA:8
+0682AE  ac 5b                           cmp.b   #0x5B, r4l ; '['
+0682B0  45 10                           bcs     loc_682C2:8
+0682B2  ac 61                           cmp.b   #0x61, r4l ; 'a'
+0682B4  45 04                           bcs     loc_682BA:8
+0682B6  ac 7b                           cmp.b   #0x7B, r4l ; '{'
+0682B8  45 10                           bcs     loc_682CA:8
+0682BA  fc 30                           mov.b   #0x30, r4l ; '0'
+0682BC  f4 30                           mov.b   #0x30, r4h ; '0'
+0682BE  18 4c                           sub.b   r4h, r4l
+0682C0  40 0e                           bra     loc_682D0:8
+0682C2  f4 41                           mov.b   #0x41, r4h ; 'A'
+0682C4  18 4c                           sub.b   r4h, r4l
+0682C6  8c 0a                           add.b   #0xA, r4l
+0682C8  40 06                           bra     loc_682D0:8
+0682CA  f4 61                           mov.b   #0x61, r4h ; 'a'
+0682CC  18 4c                           sub.b   r4h, r4l
+0682CE  8c 24                           add.b   #0x24, r4l ; '$'
+0682D0  6a 04 b4 7e                     mov.b   @0xFFFFB47E:16, r4h
+0682D4  08 4c                           add.b   r4h, r4l
+0682D6  7a 64 00 00 00 ff               and.l   #0xFF, er4
+0682DC  78 40 6a 2b 00 05 df 52         mov.b   @(byte_5DF52:32,er4), r3l
+0682E4  fc 24                           mov.b   #0x24, r4l ; '$'
+0682E6  50 c3                           mulxu.b r4l, r3
+0682E8  79 13 00 fa                     add.w   #0xFA, r3
+0682EC  79 0b 00 00                     mov.w   #0, e3
+0682F0  0f b4                           mov.l   er3, er4
+0682F2  47 0e                           beq     locret_68302:8
+0682F4  79 05 00 0a                     mov.w   #0xA, r5
+0682F8  53 53                           divxu.w r5, er3
+0682FA  79 2b 00 05                     cmp.w   #5, e3
+0682FE  45 02                           bcs     locret_68302:8
+068300  0b 53                           inc.w   #1, r3
+068302  54 70                           rts
+
+=== C13. sub_68242 pending-ACK sender gate (B40D, FF955A, FF9559)
+068242  6a 0c b4 0d                     mov.b   @0xFFFFB40D:16, r4l
+068246  47 2c                           beq     locret_68274:8
+068248  6a 0c 95 5a                     mov.b   @0xFFFF955A:16, r4l
+06824C  46 26                           bne     locret_68274:8
+06824E  6a 0c 95 59                     mov.b   @0xFFFF9559:16, r4l
+068252  46 20                           bne     locret_68274:8
+068254  5e 06 7f 18                     jsr     sub_67F18:24
+068258  47 1a                           beq     locret_68274:8
+06825A  fc 00                           mov.b   #0, r4l
+06825C  6a 8c b4 0d                     mov.b   r4l, @0xFFFFB40D:16
+068260  6a 10 89 c4 73 40               btst    #4, @0xFFFF89C4:16
+068266  47 0c                           beq     locret_68274:8
+068268  6a 0c fb a5                     mov.b   @0xFFFFFBA5:16, r4l
+06826C  ec f0                           and.b   #0xF0, r4l
+06826E  70 3c                           bset    #3, r4l
+068270  6a 8c fb a5                     mov.b   r4l, @0xFFFFFBA5:16
+068274  54 70                           rts
+
+=== C14. sub_67F18 ACK sender (B0B9=0x19 -> G '0')
+067F18  6a 18 aa d4 72 00               bclr    #0, @0xFFFFAAD4:16
+067F1E  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+067F22  ac 01                           cmp.b   #1, r4l
+067F24  47 40                           beq     loc_67F66:8
+067F26  5e 02 2f 78                     jsr     sub_22F78:24
+067F2A  47 3a                           beq     loc_67F66:8
+067F2C  5e 02 2f ee                     jsr     sub_22FEE:24
+067F30  46 34                           bne     loc_67F66:8
+067F32  6a 18 aa d4 70 00               bset    #0, @0xFFFFAAD4:16
+067F38  fc 19                           mov.b   #0x19, r4l
+067F3A  6a 8c b0 b9                     mov.b   r4l, @0xFFFFB0B9:16
+067F3E  fc 15                           mov.b   #0x15, r4l
+067F40  f4 00                           mov.b   #0, r4h
+067F42  7a 05 00 ff b4 24               mov.l   #0xFFB424, er5
+067F48  7a 06 00 ff 14 89               mov.l   #0xFF1489, er6
+067F4E  7b d4 59 8f                     eepmov.w
+067F52  0d 44                           mov.w   r4, r4
+067F54  46 f8                           bne     loc_67F4E:8
+067F56  fc ff                           mov.b   #0xFF, r4l
+067F58  6a ac 00 ff 14 9e               mov.b   r4l, @0xFF149E:32
+067F5E  5e 06 7f 6e                     jsr     sub_67F6E:24
+067F62  5e 05 ee 50                     jsr     sub_5EE50:24
+067F66  6a 10 aa d4 73 00               btst    #0, @0xFFFFAAD4:16
+067F6C  54 70                           rts
+
+=== C15. sub_68304 / sub_68318 / sub_6832A: G 'e'/'f' and N-store 'g'/'h' handlers; individual addressing -> B40D=1, FF955A=200
+068304  ac 65                           cmp.b   #0x65, r4l ; 'e'
+068306  58 70 01 90                     beq     loc_6849A:16
+06830A  ac 66                           cmp.b   #0x66, r4l ; 'f'
+06830C  58 70 01 5c                     beq     loc_6846C:16
+068310  ac 30                           cmp.b   #0x30, r4l ; '0'
+068312  58 70 0a aa                     beq     sub_68DC0:16
+068316  54 70                           rts
+068318  ac 67                           cmp.b   #0x67, r4l ; 'g'
+06831A  47 08                           beq     loc_68324:8
+06831C  7a 05 00 00 00 17               mov.l   #0x17, er5
+068322  40 06                           bra     sub_6832A:8
+068324  7a 05 00 00 00 05               mov.l   #5, er5
+06832A  fc 2d                           mov.b   #0x2D, r4l ; '-'
+06832C  7a 15 00 ff 07 e8               add.l   #0xFF07E8, er5
+068332  7a 06 00 ff b4 4e               mov.l   #0xFFB44E, er6
+068338  f4 00                           mov.b   #0, r4h
+06833A  7b d4 59 8f                     eepmov.w
+06833E  0d 44                           mov.w   r4, r4
+068340  46 f8                           bne     loc_6833A:8
+068342  6a 24 00 ff 07 eb               mov.b   @0xFF07EB:32, r4h
+068348  6a 2c 00 ff 07 ec               mov.b   @0xFF07EC:32, r4l
+06834E  6b 84 b4 3a                     mov.w   r4, @0xFFFFB43A:16
+068352  7a 02 00 ff b4 4e               mov.l   #0xFFB44E, er2
+068358  5e 04 b7 24                     jsr     sub_4B724:24
+06835C  6b a3 00 ff 2f 4c               mov.w   r3, @0xFF2F4C:32
+068362  fc 05                           mov.b   #5, r4l
+068364  f4 00                           mov.b   #0, r4h
+068366  7a 05 00 ff 07 e3               mov.l   #0xFF07E3, er5
+06836C  7a 06 00 ff 2f 63               mov.l   #0xFF2F63, er6
+068372  7b d4 59 8f                     eepmov.w
+068376  0d 44                           mov.w   r4, r4
+068378  46 f8                           bne     loc_68372:8
+06837A  fc 0a                           mov.b   #0xA, r4l
+06837C  f4 00                           mov.b   #0, r4h
+06837E  7a 05 00 ff 07 b6               mov.l   #0xFF07B6, er5
+068384  7a 06 00 ff 2f 68               mov.l   #0xFF2F68, er6
+06838A  7b d4 59 8f                     eepmov.w
+06838E  0d 44                           mov.w   r4, r4
+068390  46 f8                           bne     loc_6838A:8
+068392  fb 0a                           mov.b   #0xA, r3l
+068394  7a 05 00 05 9b 44               mov.l   #byte_59B44, er5
+06839A  7a 06 00 ff b4 71               mov.l   #0xFFB471, er6
+0683A0  6c 54                           mov.b   @er5+, r4h
+0683A2  6c 6c                           mov.b   @er6+, r4l
+0683A4  1c 4c                           cmp.b   r4h, r4l
+0683A6  46 04                           bne     loc_683AC:8
+0683A8  1a 0b                           dec.b   r3l
+0683AA  46 f4                           bne     loc_683A0:8
+0683AC  58 70 00 86                     beq     loc_68436:16
+0683B0  fb 05                           mov.b   #5, r3l
+0683B2  7a 05 00 ff 80 60               mov.l   #0xFF8060, er5
+0683B8  7a 06 00 ff b4 6c               mov.l   #0xFFB46C, er6
+0683BE  6c 54                           mov.b   @er5+, r4h
+0683C0  6c 6c                           mov.b   @er6+, r4l
+0683C2  1c 4c                           cmp.b   r4h, r4l
+0683C4  46 04                           bne     loc_683CA:8
+0683C6  1a 0b                           dec.b   r3l
+0683C8  46 f4                           bne     loc_683BE:8
+0683CA  46 5e                           bne     loc_6842A:8
+0683CC  fb 0a                           mov.b   #0xA, r3l
+0683CE  7a 05 00 ff a8 da               mov.l   #0xFFA8DA, er5
+0683D4  7a 06 00 ff b4 71               mov.l   #0xFFB471, er6
+0683DA  6c 54                           mov.b   @er5+, r4h
+0683DC  6c 6c                           mov.b   @er6+, r4l
+0683DE  1c 4c                           cmp.b   r4h, r4l
+0683E0  46 04                           bne     loc_683E6:8
+0683E2  1a 0b                           dec.b   r3l
+0683E4  46 f4                           bne     loc_683DA:8
+0683E6  46 42                           bne     loc_6842A:8
+0683E8  fc 05                           mov.b   #5, r4l
+0683EA  f4 00                           mov.b   #0, r4h
+0683EC  7a 05 00 ff b4 4e               mov.l   #0xFFB44E, er5
+0683F2  7a 06 00 ff b4 24               mov.l   #0xFFB424, er6
+0683F8  7b d4 59 8f                     eepmov.w
+0683FC  0d 44                           mov.w   r4, r4
+0683FE  46 f8                           bne     loc_683F8:8
+068400  fc 30                           mov.b   #0x30, r4l ; '0'
+068402  6a 8c b4 29                     mov.b   r4l, @0xFFFFB429:16
+068406  fc 0f                           mov.b   #0xF, r4l
+068408  f4 00                           mov.b   #0, r4h
+06840A  7a 05 00 ff 2f 63               mov.l   #0xFF2F63, er5
+068410  7a 06 00 ff b4 2a               mov.l   #0xFFB42A, er6
+068416  7b d4 59 8f                     eepmov.w
+06841A  0d 44                           mov.w   r4, r4
+06841C  46 f8                           bne     loc_68416:8
+06841E  fc 01                           mov.b   #1, r4l
+068420  6a 8c b4 0d                     mov.b   r4l, @0xFFFFB40D:16
+068424  fc c8                           mov.b   #0xC8, r4l
+068426  6a 8c 95 5a                     mov.b   r4l, @0xFFFF955A:16
+06842A  fb 00                           mov.b   #0, r3l
+06842C  72 6b                           bclr    #6, r3l
+06842E  7a 05 00 ff b4 6c               mov.l   #0xFFB46C, er5
+068434  40 0a                           bra     loc_68440:8
+068436  fb 00                           mov.b   #0, r3l
+068438  70 6b                           bset    #6, r3l
+06843A  7a 05 00 06 55 a0               mov.l   #aAll_0, er5; "     ALL       "
+068440  6a ab 00 ff 2f 4a               mov.b   r3l, @0xFF2F4A:32
+068446  fc 0f                           mov.b   #0xF, r4l
+068448  7a 06 00 ff 2f 4e               mov.l   #0xFF2F4E, er6
+06844E  f4 00                           mov.b   #0, r4h
+068450  7b d4 59 8f                     eepmov.w
+068454  0d 44                           mov.w   r4, r4
+068456  46 f8                           bne     loc_68450:8
+068458  54 70                           rts
+06845A  6a 0c 95 a7                     mov.b   @0xFFFF95A7:16, r4l
+06845E  46 06                           bne     locret_68466:8
+068460  6a 18 ba 93 72 60               bclr    #6, @0xFFFFBA93:16
+068466  54 70                           rts
+068468  ac 65                           cmp.b   #0x65, r4l ; 'e'
+06846A  47 2e                           beq     loc_6849A:8
+
+=== C16. 'e'/'f' common body (copies text, addressing test, B40D arm)
+06846C  6a 10 ba 93 73 60               btst    #6, @0xFFFFBA93:16
+068472  46 e6                           bne     loc_6845A:8
+068474  6a 0c 95 67                     mov.b   @0xFFFF9567:16, r4l
+068478  46 e0                           bne     loc_6845A:8
+06847A  fc 12                           mov.b   #0x12, r4l
+06847C  f4 00                           mov.b   #0, r4h
+06847E  7a 05 00 ff 14 89               mov.l   #0xFF1489, er5
+068484  7a 06 00 ff b4 3c               mov.l   #0xFFB43C, er6
+06848A  7b d4 59 8f                     eepmov.w
+06848E  0d 44                           mov.w   r4, r4
+068490  46 f8                           bne     loc_6848A:8
+068492  7a 05 00 00 00 17               mov.l   #0x17, er5
+068498  40 1c                           bra     loc_684B6:8
+06849A  6a 10 ba 93 73 60               btst    #6, @0xFFFFBA93:16
+0684A0  46 b8                           bne     loc_6845A:8
+0684A2  6a 0c 95 67                     mov.b   @0xFFFF9567:16, r4l
+0684A6  46 b2                           bne     loc_6845A:8
+0684A8  79 04 ff ff                     mov.w   #0xFFFF, r4
+0684AC  6b 84 b4 3c                     mov.w   r4, @0xFFFFB43C:16
+0684B0  7a 05 00 00 00 05               mov.l   #5, er5
+0684B6  fc 0f                           mov.b   #0xF, r4l
+0684B8  6a 8c 95 a7                     mov.b   r4l, @0xFFFF95A7:16
+0684BC  6a 18 ba 93 70 60               bset    #6, @0xFFFFBA93:16
+0684C2  fc 19                           mov.b   #0x19, r4l
+0684C4  6a 8c 95 67                     mov.b   r4l, @0xFFFF9567:16
+0684C8  01 00 6d f5                     push.l  er5
+0684CC  fc 50                           mov.b   #0x50, r4l ; 'P'
+0684CE  f4 00                           mov.b   #0, r4h
+0684D0  7a 05 00 ff 06 1a               mov.l   #0xFF061A, er5
+0684D6  7a 06 00 ff b9 64               mov.l   #0xFFB964, er6
+0684DC  7b d4 59 8f                     eepmov.w
+0684E0  0d 44                           mov.w   r4, r4
+0684E2  46 f8                           bne     loc_684DC:8
+0684E4  01 00 6d 75                     pop.l   er5
+0684E8  fc 2d                           mov.b   #0x2D, r4l ; '-'
+0684EA  7a 15 00 ff 14 84               add.l   #0xFF1484, er5
+0684F0  7a 06 00 ff b4 4e               mov.l   #0xFFB44E, er6
+0684F6  f4 00                           mov.b   #0, r4h
+0684F8  7b d4 59 8f                     eepmov.w
+0684FC  0d 44                           mov.w   r4, r4
+0684FE  46 f8                           bne     loc_684F8:8
+068500  fc 50                           mov.b   #0x50, r4l ; 'P'
+068502  7a 06 00 ff 06 1a               mov.l   #0xFF061A, er6
+068508  f4 00                           mov.b   #0, r4h
+06850A  7b d4 59 8f                     eepmov.w
+06850E  0d 44                           mov.w   r4, r4
+068510  46 f8                           bne     loc_6850A:8
+068512  6a 24 00 ff 14 87               mov.b   @0xFF1487:32, r4h
+068518  6a 2c 00 ff 14 88               mov.b   @0xFF1488:32, r4l
+06851E  6b 84 b4 3a                     mov.w   r4, @0xFFFFB43A:16
+068520  b4 3a                           mov.w   r4, @0xFFFFB43A:16
+068522  5e 06 f4 c6                     jsr     sub_6F4C6:24
+068526  7a 02 00 ff b4 4e               mov.l   #0xFFB44E, er2
+06852C  5e 04 b7 24                     jsr     sub_4B724:24
+068530  6b a3 00 ff 2e cc               mov.w   r3, @0xFF2ECC:32
+068536  fc 05                           mov.b   #5, r4l
+068538  f4 00                           mov.b   #0, r4h
+06853A  7a 05 00 ff 14 7f               mov.l   #0xFF147F, er5
+068540  7a 06 00 ff 2e e3               mov.l   #0xFF2EE3, er6
+068546  7b d4 59 8f                     eepmov.w
+06854A  0d 44                           mov.w   r4, r4
+06854C  46 f8                           bne     loc_68546:8
+06854E  fc 0a                           mov.b   #0xA, r4l
+068550  f4 00                           mov.b   #0, r4h
+068552  7a 05 00 ff 14 52               mov.l   #0xFF1452, er5
+068558  7a 06 00 ff 2e e8               mov.l   #0xFF2EE8, er6
+06855E  7b d4 59 8f                     eepmov.w
+068562  0d 44                           mov.w   r4, r4
+068564  46 f8                           bne     loc_6855E:8
+068566  7a 05 00 ff b4 54               mov.l   #0xFFB454, er5
+06856C  7a 06 00 ff 2f 04               mov.l   #0xFF2F04, er6
+068572  f3 06                           mov.b   #6, r3h
+068574  6c 54                           mov.b   @er5+, r4h
+068576  10 44                           shll.b  #2, r4h
+068578  10 44                           shll.b  #2, r4h
+06857A  6c 5c                           mov.b   @er5+, r4l
+06857C  ec 0f                           and.b   #0xF, r4l
+06857E  14 4c                           or.b    r4h, r4l
+068580  68 ec                           mov.b   r4l, @er6
+068582  0b 06                           adds    #1, er6
+068584  1a 03                           dec.b   r3h
+068586  46 ec                           bne     loc_68574:8
+068588  fb 0a                           mov.b   #0xA, r3l
+06858A  7a 05 00 05 9b 44               mov.l   #byte_59B44, er5
+068590  7a 06 00 ff b4 71               mov.l   #0xFFB471, er6
+068596  6c 54                           mov.b   @er5+, r4h
+068598  6c 6c                           mov.b   @er6+, r4l
+06859A  1c 4c                           cmp.b   r4h, r4l
+06859C  46 04                           bne     loc_685A2:8
+06859E  1a 0b                           dec.b   r3l
+0685A0  46 f4                           bne     loc_68596:8
+0685A2  58 70 00 92                     beq     loc_68638:16
+0685A6  fb 05                           mov.b   #5, r3l
+0685A8  7a 05 00 ff 80 60               mov.l   #0xFF8060, er5
+0685AE  7a 06 00 ff b4 6c               mov.l   #0xFFB46C, er6
+0685B4  6c 54                           mov.b   @er5+, r4h
+0685B6  6c 6c                           mov.b   @er6+, r4l
+0685B8  1c 4c                           cmp.b   r4h, r4l
+0685BA  46 04                           bne     loc_685C0:8
+0685BC  1a 0b                           dec.b   r3l
+0685BE  46 f4                           bne     loc_685B4:8
+0685C0  46 5e                           bne     loc_68620:8
+0685C2  fb 0a                           mov.b   #0xA, r3l
+0685C4  7a 05 00 ff a8 da               mov.l   #0xFFA8DA, er5
+0685CA  7a 06 00 ff b4 71               mov.l   #0xFFB471, er6
+0685D0  6c 54                           mov.b   @er5+, r4h
+0685D2  6c 6c                           mov.b   @er6+, r4l
+0685D4  1c 4c                           cmp.b   r4h, r4l
+0685D6  46 04                           bne     loc_685DC:8
+0685D8  1a 0b                           dec.b   r3l
+0685DA  46 f4                           bne     loc_685D0:8
+0685DC  46 42                           bne     loc_68620:8
+0685DE  fc 05                           mov.b   #5, r4l
+0685E0  f4 00                           mov.b   #0, r4h
+0685E2  7a 05 00 ff b4 4e               mov.l   #0xFFB44E, er5
+0685E8  7a 06 00 ff b4 24               mov.l   #0xFFB424, er6
+0685EE  7b d4 59 8f                     eepmov.w
+0685F2  0d 44                           mov.w   r4, r4
+0685F4  46 f8                           bne     loc_685EE:8
+0685F6  fc 30                           mov.b   #0x30, r4l ; '0'
+0685F8  6a 8c b4 29                     mov.b   r4l, @0xFFFFB429:16
+0685FC  fc 0f                           mov.b   #0xF, r4l
+0685FE  f4 00                           mov.b   #0, r4h
+068600  7a 05 00 ff 2e e3               mov.l   #0xFF2EE3, er5
+068606  7a 06 00 ff b4 2a               mov.l   #0xFFB42A, er6
+06860C  7b d4 59 8f                     eepmov.w
+068610  0d 44                           mov.w   r4, r4
+068612  46 f8                           bne     loc_6860C:8
+068614  fc 01                           mov.b   #1, r4l
+068616  6a 8c b4 0d                     mov.b   r4l, @0xFFFFB40D:16
+06861A  fc c8                           mov.b   #0xC8, r4l
+06861C  6a 8c 95 5a                     mov.b   r4l, @0xFFFF955A:16
+068620  6a 0c a9 f9                     mov.b   @0xFFFFA9F9:16, r4l
+068624  ac 0a                           cmp.b   #0xA, r4l
+068626  47 04                           beq     loc_6862C:8
+068628  fb 20                           mov.b   #0x20, r3l ; ' '
+06862A  40 02                           bra     loc_6862E:8
+06862C  fb 22                           mov.b   #0x22, r3l ; '"'
+06862E  72 6b                           bclr    #6, r3l
+068630  7a 05 00 ff b4 6c               mov.l   #0xFFB46C, er5
+068636  40 16                           bra     loc_6864E:8
+068638  6a 0c a9 f9                     mov.b   @0xFFFFA9F9:16, r4l
+06863C  ac 0a                           cmp.b   #0xA, r4l
+06863E  47 04                           beq     loc_68644:8
+068640  fb 20                           mov.b   #0x20, r3l ; ' '
+068642  40 02                           bra     loc_68646:8
+068644  fb 22                           mov.b   #0x22, r3l ; '"'
+068646  70 6b                           bset    #6, r3l
+068648  7a 05 00 06 55 a0               mov.l   #aAll_0, er5; "     ALL       "
+06864E  5e 06 a0 ee                     jsr     sub_6A0EE:24
+068652  fc 52                           mov.b   #0x52, r4l ; 'R'
+068654  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+068658  fc 50                           mov.b   #0x50, r4l ; 'P'
+06865A  f4 00                           mov.b   #0, r4h
+06865C  7a 05 00 ff b9 64               mov.l   #0xFFB964, er5
+068662  7a 06 00 ff 06 1a               mov.l   #0xFF061A, er6
+068668  7b d4 59 8f                     eepmov.w
+06866C  0d 44                           mov.w   r4, r4
+06866E  46 f8                           bne     loc_68668:8
+068670  54 70                           rts
+
+=== C17. sub_689A2 new-member: FF95BE=0x32 (beacon in 0.5 s)
+0689A2  0f 96                           mov.l   er1, er6
+0689A4  7a 16 00 00 00 0f               add.l   #0xF, er6
+0689AA  68 6c                           mov.b   @er6, r4l
+0689AC  4a 22                           bpl     loc_689D0:8
+0689AE  6e 1c 00 12                     mov.b   @(0x12:16,er1), r4l
+0689B2  73 5c                           btst    #5, r4l
+0689B4  46 14                           bne     loc_689CA:8
+0689B6  70 5c                           bset    #5, r4l
+0689B8  6e 9c 00 12                     mov.b   r4l, @(0x12:16,er1)
+0689BC  fc 00                           mov.b   #0, r4l
+0689BE  6a 8c b4 17                     mov.b   r4l, @0xFFFFB417:16
+0689C2  79 04 00 32                     mov.w   #0x32, r4 ; '2'
+0689C6  6b 84 95 be                     mov.w   r4, @0xFFFF95BE:16
+0689CA  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+0689D0  6a 0c b3 fb                     mov.b   @0xFFFFB3FB:16, r4l
+0689D4  68 ec                           mov.b   r4l, @er6
+0689D6  0b 06                           adds    #1, er6
+0689D8  6a 0c b3 ef                     mov.b   @0xFFFFB3EF:16, r4l
+0689DC  10 0c                           shll.b  r4l
+0689DE  7a 64 00 00 00 ff               and.l   #0xFF, er4
+0689E4  78 40 6b 24 00 05 e0 0a         mov.w   @(word_5E00A:32,er4), r4
+0689EC  69 e4                           mov.w   r4, @er6
+0689EE  0b 86                           adds    #2, er6
+0689F0  68 6b                           mov.b   @er6, r3l
+0689F2  6a 10 b4 20 77 20               bld     #2, @0xFFFFB420:16
+0689F8  67 3b                           bst     #3, r3l
+0689FA  72 7b                           bclr    #7, r3l
+0689FC  72 4b                           bclr    #4, r3l
+0689FE  6a 0c b4 7d                     mov.b   @0xFFFFB47D:16, r4l
+068A02  ac 31                           cmp.b   #0x31, r4l ; '1'
+068A04  47 06                           beq     loc_68A0C:8
+068A06  ac 32                           cmp.b   #0x32, r4l ; '2'
+068A08  46 04                           bne     loc_68A0E:8
+068A0A  70 4b                           bset    #4, r3l
+068A0C  70 7b                           bset    #7, r3l
+068A0E  6a 2c 00 ff 14 86               mov.b   @0xFF1486:32, r4l
+068A14  ac 63                           cmp.b   #0x63, r4l ; 'c'
+068A16  47 0e                           beq     loc_68A26:8
+068A18  73 6b                           btst    #6, r3l
+068A1A  46 16                           bne     loc_68A32:8
+068A1C  70 6b                           bset    #6, r3l
+068A1E  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+068A24  40 0c                           bra     loc_68A32:8
+068A26  73 6b                           btst    #6, r3l
+068A28  47 08                           beq     loc_68A32:8
+068A2A  72 6b                           bclr    #6, r3l
+068A2C  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+068A32  68 eb                           mov.b   r3l, @er6
+068A34  0b 06                           adds    #1, er6
+068A36  0b 06                           adds    #1, er6
+068A38  73 6b                           btst    #6, r3l
+068A3A  47 2a                           beq     loc_68A66:8
+068A3C  79 0c 00 0c                     mov.w   #0xC, e4
+068A40  7a 05 00 ff 14 89               mov.l   #0xFF1489, er5
+068A46  68 64                           mov.b   @er6, r4h
+068A48  6c 5c                           mov.b   @er5+, r4l
+068A4A  1c 4c                           cmp.b   r4h, r4l
+068A4C  47 06                           beq     loc_68A54:8
+068A4E  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+068A54  68 ec                           mov.b   r4l, @er6
+068A56  0b 06                           adds    #1, er6
+068A58  1b 5c                           dec.w   #1, e4
+068A5A  46 ea                           bne     loc_68A46:8
+068A5C  6a 0c a9 f9                     mov.b   @0xFFFFA9F9:16, r4l
+068A60  ac 01                           cmp.b   #1, r4l
+068A62  46 02                           bne     loc_68A66:8
+068A64  55 08                           bsr     sub_68A6E:8
+068A66  5e 06 3d 50                     jsr     sub_63D50:24
+068A6A  55 6e                           bsr     sub_68ADA:8
+068A6C  54 70                           rts
+
+=== C18. G validator sub_58440: 'g'/'h' -> N store (loc_58032 -> B259)
+058440  6a 2c 00 fe f9 64               mov.b   @0xFEF964:32, r4l
+058446  ac 80                           cmp.b   #0x80, r4l
+058448  58 40 00 e8                     bcc     loc_58534:16
+05844C  7a 64 00 00 00 ff               and.l   #0xFF, er4
+058452  6e 4c 43 cc                     mov.b   @(0x43CC:16,er4), r4l
+058456  ac 20                           cmp.b   #0x20, r4l ; ' '
+058458  58 70 00 d8                     beq     loc_58534:16
+05845C  7a 35 00 fe f9 62               sub.l   #0xFEF962, er5
+058462  6b 85 b1 16                     mov.w   r5, @0xFFFFB116:16
+058466  5e 05 8e 6e                     jsr     sub_58E6E:24
+05846A  58 60 00 c6                     bne     loc_58534:16
+05846E  6b 05 b1 16                     mov.w   @0xFFFFB116:16, r5
+058472  6a 2c 00 fe f9 64               mov.b   @0xFEF964:32, r4l
+058478  ac 63                           cmp.b   #0x63, r4l ; 'c'
+05847A  58 70 00 80                     beq     loc_584FE:16
+05847E  ac 64                           cmp.b   #0x64, r4l ; 'd'
+058480  47 74                           beq     loc_584F6:8
+058482  ac 65                           cmp.b   #0x65, r4l ; 'e'
+058484  47 68                           beq     loc_584EE:8
+058486  ac 66                           cmp.b   #0x66, r4l ; 'f'
+058488  47 5c                           beq     loc_584E6:8
+05848A  ac 67                           cmp.b   #0x67, r4l ; 'g'
+05848C  47 4e                           beq     loc_584DC:8
+05848E  ac 68                           cmp.b   #0x68, r4l ; 'h'
+058490  47 40                           beq     loc_584D2:8
+058492  ac 69                           cmp.b   #0x69, r4l ; 'i'
+058494  47 34                           beq     loc_584CA:8
+058496  ac 30                           cmp.b   #0x30, r4l ; '0'
+058498  47 28                           beq     loc_584C2:8
+05849A  ac 72                           cmp.b   #0x72, r4l ; 'r'
+05849C  47 1c                           beq     loc_584BA:8
+05849E  ac 52                           cmp.b   #0x52, r4l ; 'R'
+0584A0  47 10                           beq     loc_584B2:8
+0584A2  ac 73                           cmp.b   #0x73, r4l ; 's'
+0584A4  58 60 00 8c                     bne     loc_58534:16
+0584A8  79 25 01 81                     cmp.w   #0x181, r5
+0584AC  58 40 00 84                     bcc     loc_58534:16
+0584B0  40 52                           bra     loc_58504:8
+0584B2  79 25 01 81                     cmp.w   #0x181, r5
+0584B6  44 7c                           bcc     loc_58534:8
+0584B8  40 4a                           bra     loc_58504:8
+0584BA  79 25 01 72                     cmp.w   #0x172, r5
+0584BE  44 74                           bcc     loc_58534:8
+0584C0  40 42                           bra     loc_58504:8
+0584C2  79 25 00 1c                     cmp.w   #0x1C, r5
+0584C6  46 6c                           bne     loc_58534:8
+0584C8  40 3a                           bra     loc_58504:8
+0584CA  79 25 03 f2                     cmp.w   #0x3F2, r5
+0584CE  44 64                           bcc     loc_58534:8
+0584D0  40 32                           bra     loc_58504:8
+0584D2  79 25 00 56                     cmp.w   #0x56, r5 ; 'V'
+0584D6  46 5c                           bne     loc_58534:8
+0584D8  58 00 fb 56                     bra     loc_58032:16
+0584DC  79 25 00 44                     cmp.w   #0x44, r5 ; 'D'
+0584E0  46 52                           bne     loc_58534:8
+0584E2  58 00 fb 4c                     bra     loc_58032:16
+0584E6  79 25 00 96                     cmp.w   #0x96, r5
+0584EA  46 48                           bne     loc_58534:8
+0584EC  40 16                           bra     loc_58504:8
+0584EE  79 25 00 84                     cmp.w   #0x84, r5
+0584F2  46 40                           bne     loc_58534:8
+0584F4  40 0e                           bra     loc_58504:8
+0584F6  79 25 00 1a                     cmp.w   #0x1A, r5
+0584FA  46 38                           bne     loc_58534:8
+0584FC  40 06                           bra     loc_58504:8
+0584FE  79 25 00 08                     cmp.w   #8, r5
+058502  46 30                           bne     loc_58534:8
+058504  6a 8c b3 fa                     mov.b   r4l, @0xFFFFB3FA:16
+058508  fc 09                           mov.b   #9, r4l
+05850A  6a 8c b3 fb                     mov.b   r4l, @0xFFFFB3FB:16
+05850E  6b 04 b1 16                     mov.w   @0xFFFFB116:16, r4
+058512  79 14 00 42                     add.w   #0x42, r4 ; 'B'
+058516  6b a4 00 ff 14 40               mov.w   r4, @0xFF1440:32
+05851C  7a 05 00 fe f9 20               mov.l   #0xFEF920, er5
+058522  7a 06 00 ff 14 42               mov.l   #0xFF1442, er6
+058528  7b d4 59 8f                     eepmov.w
+05852C  0d 44                           mov.w   r4, r4
+05852E  46 f8                           bne     loc_58528:8
+058530  fc 00                           mov.b   #0, r4l
+058532  40 02                           bra     locret_58536:8
+058534  fc 01                           mov.b   #1, r4l
+058536  54 70                           rts
+
+=== C19. N-RX engine state 0 sub_5F2B0: 'g'/'h' -> sub_68318
+05F2B0  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+05F2B4  ac 01                           cmp.b   #1, r4l
+05F2B6  47 76                           beq     locret_5F32E:8
+05F2B8  6a 0c b2 59                     mov.b   @0xFFFFB259:16, r4l
+05F2BC  47 70                           beq     locret_5F32E:8
+05F2BE  f4 00                           mov.b   #0, r4h
+05F2C0  6a 84 b2 59                     mov.b   r4h, @0xFFFFB259:16
+05F2C4  6a 24 00 ff 2e c9               mov.b   @0xFF2EC9:32, r4h
+05F2CA  46 62                           bne     locret_5F32E:8
+05F2CC  ac 67                           cmp.b   #0x67, r4l ; 'g'
+05F2CE  47 44                           beq     loc_5F314:8
+05F2D0  ac 68                           cmp.b   #0x68, r4l ; 'h'
+05F2D2  47 40                           beq     loc_5F314:8
+05F2D4  ac 50                           cmp.b   #0x50, r4l ; 'P'
+05F2D6  46 56                           bne     locret_5F32E:8
+05F2D8  6a 0c b3 ea                     mov.b   @0xFFFFB3EA:16, r4l
+05F2DC  ac 1a                           cmp.b   #0x1A, r4l
+05F2DE  46 4e                           bne     locret_5F32E:8
+05F2E0  6a 10 b2 75 73 60               btst    #6, @0xFFFFB275:16
+05F2E6  47 46                           beq     locret_5F32E:8
+05F2E8  6a 0c b4 7b                     mov.b   @0xFFFFB47B:16, r4l
+05F2EC  ac 02                           cmp.b   #2, r4l
+05F2EE  46 3e                           bne     locret_5F32E:8
+05F2F0  5e 06 f5 12                     jsr     sub_6F512:24
+05F2F4  5e 06 93 fe                     jsr     sub_693FE:24
+05F2F8  46 10                           bne     loc_5F30A:8
+05F2FA  79 04 00 50                     mov.w   #0x50, r4 ; 'P'
+05F2FE  6b 84 95 e0                     mov.w   r4, @0xFFFF95E0:16
+05F302  fc 01                           mov.b   #1, r4l
+05F304  6a 8c b2 63                     mov.b   r4l, @0xFFFFB263:16
+05F308  40 24                           bra     locret_5F32E:8
+05F30A  fc 00                           mov.b   #0, r4l
+05F30C  6a ac 00 ff 2e c9               mov.b   r4l, @0xFF2EC9:32
+05F312  40 1a                           bra     locret_5F32E:8
+05F314  6d f4                           push.w  r4
+05F316  5e 06 f5 12                     jsr     sub_6F512:24
+05F31A  6d 74                           pop.w   r4
+05F31C  5e 06 83 18                     jsr     sub_68318:24
+05F320  79 04 00 50                     mov.w   #0x50, r4 ; 'P'
+05F324  6b 84 95 e0                     mov.w   r4, @0xFFFF95E0:16
+05F328  fc 01                           mov.b   #1, r4l
+05F32A  6a 8c b2 63                     mov.b   r4l, @0xFFFFB263:16
+05F32E  54 70                           rts
+
+=== C20. N-RX state 6 sub_5F5D0: picture complete, re-arm FF955A if B40D
+05F5D0  5e 05 f7 88                     jsr     sub_5F788:24
+05F5D4  58 70 00 b4                     beq     loc_5F68C:16
+05F5D8  6a 10 89 c4 73 40               btst    #4, @0xFFFF89C4:16
+05F5DE  47 0c                           beq     loc_5F5EC:8
+05F5E0  6a 0c fb a5                     mov.b   @0xFFFFFBA5:16, r4l
+05F5E4  ec f0                           and.b   #0xF0, r4l
+05F5E6  70 3c                           bset    #3, r4l
+05F5E8  6a 8c fb a5                     mov.b   r4l, @0xFFFFFBA5:16
+05F5EC  fc 00                           mov.b   #0, r4l
+05F5EE  6a 8c b2 58                     mov.b   r4l, @0xFFFFB258:16
+05F5F2  fc 00                           mov.b   #0, r4l
+05F5F4  6a 8c b2 63                     mov.b   r4l, @0xFFFFB263:16
+05F5F8  6a 0c b2 65                     mov.b   @0xFFFFB265:16, r4l
+05F5FC  ac 01                           cmp.b   #1, r4l
+05F5FE  47 44                           beq     loc_5F644:8
+05F600  6a 0c a9 f9                     mov.b   @0xFFFFA9F9:16, r4l
+05F604  ac 0a                           cmp.b   #0xA, r4l
+05F606  47 04                           beq     loc_5F60C:8
+05F608  fb 20                           mov.b   #0x20, r3l ; ' '
+05F60A  40 02                           bra     loc_5F60E:8
+05F60C  fb 22                           mov.b   #0x22, r3l ; '"'
+05F60E  6a 2c 00 ff 2f 4a               mov.b   @0xFF2F4A:32, r4l
+05F614  14 cb                           or.b    r4l, r3l
+05F616  5e 06 a4 de                     jsr     sub_6A4DE:24
+05F61A  6a 18 bb f2 72 10               bclr    #1, @0xFFFFBBF2:16
+05F620  6a 18 bb f1 70 40               bset    #4, @0xFFFFBBF1:16
+05F626  5e 00 af 06                     jsr     sub_AF06:24
+05F62A  fc 03                           mov.b   #3, r4l
+05F62C  6a 8c bc 4e                     mov.b   r4l, @0xFFFFBC4E:16
+05F630  fc 51                           mov.b   #0x51, r4l ; 'Q'
+05F632  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+05F636  6a 0c b4 0d                     mov.b   @0xFFFFB40D:16, r4l
+05F63A  47 4c                           beq     loc_5F688:8
+05F63C  fc c8                           mov.b   #0xC8, r4l
+05F63E  6a 8c 95 5a                     mov.b   r4l, @0xFFFF955A:16
+05F642  40 44                           bra     loc_5F688:8
+05F644  6a 0c a9 f9                     mov.b   @0xFFFFA9F9:16, r4l
+05F648  ac 0a                           cmp.b   #0xA, r4l
+05F64A  47 04                           beq     loc_5F650:8
+05F64C  fb 04                           mov.b   #4, r3l
+05F64E  40 02                           bra     loc_5F652:8
+05F650  fb 06                           mov.b   #6, r3l
+05F652  72 6b                           bclr    #6, r3l
+05F654  6a 10 b2 6b 73 40               btst    #4, @0xFFFFB26B:16
+05F65A  47 02                           beq     loc_5F65E:8
+05F65C  70 3b                           bset    #3, r3l
+05F65E  5e 06 54 42                     jsr     sub_65442:24
+05F662  5e 06 a4 62                     jsr     sub_6A462:24
+05F666  6a 18 bc 59 70 60               bset    #6, @0xFFFFBC59:16
+05F66C  fc 00                           mov.b   #0, r4l
+05F66E  6a 8c bb e1                     mov.b   r4l, @0xFFFFBBE1:16
+05F672  6a 18 bb f2 72 10               bclr    #1, @0xFFFFBBF2:16
+05F678  6a 18 bb f1 70 40               bset    #4, @0xFFFFBBF1:16
+05F67E  5e 00 ae 3c                     jsr     sub_AE3C:24
+05F682  fc 03                           mov.b   #3, r4l
+05F684  6a 8c bc 4e                     mov.b   r4l, @0xFFFFBC4E:16
+05F688  55 1a                           bsr     loc_5F6A4:8
+05F68A  40 0e                           bra     locret_5F69A:8
+05F68C  6b 04 95 e0                     mov.w   @0xFFFF95E0:16, r4
+05F690  46 08                           bne     locret_5F69A:8
+05F692  5e 05 f6 a4                     jsr     loc_5F6A4:24
+05F696  5e 06 5d 44                     jsr     sub_65D44:24
+05F69A  54 70                           rts
+
+=== C21. Main-loop pollers: sub_5ED18 and sub_63216 call sub_68304/sub_68242
+05ED18  6a 0c b2 58                     mov.b   @0xFFFFB258:16, r4l
+05ED1C  47 36                           beq     loc_5ED54:8
+05ED1E  ac 02                           cmp.b   #2, r4l
+05ED20  47 1a                           beq     loc_5ED3C:8
+05ED22  6a 0b b2 5f                     mov.b   @0xFFFFB25F:16, r3l
+05ED26  7a 63 00 00 00 ff               and.l   #0xFF, er3
+05ED2C  10 73                           shll.l  #2, er3
+05ED2E  78 b0 6b 26 00 05 ed b4         mov.l   @(off_5EDB4:32,er3), er6
+05ED36  5d 60                           jsr     @er6
+05ED38  58 00 00 76                     bra     locret_5EDB2:16
+05ED3C  6a 0b b2 63                     mov.b   @0xFFFFB263:16, r3l
+05ED40  7a 63 00 00 00 ff               and.l   #0xFF, er3
+05ED46  10 73                           shll.l  #2, er3
+05ED48  78 b0 6b 26 00 05 ed e4         mov.l   @(off_5EDE4:32,er3), er6
+05ED50  5d 60                           jsr     @er6
+05ED52  40 5e                           bra     locret_5EDB2:8
+05ED54  6a 0b b2 5f                     mov.b   @0xFFFFB25F:16, r3l
+05ED58  7a 63 00 00 00 ff               and.l   #0xFF, er3
+05ED5E  10 73                           shll.l  #2, er3
+05ED60  78 b0 6b 26 00 05 ed b4         mov.l   @(off_5EDB4:32,er3), er6
+05ED68  5d 60                           jsr     @er6
+05ED6A  6a 0c b2 58                     mov.b   @0xFFFFB258:16, r4l
+05ED6E  ac 01                           cmp.b   #1, r4l
+05ED70  47 40                           beq     locret_5EDB2:8
+05ED72  6a 0b b2 63                     mov.b   @0xFFFFB263:16, r3l
+05ED76  7a 63 00 00 00 ff               and.l   #0xFF, er3
+05ED7C  10 73                           shll.l  #2, er3
+05ED7E  78 b0 6b 26 00 05 ed e4         mov.l   @(off_5EDE4:32,er3), er6
+05ED86  5d 60                           jsr     @er6
+05ED88  6a 0c b2 58                     mov.b   @0xFFFFB258:16, r4l
+05ED8C  ac 02                           cmp.b   #2, r4l
+05ED8E  47 22                           beq     locret_5EDB2:8
+05ED90  6a 0c b2 a5                     mov.b   @0xFFFFB2A5:16, r4l
+05ED94  46 1c                           bne     locret_5EDB2:8
+05ED96  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+05ED9A  ac 01                           cmp.b   #1, r4l
+05ED9C  47 14                           beq     locret_5EDB2:8
+05ED9E  6a 0c b3 fa                     mov.b   @0xFFFFB3FA:16, r4l
+05EDA2  47 0a                           beq     loc_5EDAE:8
+05EDA4  f4 00                           mov.b   #0, r4h
+05EDA6  6a 84 b3 fa                     mov.b   r4h, @0xFFFFB3FA:16
+05EDAA  5e 06 83 04                     jsr     sub_68304:24
+05EDAE  5e 06 82 42                     jsr     sub_68242:24
+05EDB2  54 70                           rts
+
+=== C22. sub_63216 WIRES-X poller (B2A5==2): deferred ']q' resend at 0x0632CC
+063216  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+06321A  4a 0c                           bpl     loc_63228:8
+06321C  6a 0c b3 e4                     mov.b   @0xFFFFB3E4:16, r4l
+063220  ac 04                           cmp.b   #4, r4l
+063222  46 04                           bne     loc_63228:8
+063224  5e 06 d0 f6                     jsr     sub_6D0F6:24
+063228  6a 0c b2 a5                     mov.b   @0xFFFFB2A5:16, r4l
+06322C  ac 02                           cmp.b   #2, r4l
+06322E  46 0e                           bne     locret_6323E:8
+063230  6a 10 b2 6b 73 60               btst    #6, @0xFFFFB26B:16
+063236  47 08                           beq     loc_63240:8
+063238  6a 18 b2 6b 72 60               bclr    #6, @0xFFFFB26B:16
+06323E  54 70                           rts
+063240  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+063244  4a 16                           bpl     loc_6325C:8
+063246  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+06324A  ac 01                           cmp.b   #1, r4l
+06324C  58 70 00 a2                     beq     locret_632F2:16
+063250  6a 0c b3 fa                     mov.b   @0xFFFFB3FA:16, r4l
+063254  47 58                           beq     loc_632AE:8
+063256  5e 05 83 f2                     jsr     sub_583F2:24
+06325A  40 16                           bra     loc_63272:8
+06325C  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+063260  ac 01                           cmp.b   #1, r4l
+063262  58 70 00 8c                     beq     locret_632F2:16
+063266  6a 0c b2 67                     mov.b   @0xFFFFB267:16, r4l
+06326A  47 2a                           beq     loc_63296:8
+06326C  f4 00                           mov.b   #0, r4h
+06326E  6a 84 b2 67                     mov.b   r4h, @0xFFFFB267:16
+063272  ac 41                           cmp.b   #0x41, r4l ; 'A'
+063274  58 70 03 18                     beq     loc_63590:16
+063278  ac 42                           cmp.b   #0x42, r4l ; 'B'
+06327A  58 70 03 04                     beq     loc_63582:16
+06327E  ac 51                           cmp.b   #0x51, r4l ; 'Q'
+063280  58 70 01 1c                     beq     loc_633A0:16
+063284  ac 52                           cmp.b   #0x52, r4l ; 'R'
+063286  58 70 01 06                     beq     loc_63390:16
+06328A  ac 46                           cmp.b   #0x46, r4l ; 'F'
+06328C  58 70 06 74                     beq     loc_63904:16
+063290  5e 06 8e 9a                     jsr     sub_68E9A:24
+063294  40 5c                           bra     locret_632F2:8
+063296  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+06329A  ac 01                           cmp.b   #1, r4l
+06329C  47 54                           beq     locret_632F2:8
+06329E  6a 0c b3 fa                     mov.b   @0xFFFFB3FA:16, r4l
+0632A2  47 0a                           beq     loc_632AE:8
+0632A4  f4 00                           mov.b   #0, r4h
+0632A6  6a 84 b3 fa                     mov.b   r4h, @0xFFFFB3FA:16
+0632AA  5e 06 83 04                     jsr     sub_68304:24
+0632AE  5e 06 82 42                     jsr     sub_68242:24
+0632B2  6a 0c b3 ea                     mov.b   @0xFFFFB3EA:16, r4l
+0632B6  ac 01                           cmp.b   #1, r4l
+0632B8  47 04                           beq     loc_632BE:8
+0632BA  55 48                           bsr     sub_63304:8
+0632BC  40 34                           bra     locret_632F2:8
+0632BE  6b 04 95 e4                     mov.w   @0xFFFF95E4:16, r4
+0632C2  46 2e                           bne     locret_632F2:8
+0632C4  6a 10 b2 6b 73 70               btst    #7, @0xFFFFB26B:16
+0632CA  47 16                           beq     loc_632E2:8
+0632CC  5e 06 2d a4                     jsr     sub_62DA4:24
+0632D0  47 10                           beq     loc_632E2:8
+0632D2  6a 18 b2 6b 72 70               bclr    #7, @0xFFFFB26B:16
+0632D8  79 04 01 2c                     mov.w   #0x12C, r4
+0632DC  6b 84 95 e4                     mov.w   r4, @0xFFFF95E4:16
+0632E0  40 10                           bra     locret_632F2:8
+0632E2  fc 1d                           mov.b   #0x1D, r4l
+0632E4  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+0632E8  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+0632EE  5e 05 fd ae                     jsr     sub_5FDAE:24
+0632F2  54 70                           rts
+
+=== C23. sub_5FC0E WIRES-X start (X key): immediate ']q' or deferred (B26B.b7, FF95E4=0x1C)
+05FC0E  5e 03 dd 14                     jsr     sub_3DD14:24
+05FC12  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+05FC16  4b 18                           bmi     loc_5FC30:8
+05FC18  6a 0c 8d 90                     mov.b   @0xFFFF8D90:16, r4l
+05FC1C  ac 01                           cmp.b   #1, r4l
+05FC1E  46 10                           bne     loc_5FC30:8
+05FC20  5e 02 59 b2                     jsr     sub_259B2:24
+05FC24  58 60 00 ec                     bne     loc_5FD14:16
+05FC28  fc 00                           mov.b   #0, r4l
+05FC2A  6a 8c b1 30                     mov.b   r4l, @0xFFFFB130:16
+05FC2E  40 52                           bra     loc_5FC82:8
+05FC30  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+05FC34  4a 30                           bpl     loc_5FC66:8
+05FC36  6a 18 b3 d9 72 00               bclr    #0, @0xFFFFB3D9:16
+05FC3C  6a 10 8d e0 73 70               btst    #7, @0xFFFF8DE0:16
+05FC42  46 12                           bne     loc_5FC56:8
+05FC44  6a 04 8e d6                     mov.b   @0xFFFF8ED6:16, r4h
+05FC48  6a 0c 8e d7                     mov.b   @0xFFFF8ED7:16, r4l
+05FC4C  0c 44                           mov.b   r4h, r4h
+05FC4E  47 06                           beq     loc_5FC56:8
+05FC50  1c 4c                           cmp.b   r4h, r4l
+05FC52  58 60 00 be                     bne     loc_5FD14:16
+05FC56  fc 01                           mov.b   #1, r4l
+05FC58  6a 8c b1 30                     mov.b   r4l, @0xFFFFB130:16
+05FC5C  6a 0c 8e d7                     mov.b   @0xFFFF8ED7:16, r4l
+05FC60  6a 8c b1 31                     mov.b   r4l, @0xFFFFB131:16
+05FC64  40 1c                           bra     loc_5FC82:8
+05FC66  6a 0c 8d 24                     mov.b   @0xFFFF8D24:16, r4l
+05FC6A  47 10                           beq     loc_5FC7C:8
+05FC6C  fc 01                           mov.b   #1, r4l
+05FC6E  6a 8c b1 30                     mov.b   r4l, @0xFFFFB130:16
+05FC72  6a 0c 8d 24                     mov.b   @0xFFFF8D24:16, r4l
+05FC76  6a 8c b1 31                     mov.b   r4l, @0xFFFFB131:16
+05FC7A  40 06                           bra     loc_5FC82:8
+05FC7C  fc 02                           mov.b   #2, r4l
+05FC7E  6a 8c b1 30                     mov.b   r4l, @0xFFFFB130:16
+05FC82  fc ff                           mov.b   #0xFF, r4l
+05FC84  6a 8c ad 9a                     mov.b   r4l, @0xFFFFAD9A:16
+05FC88  fc 00                           mov.b   #0, r4l
+05FC8A  6a 8c b2 6b                     mov.b   r4l, @0xFFFFB26B:16
+05FC8E  fc 00                           mov.b   #0, r4l
+05FC90  6a 8c b2 6f                     mov.b   r4l, @0xFFFFB26F:16
+05FC94  fc 30                           mov.b   #0x30, r4l ; '0'
+05FC96  6a 8c b2 c8                     mov.b   r4l, @0xFFFFB2C8:16
+05FC9A  fc 00                           mov.b   #0, r4l
+05FC9C  6a 8c b3 29                     mov.b   r4l, @0xFFFFB329:16
+05FCA0  fc 00                           mov.b   #0, r4l
+05FCA2  6a 8c b3 ef                     mov.b   r4l, @0xFFFFB3EF:16
+05FCA6  55 74                           bsr     sub_5FD1C:8
+05FCA8  fc 30                           mov.b   #0x30, r4l ; '0'
+05FCAA  6a 8c b2 c7                     mov.b   r4l, @0xFFFFB2C7:16
+05FCAE  fc 00                           mov.b   #0, r4l
+05FCB0  6a 8c b3 ea                     mov.b   r4l, @0xFFFFB3EA:16
+05FCB4  6a 18 b2 6b 72 70               bclr    #7, @0xFFFFB26B:16
+05FCBA  6a 10 aa 3d 73 10               btst    #1, @0xFFFFAA3D:16
+05FCC0  47 2a                           beq     loc_5FCEC:8
+05FCC2  6a 18 aa d4 72 00               bclr    #0, @0xFFFFAAD4:16
+05FCC8  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+05FCCC  ac 01                           cmp.b   #1, r4l
+05FCCE  47 44                           beq     loc_5FD14:8
+05FCD0  5e 02 2f 60                     jsr     sub_22F60:24
+05FCD4  47 3e                           beq     loc_5FD14:8
+05FCD6  6a 18 b2 6b 70 70               bset    #7, @0xFFFFB26B:16
+05FCDC  6a 18 b2 6b 70 00               bset    #0, @0xFFFFB26B:16
+05FCE2  79 04 00 1c                     mov.w   #0x1C, r4
+05FCE6  6b 84 95 e4                     mov.w   r4, @0xFFFF95E4:16
+05FCEA  40 14                           bra     loc_5FD00:8
+05FCEC  5e 06 2d a4                     jsr     sub_62DA4:24
+05FCF0  47 22                           beq     loc_5FD14:8
+05FCF2  6a 18 b2 6b 70 00               bset    #0, @0xFFFFB26B:16
+05FCF8  79 04 01 2c                     mov.w   #0x12C, r4
+05FCFC  6b 84 95 e4                     mov.w   r4, @0xFFFF95E4:16
+05FD00  fc 01                           mov.b   #1, r4l
+05FD02  6a 8c b3 ea                     mov.b   r4l, @0xFFFFB3EA:16
+05FD06  fc 02                           mov.b   #2, r4l
+05FD08  6a 8c b2 a5                     mov.b   r4l, @0xFFFFB2A5:16
+05FD0C  fc 09                           mov.b   #9, r4l
+05FD0E  6a 8c a9 f9                     mov.b   r4l, @0xFFFFA9F9:16
+05FD12  40 06                           bra     locret_5FD1A:8
+05FD14  fc 1d                           mov.b   #0x1D, r4l
+05FD16  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+05FD1A  54 70                           rts
+
+=== C24. Analog answer-back arm: sub_3008C band A (89C3.b2 -> +0x86.b7, FF9578=200)
+03008C  6a 0c 8d 20                     mov.b   @0xFFFF8D20:16, r4l
+030090  47 0a                           beq     loc_3009C:8
+030092  5e 02 fc c8                     jsr     sub_2FCC8:24
+030096  58 60 00 ce                     bne     loc_30168:16
+03009A  40 3e                           bra     loc_300DA:8
+03009C  6a 8c 94 bb                     mov.b   r4l, @0xFFFF94BB:16
+0300A0  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+0300A4  4a 18                           bpl     loc_300BE:8
+0300A6  6a 18 b3 d9 72 10               bclr    #1, @0xFFFFB3D9:16
+0300AC  fc 00                           mov.b   #0, r4l
+0300AE  6a 10 8d e0 73 70               btst    #7, @0xFFFF8DE0:16
+0300B4  47 08                           beq     loc_300BE:8
+0300B6  fb 02                           mov.b   #2, r3l
+0300B8  6e 8b 00 90                     mov.b   r3l, @(0x90:16,er0)
+0300BC  fc ff                           mov.b   #0xFF, r4l
+0300BE  58 b0 00 a8                     bmi     locret_3016A:16
+0300C2  5e 03 05 90                     jsr     sub_30590:24
+0300C6  58 60 00 88                     bne     loc_30152:16
+0300CA  ab 02                           cmp.b   #2, r3l
+0300CC  58 70 00 7e                     beq     loc_3014E:16
+0300D0  ab 01                           cmp.b   #1, r3l
+0300D2  58 70 00 7c                     beq     loc_30152:16
+0300D6  5e 03 0a 24                     jsr     loc_30A24:24
+0300DA  6a 10 aa 35 73 60               btst    #6, @0xFFFFAA35:16
+0300E0  46 66                           bne     loc_30148:8
+0300E2  6a 10 8f 86 73 00               btst    #0, @0xFFFF8F86:16
+0300E8  47 58                           beq     loc_30142:8
+0300EA  5e 02 fc 6e                     jsr     sub_2FC6E:24
+0300EE  46 52                           bne     loc_30142:8
+0300F0  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+0300F6  6e 0c 00 91                     mov.b   @(0x91:16,er0), r4l
+0300FA  70 2c                           bset    #2, r4l
+0300FC  6e 8c 00 91                     mov.b   r4l, @(0x91:16,er0)
+030100  5e 02 ff 0a                     jsr     sub_2FF0A:24
+030104  5e 03 08 be                     jsr     sub_308BE:24
+030108  5e 02 f5 50                     jsr     sub_2F550:24
+03010C  fc 64                           mov.b   #0x64, r4l ; 'd'
+03010E  6a 8c 95 ac                     mov.b   r4l, @0xFFFF95AC:16
+030112  fc 0b                           mov.b   #0xB, r4l
+030114  6e 8c 00 93                     mov.b   r4l, @(0x93:16,er0)
+030118  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+03011C  72 7c                           bclr    #7, r4l
+03011E  6e 8c 00 86                     mov.b   r4l, @(0x86:16,er0)
+030122  fc 00                           mov.b   #0, r4l
+030124  6a 8c 95 78                     mov.b   r4l, @0xFFFF9578:16
+030128  6a 10 89 c3 73 20               btst    #2, @0xFFFF89C3:16
+03012E  47 3a                           beq     locret_3016A:8
+030130  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+030134  70 7c                           bset    #7, r4l
+030136  6e 8c 00 86                     mov.b   r4l, @(0x86:16,er0)
+03013A  fc c8                           mov.b   #0xC8, r4l
+03013C  6a 8c 95 78                     mov.b   r4l, @0xFFFF9578:16
+030140  40 28                           bra     locret_3016A:8
+030142  5e 03 09 f2                     jsr     sub_309F2:24
+030146  40 0a                           bra     loc_30152:8
+030148  5e 03 08 be                     jsr     sub_308BE:24
+03014C  40 04                           bra     loc_30152:8
+03014E  5e 03 0a 00                     jsr     sub_30A00:24
+030152  6a 0c 95 77                     mov.b   @0xFFFF9577:16, r4l
+030156  46 12                           bne     locret_3016A:8
+030158  fc 09                           mov.b   #9, r4l
+03015A  6e 8c 00 93                     mov.b   r4l, @(0x93:16,er0)
+03015E  5e 02 f4 aa                     jsr     sub_2F4AA:24
+030162  5e 02 fb 94                     jsr     sub_2FB94:24
+030166  40 02                           bra     locret_3016A:8
+030168  55 02                           bsr     sub_3016C:8
+03016A  54 70                           rts
+03016C  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+030170  72 7c                           bclr    #7, r4l
+030172  6e 8c 00 86                     mov.b   r4l, @(0x86:16,er0)
+030176  fc 00                           mov.b   #0, r4l
+030178  6a 8c 95 77                     mov.b   r4l, @0xFFFF9577:16
+03017C  6a 8c 95 78                     mov.b   r4l, @0xFFFF9578:16
+030180  6a 8c 95 ac                     mov.b   r4l, @0xFFFF95AC:16
+030184  6e 0c 00 92                     mov.b   @(0x92:16,er0), r4l
+030188  72 0c                           bclr    #0, r4l
+03018A  6e 8c 00 92                     mov.b   r4l, @(0x92:16,er0)
+03018E  fc 09                           mov.b   #9, r4l
+030190  6e 8c 00 93                     mov.b   r4l, @(0x93:16,er0)
+030194  5e 02 f4 aa                     jsr     sub_2F4AA:24
+030198  5e 02 fb 94                     jsr     sub_2FB94:24
+03019C  54 70                           rts
+03019E  6a 0c 8d 20                     mov.b   @0xFFFF8D20:16, r4l
+
+=== C25. Analog answer-back fire: sub_3019E band A (AACF=1, AAD1.b0, AACE=5)
+03019E  6a 0c 8d 20                     mov.b   @0xFFFF8D20:16, r4l
+0301A2  47 0a                           beq     loc_301AE:8
+0301A4  5e 02 fc c8                     jsr     sub_2FCC8:24
+0301A8  58 60 00 e4                     bne     loc_30290:16
+0301AC  40 38                           bra     loc_301E6:8
+0301AE  6a 8c 94 bb                     mov.b   r4l, @0xFFFF94BB:16
+0301B2  6a 0c 8d de                     mov.b   @0xFFFF8DDE:16, r4l
+0301B6  4a 18                           bpl     loc_301D0:8
+0301B8  6a 18 b3 d9 72 10               bclr    #1, @0xFFFFB3D9:16
+0301BE  fc 00                           mov.b   #0, r4l
+0301C0  6a 10 8d e0 73 70               btst    #7, @0xFFFF8DE0:16
+0301C6  47 08                           beq     loc_301D0:8
+0301C8  fb 02                           mov.b   #2, r3l
+0301CA  6e 8b 00 90                     mov.b   r3l, @(0x90:16,er0)
+0301CE  fc ff                           mov.b   #0xFF, r4l
+0301D0  58 b0 00 ca                     bmi     locret_3029E:16
+0301D4  5e 03 05 90                     jsr     sub_30590:24
+0301D8  46 3a                           bne     loc_30214:8
+0301DA  ab 02                           cmp.b   #2, r3l
+0301DC  47 32                           beq     loc_30210:8
+0301DE  ab 01                           cmp.b   #1, r3l
+0301E0  47 32                           beq     loc_30214:8
+0301E2  5e 03 0a 24                     jsr     loc_30A24:24
+0301E6  fc c8                           mov.b   #0xC8, r4l
+0301E8  6a 8c 95 78                     mov.b   r4l, @0xFFFF9578:16
+0301EC  fc 64                           mov.b   #0x64, r4l ; 'd'
+0301EE  6a 8c 95 ac                     mov.b   r4l, @0xFFFF95AC:16
+0301F2  6a 10 aa 35 73 60               btst    #6, @0xFFFFAA35:16
+0301F8  46 0e                           bne     loc_30208:8
+0301FA  5e 02 fc 6e                     jsr     sub_2FC6E:24
+0301FE  47 08                           beq     loc_30208:8
+030200  5e 03 09 f2                     jsr     sub_309F2:24
+030204  58 00 00 96                     bra     locret_3029E:16
+030208  5e 03 08 be                     jsr     sub_308BE:24
+03020C  58 00 00 8e                     bra     locret_3029E:16
+030210  5e 03 0a 00                     jsr     sub_30A00:24
+030214  6a 10 89 c3 73 20               btst    #2, @0xFFFF89C3:16
+03021A  47 4e                           beq     loc_3026A:8
+03021C  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+030220  73 7c                           btst    #7, r4l
+030222  47 46                           beq     loc_3026A:8
+030224  6a 0c 95 78                     mov.b   @0xFFFF9578:16, r4l
+030228  46 40                           bne     loc_3026A:8
+03022A  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+03022E  72 7c                           bclr    #7, r4l
+030230  6e 8c 00 86                     mov.b   r4l, @(0x86:16,er0)
+030234  5e 03 4d c2                     jsr     sub_34DC2:24
+030238  46 30                           bne     loc_3026A:8
+03023A  6a 18 aa d1 70 00               bset    #0, @0xFFFFAAD1:16
+030240  fc 05                           mov.b   #5, r4l
+030242  6a 8c aa ce                     mov.b   r4l, @0xFFFFAACE:16
+030246  fc ff                           mov.b   #0xFF, r4l
+030248  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+03024C  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+030252  01 00 6b 04 aa ae               mov.l   @0xFFFFAAAE:16, er4
+030258  01 00 6b 84 aa aa               mov.l   er4, @0xFFFFAAAA:16
+03025E  fc 01                           mov.b   #1, r4l
+030260  6a 8c aa cf                     mov.b   r4l, @0xFFFFAACF:16
+030264  fc 01                           mov.b   #1, r4l
+030266  6a 8c 94 c0                     mov.b   r4l, @0xFFFF94C0:16
+03026A  6a 0c 95 ac                     mov.b   @0xFFFF95AC:16, r4l
+03026E  46 2e                           bne     locret_3029E:8
+030270  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+030276  6e 0c 00 92                     mov.b   @(0x92:16,er0), r4l
+03027A  72 0c                           bclr    #0, r4l
+03027C  6e 8c 00 92                     mov.b   r4l, @(0x92:16,er0)
+
+=== C26. Band B mirror sub_31B62 / sub_31C52
+031B80  58 70 00 7e                     beq     loc_31C02:16
+031B84  ab 01                           cmp.b   #1, r3l
+031B86  58 70 00 7c                     beq     loc_31C06:16
+031B8A  5e 03 23 86                     jsr     loc_32386:24
+031B8E  6a 10 aa 35 73 60               btst    #6, @0xFFFFAA35:16
+031B94  46 66                           bne     loc_31BFC:8
+031B96  6a 10 90 8e 73 00               btst    #0, @0xFFFF908E:16
+031B9C  47 58                           beq     loc_31BF6:8
+031B9E  5e 03 17 dc                     jsr     sub_317DC:24
+031BA2  46 52                           bne     loc_31BF6:8
+031BA4  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+031BAA  6e 0c 00 91                     mov.b   @(0x91:16,er0), r4l
+031BAE  70 2c                           bset    #2, r4l
+031BB0  6e 8c 00 91                     mov.b   r4l, @(0x91:16,er0)
+031BB4  5e 03 1a 20                     jsr     sub_31A20:24
+031BB8  5e 03 22 d6                     jsr     sub_322D6:24
+031BBC  5e 03 10 4a                     jsr     sub_3104A:24
+031BC0  fc 64                           mov.b   #0x64, r4l ; 'd'
+031BC2  6a 8c 95 ad                     mov.b   r4l, @0xFFFF95AD:16
+031BC6  fc 0b                           mov.b   #0xB, r4l
+031BC8  6e 8c 00 93                     mov.b   r4l, @(0x93:16,er0)
+031BCC  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+031BD0  72 7c                           bclr    #7, r4l
+031BD2  6e 8c 00 86                     mov.b   r4l, @(0x86:16,er0)
+031BD6  fc 00                           mov.b   #0, r4l
+031BD8  6a 8c 95 89                     mov.b   r4l, @0xFFFF9589:16
+031BDC  6a 10 89 c3 73 20               btst    #2, @0xFFFF89C3:16
+031BE2  47 3a                           beq     locret_31C1E:8
+031BE4  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+031BE8  70 7c                           bset    #7, r4l
+031BEA  6e 8c 00 86                     mov.b   r4l, @(0x86:16,er0)
+031BEE  fc c8                           mov.b   #0xC8, r4l
+031BF0  6a 8c 95 89                     mov.b   r4l, @0xFFFF9589:16
+031BF4  40 28                           bra     locret_31C1E:8
+031BF6  5e 03 23 6a                     jsr     sub_3236A:24
+031BFA  40 0a                           bra     loc_31C06:8
+031BFC  5e 03 22 d6                     jsr     sub_322D6:24
+031C00  40 04                           bra     loc_31C06:8
+031C02  5e 03 23 78                     jsr     sub_32378:24
+031C06  6a 0c 95 88                     mov.b   @0xFFFF9588:16, r4l
+031C0A  46 12                           bne     locret_31C1E:8
+031C0C  fc 09                           mov.b   #9, r4l
+031C0E  6e 8c 00 93                     mov.b   r4l, @(0x93:16,er0)
+031C12  5e 03 0f a4                     jsr     sub_30FA4:24
+031C16  5e 03 16 3c                     jsr     sub_3163C:24
+031C1A  40 02                           bra     locret_31C1E:8
+031C1C  55 02                           bsr     sub_31C20:8
+031C1E  54 70                           rts
+031C20  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+031C24  72 7c                           bclr    #7, r4l
+031C26  6e 8c 00 86                     mov.b   r4l, @(0x86:16,er0)
+031C2A  fc 00                           mov.b   #0, r4l
+031C2C  6a 8c 95 88                     mov.b   r4l, @0xFFFF9588:16
+031C30  6a 8c 95 89                     mov.b   r4l, @0xFFFF9589:16
+031C34  6a 8c 95 ad                     mov.b   r4l, @0xFFFF95AD:16
+031C38  6e 0c 00 92                     mov.b   @(0x92:16,er0), r4l
+031C3C  72 0c                           bclr    #0, r4l
+031C3E  6e 8c 00 92                     mov.b   r4l, @(0x92:16,er0)
+031C42  fc 09                           mov.b   #9, r4l
+031C44  6e 8c 00 93                     mov.b   r4l, @(0x93:16,er0)
+031C48  5e 03 0f a4                     jsr     sub_30FA4:24
+031C4C  5e 03 16 3c                     jsr     sub_3163C:24
+031C50  54 70                           rts
+031C52  6a 0c 8d d5                     mov.b   @0xFFFF8DD5:16, r4l
+031C56  47 0a                           beq     loc_31C62:8
+031C58  5e 03 18 36                     jsr     sub_31836:24
+031C5C  58 60 00 c2                     bne     loc_31D22:16
+031C60  40 16                           bra     loc_31C78:8
+031C62  6a 8c bc 5c                     mov.b   r4l, @0xFFFFBC5C:16
+031C66  5e 03 1f 9e                     jsr     sub_31F9E:24
+031C6A  46 3a                           bne     loc_31CA6:8
+031C6C  ab 02                           cmp.b   #2, r3l
+031C6E  47 32                           beq     loc_31CA2:8
+031C70  ab 01                           cmp.b   #1, r3l
+031C72  47 32                           beq     loc_31CA6:8
+031C74  5e 03 23 86                     jsr     loc_32386:24
+031C78  fc c8                           mov.b   #0xC8, r4l
+031C7A  6a 8c 95 89                     mov.b   r4l, @0xFFFF9589:16
+031C7E  fc 64                           mov.b   #0x64, r4l ; 'd'
+031C80  6a 8c 95 ad                     mov.b   r4l, @0xFFFF95AD:16
+031C84  6a 10 aa 35 73 60               btst    #6, @0xFFFFAA35:16
+031C8A  46 0e                           bne     loc_31C9A:8
+031C8C  5e 03 17 dc                     jsr     sub_317DC:24
+031C90  47 08                           beq     loc_31C9A:8
+031C92  5e 03 23 6a                     jsr     sub_3236A:24
+031C96  58 00 00 96                     bra     locret_31D30:16
+031C9A  5e 03 22 d6                     jsr     sub_322D6:24
+031C9E  58 00 00 8e                     bra     locret_31D30:16
+031CA2  5e 03 23 78                     jsr     sub_32378:24
+031CA6  6a 10 89 c3 73 20               btst    #2, @0xFFFF89C3:16
+031CAC  47 4e                           beq     loc_31CFC:8
+031CAE  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+031CB2  73 7c                           btst    #7, r4l
+031CB4  47 46                           beq     loc_31CFC:8
+031CB6  6a 0c 95 89                     mov.b   @0xFFFF9589:16, r4l
+031CBA  46 40                           bne     loc_31CFC:8
+031CBC  6e 0c 00 86                     mov.b   @(0x86:16,er0), r4l
+031CC0  72 7c                           bclr    #7, r4l
+031CC2  6e 8c 00 86                     mov.b   r4l, @(0x86:16,er0)
+031CC6  5e 03 4d c2                     jsr     sub_34DC2:24
+031CCA  46 30                           bne     loc_31CFC:8
+031CCC  6a 18 aa d1 70 00               bset    #0, @0xFFFFAAD1:16
+031CD2  fc 05                           mov.b   #5, r4l
+031CD4  6a 8c aa ce                     mov.b   r4l, @0xFFFFAACE:16
+031CD8  fc ff                           mov.b   #0xFF, r4l
+031CDA  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+031CDE  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+031CE4  01 00 6b 04 aa ae               mov.l   @0xFFFFAAAE:16, er4
+031CEA  01 00 6b 84 aa aa               mov.l   er4, @0xFFFFAAAA:16
+031CF0  fc 01                           mov.b   #1, r4l
+031CF2  6a 8c aa cf                     mov.b   r4l, @0xFFFFAACF:16
+031CF6  fc 01                           mov.b   #1, r4l
+031CF8  6a 8c 94 c0                     mov.b   r4l, @0xFFFF94C0:16
+031CFC  6a 0c 95 ad                     mov.b   @0xFFFF95AD:16, r4l
+
+=== C27. Code-match ISR 0x001114 sets band A +0x86.b0 (FF8F86)
+0011C8  6a 10 8f 86 73 00               btst    #0, @0xFFFF8F86:16
+0011CE  46 58                           bne     loc_1228:8
+0011D0  6a 06 8f 84                     mov.b   @0xFFFF8F84:16, r6h
+0011D4  6a 0e 8f 82                     mov.b   @0xFFFF8F82:16, r6l
+0011D8  7a 05 00 00 00 18               mov.l   #0x18, er5
+0011DE  79 0c 00 00                     mov.w   #0, e4
+0011E2  79 0e 00 1f                     mov.w   #0x1F, e6
+0011E6  6e 5c 8f c5                     mov.b   @(-0x703B:16,er5), r4l
+0011EA  66 e4                           and.w   e6, r4
+0011EC  6e 44 12 8c                     mov.b   @(0x128C:16,er4), r4h
+0011F0  47 16                           beq     loc_1208:8
+0011F2  1a 0d                           dec.b   r5l
+0011F4  1c 6d                           cmp.b   r6h, r5l
+0011F6  44 ee                           bcc     loc_11E6:8
+0011F8  40 14                           bra     loc_120E:8
+0011FA  6e 54 8f c5                     mov.b   @(-0x703B:16,er5), r4h
+0011FE  e4 1f                           and.b   #0x1F, r4h
+001200  1c c4                           cmp.b   r4l, r4h
+001202  46 04                           bne     loc_1208:8
+001204  1a 0e                           dec.b   r6l
+001206  47 0c                           beq     loc_1214:8
+001208  1a 0d                           dec.b   r5l
+00120A  1c 6d                           cmp.b   r6h, r5l
+00120C  44 ec                           bcc     loc_11FA:8
+00120E  01 20 6d 76                     ldm.l   @sp+, er4-er6
+001212  56 70                           rte
+001214  6a 18 8f 86 70 00               bset    #0, @0xFFFF8F86:16
+00121A  6b 04 8f 80                     mov.w   @0xFFFF8F80:16, r4
+00121E  6b 84 8f 98                     mov.w   r4, @0xFFFF8F98:16
+001222  01 20 6d 76                     ldm.l   @sp+, er4-er6
+001226  56 70                           rte
+
+=== C28. Setting packers: F345 {89C3.b2, 8968..896B}; F382 {FF8997, 89BF.b3}
+00554E  fb 00                           mov.b   #0, r3l
+005550  6a 10 89 c3 77 20               bld     #2, @0xFFFF89C3:16
+005556  67 0b                           bst     #0, r3l
+005558  6a 8b b0 5a                     mov.b   r3l, @0xFFFFB05A:16
+00555C  6a 0c 89 68                     mov.b   @0xFFFF8968:16, r4l
+005560  6a 8c b0 5b                     mov.b   r4l, @0xFFFFB05B:16
+005564  6a 0c 89 69                     mov.b   @0xFFFF8969:16, r4l
+005568  6a 8c b0 5c                     mov.b   r4l, @0xFFFFB05C:16
+00556C  6a 0c 89 6a                     mov.b   @0xFFFF896A:16, r4l
+005570  6a 8c b0 5d                     mov.b   r4l, @0xFFFFB05D:16
+005574  6a 0c 89 6b                     mov.b   @0xFFFF896B:16, r4l
+005578  6a 8c b0 5e                     mov.b   r4l, @0xFFFFB05E:16
+00557C  79 0b f3 45                     mov.w   #0xF345, e3
+005580  5e 00 99 7a                     jsr     sub_997A:24
+005584  54 70                           rts
+005586  54 70                           rts
+
+=== C29. F382 packer
+004E98  6a 03 89 97                     mov.b   @0xFFFF8997:16, r3h
+004E9C  fb 00                           mov.b   #0, r3l
+004E9E  6a 10 89 bf 77 30               bld     #3, @0xFFFF89BF:16
+004EA4  67 0b                           bst     #0, r3l
+004EA6  6b 83 b0 5a                     mov.w   r3, @0xFFFFB05A:16
+004EAA  79 0b f3 82                     mov.w   #0xF382, e3
+004EAE  5e 00 97 92                     jsr     sub_9792:24
+004EB2  54 70                           rts
+
+=== C30. TX letter builder heads (B0B9 -> letter; ']' via sub_5CAF0, 'G' via sub_5CAF8)
+05CAF0  6a 03 b1 1f                     mov.b   @0xFFFFB11F:16, r3h
+05CAF4  fb 5d                           mov.b   #0x5D, r3l ; ']'
+05CAF6  40 08                           bra     loc_5CB00:8
+05CAF8  6a 03 b1 1f                     mov.b   @0xFFFFB11F:16, r3h
+05CAFC  fb 47                           mov.b   #0x47, r3l ; 'G'
+05CAFE  40 00                           bra     loc_5CB00:8
+05CB00  6b a3 00 ff 02 06               mov.w   r3, @0xFF0206:32
+05CB06  6a 0b b0 b9                     mov.b   @0xFFFFB0B9:16, r3l
+05CB0A  7a 63 00 00 00 ff               and.l   #0xFF, er3
+05CB10  10 73                           shll.l  #2, er3
+05CB12  78 b0 6b 26 00 05 ce 98         mov.l   @(off_5CE98:32,er3), er6
+05CB1A  59 60                           jmp     @er6
+
+=== C31. Letter entries
+05CCF8  fb 72                           mov.b   #0x72, r3l ; 'r'
+05CCFA  40 36                           bra     sub_5CD32:8
+05CCFC  fb 41                           mov.b   #0x41, r3l ; 'A'
+05CCFE  40 32                           bra     sub_5CD32:8
+05CD00  6a 10 8d 82 73 00               btst    #0, @0xFFFF8D82:16
+05CD06  46 04                           bne     loc_5CD0C:8
+05CD08  fb 63                           mov.b   #0x63, r3l ; 'c'
+05CD0A  40 26                           bra     sub_5CD32:8
+05CD0C  5e 02 30 38                     jsr     sub_23038:24
+05CD10  47 f6                           beq     loc_5CD08:8
+05CD12  fb 64                           mov.b   #0x64, r3l ; 'd'
+05CD14  7a 06 00 ff 02 08               mov.l   #0xFF0208, er6
+05CD1A  68 eb                           mov.b   r3l, @er6
+05CD1C  0b 06                           adds    #1, er6
+05CD1E  fc 5f                           mov.b   #0x5F, r4l ; '_'
+05CD20  68 ec                           mov.b   r4l, @er6
+05CD22  0b 06                           adds    #1, er6
+05CD24  fc 30                           mov.b   #0x30, r4l ; '0'
+05CD26  68 ec                           mov.b   r4l, @er6
+05CD28  0b 06                           adds    #1, er6
+05CD2A  5e 04 96 a6                     jsr     sub_496A6:24
+05CD2E  40 18                           bra     loc_5CD48:8
+05CD30  fb 65                           mov.b   #0x65, r3l ; 'e'
+05CD32  7a 06 00 ff 02 08               mov.l   #0xFF0208, er6
+05CD38  68 eb                           mov.b   r3l, @er6
+05CD3A  0b 06                           adds    #1, er6
+05CD3C  fc 5f                           mov.b   #0x5F, r4l ; '_'
+05CD3E  68 ec                           mov.b   r4l, @er6
+05CD40  0b 06                           adds    #1, er6
+05CD42  fc 30                           mov.b   #0x30, r4l ; '0'
+05CD44  68 ec                           mov.b   r4l, @er6
+05CD46  0b 06                           adds    #1, er6
+05CD48  79 0c 00 5d                     mov.w   #0x5D, e4 ; ']'
+05CD4C  fa 5d                           mov.b   #0x5D, r2l ; ']'
+05CD4E  79 04 00 00                     mov.w   #0, r4
+05CD52  6b 84 b1 24                     mov.w   r4, @0xFFFFB124:16
+05CD56  54 70                           rts
+05CD58  fb 63                           mov.b   #0x63, r3l ; 'c'
+05CD5A  40 d6                           bra     sub_5CD32:8
+05CD5C  fb 6c                           mov.b   #0x6C, r3l ; 'l'
+05CD5E  40 d2                           bra     sub_5CD32:8
+05CD60  fb 72                           mov.b   #0x72, r3l ; 'r'
+05CD62  40 ce                           bra     sub_5CD32:8
+05CD64  fb 43                           mov.b   #0x43, r3l ; 'C'
+05CD66  40 ca                           bra     sub_5CD32:8
+05CD68  fb 4c                           mov.b   #0x4C, r3l ; 'L'
+05CD6A  40 c6                           bra     sub_5CD32:8
+05CD6C  fb 71                           mov.b   #0x71, r3l ; 'q'
+05CD6E  40 c2                           bra     sub_5CD32:8
+05CD70  fb 23                           mov.b   #0x23, r3l ; '#'
+05CD72  40 be                           bra     sub_5CD32:8
+05CD74  fb 2a                           mov.b   #0x2A, r3l ; '*'
+05CD76  40 ba                           bra     sub_5CD32:8
+05CD78  fb 66                           mov.b   #0x66, r3l ; 'f'
+05CD7A  40 b6                           bra     sub_5CD32:8
+05CD7C  fb 67                           mov.b   #0x67, r3l ; 'g'
+05CD7E  58 00 00 9a                     bra     loc_5CE1C:16
+05CD82  fb 30                           mov.b   #0x30, r3l ; '0'
+05CD84  40 ac                           bra     sub_5CD32:8
+05CD86  6a 10 8d 82 73 00               btst    #0, @0xFFFF8D82:16
+05CD8C  46 04                           bne     loc_5CD92:8
+05CD8E  fb 63                           mov.b   #0x63, r3l ; 'c'
+05CD90  40 a0                           bra     sub_5CD32:8
+05CD92  5e 02 30 38                     jsr     sub_23038:24
+05CD96  47 f6                           beq     sub_5CD8E:8
+05CD98  fb 64                           mov.b   #0x64, r3l ; 'd'
+05CD9A  7a 06 00 ff 02 08               mov.l   #0xFF0208, er6
+05CDA0  68 eb                           mov.b   r3l, @er6
+05CDA2  0b 06                           adds    #1, er6
+05CDA4  fc 5f                           mov.b   #0x5F, r4l ; '_'
+05CDA6  68 ec                           mov.b   r4l, @er6
+05CDA8  0b 06                           adds    #1, er6
+05CDAA  fc 30                           mov.b   #0x30, r4l ; '0'
+05CDAC  68 ec                           mov.b   r4l, @er6
+05CDAE  0b 06                           adds    #1, er6
+05CDB0  5e 04 96 a6                     jsr     sub_496A6:24
+05CDB4  40 92                           bra     loc_5CD48:8
+05CDB6  fb 6a                           mov.b   #0x6A, r3l ; 'j'
+05CDB8  58 00 ff 76                     bra     sub_5CD32:16
+05CDBC  6a 10 8d 82 73 00               btst    #0, @0xFFFF8D82:16
+05CDC2  46 04                           bne     loc_5CDC8:8
+05CDC4  fb 65                           mov.b   #0x65, r3l ; 'e'
+05CDC6  40 54                           bra     loc_5CE1C:8
+05CDC8  5e 02 30 38                     jsr     sub_23038:24
+05CDCC  47 f6                           beq     loc_5CDC4:8
+05CDCE  fb 66                           mov.b   #0x66, r3l ; 'f'
+05CDD0  7a 06 00 ff 02 08               mov.l   #0xFF0208, er6
+05CDD6  68 eb                           mov.b   r3l, @er6
+05CDD8  0b 06                           adds    #1, er6
+05CDDA  fc 5f                           mov.b   #0x5F, r4l ; '_'
+05CDDC  68 ec                           mov.b   r4l, @er6
+05CDDE  0b 06                           adds    #1, er6
+05CDE0  fc 30                           mov.b   #0x30, r4l ; '0'
+05CDE2  68 ec                           mov.b   r4l, @er6
+05CDE4  0b 06                           adds    #1, er6
+05CDE6  5e 04 96 a6                     jsr     sub_496A6:24
+05CDEA  40 46                           bra     loc_5CE32:8
+05CDEC  6a 10 8d 82 73 00               btst    #0, @0xFFFF8D82:16
+05CDF2  46 04                           bne     loc_5CDF8:8
+05CDF4  fb 67                           mov.b   #0x67, r3l ; 'g'
+05CDF6  40 24                           bra     loc_5CE1C:8
+05CDF8  5e 02 30 38                     jsr     sub_23038:24
+05CDFC  47 f6                           beq     loc_5CDF4:8
+05CDFE  fb 68                           mov.b   #0x68, r3l ; 'h'
+05CE00  7a 06 00 ff 02 08               mov.l   #0xFF0208, er6
+05CE06  68 eb                           mov.b   r3l, @er6
+05CE08  0b 06                           adds    #1, er6
+05CE0A  fc 5f                           mov.b   #0x5F, r4l ; '_'
+05CE0C  68 ec                           mov.b   r4l, @er6
+05CE0E  0b 06                           adds    #1, er6
+05CE10  fc 30                           mov.b   #0x30, r4l ; '0'
+05CE12  68 ec                           mov.b   r4l, @er6
+05CE14  0b 06                           adds    #1, er6
+05CE16  5e 04 96 a6                     jsr     sub_496A6:24
+05CE1A  40 16                           bra     loc_5CE32:8
+05CE1C  7a 06 00 ff 02 08               mov.l   #0xFF0208, er6
+05CE22  68 eb                           mov.b   r3l, @er6
+05CE24  0b 06                           adds    #1, er6
+05CE26  fc 5f                           mov.b   #0x5F, r4l ; '_'
+05CE28  68 ec                           mov.b   r4l, @er6
+05CE2A  0b 06                           adds    #1, er6
+05CE2C  fc 30                           mov.b   #0x30, r4l ; '0'
+05CE2E  68 ec                           mov.b   r4l, @er6
+05CE30  0b 06                           adds    #1, er6
+05CE32  79 0c 00 fd                     mov.w   #0xFD, e4
+05CE36  fa fd                           mov.b   #0xFD, r2l
+05CE38  79 04 00 00                     mov.w   #0, r4
+05CE3C  6b 84 b1 24                     mov.w   r4, @0xFFFFB124:16
+05CE40  54 70                           rts
+
+=== C32. WIRES-X PTT-deferred keyup: sub_615AA (state 0x29, FF959B=0x23) and sub_63304 -> sub_61624 -> sub_6631E
+0615AA  6a 0c b3 27                     mov.b   @0xFFFFB327:16, r4l
+0615AE  ac 30                           cmp.b   #0x30, r4l ; '0'
+0615B0  46 30                           bne     locret_615E2:8
+0615B2  fc 00                           mov.b   #0, r4l
+0615B4  6a 8c b3 eb                     mov.b   r4l, @0xFFFFB3EB:16
+0615B8  6a 8c b3 f1                     mov.b   r4l, @0xFFFFB3F1:16
+0615BC  fc 23                           mov.b   #0x23, r4l ; '#'
+0615BE  6a 8c 95 9b                     mov.b   r4l, @0xFFFF959B:16
+0615C2  fc 46                           mov.b   #0x46, r4l ; 'F'
+0615C4  6a 8c aa e0                     mov.b   r4l, @0xFFFFAAE0:16
+0615C8  6a 0c b3 ea                     mov.b   @0xFFFFB3EA:16, r4l
+0615CC  6a 8c bc 5b                     mov.b   r4l, @0xFFFFBC5B:16
+0615D0  fc 29                           mov.b   #0x29, r4l ; ')'
+0615D2  6a 8c b3 ea                     mov.b   r4l, @0xFFFFB3EA:16
+0615D6  6a 18 aa 34 72 50               bclr    #5, @0xFFFFAA34:16
+0615DC  fc 0d                           mov.b   #0xD, r4l
+0615DE  6a 8c bb e1                     mov.b   r4l, @0xFFFFBBE1:16
+0615E2  54 70                           rts
+
+=== C33. sub_63304 (B3EA==0x29 path)
+063304  6a 0c b3 ea                     mov.b   @0xFFFFB3EA:16, r4l
+063308  ac 29                           cmp.b   #0x29, r4l ; ')'
+06330A  47 3c                           beq     loc_63348:8
+06330C  ac 17                           cmp.b   #0x17, r4l
+06330E  47 0e                           beq     loc_6331E:8
+063310  ac 28                           cmp.b   #0x28, r4l ; '('
+063312  46 46                           bne     loc_6335A:8
+063314  6a 10 b2 66 73 30               btst    #3, @0xFFFFB266:16
+06331A  47 3e                           beq     loc_6335A:8
+06331C  40 08                           bra     loc_63326:8
+06331E  6a 10 b2 66 73 20               btst    #2, @0xFFFFB266:16
+063324  47 34                           beq     loc_6335A:8
+063326  6a 0c b1 11                     mov.b   @0xFFFFB111:16, r4l
+06332A  47 2e                           beq     loc_6335A:8
+06332C  6a 10 b2 66 73 10               btst    #1, @0xFFFFB266:16
+063332  46 26                           bne     loc_6335A:8
+063334  6a 18 81 7e 70 10               bset    #1, @0xFFFF817E:16
+06333A  fc 07                           mov.b   #7, r4l
+06333C  6a 8c 95 9c                     mov.b   r4l, @0xFFFF959C:16
+063340  6a 18 b2 66 70 10               bset    #1, @0xFFFFB266:16
+063346  40 12                           bra     loc_6335A:8
+063348  6a 0c a9 ea                     mov.b   @0xFFFFA9EA:16, r4l
+06334C  ac 02                           cmp.b   #2, r4l
+06334E  46 0a                           bne     loc_6335A:8
+063350  6a 0c 95 9b                     mov.b   @0xFFFF959B:16, r4l
+063354  46 04                           bne     loc_6335A:8
+063356  5e 06 16 24                     jsr     sub_61624:24
+06335A  5e 06 db e2                     jsr     sub_6DBE2:24
+06335E  54 70                           rts
+
+=== C34. sub_61624 / sub_6631E
+061624  fc 78                           mov.b   #0x78, r4l ; 'x'
+061626  6a 8c 95 99                     mov.b   r4l, @0xFFFF9599:16
+06162A  6a 18 b2 75 72 40               bclr    #4, @0xFFFFB275:16
+061630  79 04 02 58                     mov.w   #0x258, r4
+061634  6b 84 95 e6                     mov.w   r4, @0xFFFF95E6:16
+061638  5e 06 63 1e                     jsr     sub_6631E:24
+06163C  54 70                           rts
+
+=== C35. sub_6631E
+06631E  5e 02 24 4c                     jsr     sub_2244C:24
+066322  46 72                           bne     locret_66396:8
+066324  6a 18 aa d4 72 20               bclr    #2, @0xFFFFAAD4:16
+06632A  6a 18 aa d4 72 30               bclr    #3, @0xFFFFAAD4:16
+066330  6a 18 b2 66 72 40               bclr    #4, @0xFFFFB266:16
+066336  6a 0c b3 ea                     mov.b   @0xFFFFB3EA:16, r4l
+06633A  ac 1b                           cmp.b   #0x1B, r4l
+06633C  47 22                           beq     loc_66360:8
+06633E  ac 29                           cmp.b   #0x29, r4l ; ')'
+066340  46 42                           bne     loc_66384:8
+066342  fc 05                           mov.b   #5, r4l
+066344  6a 8c b4 7b                     mov.b   r4l, @0xFFFFB47B:16
+066348  fc 02                           mov.b   #2, r4l
+06634A  6a 8c b1 32                     mov.b   r4l, @0xFFFFB132:16
+06634E  6a 18 aa d4 70 30               bset    #3, @0xFFFFAAD4:16
+066354  6a 18 b2 66 70 40               bset    #4, @0xFFFFB266:16
+06635A  5e 06 5d f6                     jsr     sub_65DF6:24
+06635E  40 36                           bra     locret_66396:8
+066360  6a 0c b3 eb                     mov.b   @0xFFFFB3EB:16, r4l
+066364  46 1e                           bne     loc_66384:8
+066366  fc 00                           mov.b   #0, r4l
+066368  6a 8c b4 7b                     mov.b   r4l, @0xFFFFB47B:16
+06636C  fc 02                           mov.b   #2, r4l
+06636E  6a 8c b1 32                     mov.b   r4l, @0xFFFFB132:16
+066372  6a 18 aa d4 70 20               bset    #2, @0xFFFFAAD4:16
+066378  6a 18 b2 66 70 40               bset    #4, @0xFFFFB266:16
+06637E  5e 06 5d d8                     jsr     sub_65DD8:24
+066382  40 12                           bra     locret_66396:8
+066384  55 12                           bsr     sub_66398:8
+066386  47 08                           beq     loc_66390:8
+066388  fc 03                           mov.b   #3, r4l
+06638A  6a 8c b1 32                     mov.b   r4l, @0xFFFFB132:16
+06638E  40 06                           bra     locret_66396:8
+066390  fc 00                           mov.b   #0, r4l
+066392  6a 8c b1 32                     mov.b   r4l, @0xFFFFB132:16
+066396  54 70                           rts
+
+=== C36. Scheduler tiers 0x003576 (fast 10 ms: bytes FF9536-FF958D, words FF95B2-FF95CD; slow 100 ms: bytes FF958E-FF95B1, words FF95CE-FF95E9)
+003576  6a 0c 94 b8                     mov.b   @0xFFFF94B8:16, r4l
+00357A  46 f8                           bne     locret_3574:8
+00357C  fc 02                           mov.b   #2, r4l
+00357E  6a 8c 94 b8                     mov.b   r4l, @0xFFFF94B8:16
+003582  79 06 00 58                     mov.w   #0x58, r6 ; 'X'
+003586  7a 05 00 ff 95 36               mov.l   #0xFF9536, er5
+00358C  68 5c                           mov.b   @er5, r4l
+00358E  47 04                           beq     loc_3594:8
+003590  1a 0c                           dec.b   r4l
+003592  68 dc                           mov.b   r4l, @er5
+003594  0b 05                           adds    #1, er5
+003596  1b 56                           dec.w   #1, r6
+003598  46 f2                           bne     loc_358C:8
+00359A  79 06 00 1c                     mov.w   #0x1C, r6
+00359E  7a 05 00 ff 95 b2               mov.l   #0xFF95B2, er5
+0035A4  69 54                           mov.w   @er5, r4
+0035A6  47 04                           beq     loc_35AC:8
+0035A8  1b 54                           dec.w   #1, r4
+0035AA  69 d4                           mov.w   r4, @er5
+0035AC  0b 85                           adds    #2, er5
+0035AE  1b d6                           dec.w   #2, r6
+0035B0  46 f2                           bne     loc_35A4:8
+0035B2  f4 00                           mov.b   #0, r4h
+0035B4  6a 0c b4 7e                     mov.b   @0xFFFFB47E:16, r4l
+0035B8  ac 3f                           cmp.b   #0x3F, r4l ; '?'
+0035BA  44 04                           bcc     loc_35C0:8
+0035BC  0a 0c                           inc.b   r4l
+0035BE  0c c4                           mov.b   r4l, r4h
+0035C0  6a 84 b4 7e                     mov.b   r4h, @0xFFFFB47E:16
+0035C4  6a 0c 95 34                     mov.b   @0xFFFF9534:16, r4l
+0035C8  1a 0c                           dec.b   r4l
+0035CA  6a 8c 95 34                     mov.b   r4l, @0xFFFF9534:16
+0035CE  46 74                           bne     locret_3644:8
+0035D0  fc 0a                           mov.b   #0xA, r4l
+0035D2  6a 8c 95 34                     mov.b   r4l, @0xFFFF9534:16
+0035D6  79 06 00 24                     mov.w   #0x24, r6 ; '$'
+0035DA  7a 05 00 ff 95 8e               mov.l   #0xFF958E, er5
+0035E0  68 5c                           mov.b   @er5, r4l
+0035E2  47 04                           beq     loc_35E8:8
+0035E4  1a 0c                           dec.b   r4l
+0035E6  68 dc                           mov.b   r4l, @er5
+0035E8  0b 05                           adds    #1, er5
+0035EA  1b 56                           dec.w   #1, r6
+0035EC  46 f2                           bne     loc_35E0:8
+0035EE  79 06 00 1c                     mov.w   #0x1C, r6
+0035F2  7a 05 00 ff 95 ce               mov.l   #0xFF95CE, er5
+0035F8  69 54                           mov.w   @er5, r4
+0035FA  47 04                           beq     loc_3600:8
+0035FC  1b 54                           dec.w   #1, r4
+0035FE  69 d4                           mov.w   r4, @er5
+003600  0b 85                           adds    #2, er5
+003602  1b d6                           dec.w   #2, r6
+003604  46 f2                           bne     loc_35F8:8
+003606  6a 0c b3 f9                     mov.b   @0xFFFFB3F9:16, r4l
+00360A  47 0c                           beq     loc_3618:8
+00360C  6a 0c 94 c0                     mov.b   @0xFFFF94C0:16, r4l
+003610  ac 01                           cmp.b   #1, r4l
+003612  47 04                           beq     loc_3618:8
+003614  5e 06 95 e4                     jsr     sub_695E4:24
+003618  6a 0c 95 35                     mov.b   @0xFFFF9535:16, r4l
+00361C  1a 0c                           dec.b   r4l
+00361E  6a 8c 95 35                     mov.b   r4l, @0xFFFF9535:16
+003622  46 20                           bne     locret_3644:8
+003624  fc 0a                           mov.b   #0xA, r4l
+003626  6a 8c 95 35                     mov.b   r4l, @0xFFFF9535:16
+00362A  79 06 00 0e                     mov.w   #0xE, r6
+00362E  7a 05 00 ff 95 ea               mov.l   #0xFF95EA, er5
+003634  69 54                           mov.w   @er5, r4
+003636  47 04                           beq     loc_363C:8
+003638  1b 54                           dec.w   #1, r4
+00363A  69 d4                           mov.w   r4, @er5
+00363C  0b 85                           adds    #2, er5
+00363E  1b d6                           dec.w   #2, r6
+

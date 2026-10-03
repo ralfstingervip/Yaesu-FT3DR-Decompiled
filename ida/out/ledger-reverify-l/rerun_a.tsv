@@ -1,0 +1,63 @@
+lane	lane_dir	step	item	compared_to	result	note
+L1	main-final5	l1_build_masks.py	rc=0	-	-	named  delta: +868 window ; net +868 / proven removed runs: 1 ; proven added runs: 13 ; named added runs: 13 / OK
+L1	main-final5	output	final4-to-final5-diff.tsv	published	IDENTICAL	
+L1	main-final5	output	final5_named_mask.bin	published	IDENTICAL	
+L1	main-final5	output	final5_proven_mask.bin	published	IDENTICAL	
+L1	main-final5	output	ledger.tsv	published	DIFFERS-AS-EXPLAINED	sizes 1301 vs 765; script writes '72.97%%' (bad literal, wrong value) in rows 5/9 and no percentage block; published rows 5/9 say 73.01%/98.54% and add 6 percentage rows - the published file was extended after the script ran
+L1	main-final5	not rewritten by the run	3	-	-	MAIN_FINAL5_codemask.bin MAIN_FINAL5_functions_raw.tsv MAIN_FINAL5_log.txt
+L2	fnindex-lo	l2_reach.py	rc=0	-	-	reachedK bytes 366932 reachedN bytes 362082 fnonly runs 94 bytes 4850 / match published list: True
+L2	fnindex-lo	l2_back.py	rc=0	-	-	ok
+L2	fnindex-lo	l2_refs.py	rc=0	-	-	done 36 938
+L2	fnindex-lo	l2_emit.py	rc=0	-	-	{'DATA-MISTYPED': [12, 80], 'DEAD': [18, 760], 'REACHED': [4, 54], 'SPLIT-TAIL': [2, 44]} demote 32 884 cites 106
+L2	fnindex-lo	verify.py	rc=0	-	-	fnonly bytes reached with RN+3 callbacks: lo 54 hi 0 / ['018250-018262', '018ABE-018AD2', '01A094-01A09C', '01A0A4-01A0AC'] / newly reached bytes outside fnonly set: 0 of which unproven: 0
+L2	fnindex-lo	output	proposed-demotions.tsv	published	IDENTICAL	
+L2	fnindex-lo	output	proposed-seeds.tsv	published	IDENTICAL	
+L2	fnindex-lo	output	runs.tsv	published	IDENTICAL	
+L2	fnindex-lo	not rewritten by the run	4	-	-	backward-closure.txt ida-items.tsv ida-xrefs.tsv inbound-scan.txt
+L2	fnindex-lo	output(scratch)	backward-closure.txt <- _scr/back_lo.txt	published	IDENTICAL	
+L2	fnindex-lo	output(scratch)	inbound-scan.txt <- _scr/refs_lo.txt	published	IDENTICAL	
+L3	fnindex-mid	l3_edges.py	rc=0	-	-	   pre  04A392 cmp.b #0x58,r5h                          normal unproven / == 04C3C8-04C3D2 10  seeds_in=04C3C8 root=04C3C8 <- fnindex 04C3C8 / done 35s
+L3	fnindex-mid	l3_classify.py	rc=0	-	-	B: also drop cross-lane seed(s) 022DF0 022E3A (run 022DF0) -> lost 2898 B; in my runs 2532 / 2532; by run {'022DF0': 114, '033790': 20, '0337AC': 20, '0337C8': 20, '033B70': 6, '03400E': 4, '03531E': 16, '035422': 16, '03799E': 74, '037A02': 18, '03A9A2': 84, '03C668': 820, '03CDBE': 44, '03CDFC': 3
+L3	fnindex-mid	output	measure.txt	published	IDENTICAL	
+L3	fnindex-mid	output	proposed-demotions.tsv	published	IDENTICAL	
+L3	fnindex-mid	output	refs-detail.tsv	published	IDENTICAL	
+L3	fnindex-mid	output	runs.tsv	published	IDENTICAL-MOD-CRLF	identical after CRLF->LF (the re-run writes CRLF; the published file has LF)
+L3	fnindex-mid	output	work\descents.pkl	published	IDENTICAL	
+L3	fnindex-mid	output	work\edges.pkl	published	IDENTICAL	
+L3	fnindex-mid	output	work\l3_edges_log.txt	published	IDENTICAL	
+L3	fnindex-mid	not rewritten by the run	4	-	-	work\l3_ida_context.txt work\l3_ida_done.txt work\l3_ida_heads.tsv work\l3_ida_xrefs.tsv
+L5	main-unnamed	l5_features.py	rc=0	-	-	730
+L5	main-unnamed	l5_evidence.py	rc=0	-	-	1159
+L5	main-unnamed	l5_classify.py	rc=0	-	-	string/label                128 runs  1073 B / value table                 215 runs  1860 B / left 0 0
+L5	main-unnamed	l5_emit.py	rc=0	-	-	reached-code gap              3    58  T1     4 T2    54 T3    0 T4    0 / Unknown                       0     0  T1     0 T2     0 T3    0 T4    0 / residue mask sha256 0d453850c6a36595
+L5	main-unnamed	l5_review.py	rc=0	-	-	
+L5	main-unnamed	output	class-summary.tsv	published	IDENTICAL	
+L5	main-unnamed	output	proposed-typing.tsv	published	IDENTICAL	
+L5	main-unnamed	output	runs.tsv	published	IDENTICAL	
+L5	main-unnamed	output	work\auto_listing.txt	published	IDENTICAL	
+L5	main-unnamed	output	work\auto_rows.json	published	IDENTICAL	
+L5	main-unnamed	output	work\evidence.json	published	IDENTICAL	
+L5	main-unnamed	output	work\features.tsv	published	IDENTICAL	
+L5	main-unnamed	output	work\left.json	published	IDENTICAL	
+L5	main-unnamed	output	work\review.txt	published	IDENTICAL	
+L5	main-unnamed	not rewritten by the run	16	-	-	apply-typing-summary.txt apply-typing.tsv offline\overrides.tsv proven-data-candidates.tsv residue_mask.bin work\dead_review.txt work\detail_32_0.txt work\full_listing.txt work\ida_heads.tsv work\ida_items.tsv work\ida_xrefs.tsv work\l5_dump_ok.txt work\left_review.txt work\runs_raw.tsv work\sheet.txt work\who1.txt
+L6	home-keytable	keytable.py	rc=0	-	-	71
+L6	home-keytable	pages.py	rc=0	-	-	256
+L6	home-keytable	zones.py	rc=0	-	-	(False, 'not-modelled') 4 / (False, 'resolved:single-handler') 17 / (False, 'resolved:state-dependent') 131
+L6	home-keytable	check_open.py	rc=0	-	-	# set P: roots=237 instructions=20493 ; window targets=0 ; USB/SCI-C operands=0 ; reset-entry jumps=0 ; screen-write sites=44 ; constant ids: 00 09 0A 0B 26 2B 52 6C 72 7F 8C ; in K3's 69 unopened: 0 ; indirect @erN sites=37 / # set J: roots=224 instructions=79881 ; window targets=3 ; USB/SCI-C oper
+L6	home-keytable	output	keytable.tsv	published	IDENTICAL	
+L6	home-keytable	output	pages.tsv	published	IDENTICAL	
+L6	home-keytable	output	work\open-check.tsv	published	IDENTICAL	
+L6	home-keytable	output	zones-resolved.tsv	published	IDENTICAL	
+L6	home-keytable	not rewritten by the run	7	-	-	work\ida_check.tsv work\ida_items.tsv work\ida_req.tsv work\ida_xrefs.tsv work\sub_probe.txt work\sub_req.txt work\sub_strings.tsv
+orch	l-wave-recon	recon_descent.py	rc=0	-	-	M6 new beyond MN not in P4: 0 / gap bytes in MK? [('0x6a0c', 0, 0), ('0x6a0d', 0, 0), ('0x77f8', 0, 0), ('0x77f9', 0, 0)] / P6 popcount 364750 removed from P5 4464
+orch	l-wave-recon	output	drop_runs.tsv	published	IDENTICAL	
+orch	l-wave-recon	output	final6_proven_mask.bin	published	DIFFERS-AS-DOCUMENTED	36 bytes differ; exactly the 36 hand-restored bytes 0x066FBE-0x066FC7 + 0x06726A-0x067283 (published 1, script 0): True
+orch	l-wave-recon	output	rec_runs.tsv	published	IDENTICAL	
+orch	l-wave-recon	not rewritten by the run	3	-	-	README.md final6_named_mask.bin proven-unreached-runs.tsv
+-	main-final5	published dir unchanged			YES	
+-	fnindex-lo	published dir unchanged			YES	
+-	fnindex-mid	published dir unchanged			YES	
+-	main-unnamed	published dir unchanged			YES	
+-	home-keytable	published dir unchanged			YES	
+-	l-wave-recon	published dir unchanged			YES	

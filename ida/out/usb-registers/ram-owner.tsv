@@ -1,0 +1,29 @@
+# Owner analysis of RAM 0xFF5C06-0xFF5C44 (MAIN, H8SX, file offset = addr)
+# Method: (1) Python byte scan whole image for BE32 imm forming 0xFF5000-0xFF6100 (outside window 0x078106-0x07B753);
+#         (2) IDA operand scan of every code head (mem+imm) in same range; (3) IDA named-object scan of 0xFF5000-0xFF6100.
+# RESULT: 0xFF5C06-0xFF5C44 has ZERO direct absolute references (imm32 or @aa:16) and ZERO named objects anywhere in MAIN.
+
+base	size	ends_at	role	evidence
+0xFF5006	0x400	0xFF5405	stored-picture / SD read staging buffer (SM-A), EEPMOV source	mov.l #0xFF5006 at 047f22,055cb6,05f480,06f664,...(12 sites); read up to 1KB by sub_6EF20
+0xFF5406	0x400	0xFF5805	picture/JPEG work buffer (used with 0x300 counts)	mov.l #0xFF5406 at 05fa30,06ef34,0745b0,0745c4,...(27 sites); counts #0x300
+0xFF5806	0x400	0xFF5C05	USB image-push quad-buffer (4x256), EP1 bulk-OUT landing zone	mov.l #0xFF5806 at 0554a4,05567e,055690,...; sub-bases 0xFF5906/5A06/5B06
+0xFF5C06	0x3FA (to 0xFF5FFF)	0xFF5FFF	UNOWNED SLACK / guard gap above the three tiled image buffers	no imm32, no @aa:16, no named object; next referenced RAM object is at 0xFF6000 (CDC, window-adjacent)
+
+# The only code path that can WRITE into 0xFF5C06-0xFF5C44:
+#   The USB EP1 bulk-OUT byte-copy loop at 0x055684/0x055688:
+#     055678  mov.w  @0xFFBA6C,r5        ; write index
+#     05567e  add.l  #0xFF5806,er5       ; dst = 0xFF5806 + index   (register-indirect, NOT absolute)
+#     055684  mov.b  @0xFFEE10,r4l       ; read EPDR1 (USB EP1 data)
+#     055688  mov.b  r4l,@er5            ; <-- store; @er5 can land in 0xFF5C06-0xFF5C44 on overrun
+#     05569e  cmp.w  #0x400,r5           ; wrap check AFTER the packet copy
+#     0556a2  bcs    loc_556C0           ; index<0x400 -> re-arm; else wrap to 0
+#   On a misaligned upload (short packet mid-stream) the index can reach up to 0x3FF, then a full 64-byte
+#   packet copies to 0xFF5806+0x3FF .. +0x43E = up to 0xFF5C44 before the 0x400 wrap check fires.
+#   This is the exact 63-byte overrun I12 doc-64 flagged. It is a bug consequence, not an owner.
+
+# READERS of 0xFF5C06-0xFF5C44: none found (no absolute read; the SM-B readback pointer 0xFFBC48 is dormant and
+#   initialised to 0xFF5806, not into the slack).
+
+# VERDICT: 0xFF5C06-0xFF5C44 is unallocated RAM slack immediately above the USB image-push buffer 0xFF5806.
+#   No subsystem (USB, audio, DSP, settings) owns it by design. It is USB-adjacent only as the overrun tail of
+#   the USB EP1 copy loop. Not a structure.

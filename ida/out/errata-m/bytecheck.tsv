@@ -1,0 +1,131 @@
+id	image	addr	file_off	expected	actual	result	meaning
+C01	M	009294	0x009294	6a 0c 8e b2 7a 64 00 00 00 ff 78 40 6a 2b 00 00 93 2c	6a 0c 8e b2 7a 64 00 00 00 ff 78 40 6a 2b 00 00 93 2c	PASS	mov.b @0x8EB2:16,r4l (009294); and.l #0xFF,er4 (009298); mov.b @(0x932C:32,er4),r3l (00929E): base 0x932C, index 0..0xFF
+C02	M	00932A	0x00932A	05 04 02 03 04 04 04 00	05 04 02 03 04 04 04 00	PASS	0x932A..0x9331; 0x932A-0x932B (05 04) lie 2 B below the reader base
+C03	M	063C04	0x063C04	fc 00 6a 8c b2 a3 fc 01 6a 8c b2 a5 fc 0a 6a 8c a9 f9	fc 00 6a 8c b2 a3 fc 01 6a 8c b2 a5 fc 0a 6a 8c a9 f9	PASS	routine entry 063C04: B2A3=0 (063C04); B2A5=1 (063C0A); mode 10: mov.b #0x0A,r4l (063C10), mov.b r4l,@A9F9 (063C12)
+C04	M	01CE9A	0x01CE9A	5e 06 3c 04	5e 06 3c 04	PASS	jsr @0x063C04 (caller 1)
+C05	M	01CEAA	0x01CEAA	5e 06 3c 04	5e 06 3c 04	PASS	jsr @0x063C04 (caller 2)
+C06	S	FFEDCE56	0x2DCE56	fb 12 44 2d 01 00 b1 19 75 51 f3	fb 12 44 2d 01 00 b1 19 75 51 f3	PASS	mov.l #0x12D44,r1; movu.b 5[r1],r1 (= F[0], F = 0x12D49); cmp #0xF3,r1
+C07	S	FFEDCE76	0x2DCE76	fb 12 44 2d 01 00 b6 11 61 31	fb 12 44 2d 01 00 b6 11 61 31	PASS	mov.l #0x12D44,r1; movu.b 0x18[r1],r1 (= byte 0x12D5C = F+0x13); cmp #3,r1
+C08	M	03510A	0x03510A	00 0a 00 05 04 00 00 00 07 59 95 00 00 00	00 0a 00 05 04 00 00 00 07 59 95 00 00 00	PASS	VHF table: stride 10, count 5; 40.000-75.995 MHz -> 0
+C09	M	035140	0x035140	00 0a 00 02 30 00 00 00 41 99 95 00 00 05 42 00 00 00 57 99 95 00 00 06	00 0a 00 02 30 00 00 00 41 99 95 00 00 05 42 00 00 00 57 99 95 00 00 06	PASS	UHF table: stride 10, count 2; 300.000-419.995 -> 5; 420.000-579.995 -> 6
+C10	M	01BF40	0x01BF40	ac 02 45 32 ac 0c 44 2e	ac 02 45 32 ac 0c 44 2e	PASS	sub_1BF40: cmp.b #2,r4l; bcs; cmp.b #0x0C,r4l; bcc -> codes >= 0x0C dropped
+C11	M	000476	0x000476	79 04 0b a0	79 04 0b a0	PASS	mov.w #0x0BA0,r4 (TPU0 period 2976+1 = 2977 -> 16e6/2977 = 5374.5 Hz)
+C12	M	0351D6	0x0351D6	fc 20 3c d0 79 04 00 00 6b 84 ff d6 79 04 09 89 6b 84 ff d8	fc 20 3c d0 79 04 00 00 6b 84 ff d6 79 04 09 89 6b 84 ff d8	PASS	sub_351D6: TCR1 (FFFFD0) = 0x20; TCNT1 = 0; TGRA1 (FFFFD8) = 0x0989 (2441+1 = 2442 -> 6552.0 Hz)
+C13	M	002336	0x002336	fc 02 6a 8c fe c1	fc 02 6a 8c fe c1	PASS	mov.b #2,r4l; mov.b r4l,@0xFEC1:16 (8-bit timer clock select = 2)
+C14	M	00FBBE	0x00FBBE	77 0b 6a 18 a9 ee 67 00 fc 16	77 0b 6a 18 a9 ee 67 00 fc 16	PASS	A9EE.b0 = r3l.b0; mov.b #0x16 (raw event 13)
+C15	M	00A210	0x00A210	79 04 f3 96	79 04 f3 96	PASS	mov.w #0xF396 (DIAL KNOB CHANGE F-code)
+C16	M	00A228	0x00A228	6a 0b 89 b5	6a 0b 89 b5	PASS	mov.b @0x89B5:16,r3l (FF89B5)
+C17	M	06ADE6	0x06ADE6	0c cb 58 70 00 28 eb 07 5e 06 ac d6 58 00 00 1e	0c cb 58 70 00 28 eb 07 5e 06 ac d6 58 00 00 1e	PASS	M4 dead-arm head: mov.b r4l,r3l; beq; and.b #7,r3l; jsr @0x06ACD6; bra
+C18	M	06ACD6	0x06ACD6	0f 95 7a 15 00 00 00 2e	0f 95 7a 15 00 00 00 2e	PASS	0x06ACD6 is an ordinary routine prologue (not a switch helper)
+C19	M	06B14C	0x06B14C	ab 06 47 40 f2 00 fa 08 5e 06 75 22	ab 06 47 40 f2 00 fa 08 5e 06 75 22	PASS	jsr @0x067522 at 06B154 (region 06B10E-06B25B, after rts 06B10C)
+C20	M	06B18C	0x06B18C	b1 ec 59 60 f2 00 fa 0a 5e 06 75 22	b1 ec 59 60 f2 00 fa 0a 5e 06 75 22	PASS	jsr @0x067522 at 06B194 (same region)
+C21	M	06B3C4	0x06B3C4	5e 06 1d 6e f2 00 fa 01 5e 06 75 22	5e 06 1d 6e f2 00 fa 01 5e 06 75 22	PASS	jsr @0x067522 at 06B3CC (region 06B3BE-06B407, after rts 06B3BC)
+C22	M	06B4F6	0x06B4F6	5e 06 75 22	5e 06 75 22	PASS	jsr @0x067522 inside 06B4B0 (M1)
+C23	M	06B536	0x06B536	5e 06 75 22	5e 06 75 22	PASS	jsr @0x067522 inside 06B4B0 (M1)
+C24	M	02B3F6	0x02B3F6	5e 06 5d 26	5e 06 5d 26	PASS	jsr @0x065D26 covers claimed 02B3F8
+C25	M	02B44E	0x02B44E	5e 06 5d 66	5e 06 5d 66	PASS	jsr covers claimed 02B450
+C26	M	05569A	0x05569A	5e 05 59 76	5e 05 59 76	PASS	jsr covers claimed 05569C
+C27	M	0559B0	0x0559B0	7a 05 00 ff 59 06	7a 05 00 ff 59 06	PASS	mov.l #0xFF5906,er5 covers claimed 0559B4
+C28	M	0559C6	0x0559C6	7a 06 00 ff 59 06	7a 06 00 ff 59 06	PASS	mov.l covers claimed 0559CA
+C29	M	076308	0x076308	59 06	59 06	PASS	the one real bra r0.w
+C30	M	03F5B2	0x03F5B2	01 00 6d f2 6d 62 79 0a 00 00 6d 63 01 00 69 64	01 00 6d f2 6d 62 79 0a 00 00 6d 63 01 00 69 64	PASS	sub_3F5B2 head as in the image
+C31	M	01E1BE	0x01E1BE	10 73 78 b0 6b 26 00 01 e1 de	10 73 78 b0 6b 26 00 01 e1 de	PASS	shll.l #2,er3 (01E1BE); mov.l @(0x1E1DE:32,er3),er6 (01E1C0, 8 B)
+C32	M	01E1C8	0x01E1C8	01 10 6d 75	01 10 6d 75	PASS	first dead instruction after the operand tail
+C33	M	017924	0x017924	7a 05 00 01 79 2e 5a 01 52 60	7a 05 00 01 79 2e 5a 01 52 60	PASS	mov.l #0x01792E,er5; jmp @0x015260
+C34	M	01792E	0x01792E	00 01 a0 d4 00 01 79 4e 00 01 79 56 00 01 79 5e	00 01 a0 d4 00 01 79 4e 00 01 79 56 00 01 79 5e	PASS	record 0x01792E fields 0-3
+C35	M	01794E	0x01794E	fc 00 5e 01 8f aa 40 32	fc 00 5e 01 8f aa 40 32	PASS	field 1 handler: mov.b #0,r4l; jsr @0x018FAA; bra
+C36	M	015288	0x015288	10 72 0a a5 01 00 69 56 47 08 5d 60	10 72 0a a5 01 00 69 56 47 08 5d 60	PASS	sub_15260: er6 = [rec + 4*AD68]; jsr @er6
+C37	M	018FAA	0x018FAA	6a 18 8a ac 61 c0	6a 18 8a ac 61 c0	PASS	bnot r4l,@0x8AAC:16 (live twin entry)
+C38	M	000E1E	0x000E1E	00 7f 31 9c	00 7f 31 9c	PASS	slot 13 of 0x000DEA {u8 flag,u8 level,u16 mag}; 0x000E20 = 31 9c
+C39	M	000938	0x000938	78 e0 6b 26 00 00 0d ea	78 e0 6b 26 00 00 0d ea	PASS	reader of base 0x000DEA
+C40	M	014F8E	0x014F8E	78 30 6a 2b 00 01 51 8c	78 30 6a 2b 00 01 51 8c	PASS	mov.b @(0x01518C:32,er3),r3l -> u8 map 0x01518C
+C41	M	006A06	0x006A06	40 12	40 12	PASS	bra before 0x006A08 block
+C42	M	0077CC	0x0077CC	40 36	40 36	PASS	bra before 0x0077CE block
+C43	M	073EB4	0x073EB4	a1 17 44 24	a1 17 44 24	PASS	'A': cmp.b #0x17,r1h; bcc (>= 0x17 NAK)
+C44	M	073ECE	0x073ECE	fc 09 18 c1 6a 81 a9 ed	fc 09 18 c1 6a 81 a9 ed	PASS	'A': key-event store to A9ED
+C45	M	073E86	0x073E86	5e 03 4a 52	5e 03 4a 52	PASS	jsr @0x034A52
+C46	M	073E8E	0x073E8E	5e 03 50 e4	5e 03 50 e4	PASS	jsr @0x0350E4
+C47	M	0743BA	0x0743BA	fc 01 6a 8c b0 cc	fc 01 6a 8c b0 cc	PASS	B0CC = 1 (imm 0743BA, store 0743BC)
+C48	M	0743CA	0x0743CA	fc 00 6a 8c b0 cc	fc 00 6a 8c b0 cc	PASS	B0CC = 0 (imm 0743CA, store 0743CC)
+C49	M	031BEE	0x031BEE	fc c8 6a 8c 95 89	fc c8 6a 8c 95 89	PASS	imm 031BEE, store FF9589 at 031BF0
+C50	M	030240	0x030240	fc 05 6a 8c aa ce	fc 05 6a 8c aa ce	PASS	AACE = 5
+C51	M	031CD2	0x031CD2	fc 05 6a 8c aa ce	fc 05 6a 8c aa ce	PASS	AACE = 5 (band-B twin)
+C52	M	00FAFE	0x00FAFE	6a 0c 89 bb 47 14	6a 0c 89 bb 47 14	PASS	VOX test (what 0x00FAFE really holds)
+C53	M	00FB04	0x00FB04	6a 10 89 20 73 00 46 0c	6a 10 89 20 73 00 46 0c	PASS	btst #0,@0x8920:16; bne (the Bluetooth-ON test)
+C54	S	FFF387B6	0x3387B6	fb e2 b8 2c 01 00 f8 e5 02	fb e2 b8 2c 01 00 f8 e5 02	PASS	mov.l #0x12CB8,r14; mov.w #2,[r14]
+C55	S	FFF38759	0x338759	fb e2 b8 2c 01 00 f8 e5 01	fb e2 b8 2c 01 00 f8 e5 01	PASS	12CB8 = 1
+C56	S	FFF388EB	0x3388EB	fb e2 b8 2c 01 00 f8 e5 01	fb e2 b8 2c 01 00 f8 e5 01	PASS	12CB8 = 1
+C57	S	FFF38F75	0x338F75	fb e2 b8 2c 01 00 f8 e5 01	fb e2 b8 2c 01 00 f8 e5 01	PASS	12CB8 = 1 (mov.w at FFF38F7B)
+C58	S	FFF38467	0x338467	39 7b 00	39 7b 00	PASS	bsr.w FFF384E2 (TXAT=1 re-send path per M12)
+C59	S	FFEDD019	0x2DD019	05 f2 b4 05	05 f2 b4 05	PASS	bsr.a FFF3850B from the common frame path
+C60	S	FFF3851D	0x33851D	b6 11 75 21 20	b6 11 75 21 20	PASS	movu.b 0x18[r1],r1; and #0x20,r1 -> 1229D
+C61	S	FFEDD533	0x2DD533	fb e2 44 2d 01 00 c9 0e 0f f6 95	fb e2 44 2d 01 00 c9 0e 0f f6 95	PASS	mov.l #0x12D44,r14; mov.b 0x0F[r0],0x95F6[r14] -> 0x1C33A
+C62	S	FFEDD706	0x2DD706	fb e2 44 2d 01 00 c9 0e 0f 76 96	fb e2 44 2d 01 00 c9 0e 0f 76 96	PASS	mov.l #0x12D44,r14; mov.b 0x0F[r0],0x9676[r14] -> 0x1C3BA
+C63	S	FFEDD8F4	0x2DD8F4	fb e2 44 2d 01 00 c9 0e 0b f6 96	fb e2 44 2d 01 00 c9 0e 0b f6 96	PASS	FE builder: 0x96F6[r14] -> 0x1C43A
+C64	S	FFF394CF	0x3394CF	05 59 40 fa	05 59 40 fa	PASS	bsr.a FFEDD528 (E5/E6 sender)
+C65	S	FFF39516	0x339516	05 12 40 fa	05 12 40 fa	PASS	bsr.a FFEDD528
+C66	S	FFF38AEA	0x338AEA	05 3e 4a fa	05 3e 4a fa	PASS	bsr.a FFEDD528 (E4 path per M12)
+C67	M	073292	0x073292	ac 03	ac 03	PASS	cmp.b #3,r4l (MAIN E4 reader)
+C68	M	054D50	0x054D50	01 10 6d f4 6a 0c 81 3a	01 10 6d f4 6a 0c 81 3a	PASS	vector-234 entry: push; mov.b @0x813A:16,r4l at 054D54
+C69	M	05E376	0x05E376	00 0f 00 ff b9 ed	00 0f 00 ff b9 ed	PASS	descriptor for 0x0296E8: max 15
+C70	M	05E3B4	0x05E3B4	00 03 00 ff b9 ed	00 03 00 ff b9 ed	PASS	descriptor for 0x029712: max 3
+C71	M	014984	0x014984	7a 24 00 06 66 00	7a 24 00 06 66 00	PASS	cmp.l #0x00066600,er4 (666.00 kHz BCD)
+C72	M	0149A0	0x0149A0	7a 24 00 06 66 00	7a 24 00 06 66 00	PASS	cmp.l #0x00066600,er4
+C73	M	03FB32	0x03FB32	7a 06 00 ff 91 02	7a 06 00 ff 91 02	PASS	mov.l #0xFF9102,er6 (= FF90F0+0x12)
+C74	M	022176	0x022176	00 05 00 00 00 17 95 00	00 05 00 00 00 17 95 00	PASS	broadcast band row 0.50000-1.79500 MHz (BCD, 10 Hz)
+C75	M	00216A	0x00216A	7a 04 00 ff 8e e0	7a 04 00 ff 8e e0	PASS	A record FF8EE0
+C76	M	00217E	0x00217E	7a 04 00 ff 8f e8	7a 04 00 ff 8f e8	PASS	B record FF8FE8
+C77	S	FFF3A50B	0x33A50B	61 c1	61 c1	PASS	cmp #12,r1 (FIND <addr12>)
+C78	S	FFF3A57F	0x33A57F	61 f1	61 f1	PASS	cmp #15,r1
+C79	S	FFF3A77B	0x33A77B	f8 e4 05	f8 e4 05	PASS	mov.b #5,[r14] (PAIR=<addr> -> linked)
+C80	S	FFF3A8CF	0x33A8CF	75 51 2b	75 51 2b	PASS	cmp #0x2B,r1 ('+' of ERROR+SCOI)
+C81	M	07336C	0x07336C	ac 09	ac 09	PASS	cmp.b #9,r4l (F3D5 delete flow -> PINF)
+C82	S	FFF383DE	0x3383DE	05 8a 18 00	05 8a 18 00	PASS	F3D5 flow: bsr.a FFF39C68
+C83	S	FFF381A8	0x3381A8	05 9d 16 00	05 9d 16 00	PASS	F3D6 flow: bsr.a FFF39845
+C84	M	0032D2	0x0032D2	2c 94	2c 94	PASS	mov.b @0x94:8,r4l (byte read of FFFF94)
+C85	M	003346	0x003346	2c 90	2c 90	PASS	mov.b @0x90:8,r4l (AN0, byte read)
+C86	M	00010C	0x00010C	00 00 24 b6	00 00 24 b6	PASS	vector 67 (0x10C = 67*4) -> sub_24B6
+C87	M	0021EE	0x0021EE	fc 00 3c a0 3c a1	fc 00 3c a0 3c a1	PASS	ADCSR/ADCR zeroed at init
+C88	M	0029A8	0x0029A8	3e 68	3e 68	PASS	mov.b r6l,@0x68:8 (DA0 at FFFF68)
+C89	S	FFEE2220	0x2E2220	66 03 7f 13	66 03 7f 13	PASS	mov.l #0,r3; jsr r3
+C90	S	FFEE223B	0x2E223B	66 03 7f 13	66 03 7f 13	PASS	mov.l #0,r3; jsr r3
+C91	M	073A34	0x073A34	78 b0 6b 26 00 07 44 72	78 b0 6b 26 00 07 44 72	PASS	8-byte indexed load; 0x073A36 is inside it
+C92	M	01101A	0x01101A	6a 0c aa d4 ec 01 46 02	6a 0c aa d4 ec 01 46 02	PASS	mov.b @AAD4,r4l; and.b #1,r4l; bne -> n = 9
+C93	M	062972	0x062972	7a 05 00 ff b3 2e	7a 05 00 ff b3 2e	PASS	mov.l #0xFFB32E,er5 (the er5 overwrite)
+C94	M	062962	0x062962	7a 05 00 06 21 78	7a 05 00 06 21 78	PASS	what 0x062962 holds: mov.l #0x062178,er5
+C95	M	01D33E	0x01D33E	6e 0c 00 06 46 0e	6e 0c 00 06 46 0e	PASS	mov.b @(6,er0),r4l; bne: BE32 00 06 46 0e starts at 01D340
+C96	M	01D35E	0x01D35E	6e 0c 00 06 46 10	6e 0c 00 06 46 10	PASS	the second cite 0x01D360 = 00 06 46 10 is right as written
+C97	M	0767BC	0x0767BC	54 13	54 13	PASS	one rts/l (er2-er3)
+C98	M	062806	0x062806	40 16 5e 06 6f b4 40 10 5e 06 72 50 40 0a 5e 06 72 6a 40 04 5e 06 6f aa 54 70	40 16 5e 06 6f b4 40 10 5e 06 72 50 40 0a 5e 06 72 6a 40 04 5e 06 6f aa 54 70	PASS	arms: jsr 066FB4 (062808), jsr 067250 (06280E), jsr 06726A (062814), jsr 066FAA (06281A)
+C99	M	06723A	0x06723A	5e 06 6f b4 58 00 00 0c 55 0c 40 08 55 22 40 04 5e 06 6f aa 54 70	5e 06 6f b4 58 00 00 0c 55 0c 40 08 55 22 40 04 5e 06 6f aa 54 70	PASS	jsr 066FB4 (06723A); jsr 066FAA (06724A)
+W01	M	063C04	0x063C04	fc 0a 6a 8c a9 f9	fc 00 6a 8c b2 a3	SLIP-CONFIRMED	122:117 as written
+W02	M	06ADE4	0x06ADE4	0c cb 58 70 00 28 eb 07 5e 06 ac d6 58 00 00 1e	00 2e 0c cb 58 70 00 28 eb 07 5e 06 ac d6 58 00	SLIP-CONFIRMED	RESUME:36 / recon README:22 as written
+W03	M	03F5B2	0x03F5B2	6d 62 6d 63 01 00 69 64	01 00 6d f2 6d 62 79 0a	SLIP-CONFIRMED	100:126 as written (contiguous)
+W04	M	073E88	0x073E88	5e 03 4a 52	4a 52 fc 01	SLIP-CONFIRMED	104:164 as written
+W05	M	073E90	0x073E90	5e 03 50 e4	50 e4 fc 00	SLIP-CONFIRMED	104:164 as written
+W06	M	0743BC	0x0743BC	fc 01 6a 8c b0 cc	6a 8c b0 cc 40 12	SLIP-CONFIRMED	106:130 and opcode-1c.tsv:39 as written
+W07	M	0743CC	0x0743CC	fc 00 6a 8c b0 cc	6a 8c b0 cc 5e 05	SLIP-CONFIRMED	opcode-1c.tsv:40 as written (new)
+W08	M	030242	0x030242	fc 05 6a 8c aa ce	6a 8c aa ce fc ff	SLIP-CONFIRMED	106:153 as written
+W09	M	031CD4	0x031CD4	fc 05 6a 8c aa ce	6a 8c aa ce fc ff	SLIP-CONFIRMED	106:153 as written
+W10	M	00FAFE	0x00FAFE	6a 10 89 20 73 00 46 0c	6a 0c 89 bb 47 14 6a 10	SLIP-CONFIRMED	107:119 as written
+W11	M	054D50	0x054D50	6a 0c 81 3a 58 60 01 4c	01 10 6d f4 6a 0c 81 3a	SLIP-CONFIRMED	112:84 as written
+W12	M	062962	0x062962	7a 05 00 ff b3 2e	7a 05 00 06 21 78	SLIP-CONFIRMED	101:99 as written
+W13	M	01D33E	0x01D33E	00 06 46 0e	6e 0c 00 06	SLIP-CONFIRMED	101:103 as written (BE32 at 01D33E)
+W14	M	031BEE	0x031BEE	6a 8c 95 89	fc c8 6a 8c	SLIP-CONFIRMED	106:151 as written (store at 031BEE)
+X01	computed					PASS	BE24/BE32/abs24 '00 93 2a' hits=[]; '00 00 93 2c' hits=['0x92a2'] [scope: MAIN 0x000000-0x07FFFF, every offset]
+X02	computed					PASS	jsr @063C04 at ['0x1ce9a', '0x1ceaa']; 'fc 0a 6a 8c a9 f9' at ['0x1d09e', '0x63c10'] (P7: [1, 1]) [scope: MAIN 0x000000-0x07FFFF]
+X03	computed					PASS	VHF 0x03510A ['40.000-75.995->0', '108.000-119.995->1', '120.000-173.995->2', '174.000-221.995->3', '222.000-229.995->4'] ; UHF 0x035140 ['300.000-419.995->5', '420.000-579.995->6'] [scope: two tables]
+X04	computed					PASS	104 BE32 at 0x000B8C, low 9 bits zero; bit-reversed low 9 = D023..D754 in order; all 104 divisible by g=0xC75 [scope: 0x000B8C-0x000D2B]
+X05	computed					PASS	TPU1 16e6/2442=6552.0 Hz; DCS 16e6/2977/40=134.36 bps; T-CALL 250 kHz/(2*(0x47+1))=1736.1 Hz [scope: arithmetic on C11-C13]
+X06	computed					PASS	off_74472 (48 BE32) contains none of the 4 leaves; BE32 refs to leaves={'0x66fb4': [], '0x67250': [], '0x66fbe': [], '0x6726a': []}; jsr/jmp sites to leaves: 062808:P6=1,P7=0 06280E:P6=1,P7=0 062814:P6=0,P7=0 06723A:P6=1,P7=0 06AB1C:P6=1,P7=0 06AB24:P6=1,P7=0 06AB2A:P6=1,P7=0 06AB36:P6=1,P7=0 06ADF6:P6=1,P7=0 06ADFE:P6=1,P7=0 06AE04:P6=1,P7=0 06AE10:P6=1,P7=0 ; to 066FAA: 06281A:P7=0 0628FE:P7=0 06724A:P7=0 06AB30:P7=0 06AE0A:P7=0 [scope: MAIN 0x000000-0x07FFFF]
+X07	computed					PASS	jsr @0x067522 at ['0x6b154', '0x6b194', '0x6b3cc', '0x6b4f6', '0x6b536'] (all P7=0, N7=1); inbound from outside: {'06B10E-06B25C': ['05D23E:6b06b126'], '06B3BE-06B408': [], '06B4B0-06B556': []} (excluded abs16 operand 05D23E 6b 06 b1 26); bytes before region: {'06B10E': '5470', '06B3BE': '5470', '06B4B0': '5470'} [scope: MAIN 0x000000-0x07FFFF: BE24 value at every offset (covers BE32 hi=00 and abs24 jsr/jmp/mov.l), rel8 Bcc/bsr and rel16 Bcc/bsr at even offsets]
+X08	computed					PASS	0x069A7F matches 0x069964 for 37 B; first difference at +37 (02 vs 0e) [scope: two runs]
+X09	computed					PASS	readers '78 e0 6b 26 00 00 0d ea' at ['0x938', '0x95c', '0xa04']; jsr @0x018FAA at ['0x17950', '0x17958', '0x1796c', '0x17974', '0x1797c', '0x17984'] [scope: MAIN 0x000000-0x07FFFF]
+X10	computed					PASS	'00 06 66 00' at ['0x14986', '0x149a2'] [scope: MAIN 0x000000-0x07FFFF]
+X11	computed					PASS	mov.l #0x12CB8 sites: FFF38627(fbe2):write mov.w #2 ; FFF3865A(fbe2):write mov.w #2 ; FFF3870A(fbe2):other 5cee61 ; FFF38759(fbe2):write mov.w #1 ; FFF38780(fbe2):other 5cee61 ; FFF387B6(fbe2):write mov.w #2 ; FFF38893(fbe2):other 5cee61 ; FFF388EB(fbe2):write mov.w #1 ; FFF38F75(fbe2):write mov.w #1 ; FFF392D7(fbe2):other 5cee61 ; FFF39351(fbe2):other 5cee61 ; FFF393BC(fbe2):other 5cee61 ; FFF39430(fbe2):other 5cee61 [scope: SUB whole image (4 MB), LE immediate 'b8 2c 01 00']
+X12	computed					PASS	0x12D44+0x95F6=0x1C33A, +0x9676=0x1C3BA, +0x96F6=0x1C43A (doc 109 row above: +0x85F6=0x1B33A); F=0x12D49, F+0x13 = 0x12D44+0x18 = 0x12D5C [scope: arithmetic on C06/C07/C61-C63]
+X13	computed					PASS	bsr.a targets {'FFF394CF': 'FFEDD528', 'FFF39516': 'FFEDD528', 'FFF38AEA': 'FFEDD528', 'FFEDD019': 'FFF3850B', 'FFF383DE': 'FFF39C68', 'FFF381A8': 'FFF39845'}; FFF3851D lies in FFF3850B's body [scope: six SUB sites]
+X14	computed					PASS	half-open ranges sum 120 B; 457,462 - 120 = 457342; LE24 values pointing into them at: none [scope: SUB whole image, every offset, 3-byte LE value | 0xFF000000 (also covers LE32 with hi byte FF)]
+X15	computed					PASS	bu_all.tsv counts {'rte/l/all': 530, 'rte/l/even': 73, 'rte/l/even&P6': 4, 'rte/l/even&P7': 4, 'rts/l/all': 654, 'rts/l/even': 181, 'rts/l/even&P6': 68, 'rts/l/even&P7': 81}; neither 301 nor 251 appears in any of these scopes [scope: bu_all.tsv: every offset 0..0x7B753; even offsets; even & proven (final6 / final7)]
+X16	computed					PASS	9 inline ADDR-bytes citations; non-PASS: [('m-wave-recon/README.md', 22, '06ADE4', 'FOUND+2')] [scope: RESUME-FULL.md lines 13-250 (M wave) and m-wave-recon/README.md, backticked 'ADDR hh hh ..' runs]
+X17	computed					PASS	doc 142 inline 'ADDR bytes' citations: 104, non-PASS: [] [scope: docs/deep/142-errata-m.md, every backticked 'ADDR hh hh ..' run]

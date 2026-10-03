@@ -1,0 +1,343 @@
+# Functions created, extended or removed in G1_H8S by the H8SX decode, and absorbed code runs left outside functions.
+# validation: term = every chunk ends in rts/rte/rts/l/jmp/bra (or falls into the next function); entry = call/jump xref, data/table ref, F1/fnindex proof;
+#             operands = data-reference targets classified ROM (<0x07B754) / RAM (0xFEE000-0xFFBFFF) / I/O (0xFFEA00-0xFFFFFF); 'imm' = IDA offset on an immediate constant.
+kind	start	end_before	end_after	chunks	insns	code_bytes	new_h8sx_bytes	sites	tiers	term	entry	operands	result	note
+new	004D92	-	004DF0	1	33	94	12	1	A	falls-through: 004DEE->code 004DF0 (owner 004DF0)	call	ram=2	ok	last: 004DEE:jsr     @er6
+new	005E68	-	00600A	1	112	418	0	0	-	yes	call	ram=9	ok	last: 006008:rts
+extended	006B84	006C32	006C7C	2	98	282	68	2	A	yes	call,proven:fnindex:main-low	ram=11	ok	last: 006C9C:rts
+shrunk	006D0A	006E92	006E2E	1	79	292	0	0	-	falls-through: 006E2A->code 006E2E (owner 006E2E)	call,proven:fnindex:main-low	ram=13	ok	last: 006E2A:jsr     sub_7642:24
+new	006E2E	-	006E9A	2	42	120	8	1	A	falls-through: 006E92->code 006E9A (owner 006E9A)	call,jump	ram=3	ok	last: 006EAA:rts
+extended	008674	0086A0	008798	1	78	292	24	2	A	falls-through: 008796->code 008798 (owner 008798)	call,proven:fnindex:main-low	ram=18	ok	last: 008796:adds    #1, er6
+new	0088A6	-	0088E4	1	16	62	8	1	A	yes	call	ram=2	ok	last: 0088E2:rts
+new	009168	-	00917E	1	5	22	10	1	A	yes	call	ram=1	ok	last: 00917C:jmp     @er6
+new	0095C0	-	009606	1	16	70	10	1	A	yes	call	ram=5	ok	last: 009604:jmp     @er6
+new	00A654	-	00A684	1	13	48	32	1	A	falls-through: 00A682->code 00A684 (owner 00A684)	call	ram=3	ok	last: 00A682:mov.b   r4l, r3l
+new	00FC66	-	00FC80	1	7	26	10	1	A	yes	call	io=1,ram=1	ok	last: 00FC7E:jmp     @er6
+new	00FD5E	-	00FD7E	1	8	32	10	1	A	yes	call	io=1,ram=2	ok	last: 00FD7C:jmp     @er6
+new	00FDC8	-	00FDE2	1	6	26	10	1	A	yes	call	ram=2	ok	last: 00FDE0:jmp     @er6
+new	00FE18	-	00FE38	1	8	32	10	1	A	yes	call	ram=2	ok	last: 00FE36:jmp     @er6
+new	014C90	-	014CFC	1	28	108	80	4	A	yes	call	ram=2,rom=4	ok	last: 014CFA:rts
+new	014CFC	-	014D36	1	15	58	30	2	A	yes	call	ram=2,rom=2	ok	last: 014D34:rts
+new	014E04	-	014EA2	1	41	158	86	4	A	yes	call	ram=5,rom=2	ok	last: 014EA0:rts
+new	014EBE	-	014ED4	1	5	22	10	1	A	yes	call	ram=1,rom=1	ok	last: 014ED2:jmp     @er6
+new	015ED0	-	015EE6	1	7	22	0	0	-	yes	dataref	ram=2	ok	last: 015EE4:rts
+new	0186CC	-	0186F0	1	10	36	12	1	A	yes	call	ram=2,rom=1	ok	last: 0186EE:rts
+new	01A432	-	01A436	1	1	4	0	0	-	falls-through: 01A432->code 01A436 (owner 01A436)	call,proven:fnindex:main-low	ram=1	ok	not an H8SX site: lane-1 sub_1A432 (F6 28 B double-count); IDA made it code during re-analysis; last: 01A432:mov.b   @0xFFFFAD80:16, r2l
+new	01C5D2	-	01C5E8	1	5	22	10	1	B	yes	call	ram=1,rom=1	ok	last: 01C5E6:jmp     @er6
+new	01D300	-	01D332	1	17	50	8	1	A	yes	call	ram=1,rom=1	ok	last: 01D330:rts
+new	01D528	-	01D544	1	7	28	12	1	A	yes	call	rom=1	ok	last: 01D542:rts
+new	01D744	-	01D774	1	13	48	8	1	A	yes	call	ram=1,rom=1	ok	last: 01D772:rts
+new	01E8EA	-	01E938	1	21	78	8	1	A	falls-through: 01E936->code 01E938 (owner 01E938)	call,dataref	ram=6,rom=1	ok	last: 01E936:beq     loc_1E962:8
+new	01ED5E	-	01EDEE	1	41	144	0	0	-	yes	dataref	ram=4,rom=2	ok	last: 01EDEC:rts
+new	01EDFE	-	01EE7A	1	42	124	112	1	B	yes	call	ram=4,rom=1	ok	last: 01EE78:rts
+new	01EEBA	-	01EF08	1	18	78	8	1	A	falls-through: 01EF04->code 01EF08 (owner 01EF08)	table	ram=3,rom=6	ok	last: 01EF04:jsr     sub_3F6F2:24
+new	01EF12	-	01EFD6	1	55	196	0	0	-	yes	dataref,table	ram=7,rom=1	ok	last: 01EFD4:rts
+new	01F0A6	-	01F108	1	25	98	8	1	A	yes	table	ram=7,rom=1	ok	last: 01F106:rts
+new	01F5EC	-	01F60A	1	8	30	10	1	B	yes	call	rom=1	ok	last: 01F608:jmp     @er6
+new	0212F8	-	02131C	1	9	36	12	1	A	yes	call	ram=1,rom=1	ok	last: 02131A:rts
+new	022212	-	02225C	1	20	74	56	1	A	yes	call	rom=3	ok	last: 02225A:rts
+new	022276	-	0222C0	1	20	74	8	1	A	yes	call	rom=3	ok	last: 0222BE:rts
+new	023984	-	0239AA	1	9	38	10	1	A	yes	dataref,table	rom=1	ok	last: 0239A8:jmp     @er6
+new	024EAE	-	024F28	2	30	126	0	0	-	falls-through: 024F24->code 024F28 (owner 024F7E), 024F44->code 024F48 (owner 024F7E)	call	ram=5,rom=1	ok	last: 024F44:jsr     sub_3FFA0:24
+new	024FBE	-	024FEE	1	14	48	0	0	-	yes	dataref	ram=1,rom=1	ok	last: 024FEC:rts
+new	029354	-	0293D8	1	50	132	112	1	A	yes	call	ram=6,rom=1	ok	last: 0293D6:bra     locret_293DC:8
+new	029D68	-	029D72	1	2	10	0	0	-	yes	dataref	rom=1	ok	last: 029D6E:jmp     sub_286A6:24
+new	02BE06	-	02BE0C	1	2	6	0	0	-	yes	dataref	-	ok	last: 02BE0A:rts
+new	02BF90	-	02BF96	1	2	6	0	0	-	yes	dataref	-	ok	last: 02BF94:rts
+new	02CBB0	-	02CBC6	1	6	22	10	1	A	yes	dataref,table	rom=1	ok	last: 02CBC4:jmp     @er6
+new	02DA48	-	02DA5E	1	6	22	10	1	A	yes	dataref,table	rom=1	ok	last: 02DA5C:jmp     @er6
+new	02ED5E	-	02EDD0	1	33	114	8	1	A	yes	call	ram=3,rom=1	ok	last: 02EDCE:rts
+new	02EE1A	-	02EE3C	1	11	34	0	0	-	yes	dataref,table	ram=1	ok	last: 02EE3A:rts
+new	02EFBE	-	02F030	1	33	114	8	1	A	yes	call	ram=3,rom=1	ok	last: 02F02E:rts
+new	02F07A	-	02F09C	1	11	34	0	0	-	yes	dataref,table	ram=1	ok	last: 02F09A:rts
+new	02F1DA	-	02F288	1	52	174	62	2	A	yes	call	ram=4,rom=2	ok	last: 02F286:rts
+new	02F2E0	-	02F35E	1	43	126	0	0	-	falls-through: 02F35A->code 02F35E (owner 02F35E)	call	ram=12	ok	last: 02F35A:mov.b   @0xFFFF8EB6:16, r4l
+new	02F69E	-	02F6FC	1	25	94	0	0	-	falls-through: 02F6F8->code 02F6FC (owner 02F6FC)	dataref,table	ram=7	ok	last: 02F6F8:mov.b   r4l, @0xFFFF9568:16
+new	030CE6	-	030DA8	1	59	194	62	2	A	yes	call	ram=5,rom=2	ok	last: 030DA6:rts
+new	030E00	-	030E62	1	33	98	0	0	-	falls-through: 030E5E->code 030E62 (owner 030E62)	call	ram=11	ok	last: 030E5E:mov.b   @(0x19:16,er0), r4l
+new	03118C	-	0311E8	1	28	92	0	0	-	yes	dataref,table	ram=5	ok	last: 0311E6:rts
+new	032590	-	0325BA	1	10	42	10	1	A	yes	call	rom=1	ok	last: 0325B8:jmp     @er6
+new	032B12	-	032B34	1	7	34	10	1	A	yes	call	ram=1,rom=1	ok	last: 032B32:jmp     @er6
+new	032BDC	-	032BFA	1	7	30	16	1	A	yes	call	ram=2,rom=1	ok	last: 032BF8:rts
+new	0330B6	-	0330F0	1	15	58	8	1	A	yes	call	ram=3,rom=1	ok	last: 0330EE:rts
+new	033988	-	03399E	1	6	22	10	1	A	yes	dataref,table	rom=1	ok	last: 03399C:jmp     @er6
+new	0340A8	-	0340DE	1	17	54	10	1	A	yes	call	ram=3,rom=1	ok	last: 0340DC:jmp     @er6
+new	0346FA	-	034706	1	5	12	0	0	-	yes	dataref,table	-	ok	last: 034704:rts
+new	034DC8	-	034DF2	1	10	42	10	1	A	yes	call	ram=1,rom=1	ok	last: 034DF0:jmp     @er6
+new	034E8A	-	034EAC	1	7	34	10	1	A	yes	call	ram=3,rom=1	ok	last: 034EAA:jmp     @er6
+new	034EEE	-	034F18	1	11	42	10	1	A	yes	call	ram=2,rom=1	ok	last: 034F16:jmp     @er6
+new	03505C	-	035086	1	11	42	10	1	A	yes	call	ram=2,rom=1	ok	last: 035084:jmp     @er6
+new	03532E	-	035344	1	5	22	10	1	A	yes	call	ram=1,rom=1	ok	last: 035342:jmp     @er6
+extended	03542E	035432	0354B2	1	38	132	30	3	A	yes	dataref,proven:fnindex:main-low	io=1,ram=7,rom=3	ok	last: 0354B0:jmp     @er6
+new	035650	-	035666	1	5	22	10	1	A	yes	call	ram=1,rom=1	ok	last: 035664:jmp     @er6
+new	035D42	-	035D4C	1	5	10	0	0	-	yes	dataref,table	-	ok	last: 035D4A:rts
+new	037842	-	0378A2	1	24	96	8	1	A	yes	call	ram=1,rom=1	ok	last: 0378A0:rts
+new	038074	-	0380EA	1	40	118	24	1	A	yes	call	ram=2,rom=1	ok	last: 0380E8:rts
+new	0380EA	-	038160	1	40	118	8	1	A	yes	call	ram=2,rom=1	ok	last: 03815E:rts
+new	03835E	-	038380	2	26	96	10	1	A	yes	call	io=1,ram=5,rom=1	ok	last: 03835C:rts
+new	038C06	-	038CB2	1	50	172	0	0	-	yes	dataref,table	ram=15	ok	last: 038CB0:rts
+extended	03906A	039080	0390FC	1	52	146	10	1	A	yes	none (pre-existing IDA function, not proven)	io=5,ram=4,rom=1	ok-unreferenced-preexisting	last: 0390FA:jmp     @er6
+new	03CF72	-	03CF9C	1	11	42	38	1	A	yes	table	ram=1,rom=1	ok	last: 03CF98:jmp     loc_3D1EE:24
+new	03CF9C	-	03CFE4	1	17	72	58	1	A	yes	table	ram=2,rom=2	ok	last: 03CFE0:jmp     loc_3D1EE:24
+new	04558E	-	0455E6	1	22	88	10	1	A	yes	call	ram=4,rom=2	ok	last: 0455E4:jmp     @er6
+new	047212	-	04723C	1	10	42	10	1	A	yes	call	ram=2,rom=1	ok	last: 04723A:jmp     @er6
+new	04753E	-	04759A	2	25	94	10	1	A	yes	call	ram=7,rom=1	ok	last: 0475C6:rts
+extended	0486C4	0486D2	0488B6	2	215	780	10	1	A	yes	none (pre-existing IDA function, not proven)	ram=14,rom=6	ok-unreferenced-preexisting	last: 048B38:bra     locret_48B46:8
+new	04927A	-	0492B4	1	14	58	24	1	A	yes	call	ram=2,rom=1	ok	last: 0492B2:rts
+extended	04AAE8	04AB64	04AB70	1	37	136	10	1	A	yes	call,proven:fnindex:main-high-a	ram=16,rom=1	ok	last: 04AB6E:rts
+new	04B88C	-	04B8D4	1	20	72	0	0	-	yes	dataref,table	ram=6,rom=1	ok	last: 04B8D2:rts
+new	04B8D4	-	04B9EA	1	81	278	10	1	A	yes	table	ram=4,rom=1	ok	last: 04B9E8:rts
+new	04DE94	-	04DEE2	1	26	78	0	0	-	yes	table 0x04AB70 (F1, raw dword, no IDA xref)	ram=2,rom=1	ok	true entry inside F1 row 04DE6E; last: 04DEE0:rts
+new	04DF98	-	04E010	1	43	120	0	0	-	yes	table 0x04AB70 (F1, raw dword, no IDA xref)	ram=4,rom=1	ok	true entry inside F1 row 04DF72; last: 04E00E:rts
+new	04F390	-	04F3DE	1	25	78	8	1	A	yes	call	ram=2,rom=1	ok	last: 04F3DC:rts
+new	0521F6	-	05223E	1	18	72	20	1	A	falls-through: 05223C->code 05223E (owner 05223E)	call	ram=4,rom=1	ok	last: 05223C:cmp.w   r3, r6
+new	052278	-	0522CA	1	18	82	0	0	-	yes	dataref,table	ram=11	ok	last: 0522C8:rts
+new	054FEC	-	055002	1	5	22	10	1	A	yes	call	ram=1,rom=1	ok	last: 055000:jmp     @er6
+new	055034	-	055116	2	73	254	10	1	A	falls-through: 05513E->code 055144 (owner 055144)	dataref,table	ram=8,rom=4	ok	last: 05513E:mov.l   #unk_55810, er5
+new	055B7A	-	055BF2	1	33	120	90	3	A	yes	call	ram=6,rom=3	ok	last: 055BF0:jmp     @er6
+new	055D8C	-	055DC6	1	16	58	0	0	-	falls-through: 055DC2->code 055DC6 (owner 055DC6)	dataref,table	ram=5	ok	last: 055DC2:jsr     loc_55B28:24
+new	055F84	-	055F96	1	7	18	0	0	-	yes	dataref,table	ram=2	ok	last: 055F94:rts
+extended	056272	056298	05645C	1	137	476	368	5	A	yes	call,proven:fnindex:main-high-a	io=1,ram=23,rom=5	ok	last: 05645A:rts
+new	056574	-	0565BC	1	23	72	0	0	-	yes	call	ram=7	ok	last: 0565BA:rts
+new	05683E	-	056A94	1	183	598	0	0	-	yes	call	io=6,ram=31	ok	last: 056A92:rts
+new	056A94	-	056B6E	1	69	218	10	1	A	yes	call	ram=16,rom=2	ok	last: 056B6C:jmp     @er6
+new	056C68	-	056CB4	1	26	76	0	0	-	yes	call	ram=9	ok	last: 056CB2:rts
+new	056EE4	-	0572F2	2	338	1040	0	0	-	yes	dataref,table	ram=40	ok	last: 056EE2:rts
+new	05AF70	-	05AF86	1	5	22	10	1	A	yes	call	ram=1,rom=1	ok	last: 05AF84:jmp     @er6
+new	05B184	-	05B19A	1	5	22	10	1	A	yes	call	ram=1,rom=1	ok	last: 05B198:jmp     @er6
+new	05B1A2	-	05B1F8	1	24	86	8	1	A	yes	call	ram=3,rom=1	ok	last: 05B1F6:rts
+new	05B210	-	05B254	1	21	68	0	0	-	yes	call	ram=6	ok	last: 05B252:rts
+new	05B254	-	05B28C	1	18	56	0	0	-	yes	call	ram=4	ok	last: 05B28A:rts
+new	05B28C	-	05B2D8	1	23	76	0	0	-	yes	call	ram=4	ok	last: 05B2D6:rts
+new	05B2D8	-	05B310	1	18	56	0	0	-	yes	call	ram=4	ok	last: 05B30E:rts
+new	05B442	-	05B458	1	5	22	10	1	A	yes	table	ram=1,rom=1	ok	last: 05B456:jmp     @er6
+new	05BCCE	-	05BCE4	1	5	22	10	1	A	yes	table	ram=1,rom=1	ok	last: 05BCE2:jmp     @er6
+new	05BD92	-	05BDA8	1	5	22	10	1	A	yes	table	ram=1,rom=1	ok	last: 05BDA6:jmp     @er6
+new	05BFA6	-	05BFBC	1	5	22	10	1	A	yes	table	ram=1,rom=1	ok	last: 05BFBA:jmp     @er6
+new	05C18E	-	05C1A4	1	5	22	10	1	A	yes	table	ram=1,rom=1	ok	last: 05C1A2:jmp     @er6
+new	05C352	-	05C368	1	5	22	10	1	A	yes	table	ram=1,rom=1	ok	last: 05C366:jmp     @er6
+extended	05CAF8	05CB00	05CB1C	1	9	36	10	1	A	yes	call,proven:fnindex:main-high-b	ram=3,rom=1	ok	last: 05CB1A:jmp     @er6
+new	05ED18	-	05EDB4	1	44	156	110	4	A	yes	call	ram=6,rom=2	ok	last: 05EDB2:rts
+new	05EF00	-	05EF2C	1	14	44	0	0	-	yes	dataref,table	io=1,ram=4	ok	last: 05EF2A:rts
+new	05F2B0	-	05F330	1	43	128	0	0	-	yes	dataref,table	ram=8	ok	last: 05F32E:rts
+new	061A2E	-	061A88	1	24	90	32	2	B	yes	call	ram=4,rom=2	ok	last: 061A86:bra     locret_61A9C:8
+new	061BE2	-	061C54	1	33	114	10	1	A	yes	call	ram=8,rom=1	ok	last: 061C52:bra     nullsub_74:8
+new	066966	-	0669D4	1	31	110	10	1	A	yes	call	ram=12,rom=1	ok	last: 0669D2:jmp     @er6
+extended	069F4C	069F64	069F6E	1	10	34	10	1	A	yes	dataref,proven:fnindex:main-high-b	ram=2,rom=1	ok	last: 069F6C:jmp     @er6
+new	06AB68	-	06AB88	1	9	32	10	1	A	yes	call	rom=1	ok	last: 06AB86:jmp     @er6
+new	06AC5A	-	06AC7C	2	12	40	10	1	A	falls-through: 06AC9A->code 06ACA0 (owner 06ACA0)	call	rom=2	ok	last: 06AC9A:mov.l   #loc_67454, er5
+new	06AE16	-	06AEE2	1	64	204	18	2	A	yes	call	ram=1,rom=2	ok	last: 06AEE0:rts
+new	06AF02	-	06AF2C	1	14	42	10	1	A	falls-through: 06AF28->code 06AF2C (owner 06AF2C)	call	ram=1,rom=1	ok	last: 06AF28:mov.b   r4l, @0xFFFFB05A:16
+new	06BCC0	-	06BCD6	1	5	22	10	1	A	yes	call	ram=1,rom=1	ok	last: 06BCD4:jmp     @er6
+new	06FD82	-	06FDA2	1	8	32	10	1	A	yes	call	ram=1,rom=1	ok	last: 06FDA0:jmp     @er6
+new	06FF00	-	06FF16	1	5	22	10	1	A	yes	table	ram=1,rom=1	ok	last: 06FF14:jmp     @er6
+new	06FF30	-	06FF88	1	24	88	0	0	-	yes	dataref,table	ram=9,rom=2	ok	last: 06FF86:rts
+new	070130	-	070146	1	5	22	10	1	A	yes	table	ram=1,rom=1	ok	last: 070144:jmp     @er6
+new	07015A	-	070170	1	7	22	0	0	-	yes	dataref,table	ram=2	ok	last: 07016E:rts
+new	070356	-	0703C4	1	27	110	28	3	A	yes	call	ram=6,rom=2	ok	last: 0703C2:rts
+new	0703C4	-	0703E6	1	9	34	0	0	-	yes	dataref,table	ram=2	ok	not an H8SX site: IDA side effect from a data offset at 0x0703E6; last: 0703E4:rts
+new	073072	-	07308C	1	6	26	10	1	A	yes	call	ram=1,rom=1	ok	last: 07308A:jmp     @er6
+new	07312A	-	073162	1	16	56	10	1	A	yes	table	ram=3,rom=1	ok	last: 073160:rts
+new	073358	-	0733E0	1	35	136	16	2	A	yes	call	ram=7,rom=3	ok	last: 0733DE:rts
+new	073930	-	073974	1	17	68	10	1	A	yes	call	ram=3,rom=1	ok	last: 073972:jmp     @er6
+new	0739FA	-	073A54	1	30	90	8	1	A	yes	table	ram=6,rom=1	ok	last: 073A52:rts
+new	075F36	-	075FC6	1	54	144	114	9	A	yes	call	ram=4	ok	last: 075FC4:rts/l   er4-er6
+new	075FC6	-	076080	1	72	186	154	11	A	yes	call	ram=4	ok	last: 07607E:rts/l   er2-er5
+new	076080	-	076148	1	72	200	172	13	A	yes	call	ram=4	ok	last: 076146:rts/l   er2-er3
+new	07615E	-	0761C8	1	31	106	94	7	A	yes	call	ram=2,rom=6	ok	last: 0761C6:rts
+new	0761C8	-	076256	1	49	142	88	6	A	yes	call	ram=2	ok	last: 076254:rts/l   er3-er6
+new	0762DC	-	0767BE	1	436	1250	722	93	A	yes	call	ram=2,rom=46	ok	last: 0767BC:rts/l   er2-er3
+new	076C0A	-	076EF8	1	210	750	468	28	B	yes	call	ram=8	ok	last: 076EF6:rts/l   er4-er6
+new	076EF8	-	076FC4	1	55	204	108	9	B	yes	call	ram=6	ok	last: 076FC2:rts/l   er3-er6
+new	076FC4	-	076FC8	1	2	4	4	1	B	yes	call	-	ok	last: 076FC6:rts
+new	076FC8	-	07711E	1	114	342	202	23	AB	yes	call	io=5,ram=3,imm=1	ok	1 imm-offset(s); last: 07711C:rts/l   er2-er5
+new	07711E	-	0771AE	1	53	144	46	8	A	yes	call	io=6,ram=1	ok	last: 0771AC:rts/l   er2
+new	0771E2	-	07720E	1	10	44	36	3	A	yes	call	ram=1	ok	last: 07720C:rts
+new	07720E	-	077320	1	82	274	190	6	A	yes	call	ram=11,rom=3,imm=2	ok	2 imm-offset(s); last: 07731E:rts/l   er2-er5
+new	07745A	-	0774E8	1	48	142	136	11	A	yes	call	ram=3	ok	last: 0774E6:rts/l   er2-er3
+new	0774E8	-	07757C	1	51	148	142	12	A	yes	call	ram=3	ok	last: 07757A:rts/l   er2-er3
+new	07757C	-	077692	1	80	278	222	5	A	yes	call	ram=19	ok	last: 077690:rts/l   er2-er5
+new	077692	-	07778C	1	67	250	238	7	A	yes	call	ram=18	ok	last: 07778A:rts/l   er2-er3
+new	07778C	-	0777E0	1	21	84	8	1	A	yes	call	ram=5	ok	last: 0777DE:rts
+new	0777E0	-	07780C	1	10	44	36	3	A	yes	call	ram=1	ok	last: 07780A:rts
+new	07780C	-	077900	1	75	244	92	5	A	yes	call	ram=10,rom=4	ok	last: 0778FE:rts/l   er2-er5
+new	077900	-	077924	1	9	36	22	2	A	yes	call	ram=1	ok	last: 077922:rts
+new	077A1C	-	077A36	1	8	26	10	1	A	yes	call	-	ok	last: 077A34:rts
+new	077A36	-	077ADA	1	59	164	148	14	A	yes	call	ram=2	ok	last: 077AD8:rts/l   er2-er3
+new	077ADA	-	077BD0	1	71	246	210	4	A	yes	call	ram=17	ok	last: 077BCE:rts/l   er4-er6
+new	077BD0	-	077CAC	1	58	220	214	6	A	yes	call	ram=17	ok	last: 077CAA:rts/l   er2-er3
+new	077CB8	-	077CC2	1	3	10	10	1	A	yes	call	-	ok	last: 077CC0:rts
+new	077CC2	-	077D16	1	21	84	8	1	A	yes	call	ram=5	ok	last: 077D14:rts
+new	077D16	-	077D6A	1	21	84	6	1	A	yes	call	ram=5	ok	last: 077D68:rts
+new	077DB8	-	077E28	1	48	112	112	2	A	yes	call,dataref	ram=2	ok	last: 077E26:rts/l   er2-er5
+new	077E28	-	077EF0	1	75	200	180	14	A	yes	call	ram=2,rom=1	ok	last: 077EEE:rts/l   er2-er5
+new	077F26	-	077F4A	1	14	36	10	2	A	yes	call	-	ok	last: 077F48:rts/l   er2-er3
+new	077F4A	-	077FC6	1	40	124	116	5	A	yes	call	rom=3	ok	last: 077FC4:rts/l   er4-er6
+new	077FC6	-	07801C	1	28	86	72	2	A	yes	call,dataref	ram=1	ok	last: 07801A:rts/l   er4-er6
+new	078086	-	0780BE	1	15	56	46	2	A	yes	call,dataref	ram=1	ok	last: 0780BC:rts/l   er2-er3
+new	0780D8	-	078102	1	21	42	16	2	A	falls-through: 078100->code 078102 (owner 078102)	call	-	ok	last: 078100:bcs     loc_780F4:8
+removed	00481E	00482A	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	006C70	006C7C	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	0088BA	0088E4	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	0101DC	010204	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	014E7E	014EA2	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	015E32	015E42	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	018146	018180	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	01A67C	01A684	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	01D316	01D332	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	01D764	01D774	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	01DE92	01DEC6	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	01E1C2	01E1DE	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	01E920	01E938	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	01EEC8	01EF08	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	01F0C2	01F108	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	02228A	0222C0	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	02412A	02413E	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	02CA2C	02CB00	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	02D90E	02D998	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	02ED7C	02EDD0	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	02EFDC	02F030	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	0330DC	0330F0	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	033820	03388A	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	034644	034674	-	-	-	-	-	-	-	-	proven:proved	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	035CB6	035CD8	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	037862	0378A2	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	038104	038160	-	-	-	-	-	-	-	-	proven:proved	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	038486	0384B8	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	04CE30	04CE8A	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	04DE00	04DE26	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	04DE6E	04DEE2	-	-	-	-	-	-	-	-	proven:proved	-	correct	start became data (ASCII); true entry restored at 04DE94
+removed	04DF3C	04DF60	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	04DF72	04E010	-	-	-	-	-	-	-	-	proven:proved	-	correct	start became data (ASCII); true entry restored at 04DF98
+removed	04F3A4	04F3DE	-	-	-	-	-	-	-	-	proven:proved	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	05641E	056448	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	05A3BA	05A3C6	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	05B1EC	05B1F8	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	06AC14	06AC3A	-	-	-	-	-	-	-	-	proven:proved	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	06AEBC	06AEE2	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	0733A4	0733E0	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	073A36	073A54	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+2 into an H8SX insn)
+removed	076C04	076C0A	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+4 into an H8SX insn)
+removed	077914	077924	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+4 into an H8SX insn)
+removed	077D66	077D6A	-	-	-	-	-	-	-	-	-	-	correct	start was mid-instruction (+4 into an H8SX insn)
+code-run	0007A6	-	0007B0	-	2	10	10	1	B	yes	site origin 0007A6	-	ok	last: bra .+42 (0x7da); W2-8 type parameter table
+code-run	0007B6	-	0007C0	-	2	10	10	1	B	yes	site origin 0007B6	-	ok	last: bra .+14 (0x7ce); W2-8 type parameter table
+code-run	0007C6	-	000800	-	20	58	58	1	B	flows into existing code at 000800	site origin 0007C6	-	ok	last: sub.w e6,r6; W2-8 type parameter table
+code-run	000886	-	000890	-	2	10	10	1	B	yes	site origin 000886	-	ok	last: bra .+42 (0x8ba); W2-8 type parameter table
+code-run	000896	-	0008A0	-	2	10	10	1	B	yes	site origin 000896	-	ok	last: bra .+14 (0x8ae); W2-8 type parameter table
+code-run	0008A6	-	0008F0	-	27	74	74	1	B	yes	site origin 0008A6	-	ok	last: rte ; W2-8 type parameter table
+code-run	000938	-	0009B0	-	39	120	120	3	B	yes	site origin 000938	-	ok	last: rte ; W2-8 type parameter table
+code-run	0009D8	-	000A8C	-	64	180	180	3	B	yes	site origin 0009D8	-	ok	last: rte ; W2-8 type parameter table
+code-run	005E4A	-	005E54	-	2	10	10	1	A	flows into existing code at 005E54	site origin 005E4A	-	ok	last: bsr .+20 (0x5e68); W2-8 type parameter table
+code-run	008EB6	-	008EC0	-	2	10	10	1	A	yes	site origin 008EB6	-	ok	last: jmp @er5; W2-8 type other
+code-run	0101DA	-	0101E2	-	1	8	8	1	A	flows into existing code at 0101E2	site origin 0101DA	-	ok	last: mov.l @(0x10242:32,er3),er6; W2-8 type other
+code-run	015E30	-	015E38	-	1	8	8	1	B	flows into existing code at 015E38	site origin 015E30	-	ok	last: mov.l @(0x12268:32,er3),er6; W2-8 type other
+code-run	017880	-	01788C	-	2	12	12	1	B	flows into existing code at 01788C	site origin 017880	-	ok	last: jsr @0x3f628:24; W2-8 type parameter table
+code-run	0178BC	-	0178C8	-	2	12	12	1	B	flows into existing code at 0178C8	site origin 0178BC	-	ok	last: jsr @0x3f628:24; W2-8 type parameter table
+code-run	018144	-	01814C	-	1	8	8	1	B	flows into existing code at 01814C	site origin 018144	-	ok	last: mov.l @(0x18198:32,er4),er6; W2-8 type other
+code-run	018290	-	01829A	-	2	10	10	1	B	yes	site origin 018290	-	ok	last: jmp @er6; W2-8 type other
+code-run	01851C	-	018568	-	25	76	76	1	B	flows into existing code at 018568	site origin 01851C	-	ok	last: jsr @0x17a3a:24; W2-8 type parameter table
+code-run	018AEC	-	018AF6	-	2	10	10	1	B	yes	site origin 018AEC	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	01D7D2	-	01D7DE	-	3	12	12	1	B	yes	site origin 01D7D2	-	ok	last: bra .+44 (0x1d80a); W2-8 type parameter table
+code-run	01D7EE	-	01D7FA	-	3	12	12	1	B	yes	site origin 01D7EE	-	ok	last: bra .+16 (0x1d80a); W2-8 type parameter table
+code-run	01D83E	-	01D84A	-	3	12	12	1	B	yes	site origin 01D83E	-	ok	last: bra .+44 (0x1d876); W2-8 type parameter table
+code-run	01D85A	-	01D866	-	3	12	12	1	B	yes	site origin 01D85A	-	ok	last: bra .+16 (0x1d876); W2-8 type parameter table
+code-run	01DAB4	-	01DAC0	-	3	12	12	1	A	yes	site origin 01DAB4	-	ok	last: bra .+72 (0x1db08); W2-8 type parameter table
+code-run	01DAF2	-	01DB04	-	4	18	18	1	A	yes	site origin 01DAF2	-	ok	last: bra .+4 (0x1db08); W2-8 type parameter table
+code-run	01DE6E	-	01DE78	-	2	10	10	1	A	yes	site origin 01DE6E	-	ok	last: bra .+54 (0x1deae); W2-8 type other
+code-run	01DE90	-	01DE98	-	1	8	8	1	A	flows into existing code at 01DE98	site origin 01DE90	-	ok	last: mov.l @(0x1df1a:32,er6),er5; W2-8 type other
+code-run	01E1C0	-	01E1C8	-	1	8	8	1	B	flows into existing code at 01E1C8	site origin 01E1C0	-	ok	last: mov.l @(0x1e1de:32,er3),er6; W2-8 type other
+code-run	01EA6A	-	01EABE	-	23	84	84	1	A	yes	site origin 01EA6A	-	ok	last: rts ; W2-8 type parameter table
+code-run	01F2A0	-	01F2AA	-	2	10	10	1	B	yes	site origin 01F2A0	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	01F3E6	-	01F3F0	-	2	10	10	1	B	yes	site origin 01F3E6	-	ok	last: jmp @er6; W2-8 type other
+code-run	01F462	-	01F46C	-	2	10	10	1	B	yes	site origin 01F462	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	01F896	-	01F8E2	-	24	76	76	1	B	yes	site origin 01F896	-	ok	last: rts ; W2-8 type parameter table
+code-run	021882	-	02188C	-	2	10	10	1	B	yes	site origin 021882	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	021B96	-	021BA0	-	2	10	10	1	B	yes	site origin 021B96	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	021BF8	-	021C02	-	2	10	10	1	B	yes	site origin 021BF8	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	021CBC	-	021CC6	-	2	10	10	1	B	yes	site origin 021CBC	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	021D3E	-	021D48	-	2	10	10	1	B	yes	site origin 021D3E	-	ok	last: jmp @er6; W2-8 type other
+code-run	024128	-	024130	-	1	8	8	1	B	flows into existing code at 024130	site origin 024128	-	ok	last: mov.l @(0x2413e:32,er3),er6; W2-8 type other
+code-run	024F56	-	024F60	-	2	10	10	1	B	yes	site origin 024F56	-	ok	last: jmp @er6; W2-8 type other
+code-run	025464	-	025496	-	16	50	50	1	A	yes	site origin 025464	-	ok	last: rts ; W2-8 type recovered code
+code-run	029412	-	02941C	-	2	10	10	1	B	yes	site origin 029412	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	029822	-	02982C	-	2	10	10	1	B	yes	site origin 029822	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	029920	-	02992A	-	2	10	10	1	B	yes	site origin 029920	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	029D46	-	029D50	-	2	10	10	1	B	yes	site origin 029D46	-	ok	last: jmp @er5; W2-8 type parameter table
+code-run	02AD8E	-	02AD98	-	2	10	10	1	B	yes	site origin 02AD8E	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	02BA74	-	02BA7E	-	2	10	10	1	B	yes	site origin 02BA74	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	02BC5C	-	02BC66	-	2	10	10	1	B	yes	site origin 02BC5C	-	ok	last: jmp @er6; W2-8 type other
+code-run	02BE20	-	02BE2A	-	2	10	10	1	B	yes	site origin 02BE20	-	ok	last: jmp @er6; W2-8 type other
+code-run	02C094	-	02C0A0	-	2	12	12	1	B	yes	site origin 02C094	-	ok	last: jmp @0x28562:24; W2-8 type parameter table
+code-run	02C190	-	02C19C	-	2	12	12	1	B	yes	site origin 02C190	-	ok	last: jmp @0x28562:24; W2-8 type parameter table
+code-run	02C208	-	02C214	-	2	12	12	1	B	yes	site origin 02C208	-	ok	last: jmp @0x28586:24; W2-8 type parameter table
+code-run	02CA2A	-	02CA32	-	1	8	8	1	A	flows into existing code at 02CA32	site origin 02CA2A	-	ok	last: mov.l @(0x2cb00:32,er3),er6; W2-8 type other
+code-run	02D90C	-	02D914	-	1	8	8	1	A	flows into existing code at 02D914	site origin 02D90C	-	ok	last: mov.l @(0x2d998:32,er3),er6; W2-8 type other
+code-run	03381E	-	033826	-	1	8	8	1	A	flows into existing code at 033826	site origin 03381E	-	ok	last: mov.l @(0x338d8:32,er3),er6; W2-8 type other
+code-run	034642	-	03464A	-	1	8	8	1	A	flows into existing code at 03464A	site origin 034642	-	ok	last: mov.l @(0x34674:32,er3),er6; W2-8 type other
+code-run	0354BE	-	0354C8	-	2	10	10	1	B	yes	site origin 0354BE	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	035710	-	03571A	-	2	10	10	1	A	yes	site origin 035710	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	03580C	-	035816	-	2	10	10	1	A	yes	site origin 03580C	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	035CB4	-	035CBC	-	1	8	8	1	A	flows into existing code at 035CBC	site origin 035CB4	-	ok	last: mov.l @(0x35cd8:32,er3),er6; W2-8 type other
+code-run	037EF8	-	037F02	-	2	10	10	1	B	yes	site origin 037EF8	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	038484	-	03848C	-	1	8	8	1	A	flows into existing code at 03848C	site origin 038484	-	ok	last: mov.l @(0x387fa:32,er4),er5; W2-8 type other
+code-run	038BE2	-	038BEC	-	2	10	10	1	A	yes	site origin 038BE2	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	038D40	-	038D66	-	7	38	38	1	A	yes	site origin 038D40	-	ok	last: bra .+6 (0x38d6c); W2-8 type parameter table
+code-run	03CF2A	-	03CF34	-	2	10	10	1	A	yes	site origin 03CF2A	-	ok	last: jmp @er6; W2-8 type other
+code-run	04CE2E	-	04CE36	-	1	8	8	1	B	flows into existing code at 04CE36	site origin 04CE2E	-	ok	last: mov.l @(0x4e98e:32,er1),er3; W2-8 type other
+code-run	04CE4C	-	04CE54	-	1	8	8	1	B	flows into existing code at 04CE54	site origin 04CE4C	-	ok	last: mov.l @(0x4e98e:32,er1),er3; W2-8 type None
+code-run	04DDFE	-	04DE06	-	1	8	8	1	B	flows into existing code at 04DE06	site origin 04DDFE	-	ok	last: mov.l @(0x4de6c:32,er3),er4; W2-8 type other
+code-run	04DE0A	-	04DE12	-	1	8	8	1	B	flows into existing code at 04DE12	site origin 04DE0A	-	ok	last: mov.l @(0x4de44:32,er3),er4; W2-8 type None
+code-run	04DF3A	-	04DF42	-	1	8	8	1	B	flows into existing code at 04DF42	site origin 04DF3A	-	ok	last: mov.l @(0x4df70:32,er3),er4; W2-8 type other
+code-run	05B394	-	05B39E	-	2	10	10	1	A	yes	site origin 05B394	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	05C060	-	05C06A	-	2	10	10	1	A	yes	site origin 05C060	-	ok	last: jmp @er6; W2-8 type other
+code-run	05C400	-	05C40A	-	2	10	10	1	A	yes	site origin 05C400	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	05E882	-	05E88C	-	2	10	10	1	B	yes	site origin 05E882	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	05E898	-	05E8A2	-	2	10	10	1	B	yes	site origin 05E898	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	05FE6C	-	05FE76	-	2	10	10	1	B	yes	site origin 05FE6C	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	0601DE	-	0601E8	-	2	10	10	1	B	yes	site origin 0601DE	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	06109A	-	0610A4	-	2	10	10	1	B	yes	site origin 06109A	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	061768	-	061772	-	2	10	10	1	B	yes	site origin 061768	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	061AF6	-	061B36	-	16	64	64	1	B	yes	site origin 061AF6	-	ok	last: bra .+20 (0x61b4a); W2-8 type parameter table
+code-run	061BAE	-	061BBC	-	4	14	14	1	B	yes	site origin 061BAE	-	ok	last: bra .+24 (0x61bd4); W2-8 type parameter table
+code-run	061BC8	-	061BDC	-	5	20	20	1	B	yes	site origin 061BC8	-	ok	last: bra .+4 (0x61be0); W2-8 type parameter table
+code-run	06219C	-	0621A6	-	2	10	10	1	B	yes	site origin 06219C	-	ok	last: jmp @er6; W2-8 type recovered code
+code-run	06292E	-	062938	-	2	10	10	1	B	yes	site origin 06292E	-	ok	last: jmp @er6; W2-8 type other
+code-run	0629C8	-	0629D2	-	2	10	10	1	B	yes	site origin 0629C8	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	062A10	-	062A1A	-	2	10	10	1	B	yes	site origin 062A10	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	062A94	-	062A9E	-	2	10	10	1	B	yes	site origin 062A94	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	063E2C	-	063E36	-	2	10	10	1	B	yes	site origin 063E2C	-	ok	last: jmp @er6; W2-8 type other
+code-run	064320	-	06432A	-	2	10	10	1	B	yes	site origin 064320	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	0661A8	-	0661B2	-	2	10	10	1	B	yes	site origin 0661A8	-	ok	last: jmp @er6; W2-8 type other
+code-run	066CA2	-	066CAC	-	2	10	10	1	B	yes	site origin 066CA2	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	066EF6	-	066F00	-	2	10	10	1	B	yes	site origin 066EF6	-	ok	last: jmp @er6; W2-8 type other
+code-run	06B174	-	06B17E	-	2	10	10	1	B	yes	site origin 06B174	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	06B186	-	06B190	-	2	10	10	1	B	yes	site origin 06B186	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	06B1AA	-	06B1B4	-	2	10	10	1	B	yes	site origin 06B1AA	-	ok	last: jmp @er6; W2-8 type other
+code-run	06B3E2	-	06B3EC	-	2	10	10	1	B	yes	site origin 06B3E2	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	06B516	-	06B520	-	2	10	10	1	B	yes	site origin 06B516	-	ok	last: jmp @er6; W2-8 type recovered code
+code-run	06B528	-	06B532	-	2	10	10	1	B	yes	site origin 06B528	-	ok	last: jmp @er6; W2-8 type recovered code
+code-run	06B54C	-	06B556	-	2	10	10	1	B	yes	site origin 06B54C	-	ok	last: jmp @er6; W2-8 type recovered code
+code-run	06F9B4	-	06F9BE	-	2	10	10	1	A	yes	site origin 06F9B4	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	06F9DA	-	06F9E4	-	2	10	10	1	A	yes	site origin 06F9DA	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	06FB22	-	06FB2C	-	2	10	10	1	A	yes	site origin 06FB22	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	06FB38	-	06FB42	-	2	10	10	1	A	yes	site origin 06FB38	-	ok	last: jmp @er6; W2-8 type parameter table
+code-run	076148	-	07615E	-	10	22	22	2	B	yes	site origin 076148	-	ok	last: rts ; W2-8 type parameter table
+code-run	076256	-	07625A	-	1	4	4	1	B	flows into existing code at 07625A	site origin 076256	-	ok	last: stm.l er3-er6,@-sp; W2-8 type other
+code-run	076284	-	0762D6	-	29	82	82	5	B	yes	site origin 076284	-	ok	last: rts/l er3-er6; W2-8 type parameter table
+code-run	0762DA	-	0762DC	-	1	2	2	1	B	yes	site origin 0762DA	-	ok	last: rts/l er3-er6; W2-8 type other
+code-run	0767F4	-	07684A	-	23	86	86	10	B	yes	site origin 0767F4	-	ok	last: rts/l er4-er6; W2-8 type parameter table
+code-run	076852	-	0768A8	-	23	86	86	10	B	yes	site origin 076852	-	ok	last: rts/l er4-er6; W2-8 type parameter table
+code-run	0768CC	-	0769AA	-	58	222	222	12	B	yes	site origin 0768CC	-	ok	last: rts/l er2; W2-8 type parameter table
+code-run	0769D0	-	0769EC	-	9	28	28	2	B	yes	site origin 0769D0	-	ok	last: rts/l er4-er6; W2-8 type parameter table
+code-run	076A0C	-	076AA2	-	45	150	150	14	B	yes	site origin 076A0C	-	ok	last: rts/l er4-er6; W2-8 type parameter table
+code-run	076AB6	-	076ADE	-	9	40	40	5	B	yes	site origin 076AB6	-	ok	last: rts/l er4-er6; W2-8 type parameter table
+code-run	076AF6	-	076C06	-	78	272	272	17	B	flows into existing code at 076C06	site origin 076AF6	-	ok	last: mov.w #0x0,@0xff6314:32; W2-8 type parameter table
+code-run	0771BE	-	0771E2	-	14	36	36	5	B	yes	site origin 0771BE	-	ok	last: rts ; W2-8 type parameter table
+code-run	077320	-	077324	-	1	4	4	1	B	flows into existing code at 077324	site origin 077320	-	ok	last: stm.l er2-er5,@-sp; W2-8 type parameter table
+code-run	077378	-	07745A	-	67	226	226	4	B	yes	site origin 077378	-	ok	last: rts ; W2-8 type parameter table
+code-run	0779BC	-	077A1C	-	26	96	96	3	B	yes	site origin 0779BC	-	ok	last: rts ; W2-8 type parameter table
+code-run	077DA4	-	077DB2	-	3	14	14	2	B	yes	site origin 077DA4	-	ok	last: rts/l er2-er3; W2-8 type parameter table
+code-run	077DB6	-	077DB8	-	1	2	2	1	B	yes	site origin 077DB6	-	ok	last: rts/l er2-er3; W2-8 type parameter table
+code-run	07801C	-	078086	-	28	106	106	2	B	yes	site origin 07801C	-	ok	last: rts/l er2-er3; W2-8 type parameter table
+code-run	078104	-	078106	-	1	2	2	0	B	yes	site origin 078104	-	ok	last: rts ; W2-8 type other

@@ -1,0 +1,71 @@
+job PC_L4_SUB h
+; ==== sub_FFEDC1F6 FFEDC1F6-FFEDC2E1 ====
+FFEDC1F6  sub     #8, sp
+FFEDC1F8  mov.w   #0, 8+var_4[sp]
+FFEDC1FB  mov.l   #12D44h, r14
+FFEDC201  movu.b  84C7h[r14], r15
+FFEDC205  cmp     84C6h[r14], r15
+FFEDC209  beq.w   loc_FFEDC2D7
+FFEDC20C  mvtipl  #3
+FFEDC20F  bra.b   loc_FFEDC23D
+FFEDC211  mov.l   #12D44h, r14
+FFEDC217  mov.b   #0, 84C7h[r14]
+FFEDC21C  mov.l   #12D44h, r14
+FFEDC222  movu.b  84C7h[r14], r15
+FFEDC226  cmp     84C6h[r14], r15
+FFEDC22A  movu.b  8+var_5[sp], r1
+FFEDC22C  beq.b   loc_FFEDC268
+FFEDC22E  shll    #1, r1
+FFEDC230  mov.l   #12D44h, r14
+FFEDC236  add     r1, r14
+FFEDC238  mov.w   #0, 800Eh[r14]
+FFEDC23D  mov.l   #12D44h, r14
+FFEDC243  mov.b   84C7h[r14], 8+var_5[sp]
+FFEDC248  mov.l   #12D44h, r14
+FFEDC24E  movu.b  84C7h[r14], r15
+FFEDC252  add     #1, r15
+FFEDC254  mov.b   r15, 84C7h[r14]
+FFEDC258  mov.l   #12D44h, r14
+FFEDC25E  movu.b  84C7h[r14], r14
+FFEDC262  cmp     #3, r14
+FFEDC264  bgt.b   loc_FFEDC211
+FFEDC266  bra.b   loc_FFEDC21C
+FFEDC268  shll    #1, r1
+FFEDC26A  mov.l   #12D44h, r14
+FFEDC270  add     r1, r14
+FFEDC272  mov.w   800Eh[r14], 8+var_4[sp]
+FFEDC277  mov.l   #12D44h, r1
+FFEDC27D  movu.b  5[r1], r1
+FFEDC27F  cmp     #-4, r1
+FFEDC282  beq.b   loc_FFEDC2AC
+FFEDC284  movu.b  8+var_5[sp], r1
+FFEDC286  mul     #12Ch, r1
+FFEDC28A  mov.l   #12D44h, r14
+FFEDC290  add     r14, r1
+FFEDC292  mov.b   8016h[r1], 84C8h[r14]
+FFEDC298  movu.b  8+var_5[sp], r1
+FFEDC29A  mul     #12Ch, r1
+FFEDC29E  mov.l   #12D44h, r14
+FFEDC2A4  add     r14, r1
+FFEDC2A6  mov.b   8017h[r1], 84C9h[r14]
+FFEDC2AC  movu.b  8+var_5[sp], r2
+FFEDC2AE  mul     #12Ch, r2
+FFEDC2B2  mov.l   #12D44h, r1
+FFEDC2B8  add     r2, r1
+FFEDC2BA  add     #8016h, r1, r1
+FFEDC2BF  bsr.a   sub_FFEF0385
+FFEDC2C3  movu.b  8+var_5[sp], r1
+FFEDC2C5  shll    #1, r1
+FFEDC2C7  mov.l   #12D44h, r14
+FFEDC2CD  add     r1, r14
+FFEDC2CF  mov.w   #0, 800Eh[r14]
+FFEDC2D4  mvtipl  #0
+FFEDC2D7  mov.w   8+var_4[sp], 8+var_2[sp]
+FFEDC2DB  mov.w   8+var_2[sp], r1
+FFEDC2DD  movu.w  r1, r1
+FFEDC2DF  rtsd    #2
+
+; ==== xrefs TO FFEDC1F6 ====
+  FFF36CA2 sub_FFF36CA2           bsr.a   sub_FFEDC1F6
+; (1)
+

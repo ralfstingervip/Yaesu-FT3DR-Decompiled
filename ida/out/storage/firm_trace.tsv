@@ -1,0 +1,15 @@
+item	value	status	mapped_ea	file_off	evidence
+firm_string	"FIRM ERROR" (10 bytes) - ONLY firmware-related string in SUB	confirmed	FFF4AB3F	34AB3F	grep of FT3D_SUB_ver102_ALL.bin; sole hit for FIRM/firmware/update/loader-image markers
+firm_string_MAIN	none	not found (whole-image string scan of FT3D_MAIN_ver102_EXP.bin)	-	-	no FIRM/firmware/LOADER/BOOTLOAD/UPDATE/IMAGE/.mot/.hex/.fw string in MAIN
+msg_id	FIRM ERROR = popup message id 0xAB	confirmed	-	-	consecutive message table: W PROTECT=0xA0(FFF4AAD9) .. HEAT=0xA9 .. M-ONLY=0xAA .. FIRM ERROR=0xAB(FFF4AB3F)
+id_to_string_map	sub_FFF0B665 switch: cmp #-55h (0xAB) then loads ptr #FFF4AB3F	confirmed	FFF0B734 / FFF0BD4B	30B734 / 30BD4B	cmp at FFF0B734 (imm_sites); mov.l #FFF4AB3F immediate at FFF0BD4B (LE ptr 3F AB F4 FF in code)
+raiser_1	sub_FFF0DB03 - screen state 7 handler; loads id 0xAB (mov.l #-55h)	confirmed	FFF0DDA9,FFF0DDC4,FFF0DDEF	30DDA9	imm_sites.tsv; dispatched by sub_FFF0D6D9 at FFF0D705
+raiser_2	sub_FFF0DE56 - screen state 8 = DSP WRITE MODE handler; loads id 0xAB	confirmed	FFF0E08D,FFF0E0A6,FFF0E0CD	30E08D	imm_sites.tsv; dispatched by sub_FFF0D6D9 at FFF0D709; draws ---DSP WRITE MODE----/Loading.../Complete/FIRM ERROR
+raiser_3	sub_FFF0E118 - screen state 9 handler; loads id 0xAB	confirmed	FFF0E34B	30E34B	imm_sites.tsv; dispatched by sub_FFF0D6D9 at FFF0D70D
+dispatcher	sub_FFF0D6D9 - screen selector on IPC status byte [0x00008C4E]	confirmed	FFF0D6D9	30D6D9	callgraph_full.tsv edges to states 2,5,7,8,9,A,B; per doc 06 reads movu.b 1[#0x8C4D]
+raiser_callees	sub_FFF0DB03/DE56/E118 call ONLY display primitives FFEF04F7/FFEF190D/FFEF1B23/FFEF1BB1/FFEF1C48/FFEF68D5	confirmed	-	-	callgraph_full.tsv: zero edges to fopen(FFF12xxx/FFF14xxx), SDHI(FFF33xxx/FFF35xxx), or path builders(FFF3B8DE/FFF12A8F)
+subtree_fs_free	entire DSP-write screen subtree is filesystem-free to 3 levels	confirmed	-	-	2nd-level callees (FFEF153B/2184/2261/2317/FFEE5269/1A16/0581/0648) also have zero fs/sd edges
+firm_source	DSP firmware arrives over the wire (MAIN drives DSP via SCI-A after reset), NOT from SD	confirmed (cross-ref doc 06-dsp-vocoder.md)	-	-	MAIN sub_5DD00 state machine 0..7 over 0xFFFF52; SUB only draws the screen from IPC status
+srecord_format	no S-record/Intel-hex/ELF firmware format parsed	not found (string + feature-code scan)	-	-	scattered S0/S1/S2/S3 bytes are in SUB display-resource region 0x00030000-0x0003F000, not ASCII S-record lines, not referenced by any decoder
+read_from_sd_label	"Read from SD" is a computed-index UI label (SD info/camera group), no 32-bit pointer	confirmed	FFF4A405	34A405	no LE-dword xref in image; adjacent to Used/Free space/Capacity/CAMERA SIZE strings; per CORRECTION #5 menu labels are table-indexed
+verdict	SD is DATA STORAGE ONLY - not a firmware-load path and not a parsed-firmware-format path	confirmed	-	-	no firmware image, filename, or format read/validated from the card on any path

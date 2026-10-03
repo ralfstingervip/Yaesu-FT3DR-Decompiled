@@ -1,0 +1,88 @@
+###### func 00055976-000559F4 (req 000559DA)
+; xrefs-to: 0005569A
+00055976  79 25 01 00            cmp.w   #0x100, r5                           ; #0x100 R5
+0005597A  47 42                  beq     loc_559BE:8                          ; a=0x559BE
+0005597C  79 25 02 00            cmp.w   #0x200, r5                           ; #0x200 R5
+00055980  47 2c                  beq     loc_559AE:8                          ; a=0x559AE
+00055982  79 25 03 00            cmp.w   #0x300, r5                           ; #0x300 R5
+00055986  47 16                  beq     loc_5599E:8                          ; a=0x5599E
+00055988  79 25 04 00            cmp.w   #0x400, r5                           ; #0x400 R5
+0005598C  46 64                  bne     locret_559F2:8                       ; a=0x559F2
+0005598E  6d f5                  push.w  r5                                   ; R5
+00055990  7a 05 00 ff 5b 06      mov.l   #0xFF5B06, er5                       ; #0xFF5B06 R37
+00055996  7a 06 00 ff 58 06      mov.l   #0xFF5806, er6                       ; #0xFF5806 R38
+0005599C  40 2e                  bra     loc_559CC:8                          ; a=0x559CC
+0005599E  6d f5                  push.w  r5                                   ; R5
+000559A0  7a 05 00 ff 5a 06      mov.l   #0xFF5A06, er5                       ; #0xFF5A06 R37
+000559A6  7a 06 00 ff 5b 06      mov.l   #0xFF5B06, er6                       ; #0xFF5B06 R38
+000559AC  40 1e                  bra     loc_559CC:8                          ; a=0x559CC
+000559AE  6d f5                  push.w  r5                                   ; R5
+000559B0  7a 05 00 ff 59 06      mov.l   #0xFF5906, er5                       ; #0xFF5906 R37
+000559B6  7a 06 00 ff 5a 06      mov.l   #0xFF5A06, er6                       ; #0xFF5A06 R38
+000559BC  40 0e                  bra     loc_559CC:8                          ; a=0x559CC
+000559BE  6d f5                  push.w  r5                                   ; R5
+000559C0  7a 05 00 ff 58 06      mov.l   #0xFF5806, er5                       ; #0xFF5806 R37
+000559C6  7a 06 00 ff 59 06      mov.l   #0xFF5906, er6                       ; #0xFF5906 R38
+000559CC  01 00 6b 86 bc 48      mov.l   er6, @0xFFFFBC48:16                  ; R38 a=0xFFFFBC48
+000559D2  79 04 01 00            mov.w   #0x100, r4                           ; #0x100 R4
+000559D6  6b 84 bc 3e            mov.w   r4, @0xFFFFBC3E:16                   ; R4 a=0xFFFFBC3E
+000559DA  5e 00 b6 10            jsr     sub_B610:24                          ; a=0xB610
+000559DE  01 00 6b 05 b0 98      mov.l   @0xFFFFB098:16, er5                  ; a=0xFFFFB098 R37
+000559E4  7a 35 00 00 01 00      sub.l   #0x100, er5                          ; #0x100 R37
+000559EA  01 00 6b 85 b0 98      mov.l   er5, @0xFFFFB098:16                  ; R37 a=0xFFFFB098
+000559F0  6d 75                  pop.w   r5                                   ; R5
+000559F2  54 70                  rts                                          ; 
+###### func 000559F4-00055A24 (req 00055A06)
+; xrefs-to: 00055612
+000559F4  01 00 6b 04 b0 98      mov.l   @0xFFFFB098:16, er4                  ; a=0xFFFFB098 R36
+000559FA  47 10                  beq     loc_55A0C:8                          ; a=0x55A0C
+000559FC  6b 84 bc 3e            mov.w   r4, @0xFFFFBC3E:16                   ; R4 a=0xFFFFBC3E
+00055A00  01 00 6b 05 bc 48      mov.l   @0xFFFFBC48:16, er5                  ; a=0xFFFFBC48 R37
+00055A06  5e 00 b6 10            jsr     sub_B610:24                          ; a=0xB610
+00055A0A  55 18                  bsr     sub_55A24:8                          ; a=0x55A24
+00055A0C  6a 18 bb f2 72 20      bclr    #2, @0xFFFFBBF2:16                   ; #0x2 a=0xFFFFBBF2
+00055A12  6a 18 bb f1 70 40      bset    #4, @0xFFFFBBF1:16                   ; #0x4 a=0xFFFFBBF1
+00055A18  5e 00 af 94            jsr     sub_AF94:24                          ; a=0xAF94
+00055A1C  fc 02                  mov.b   #2, r4l                              ; #0x2 R28
+00055A1E  6a 8c bc 4e            mov.b   r4l, @0xFFFFBC4E:16                  ; R28 a=0xFFFFBC4E
+00055A22  54 70                  rts                                          ; 
+###### func 00055D32-00055D6C (req 00055D32)
+; xrefs-to: 00055D0C 00055D2C
+00055D32  5e 00 b6 10            jsr     sub_B610:24                          ; a=0xB610
+00055D36  6b 04 ba 74            mov.w   @0xFFFFBA74:16, r4                   ; a=0xFFFFBA74 R4
+00055D3A  46 2e                  bne     locret_55D6A:8                       ; a=0x55D6A
+00055D3C  6a 0c b2 5a            mov.b   @0xFFFFB25A:16, r4l                  ; a=0xFFFFB25A R28
+00055D40  47 22                  beq     loc_55D64:8                          ; a=0x55D64
+00055D42  6a 0c b2 5a            mov.b   @0xFFFFB25A:16, r4l                  ; a=0xFFFFB25A R28
+00055D46  1a 0c                  dec.b   r4l                                  ; #0x1 R28
+00055D48  6a 8c b2 5a            mov.b   r4l, @0xFFFFB25A:16                  ; R28 a=0xFFFFB25A
+00055D4C  47 16                  beq     loc_55D64:8                          ; a=0x55D64
+00055D4E  79 04 00 05            mov.w   #5, r4                               ; #0x5 R4
+00055D52  6b 84 95 b4            mov.w   r4, @0xFFFF95B4:16                   ; R4 a=0xFFFF95B4
+00055D56  fc 01                  mov.b   #1, r4l                              ; #0x1 R28
+00055D58  6a 8c ba 3a            mov.b   r4l, @0xFFFFBA3A:16                  ; R28 a=0xFFFFBA3A
+00055D5C  fc 01                  mov.b   #1, r4l                              ; #0x1 R28
+00055D5E  6a 8c bc 50            mov.b   r4l, @0xFFFFBC50:16                  ; R28 a=0xFFFFBC50
+00055D62  40 06                  bra     locret_55D6A:8                       ; a=0x55D6A
+00055D64  fc 03                  mov.b   #3, r4l                              ; #0x3 R28
+00055D66  6a 8c bc 50            mov.b   r4l, @0xFFFFBC50:16                  ; R28 a=0xFFFFBC50
+00055D6A  54 70                  rts                                          ; 
+###### func 00055FDE-00055FF0 (req 00055FDE)
+; xrefs-to: 00055FB8 00055FD8
+00055FDE  5e 00 b6 10            jsr     sub_B610:24                          ; a=0xB610
+00055FE2  6b 04 ba 74            mov.w   @0xFFFFBA74:16, r4                   ; a=0xFFFFBA74 R4
+00055FE6  46 06                  bne     locret_55FEE:8                       ; a=0x55FEE
+00055FE8  fc 02                  mov.b   #2, r4l                              ; #0x2 R28
+00055FEA  6a 8c bc 57            mov.b   r4l, @0xFFFFBC57:16                  ; R28 a=0xFFFFBC57
+00055FEE  54 70                  rts                                          ; 
+###### func 00055DEE-00055DFA (req 00055DEE)
+; xrefs-to: 00055DEC
+00055DEE  5e 00 b5 ce            jsr     sub_B5CE:24                          ; a=0xB5CE
+00055DF2  fc 02                  mov.b   #2, r4l                              ; #0x2 R28
+00055DF4  6a 8c bc 54            mov.b   r4l, @0xFFFFBC54:16                  ; R28 a=0xFFFFBC54
+00055DF8  54 70                  rts                                          ; 
+###### xref 0000B5CE
+  from 00055DEE type 17 fn 00055DEE
+###### xref 0000D53A
+  from 0000460C type 17 fn 0000460A
+  from 00004618 type 17 fn 0000460A

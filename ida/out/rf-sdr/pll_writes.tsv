@@ -1,0 +1,41 @@
+# FT3DR MAIN (H8S) synthesiser write sequences.  Bus: bit-banged 3-wire on port 0xFFFF5D
+#   CLK = 0xFFFF5D bit2, DATA = bit3, LE = bit6 (device/channel A, sub_37BA0) or bit7 (B, sub_37BA4)
+#   writer: MAIN 0x037BA4 / 0x037BA0 - 16 bits MSB-first per word, one LE pulse per word
+#   word format: high byte = register address, low byte = 8 data bits
+#   table format in ROM: [u16 word_count][u16 word]...
+file_off	label	words	decode_addr=data	raw_words	note
+037D8C	seq_010A	1	01=0A	010A	single word, reg 00 data 0x0A
+037D90	seq_2B4A	1	2B=4A	2B4A	single word, reg 2B data 0x4A
+037D94	initA_0	7	20=00 21=0C 22=11 23=4B 24=00 25=17 2A=00	2000 210C 2211 234B 2400 2517 2A00	7 words regs 20,21,22,23,24,25,2A  (common/global block)
+037DA4	initA_1	7	20=00 21=0C 22=11 23=6B 24=00 25=17 2A=00	2000 210C 2211 236B 2400 2517 2A00	as initA_0 but reg23 data 6B instead of 4B
+037DB4	initA_2	7	20=00 21=0C 22=11 23=4B 24=00 25=07 2A=00	2000 210C 2211 234B 2400 2507 2A00	as initA_0 but reg25 data 07 instead of 17
+037DC4	initA_3	7	20=00 21=0C 22=11 23=6B 24=00 25=07 2A=00	2000 210C 2211 236B 2400 2507 2A00	reg23=6B and reg25=07
+037DD4	chA_reset	7	08=00 09=00 0A=00 0B=00 0C=7F 0D=FF 0E=FF	0800 0900 0A00 0B00 0C7F 0DFF 0EFF	7 words regs 08,09,0A,0B,0C,0D,0E  (channel A)
+037DE4	chB_reset	7	18=00 19=00 1A=40 1B=00 1C=7F 1D=FF 1E=FF	1800 1900 1A40 1B00 1C7F 1DFF 1EFF	7 words regs 18,19,1A,1B,1C,1D,1E  (channel B)
+037DF4	chA_1A40	1	1A=40	1A40	single word reg 1A data 40
+037DF8	chA_1A00	1	1A=00	1A00	single word reg 1A data 00
+037DFC	tuneA_template	10	26=01 27=01 02=03 03=20 04=0B 05=40 06=C0 07=28 0A=00 0B=00	2601 2701 0203 0320 040B 0540 06C0 0728 0A00 0B00	10 words regs 26,27,02,03,04,05,06,07,0A,0B - channel A tune template
+037E12	tuneB_template	10	28=01 29=01 12=04 13=B0 14=0B 15=40 16=C0 17=28 1A=00 1B=00	2801 2901 1204 13B0 140B 1540 16C0 1728 1A00 1B00	10 words regs 28,29,12,13,14,15,16,17,1A,1B - channel B tune template
+037E28	post_0F10	3	0F=10 1F=AF 01=0A	0F10 1FAF 010A	3 words regs 0F,1F,01 : 0F=10
+037E30	post_0F14	3	0F=14 1F=AF 01=0A	0F14 1FAF 010A	3 words regs 0F,1F,01 : 0F=14
+037E38	post_0F10_b	3	0F=10 1F=AF 01=0A	0F10 1FAF 010A	3 words regs 0F,1F,01 : 0F=10
+037E40	post_0F14_b	3	0F=14 1F=AF 01=0A	0F14 1FAF 010A	3 words regs 0F,1F,01 : 0F=14
+
+# runtime-computed tune buffer, RAM 0xFF9500, written by the same routine
+# field	buffer_byte	source	meaning
+reg02/12 data	0xFF9507	high byte of [0xFF94FA]	fractional numerator, high
+reg03/13 data	0xFF9509	low byte of [0xFF94FA]	fractional numerator, low
+reg04/14 data	0xFF950B	high byte of [0xFF94F8]	fractional modulus, high = ref/(125*div) hi
+reg05/15 data	0xFF950D	low byte of [0xFF94F8]	fractional modulus, low
+reg06/16 data	0xFF950F	(divcode<<4) | (bandflag<<3)	VCO output divider + band select
+reg07/17 data	0xFF9511	[0xFF94FC]	integer divider N = VCO / f_comp  (fits one byte: 18..48)
+reg0A/1A data	0xFF9513	[0xFF9517] = 0x40 or 0x10	mode byte, 0x10 when LO >= 0x30000000 BCD (>= 805.3 MHz-code)
+
+# arithmetic, MAIN 0x037C96-0x037D88 (channel B) and 0x037AEA path (channel A)
+# LO frequency is 8-digit BCD in units of 10 Hz, held at RAM 0xFFAA4A
+# VCO = LO * divider ; N = VCO / f_comp ; f_comp = 5,760,000 (57.60 MHz) or 4,400,000 (44.00 MHz)
+#   selected by bit 0 of RAM 0xFFAADF, constants at MAIN 0x037CD6/0x037CE4 and 0x037D0A/0x037D18
+# modulus  = f_comp / (125 * divider)   [MAIN 0x037D02-0x037D1E]
+# LO resolution = 125 * 10 Hz = 1250 Hz
+# fixed LO constants, 10 Hz BCD, MAIN 0x037E48 = 58.050000 MHz, 0x037E4C = 57.150000 MHz
+#   57.15 + 0.45 = 57.60 and 58.05 - 0.45 = 57.60 -> 1st IF 57.60 MHz, 2nd IF 450 kHz (inferred)

@@ -1,0 +1,26 @@
+# M3 proposals only - no mask, seed or DB was edited. Each range is set in final6_proven_mask.bin and final6_named_mask.bin. Demotion = clear from proven; named unchanged (I12 convention; the DATA-MISTYPED 2 B to be retyped as data, staying named). byte_sum = sum of image bytes in range.
+start	end_excl	len	class	proven_bytes_P6	named_bytes_N6	byte_sum	sha256_16	note
+0334A0	0334A4	4	DEAD	4	4	362	e11d795c4547b65a	third entry 0334A0 79 06 03 e8 (mov.w #1000,r6) of helper 033494 (#100) / 03349A (#500) / 0334A0 (#1000) -> common loop 
+034032	034040	14	DEAD	14	14	1340	5c8b6d53c77c913e	cmp chain fd 00 ab 27 47 0c ab 29 47 04 ab 2a 46 e0 after unconditional 034030 40 0e (bra 0x34040)
+0348EC	034916	42	DEAD	42	42	4045	d4778cb73c0cf69d	block 7e 5b 73 30 ... 5e 03 42 ec after unconditional 0348EA 40 2a (bra 0x34916)
+03D0EE	03D150	98	DEAD	98	98	7985	49e9a145a5614a57	case body 7a 04 77 91 25 00 (BCD 779.125 MHz base
+03D1C8	03D1CA	2	DATA-MISTYPED	2	2	0	96a296d224f285c6	low word of the 4-byte packed-BCD constant 00 40 00 00 at 03D1C6: 03D1B4 7a 06 00 03 d1 c6 mov.l #0x3D1C6,er6 -> 03D1BA 
+03EF60	03EF64	4	DEAD	4	4	331	1cc456f349ec955b	arm fc 07 40 08 after 03EF5E 40 0c (bra 0x3EF6C)
+03EFA0	03EFA4	4	DEAD	4	4	331	1cc456f349ec955b	arm fc 07 40 08 after 03EF9E 40 0c (bra 0x3EFAC)
+03EFE0	03EFE4	4	DEAD	4	4	331	1cc456f349ec955b	arm fc 07 40 08 after 03EFDE 40 0c (bra 0x3EFEC)
+045D88	045D8E	6	SPLIT-TAIL	6	6	334	2f03ee13657fdc49	0b 01 fc 00 40 06 = beq target of 045D1C 47 6a inside head 045D18 (68 1b ab 2c 47 6a), which follows rts 045D16 and has 
+0460C2	046130	110	DEAD	110	110	9744	edce65ba5b48d09d	block skipped by unconditional 0460C0 40 6e (bra 0x46130)
+04B1D0	04B1E6	22	DEAD	22	22	1453	c689cdc7cb0a1d76	block 6a 10 9e 22 73 00 58 60 00 06 5e 05 14 c6 ... 5e 05 16 fe after unconditional 04B1CE 40 1a (bra 0x4B1EA)
+04B830	04B84E	30	DEAD	30	30	1984	eb25932f048c42a7	2-digit entry 7a 03 00 00 00 00 f4 02 (count 2)
+04B856	04B864	14	SPLIT-TAIL	14	14	1047	d9cdff66c36970fb	6c 2b 19 d3 47 08 79 04 03 e8 = x1000 step of the 4-digit entry
+04BB78	04BB86	14	DEAD	14	14	1746	4dce0005488b1c8d	fc 80 6a 8c a7 c8 7a 02 00 ff a8 82 40 0c
+04C198	04C1BE	38	DEAD	38	38	4385	d53612b21dba6f49	7a 02 00 ff a8 88 ... 40 1e
+04F534	04F53A	6	DEAD	6	6	631	90d543d6ae3a587c	arms fd 1e 40 02 fd 1d after unconditional 04F532 40 06 (bra 0x4F53A)
+04F87C	04F8AC	48	DEAD	48	48	1698	f557ba0f3bcc36c6	six entries 7a 01 00 00 00 {00,0c,18,24,30,3c} + bra 0x4F8DA at 04F87C/84/8C/94/9C/A4
+04F8DA	04F906	44	DEAD	44	44	4337	604788b442dd1a42	79 04 00 01 6b 84 b0 50 ...
+050812	050826	20	DEAD	20	20	2353	2f2460d92b6d4744	block 5e 01 d0 fc fc 05 6a 8c a9 f9 ... 5e 05 09 5a after unconditional 050810 40 14 (bra 0x50826)
+050CD0	050CD4	4	DEAD	4	4	512	7ce2274b3cc722dc	5e 03 ff a0 after unconditional 050CCE 40 04 (bra 0x50CD4)
+05291E	052938	26	DEAD	26	26	2236	77b4228223068bd9	entry 7a 03 00 07 00 00 6a 02 a4 f7 after 05291C 40 1a bra
+0532BA	0532CE	20	DEAD	20	20	2415	3adafae9fa67e514	block 7a 06 00 ff 3d ab fc 00 68 ec 7a 06 00 ff 3d ac fc 00 68 ec after unconditional 0532B8 40 14 (bra 0x532CE)
+total	-	574	ALL	574	574	49600	-	DATA-MISTYPED=2 DEAD=552 SPLIT-TAIL=20
+# ledger if applied: MAIN proven 364786 - 574 = 364212 (72.02% of 505,684 content; 93.57% of 389,260 decodable); named 501656 unchanged; headline unchanged 965,919 / 1,029,972 = 93.78%

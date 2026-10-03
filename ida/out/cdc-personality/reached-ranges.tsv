@@ -1,0 +1,15 @@
+#	CDC personality code reached via the handler-record table (flash 0x07B4B4, stride 10,
+#	BE32 handler pointer at record +6) and from the SETUP handler's jsr sub_76C0A.
+#	final5/final6 named mask = 100% of all rows. final5/final6 proven mask set counts below.
+#	MAIN H8SX big-endian base0, file offset = addr. Verified: ida/out/cdc-personality/verify.py
+start	end	bytes	role	proven_set_final5	reachability
+0767BE	0768A8	234	IFR0 b6 handler: EP1 bulk-OUT data -> OUT ring (sub_78334)	part	via record 0x07B4DC (mask 40000000)
+0768A8	0768C8	32	IFR0 b4 handler: drain IN ring -> EP2 bulk-IN (sub_7837C)	part	via record 0x07B4E6 (mask 10000000); BE32 0x000768A8 @0x07B4EC
+0768C8	0769AA	226	IFR0 b3 SETUP handler -> jsr sub_76C0A	part	via record 0x07B4C8 (mask 08000000)
+0769AA	076ADE	308	IFR0 b0|b2/b1 handler: EP0 control data/status	part	via records 0x07B4BE/0x07B4D2 (mask 05/02000000)
+076ADE	076C0A	300	near-duplicate EP0 handlers incl. 0x076B4E	part	NO table/abs ref found (doc 95/42) -- Unknown; NOT proposed
+076C0A	076FC8	958	control-request parser sub_76C0A + sub_76EF8 (CDC class) + sub_76FC4 (vendor stub)	0	via jsr @0x07691A from 0768C8
+076FC8	07711E	342	SCI-C TX pump sub_76FC8 (doc 42)	342	via 0x0781C0 service loop (DSP-WRITE>=5)
+07711E	0771AC	142	SCI-C RX bridge sub_7711E	part	via SCI-C ISR 0x0561B0 (FF813A!=0)
+0771AC	0771E2	54	byte-ring helpers + single-byte polled TX (0771D6)	part	intra/ISR
+0771E2	077240	94	EP (re)config helpers over 0xFF6000 block	full	module

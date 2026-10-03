@@ -1,0 +1,64 @@
+job PC_L4_MAIN e
+; ==== sub_E896 0000E896-0000E8AE ====
+0000E896  mov.b   #1, r4l
+0000E898  mov.b   r4l, @(2:16,er0)
+0000E89C  mov.b   r4l, @(5:16,er0)
+0000E8A0  mov.b   r3l, @(4:16,er0)
+0000E8A4  mov.b   r3l, @(3:16,er0)
+0000E8A8  jsr     sub_3A29C:24
+0000E8AC  rts
+
+; ==== sub_2EA8E 0002EA8E-0002EAAC ====
+0002EA8E  mov.b   @(0x54:16,er0), r4l
+0002EA92  mov.b   r4l, @(5:16,er0)
+0002EA96  cmp.b   #1, r4l
+0002EA98  beq     loc_2EA9E:8
+0002EA9A  cmp.b   #3, r4l
+0002EA9C  bne     locret_2EAAA:8
+0002EA9E  mov.b   @(0x50:16,er0), r4l
+0002EAA2  cmp.b   #3, r4l
+0002EAA4  bcc     locret_2EAAA:8
+0002EAA6  jsr     sub_23812:24
+0002EAAA  rts
+
+; ==== sub_2D016 0002D016-0002D084 ====
+0002D016  mov.l   #0xFF8EE0, er0
+0002D01C  mov.l   er0, @0xFFFF8122:16
+0002D022  mov.l   er0, @0xFFFF812A:16
+0002D028  mov.b   @(0x5A:16,er0), r4l
+0002D02C  bclr    #1, r4l
+0002D02E  mov.b   r4l, @(0x5A:16,er0)
+0002D032  mov.b   @(0x5A:16,er0), r4l
+0002D036  bclr    #3, r4l
+0002D038  mov.b   r4l, @(0x5A:16,er0)
+0002D03C  mov.b   @(0x54:16,er0), r4l
+0002D040  mov.b   r4l, @(5:16,er0)
+0002D044  mov.b   @0xFFFF91FC:16, r4l
+0002D048  mov.b   r4l, @0xFFFF8F4C:16
+0002D04C  mov.b   @0xFFFF91FD:16, r4l
+0002D050  mov.b   r4l, @0xFFFF8F4D:16
+0002D054  mov.b   #0x1C, r4l
+0002D056  mov.l   #0xFF9210, er5
+0002D05C  mov.l   #0xFF8F60, er6
+0002D062  mov.b   #0, r4h
+0002D064  eepmov.w
+0002D068  mov.w   r4, r4
+0002D06A  bne     loc_2D064:8
+0002D06C  jsr     sub_1CBE6:24
+0002D070  bclr    #4, @0xFFFF8EA5:16
+0002D076  jsr     sub_3F3A4:24
+0002D07A  jsr     sub_2EA8E:24
+0002D07E  jsr     sub_1C050:24
+0002D082  rts
+
+; ==== xrefs TO 0000E896 ====
+  0000E01A sub_DEFA               jsr     sub_E896:24
+  0000E05A sub_DEFA               jsr     sub_E896:24
+; (2)
+
+; ==== xrefs TO 0002EA8E ====
+  0002D07A sub_2D016              jsr     sub_2EA8E:24
+  0002D63C sub_2D5BA              jsr     sub_2EA8E:24
+  0002E216 sub_2E1AC              jsr     sub_2EA8E:24
+; (3)
+

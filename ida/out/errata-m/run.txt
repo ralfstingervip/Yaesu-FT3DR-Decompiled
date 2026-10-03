@@ -1,0 +1,27 @@
+MAIN sha256 8e3ecd05409b2c314ebed77320ece5930bf31c8333cd84aeef4f6b0264c1bcce OK
+SUB  sha256 b93570b3c2f69ccb51c113c893b4bc4c414cf78ceddde478748404e0768c6230 OK
+byte runs C: 99/99 PASS
+as-written W: 14/14 SLIP-CONFIRMED
+computed X: 17/17 PASS
+errata rows: 57, anchors all pass: 57
+owning-line text checks: 57/57 PASS
+source-line text checks: 57/57 PASS or new
+sweep: 9 RESUME/README citations, 1 non-PASS; doc 142 self-sweep 104
+named delta 0 B, proven delta 0 B (no mask byte changed by any row)
+X01 PASS BE24/BE32/abs24 '00 93 2a' hits=[]; '00 00 93 2c' hits=['0x92a2']
+X02 PASS jsr @063C04 at ['0x1ce9a', '0x1ceaa']; 'fc 0a 6a 8c a9 f9' at ['0x1d09e', '0x63c10'] (P7: [1, 1])
+X03 PASS VHF 0x03510A ['40.000-75.995->0', '108.000-119.995->1', '120.000-173.995->2', '174.000-221.995->3', '222.000-229.995->4'] ; UHF 0x035140 ['300.000-419.995->5', '420.000-579.995->6']
+X04 PASS 104 BE32 at 0x000B8C, low 9 bits zero; bit-reversed low 9 = D023..D754 in order; all 104 divisible by g=0xC75
+X05 PASS TPU1 16e6/2442=6552.0 Hz; DCS 16e6/2977/40=134.36 bps; T-CALL 250 kHz/(2*(0x47+1))=1736.1 Hz
+X06 PASS off_74472 (48 BE32) contains none of the 4 leaves; BE32 refs to leaves={'0x66fb4': [], '0x67250': [], '0x66fbe': [], '0x6726a': []}; jsr/jmp sites to leaves: 062808:P6=1,P7=0 06280E:P6=1,P7=0 062814:P6=0,P7=0 06723A:P6=1,P7=0 06AB1C:P6=1,P7=0 06AB24:P6=1,P7=0 06AB2A:P6=1,P7=0 06AB36:P6=1,P7=0 06ADF6:P6=1,P7=0 06ADFE:P6=1,P7=0 06AE04:P6=1,P7=0 06AE10:P6=1,P7=0 ; to 066FAA: 06281A:P7=0 0628FE:P7=0 06724A:P7=0 06AB30:P7=0 06AE0A:P7=0
+X07 PASS jsr @0x067522 at ['0x6b154', '0x6b194', '0x6b3cc', '0x6b4f6', '0x6b536'] (all P7=0, N7=1); inbound from outside: {'06B10E-06B25C': ['05D23E:6b06b126'], '06B3BE-06B408': [], '06B4B0-06B556': []} (excluded abs16 operand 05D23E 6b 06 b1 26); bytes before region: {'06B10E': '5470', '06B3BE': '5470', '06B4B0': '5470'}
+X08 PASS 0x069A7F matches 0x069964 for 37 B; first difference at +37 (02 vs 0e)
+X09 PASS readers '78 e0 6b 26 00 00 0d ea' at ['0x938', '0x95c', '0xa04']; jsr @0x018FAA at ['0x17950', '0x17958', '0x1796c', '0x17974', '0x1797c', '0x17984']
+X10 PASS '00 06 66 00' at ['0x14986', '0x149a2']
+X11 PASS mov.l #0x12CB8 sites: FFF38627(fbe2):write mov.w #2 ; FFF3865A(fbe2):write mov.w #2 ; FFF3870A(fbe2):other 5cee61 ; FFF38759(fbe2):write mov.w #1 ; FFF38780(fbe2):other 5cee61 ; FFF387B6(fbe2):write mov.w #2 ; FFF38893(fbe2):other 5cee61 ; FFF388EB(fbe2):write mov.w #1 ; FFF38F75(fbe2):write mov.w #1 ; FFF392D7(fbe2):other 5cee61 ; FFF39351(fbe2):other 5cee61 ; FFF393BC(fbe2):other 5cee61 ; FFF39430(fbe2):other 5cee61
+X12 PASS 0x12D44+0x95F6=0x1C33A, +0x9676=0x1C3BA, +0x96F6=0x1C43A (doc 109 row above: +0x85F6=0x1B33A); F=0x12D49, F+0x13 = 0x12D44+0x18 = 0x12D5C
+X13 PASS bsr.a targets {'FFF394CF': 'FFEDD528', 'FFF39516': 'FFEDD528', 'FFF38AEA': 'FFEDD528', 'FFEDD019': 'FFF3850B', 'FFF383DE': 'FFF39C68', 'FFF381A8': 'FFF39845'}; FFF3851D lies in FFF3850B's body
+X14 PASS half-open ranges sum 120 B; 457,462 - 120 = 457342; LE24 values pointing into them at: none
+X15 PASS bu_all.tsv counts {'rte/l/all': 530, 'rte/l/even': 73, 'rte/l/even&P6': 4, 'rte/l/even&P7': 4, 'rts/l/all': 654, 'rts/l/even': 181, 'rts/l/even&P6': 68, 'rts/l/even&P7': 81}; neither 301 nor 251 appears in any of these scopes
+X16 PASS 9 inline ADDR-bytes citations; non-PASS: [('m-wave-recon/README.md', 22, '06ADE4', 'FOUND+2')]
+X17 PASS doc 142 inline 'ADDR bytes' citations: 104, non-PASS: []

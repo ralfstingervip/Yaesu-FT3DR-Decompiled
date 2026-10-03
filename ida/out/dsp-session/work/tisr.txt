@@ -1,0 +1,50 @@
+002a00  81 71                    mov.b   r4l, @0xFFFF8171:16                  
+002a02  fc 04                    mov.b   #4, r4l                              
+002a04  6a 8c 94 b9              mov.b   r4l, @0xFFFF94B9:16                  
+002a08  6b 04 fd 6a              mov.w   @0xFFFFFD6A:16, r4                   <- 29dc,29e2
+002a0c  71 74                    bnot    #7, r4h                              
+002a0e  71 64                    bnot    #6, r4h                              
+002a10  6b 84 fd 6a              mov.w   r4, @0xFFFFFD6A:16                   
+002a14  6a 18 81 70 71 00        bnot    #0, @0xFFFF8170:16                   
+002a1a  6d 74                    pop.w   r4                                   
+002a1c  56 70                    rte                                          
+
+;---- func 0x2a1e..0x2a30
+002a1e  6d f4                    push.w  r4                                   <- 12c
+002a20  6b 04 ff 36              mov.w   @0xFFFFFF36:16, r4                   
+002a24  72 24                    bclr    #2, r4h                              
+002a26  6b 84 ff 36              mov.w   r4, @0xFFFFFF36:16                   
+002a2a  04 80                    orc     #0x80, ccr                           
+002a2c  5a 00 20 50              jmp     loc_2050:24                          
+
+;---- func 0x2a30..0x2a60
+002a30  6d f4                    push.w  r4                                   <- 1b8
+002a32  6a 18 fe f5 72 00        bclr    #0, @0xFFFFFEF5:16                   
+002a38  6a 0c 94 b8              mov.b   @0xFFFF94B8:16, r4l                  
+002a3c  47 06                    beq     loc_2A44:8                           
+002a3e  1a 0c                    dec.b   r4l                                  
+002a40  6a 8c 94 b8              mov.b   r4l, @0xFFFF94B8:16                  
+002a44  6a 0c 94 b9              mov.b   @0xFFFF94B9:16, r4l                  <- 2a3c
+002a48  47 06                    beq     loc_2A50:8                           
+002a4a  1a 0c                    dec.b   r4l                                  
+002a4c  6a 8c 94 b9              mov.b   r4l, @0xFFFF94B9:16                  
+002a50  6a 0c 94 ba              mov.b   @0xFFFF94BA:16, r4l                  <- 2a48
+002a54  47 06                    beq     loc_2A5C:8                           
+002a56  1a 0c                    dec.b   r4l                                  
+002a58  6a 8c 94 ba              mov.b   r4l, @0xFFFF94BA:16                  
+002a5c  6d 74                    pop.w   r4                                   <- 2a54
+002a5e  56 70                    rte                                          
+
+;---- func 0x2a60..0x2aa0
+002a60  6d f4                    push.w  r4                                   <- 128
+002a62  6b 04 ff 36              mov.w   @0xFFFFFF36:16, r4                   
+002a66  72 24                    bclr    #2, r4h                              
+002a68  6b 84 ff 36              mov.w   r4, @0xFFFFFF36:16                   
+002a6c  2c 4e                    mov.b   @0x4E:8, r4l                         
+002a6e  6a 10 81 70 73 10        btst    #1, @0xFFFF8170:16                   
+002a74  46 06                    bne     loc_2A7C:8                           
+002a76  73 1c                    btst    #1, r4l                              
+002a78  47 0a                    beq     loc_2A84:8                           
+002a7a  40 04                    bra     loc_2A80:8                           
+002a7c  73 1c                    btst    #1, r4l                              <- 2a74
+002a7e  46 04                    bne     loc_2A84:8                           

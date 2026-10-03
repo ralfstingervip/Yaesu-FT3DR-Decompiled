@@ -1,0 +1,16 @@
+kind	addr	function	bytes	effect	evidence
+write	0x002E18	sub_2DCE	6a 0c 80 04 47 04 ac 04 45 06 fc 00 6a 8c b0 cc	boot init (called once from sub_2070 at 0x002B3A): B0CC=0 unless FF8004 in {1,2,3}	Confirmed
+write	0x073B3A	sub_73AFE	fc 00 6a 8c b0 cc	command slot 0x00 (frame byte '0' = 0x30) "enter remote mode": FF8004=2, FF89BA(TOT)=0, B0CC=0; also called at boot by sub_7351E when FF8004==3	Confirmed
+write	0x0743BC	sub_74396	a1 01 46 20 fc 01 6a 8c b0 cc	command slot 0x2D (frame byte ']' = 0x5D), arg r1h=1: B0CC=1	Confirmed
+write	0x0743CC	sub_74396	6a 10 b0 cc 73 00 47 0a fc 00 6a 8c b0 cc	same command, arg r1h=0: if B0CC.b0 then B0CC=0 and jsr sub_56046 (B0B4=5, B0A4=0: DSP link re-init)	Confirmed
+gate	0x0743A8	sub_74396	47 30 6a 10 b0 a4 73 20 47 28	command accepted only if operating band comm mode (FF8D20/FF8DD5)!=0 and B0A4.b2 (DSP init script done); else NAK loc_73AC2	Confirmed
+read	0x0358CA	sub_35872	6a 10 b0 cc 73 00 58 60 00 f4	TX-start dispatcher: b0 set -> sub_5A2F8 = DSP session 0x15 (script 0x05C40A, sends 1C 03), AAD5=0x10; checked before AAD4.b0 (data) and voice	Confirmed
+read	0x035EDC	sub_35F6A	6a 10 b0 cc 73 00 58 60 00 62	node-mode twin dispatcher: same selection	Confirmed
+read	0x035A22	sub_35A04	6a 10 b0 cc 73 00 46 38	TX FSM state 0x10: b0 set skips the 3.5 s (FF9597) follow-up call sub_5CA34	Confirmed
+read	0x0743C2	sub_74396	6a 10 b0 cc 73 00	clear path tests b0 before clearing	Confirmed
+values	-	-	-	only 0 and 1 are ever stored (4 store sites above, all immediate); bits 1-7 are always 0 and have no reader	Confirmed (whole-image xref + text scan, 8 refs total)
+bit0	-	-	-	1 = next PTT TX in a digital mode runs DSP session 0x15 instead of voice (0x02/0x0B/0x10) or data (0x0A)	Confirmed
+bit0-session	0x05C40A	session 0x15	-	12, WAIT, 1A 01/12, WAIT, SEND 1C 03 (B0B8=3, 0x05A040), WAIT, TXON, hold while B0BB.b0 (PTT held), TXOFF, RX ENABLE, END (doc 57)	Confirmed (doc 57)
+bit0-meaning	-	-	-	opcode 1C carries vendor trace label "DATA TEXT SET" (doc 06); sub-code 03 and the transmitted content are DSP-defined	Unknown (DSP firmware absent)
+bit0-name	-	-	-	remote/service-commanded fixed-content TX mode, armed only over the 0x30-based command protocol (table 0x074472, length table 0x074532, dispatcher 0x073A36); no UI writer	Inferred
+bits1-7	-	-	-	unused	Confirmed

@@ -1,0 +1,234 @@
+== reset_handler 0xFFC00000 ==
+FFC00000  fd7302fca80600           mvtc    #6A8FCh, usp
+FFC00007  fd730afcb80600           mvtc    #6B8FCh, isp
+FFC0000E  fbe280ffffff             mov.l   #off_FFFFFF80, r14
+FFC00014  fd68ed                   mvtc    r14, extb
+FFC00017  fbe2708aedff             mov.l   #off_FFED8A70, r14
+FFC0001D  fd68ec                   mvtc    r14, intb
+FFC00020  fbea0001                 mov.l   #100h, r14
+FFC00024  fd68e3                   mvtc    r14, fpsw
+FFC00027  05955d34                 bsr.a   sub_FFF45DBC
+FFC0002B  03                       nop
+FFC0002C  fbee000001               mov.l   #10000h, r14
+FFC00031  fd68e0                   mvtc    r14, psw
+FFC00034  6601                     mov.l   #0, r1
+FFC00036  051d6c33                 bsr.a   sub_FFF36C53
+FFC0003A  00                       brk
+FFC0003B  02                       rts
+FFC0003C  ff                       .byte 0FFh
+FFC0003D  ff                       .byte 0FFh
+FFC0003E  ff                       .byte 0FFh
+FFC0003F  ff                       .byte 0FFh
+FFC00040  ff                       .byte 0FFh
+FFC00041  ff                       .byte 0FFh
+FFC00042  ff                       .byte 0FFh
+FFC00043  ff                       .byte 0FFh
+FFC00044  ff                       .byte 0FFh
+FFC00045  ff                       .byte 0FFh
+FFC00046  ff                       .byte 0FFh
+FFC00047  ff                       .byte 0FFh
+FFC00048  ff                       .byte 0FFh
+FFC00049  ff                       .byte 0FFh
+FFC0004A  ff                       .byte 0FFh
+FFC0004B  ff                       .byte 0FFh
+FFC0004C  ff                       .byte 0FFh
+FFC0004D  ff                       .byte 0FFh
+FFC0004E  ff                       .byte 0FFh
+FFC0004F  ff                       .byte 0FFh
+FFC00050  ff                       .byte 0FFh
+FFC00051  ff                       .byte 0FFh
+FFC00052  ff                       .byte 0FFh
+FFC00053  ff                       .byte 0FFh
+FFC00054  ff                       .byte 0FFh
+FFC00055  ff                       .byte 0FFh
+FFC00056  ff                       .byte 0FFh
+FFC00057  ff                       .byte 0FFh
+FFC00058  ff                       .byte 0FFh
+FFC00059  ff                       .byte 0FFh
+FFC0005A  ff                       .byte 0FFh
+FFC0005B  ff                       .byte 0FFh
+FFC0005C  ff                       .byte 0FFh
+FFC0005D  ff                       .byte 0FFh
+FFC0005E  ff                       .byte 0FFh
+FFC0005F  ff                       .byte 0FFh
+FFC00060  ff                       .byte 0FFh
+FFC00061  ff                       .byte 0FFh
+FFC00062  ff                       .byte 0FFh
+FFC00063  ff                       .byte 0FFh
+FFC00064  ff                       .byte 0FFh
+FFC00065  ff                       .byte 0FFh
+FFC00066  ff                       .byte 0FFh
+FFC00067  ff                       .byte 0FFh
+FFC00068  ff                       .byte 0FFh
+FFC00069  ff                       .byte 0FFh
+FFC0006A  ff                       .byte 0FFh
+FFC0006B  ff                       .byte 0FFh
+FFC0006C  ff                       .byte 0FFh
+FFC0006D  ff                       .byte 0FFh
+FFC0006E  ff                       .byte 0FFh
+FFC0006F  ff                       .byte 0FFh
+FFC00070  ff                       .byte 0FFh
+FFC00071  ff                       .byte 0FFh
+FFC00072  ff                       .byte 0FFh
+FFC00073  ff                       .byte 0FFh
+FFC00074  ff                       .byte 0FFh
+FFC00075  ff                       .byte 0FFh
+FFC00076  ff                       .byte 0FFh
+FFC00077  ff                       .byte 0FFh
+FFC00078  ff                       .byte 0FFh
+FFC00079  ff                       .byte 0FFh
+FFC0007A  ff                       .byte 0FFh
+FFC0007B  ff                       .byte 0FFh
+FFC0007C  ff                       .byte 0FFh
+FFC0007D  ff                       .byte 0FFh
+FFC0007E  ff                       .byte 0FFh
+FFC0007F  ff                       .byte 0FFh
+
+== sample functions ==
+
+-- FFF4B084 size 4514 --
+FFF4B084  6e6d                     pushm   r6-r13
+FFF4B086  720030ff                 add     #-0D0h, sp, sp
+FFF4B08A  6101                     cmp     #0, r1
+FFF4B08C  a18c                     mov.l   r4, 0D0h+var_B4[sp]
+FFF4B08E  fb6a18fc                 mov.l   #-3E8h, r6
+FFF4B092  2020                     beq.b   loc_FFF4B0B2
+FFF4B094  6102                     cmp     #0, r2
+FFF4B096  fb6a30f8                 mov.l   #-7D0h, r6
+FFF4B09A  2018                     beq.b   loc_FFF4B0B2
+FFF4B09C  6103                     cmp     #0, r3
+FFF4B09E  fb6a48f4                 mov.l   #-0BB8h, r6
+FFF4B0A2  2010                     beq.b   loc_FFF4B0B2
+FFF4B0A4  a98e                     mov.l   0D0h+var_B4[sp], r6
+FFF4B0A6  fbea60f0                 mov.l   #-0FA0h, r14
+FFF4B0AA  6126                     cmp     #2, r6
+FFF4B0AC  6606                     mov.l   #0, r6
+FFF4B0AE  2304                     bltu.b  loc_FFF4B0B2
+FFF4B0B0  efe6                     mov.l   r14, r6
+FFF4B0B2  6106                     cmp     #0, r6
+FFF4B0B4  3bcd05                   bne.w   loc_FFF4B681
+FFF4B0B7  a997                     mov.l   18h[r1], r7
+FFF4B0B9  fb6ad2fb                 mov.l   #-42Eh, r6
+FFF4B0BD  6107                     cmp     #0, r7
+FFF4B0BF  3ac205                   beq.w   loc_FFF4B681
+FFF4B0C2  a98e                     mov.l   0D0h+var_B4[sp], r6
+FFF4B0C4  6237                     add     #3, r7
+FFF4B0C6  7527fc                   and     #-4, r7
+FFF4B0C9  6106                     cmp     #0, r6
+FFF4B0CB  3b6f01                   bne.w   loc_FFF4B23A
+FFF4B0CE  6101                     cmp     #0, r1
+FFF4B0D0  fb6a18fc                 mov.l   #-3E8h, r6
+FFF4B0D4  2024                     beq.b   loc_FFF4B0F8
+FFF4B0D6  a99e                     mov.l   1Ch[r1], r6
+FFF4B0D8  76061b04                 cmp     #41Bh, r6
+FFF4B0DC  fb6ac8fb                 mov.l   #-438h, r6
+FFF4B0E0  2518                     bleu.b  loc_FFF4B0F8
+FFF4B0E2  591e40                   movu.b  40h[r1], r14
+FFF4B0E5  fb6a6efb                 mov.l   #-492h, r6
+FFF4B0E9  612e                     cmp     #2, r14
+FFF4B0EB  220d                     bgeu.b  loc_FFF4B0F8
+
+-- FFF1F752 size 2612 --
+FFF1F752  72000cff                 add     #-0F4h, sp, sp
+FFF1F756  e7013c                   mov.l   r1, 0F4h+var_4[sp]
+FFF1F759  e7023b                   mov.l   r2, 0F4h+var_8[sp]
+FFF1F75C  e7033a                   mov.l   r3, 0F4h+var_C[sp]
+FFF1F75F  e70439                   mov.l   r4, 0F4h+var_10[sp]
+FFF1F762  c500f8e3                 mov.b   0F4h+arg_0[sp], 0F4h+var_11[sp]
+FFF1F766  c500f9e2                 mov.b   0F4h+arg_1[sp], 0F4h+var_12[sp]
+FFF1F76A  e5003f37                 mov.l   0F4h+arg_4[sp], 0F4h+var_18[sp]
+FFF1F76E  e5004036                 mov.l   0F4h+arg_8[sp], 0F4h+var_1C[sp]
+FFF1F772  e5004135                 mov.l   0F4h+arg_C[sp], 0F4h+var_20[sp]
+FFF1F776  3e0c00                   mov.l   #0, 0F4h+var_C4[sp]
+FFF1F779  3c8f00                   mov.b   #0, 0F4h+var_D5[sp]
+FFF1F77C  3e0601                   mov.l   #1, 0F4h+var_DC[sp]
+FFF1F77F  ed013c                   mov.l   0F4h+var_4[sp], r1
+FFF1F782  ad9c                     mov.l   5Ch[r1], r4
+FFF1F784  66b3                     mov.l   #0Bh, r3
+FFF1F786  754220                   mov.l   #20h, r2 ; ' '
+FFF1F789  71010d                   add     #0F4h+var_E7, sp, r1
+FFF1F78C  0523ed00                 bsr.a   sub_FFF2E4AF
+FFF1F790  3c0d2e                   mov.b   #2Eh, 0F4h+var_E7[sp] ; '.'
+FFF1F793  ed0135                   mov.l   0F4h+var_20[sp], r1
+FFF1F796  72110c06                 add     #60Ch, r1, r1
+FFF1F79A  e70125                   mov.l   r1, 0F4h+var_60[sp]
+FFF1F79D  ed0135                   mov.l   0F4h+var_20[sp], r1
+FFF1F7A0  72110c08                 add     #80Ch, r1, r1
+FFF1F7A4  e70126                   mov.l   r1, 0F4h+var_5C[sp]
+FFF1F7A7  ed0135                   mov.l   0F4h+var_20[sp], r1
+FFF1F7AA  72110c0a                 add     #0A0Ch, r1, r1
+FFF1F7AE  e70127                   mov.l   r1, 0F4h+var_58[sp]
+FFF1F7B1  f9045900                 mov.b   #0, 0F4h+var_9B[sp]
+FFF1F7B5  ed013c                   mov.l   0F4h+var_4[sp], r1
+FFF1F7B8  ad9c                     mov.l   5Ch[r1], r4
+FFF1F7BA  ed0135                   mov.l   0F4h+var_20[sp], r1
+FFF1F7BD  72110c08                 add     #80Ch, r1, r1
+FFF1F7C1  fb3a0002                 mov.l   #200h, r3
+FFF1F7C5  6602                     mov.l   #0, r2
+FFF1F7C7  05e8ec00                 bsr.a   sub_FFF2E4AF
+FFF1F7CB  ed013c                   mov.l   0F4h+var_4[sp], r1
+FFF1F7CE  ad9c                     mov.l   5Ch[r1], r4
+FFF1F7D0  ed0135                   mov.l   0F4h+var_20[sp], r1
+
+-- FFF162CD size 2528 --
+FFF162CD  7ea6                     push.l  r6
+FFF162CF  710088                   add     #-78h, sp, sp
+FFF162D2  a709                     mov.l   r1, 78h+var_4[sp]
+FFF162D4  a702                     mov.l   r2, 78h+var_8[sp]
+FFF162D6  a68b                     mov.l   r3, 78h+var_C[sp]
+FFF162D8  f9045b00                 mov.b   #0, 78h+var_1D[sp]
+FFF162DC  3e8400                   mov.l   #0, 78h+var_28[sp]
+FFF162DF  3e8300                   mov.l   #0, 78h+var_2C[sp]
+FFF162E2  3e8200                   mov.l   #0, 78h+var_30[sp]
+FFF162E5  3e8100                   mov.l   #0, 78h+var_34[sp]
+FFF162E8  3e8000                   mov.l   #0, 78h+var_38[sp]
+FFF162EB  3e0f00                   mov.l   #0, 78h+var_3C[sp]
+FFF162EE  fbe22c5e0600             mov.l   #65E2Ch, r14
+FFF162F4  e4e004                   mov.l   [r14], 78h+var_68[sp]
+FFF162F7  fbe2245e0600             mov.l   #65E24h, r14
+FFF162FD  e4e003                   mov.l   [r14], 78h+var_6C[sp]
+FFF16300  3e0200                   mov.l   #0, 78h+var_70[sp]
+FFF16303  0566faff                 bsr.a   sub_FFF15D69
+FFF16307  a381                     mov.l   r1, 78h+var_40[sp]
+FFF16309  ab81                     mov.l   78h+var_40[sp], r1
+FFF1630B  6101                     cmp     #0, r1
+FFF1630D  2010                     beq.b   loc_FFF1631D
+FFF1630F  6602                     mov.l   #0, r2
+FFF16311  fb16d8                   mov.l   #-28h, r1
+FFF16314  05678b00                 bsr.a   sub_FFF1EE7B
+FFF16318  a009                     mov.l   r1, 78h+var_74[sp]
+FFF1631A  388c09                   bra.w   loc_FFF16CA6
+FFF1631D  3e8800                   mov.l   #0, 78h+var_18[sp]
+FFF16320  38ab00                   bra.w   loc_FFF163CB
+FFF16323  a889                     mov.l   78h+var_6C[sp], r1
+FFF16325  ce1e4204                 mov.b   442h[r1], r14
+FFF16329  610e                     cmp     #0, r14
+FFF1632B  210c                     bne.b   loc_FFF16337
+FFF1632D  59015b                   movu.b  78h+var_1D[sp], r1
+FFF16330  6101                     cmp     #0, r1
+FFF16332  1d                       bne.s   loc_FFF16337
+FFF16333  f80601                   mov.l   #1, 78h+var_78[sp]
+FFF16336  0c                       bra.s   loc_FFF1633A
+FFF16337  f80600                   mov.l   #0, 78h+var_78[sp]
+FFF1633A  ec01                     mov.l   78h+var_78[sp], r1
+
+-- FFF15E94 size 1 --
+FFF15E94  02                       rts
+
+-- FFF37442 size 1 --
+FFF37442  02                       rts
+
+-- FFF15CE7 size 6 --
+FFF15CE7  6040                     sub     #4, sp
+FFF15CE9  e301                     mov.l   r1, 4+var_4[sp]
+FFF15CEB  6701                     rtsd    #1
+
+-- FFF36C9C size 6 --
+FFF36C9C  05b78f00                 bsr.a   sub_FFF3FC53
+FFF36CA0  2efc                     bra.b   sub_FFF36C9C
+
+-- FFF455A0 size 7 --
+FFF455A0  ef1e                     mov.l   r1, r14
+FFF455A2  7f8f                     smovf
+FFF455A4  efe1                     mov.l   r14, r1
+FFF455A6  02                       rts

@@ -1,0 +1,120 @@
+descriptor-address immediate load sites: 442
+distinct descriptors referenced: 199
+distinct functions containing a draw site: 165
+
+most common callee after a descriptor load (candidate blit routine):
+  FFEF68D5  x176  sub_FFEF68D5
+  FFEF0648  x168  sub_FFEF0648
+  FFEEF9BB  x22   sub_FFEEF9BB
+  FFEF121F  x4    sub_FFEF121F
+  FFEEC3BD  x2    sub_FFEEC3BD
+  FFEF02F2  x1    sub_FFEF02F2
+
+=== top blit candidate FFEF68D5 sub_FFEF68D5 ===
+FFEF68D5  60c0                   sub     #0Ch, sp
+FFEF68D7  9109                   mov.w   r1, 0Ch+var_2[sp]
+FFEF68D9  9102                   mov.w   r2, 0Ch+var_4[sp]
+FFEF68DB  818b                   mov.b   r3, 0Ch+var_5[sp]
+FFEF68DD  e304                   mov.l   r4, 0Ch+var_C[sp]
+FFEF68DF  6104                   cmp     #0, r4
+FFEF68E1  2028                   beq.b   loc_FFEF6909
+FFEF68E3  b189                   movu.b  0Ch+var_5[sp], r1
+FFEF68E5  6111                   cmp     #1, r1
+FFEF68E7  ec03                   mov.l   0Ch+var_C[sp], r3
+FFEF68E9  9901                   mov.w   0Ch+var_4[sp], r1
+FFEF68EB  990d                   mov.w   0Ch+var_2[sp], r5
+FFEF68ED  210c                   bne.b   loc_FFEF68F9
+FFEF68EF  5f12                   movu.w  r1, r2
+FFEF68F1  5f51                   movu.w  r5, r1
+FFEF68F3  05559dff               bsr.a   sub_FFEF0648
+FFEF68F7  6703                   rtsd    #3
+FFEF68F9  ec02                   mov.l   0Ch+var_C[sp], r2
+FFEF68FB  b82c                   movu.w  2[r2], r4
+FFEF68FD  5c33                   movu.w  [r3], r3
+FFEF68FF  5f12                   movu.w  r1, r2
+FFEF6901  5f51                   movu.w  r5, r1
+FFEF6903  05f49bff               bsr.a   sub_FFEF04F7
+FFEF6907  6703                   rtsd    #3
+FFEF6909  6703                   rtsd    #3
+
+=== sample draw sites ===
+
+; site in func FFEE29D7 draws descriptor FFED31CC (rec 1223) -> callee ?
+  FFEE29DD  mov.l   #unk_FFED31CC, r1
+  FFEE29E3  mov.l   r1, 0Ch+var_8[sp]
+  FFEE29E5  mov.b   #1, 0Ch+var_9[sp]
+  FFEE29E8  mov.l   #8C4Dh, r14
+  FFEE29EE  mov.b   1[r14], 0Ch+var_A[sp]
+  FFEE29F2  movu.b  0Ch+var_A[sp], r1
+  FFEE29F4  cmp     #0, r1
+  FFEE29F6  bne.b   loc_FFEE2A04
+
+; site in func FFEE29D7 draws descriptor FFED31CC (rec 1223) -> callee FFEF68D5
+  FFEE2A26  mov.l   #unk_FFED31CC, r1
+  FFEE2A2C  mov.l   r1, 0Ch+var_8[sp]
+  FFEE2A2E  bra.b   loc_FFEE2A3C
+  FFEE2A30  mov.l   #unk_FFED31DC, r1
+  FFEE2A36  mov.l   r1, 0Ch+var_8[sp]
+  FFEE2A38  bra.s   loc_FFEE2A3C
+  FFEE2A39  mov.b   #0, 0Ch+var_9[sp]
+  FFEE2A3C  mov.l   0Ch+var_8[sp], r4
+
+; site in func FFEE29D7 draws descriptor FFED31DC (rec 1224) -> callee FFEF68D5
+  FFEE2A30  mov.l   #unk_FFED31DC, r1
+  FFEE2A36  mov.l   r1, 0Ch+var_8[sp]
+  FFEE2A38  bra.s   loc_FFEE2A3C
+  FFEE2A39  mov.b   #0, 0Ch+var_9[sp]
+  FFEE2A3C  mov.l   0Ch+var_8[sp], r4
+  FFEE2A3E  movu.b  0Ch+var_9[sp], r3
+  FFEE2A40  movu.w  0Ch+var_4[sp], r2
+  FFEE2A42  movu.w  0Ch+var_2[sp], r1
+
+; site in func FFEE2C03 draws descriptor FFED217C (rec 962) -> callee FFEF68D5
+  FFEE2C49  mov.l   #unk_FFED217C, r4
+  FFEE2C4F  mov.l   #1, r3
+  FFEE2C51  bsr.a   sub_FFEF68D5
+  FFEE2C55  bra.w   loc_FFEE2CF4
+  FFEE2C58  movu.w  arg_66[sp], r2
+  FFEE2C5B  movu.w  arg_6C[sp], r1
+  FFEE2C5E  add     #2, r2
+  FFEE2C60  movu.w  r2, r2
+
+; site in func FFEE2C03 draws descriptor FFECF19C (rec 196) -> callee FFEF68D5
+  FFEE2C62  mov.l   #unk_FFECF19C, r4
+  FFEE2C68  mov.l   #1, r3
+  FFEE2C6A  bsr.a   sub_FFEF68D5
+  FFEE2C6E  bra.w   loc_FFEE2CF4
+  FFEE2C71  movu.w  arg_66[sp], r2
+  FFEE2C74  movu.w  arg_6C[sp], r1
+  FFEE2C77  add     #2, r2
+  FFEE2C79  movu.w  r2, r2
+
+; site in func FFEE2C03 draws descriptor FFED215C (rec 960) -> callee FFEF68D5
+  FFEE2C7B  mov.l   #unk_FFED215C, r4
+  FFEE2C81  mov.l   #1, r3
+  FFEE2C83  bsr.a   sub_FFEF68D5
+  FFEE2C87  bra.b   loc_FFEE2CF4
+  FFEE2C89  movu.w  arg_66[sp], r2
+  FFEE2C8C  movu.w  arg_6C[sp], r1
+  FFEE2C8F  add     #2, r2
+  FFEE2C91  movu.w  r2, r2
+
+; site in func FFEE2C03 draws descriptor FFED216C (rec 961) -> callee FFEF68D5
+  FFEE2C93  mov.l   #unk_FFED216C, r4
+  FFEE2C99  mov.l   #1, r3
+  FFEE2C9B  bsr.a   sub_FFEF68D5
+  FFEE2C9F  bra.b   loc_FFEE2CF4
+  FFEE2CA1  movu.b  arg_65[sp], r1
+  FFEE2CA4  mul     #13h, r1
+  FFEE2CA7  mov.l   arg_5C[sp], r2
+  FFEE2CA9  movu.b  [r2, r1], r14
+
+; site in func FFEE2CCE draws descriptor FFED219C (rec 964) -> callee FFEF68D5
+  FFEE2D0E  mov.l   #unk_FFED219C, r4
+  FFEE2D14  mov.l   #1, r3
+  FFEE2D16  bsr.a   sub_FFEF68D5
+  FFEE2D1A  bra.b   loc_FFEE2D42
+  FFEE2D1C  movu.b  arg_65[sp], r1
+  FFEE2D1F  mul     #13h, r1
+  FFEE2D22  add     arg_5C[sp].l, r1
+  FFEE2D26  movu.b  1[r1], r1

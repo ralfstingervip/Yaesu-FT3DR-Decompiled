@@ -1,0 +1,159 @@
+scope	start	end	bytes	class	layout	count	evidence
+below-window	FFECE51C	FFECE55C	64	zero pad	u8[64], all 0x00	1	after CALLBACK_REGINIT FFECE4E4-FFECE51C (doc 27); before descriptor record 0
+below-window	FFECE55C	FFED0000	6820	RGB565 bitmap descriptor records (doc 16 sect.2)	i17_bmp_desc_t {u16 w,u16 h,u32 src,u16 key,u16 tint,u16 mode,u16 pad} stride 16; records 0..425 + bytes 0..3 of 426	426	base FFECE55C; rec 391 = FFECFDCC (doc 27 RGB565 font base); refs 271: FFEE2C62->FFECF19C,FFEE6807->FFECF17C,FFEE6972->FFECEFDC,FFEE7A14->FFECF4DC
+window	FFED0000	FFED000C	12	RGB565 bitmap descriptor records	tail (src,key,tint,mode,pad) of record 426 at FFECFFFC	0	record straddles the window edge
+window	FFED000C	FFED337C	13168	RGB565 bitmap descriptor records	i17_bmp_desc_t stride 16; records 427..1249	823	refs 240: FFED45A4->FFED308C,FFED55D0->FFED1EEC,FFEE29DD->FFED31CC,FFEE2A26->FFED31CC
+retype	FFED337C	FFED3382	6	RGB565 bitmap descriptor records	first 6 B of record 1250; I2 DB held a bogus 6-B strlit here (08 00 0b 00 14 20)	0	refs 1: FFEE9D1F->FFED337C
+window	FFED3382	FFED3F6C	3050	RGB565 bitmap descriptor records	bytes 6..15 of record 1250 + records 1251..1440	190	refs 123: FFED7A64->FFED33CC,FFEE6947->FFED39DC,FFEE9D15->FFED338C,FFEE9D29->FFED339C
+window	FFED4180	FFED4288	264	RAM-default image (const struct copied to RAM)	u8[264] = bytes 4..267 of the 268-B image at FFED417C; fields read: +0..+A u8, +C/+E/+10/+12/+14 u16, +16 u8, +18 u32, +1C/+1D u8, +1E u16, +30..+55 (38 B)	1	sub_FFEDFBE2 FFEDFBED 'fb3a0c01' mov.l #10Ch,r3 / FFEDFBF1 #FFED417C / FFEDFBF7 #1CC90 / smovf; readers sub_FFEDF904..sub_FFEDFA32 (else-branch when [1CDD4+n]==0)
+window	FFED428C	FFED4298	12	char* table (GPS $PMTK command strings)	u32 pointer slots into the string pool	3	table FFED4288..FFED42CC (17 slots) indexed by sub_FFEE0D4D (FFEE0D7B #FFED4288; mov.l [r14,r15]); targets e.g. FFF483F3
+window	FFED42A0	FFED42B0	16	char* table (GPS $PMTK command strings)	u32 pointer slots into the string pool	4	table FFED4288..FFED42CC (17 slots) indexed by sub_FFEE0D4D (FFEE0D7B #FFED4288; mov.l [r14,r15]); targets e.g. FFF48444
+window	FFED42B8	FFED42BC	4	char* table (GPS $PMTK command strings)	u32 pointer slots into the string pool	1	table FFED4288..FFED42CC (17 slots) indexed by sub_FFEE0D4D (FFEE0D7B #FFED4288; mov.l [r14,r15]); targets e.g. FFF48481
+window	FFED42C4	FFED42CC	8	char* table (GPS $PMTK command strings)	u32 pointer slots into the string pool	2	table FFED4288..FFED42CC (17 slots) indexed by sub_FFEE0D4D (FFEE0D7B #FFED4288; mov.l [r14,r15]); targets e.g. FFF48499
+window	FFED42CC	FFED4300	52	linker section-address list (Inferred CC-RX __sectop/__secend constants)	u32[13]: FFC00100 FFC3EB44 FFECE4E8 FFF47FD1 FFF48064 FFF483C8 FFF483C8 000698FC FFED8A34 FFED8A58 FFED8A70 x3	13	no code or data ref (3-byte scan of the whole image: 0 hits); FFF47FD1/FFF48064/FFF483C8 = first 1-byte switch table, first 2-byte table, end of tables (H8 typed-data.tsv); FFED8A34/58/70 = DTBL/BTBL/INTB
+window	FFED45A8	FFED45E8	64	bitmap-descriptor pointer table	u32[16] (slots 1..16 of 17; slot 0 FFED45A4 typed by I2)	16	sub_FFEE4DDA FFEE4E22 #FFED45A4, index = byte mod 0x11, mov.l [r1,r14],r3 -> sub_FFEF0648 (RGB565 blit)
+window	FFED4644	FFED477C	312	1-bpp font block table (doc 27 sect.2, extended)	i17_font1_blk_t {u8 w,u8 h,u16 base_code,u32 ord_tbl,u32 pix_base} stride 12	26	doc 27 listed 8; selector bound in sub_FFEF2184 is 0x1A = 26 entries; refs FFEF21BE/FFEE52A0 #FFED4644
+window	FFED477C	FFED49E0	612	1-bpp glyph/icon descriptor records	i17_glyph1_desc_t {u16 w,u16 h,u32 pix (FFC0xxxx-FFC3xxxx 1-bpp store),u32 flag} stride 12	51	no direct immediate (3-byte scan 0 hits for FFED477C); contiguous after the 26 font blocks (Inferred: same base, index >= 26)
+window	FFED49E0	FFED4B48	360	glyph-table index records	i17_glyph_tbl8_t {u16 f0,u16 f2,u32 tbl} stride 8	45	sub_FFEE59A4 FFEE59C8 shll #3 / FFEE59CA #FFED49E0 / add 4[r14].l (tbl), index clamped to 0x2C (45 entries); sub_FFEE5A73 movu.w [r14] (f0)
+window	FFED55D4	FFED55E0	12	bitmap-descriptor pointer table	u32[3] (slots 1..3 of 4 at FFED55D0)	3	sub_FFEEF86F FFEEF8C9 #FFED55D0, index & 3 -> sub_FFEF0648
+window	FFED55E0	FFED71A8	7112	icon/indicator records (desc ptr at +0x18)	i17_icon_rec_t {u32 id,u16 f04,u16 f06,u32 f08,u32 f0c,u32 f10,u32 f14,u32 desc} stride 28; id = index or 0 (unused)	254	sub_FFEF34B1 FFEF34BF mul #1Ch / FFEF34C2 #FFED55E0 / smovf 0x1C
+window	FFED71A8	FFED7228	128	constant table	u32[32] = 1<<i	32	sub_FFEFB2C2 FFEFB2C6 cmp #1Fh / FFEFB2CB #FFED71A8 / mov.l [r1,r14],r1
+window	FFED74E8	FFED75A8	192	setup-menu category table (BRIEF correction 5: base FFED74E8, 1-based)	i17_menu_cat_t {u32 count,u32 labels (20-B label rows in FFC3xxxx)} stride 8	24	sub_FFF095E3 FFF095E9 shll #3 / FFF095EB #FFED74E8; sub_FFF0966E FFF09695
+window	FFED7A68	FFED7AA4	60	record table {u32 desc, char name[12]} (WIRES-X news categories)	stride 16 from FFED7A64 (rec 0 desc typed by I2): EMERGENCY/NEWS STATION/LOCAL NEWS/INT NEWS	4	sub_FFF0F6A7 FFF0F6F4 #FFED7A64 / mov.l 30h[r1],r4 -> sub_FFEF68D5; sub_FFF0F711 FFF0F713 (+0x34)
+window	FFED7AA4	FFED7AE4	64	record table {u32 desc, char name[8], u32 0} (WIRES-X news content types)	i17_news_b_t stride 16: '       '/VOICE/MESSAGE/PICT	4	sub_FFF0F546 FFF0F57F shll #4 / FFF0F581 #FFED7AA4 (index clamped <4); sub_FFF129AF FFF129D0
+window	FFED7E94	FFED7EB0	28	char* list, NULL-terminated (local tree, not in this repo)	u32[6] string pointers + u32 0	7	base FFED7E90 typed by I2; refs 2: FFF12ACA->FFED7E90,FFF12AFE->FFED7E90
+window	FFED7F18	FFED7F50	56	storage-driver status-mask table (Inferred SD/MMC host)	u32[14] = 7 mask words indexed by card-type u16 at [card+2C6h]	14	sub_FFF34897 FFF34925 movu.w 2C6h[r14] / FFF34929 #FFED7F18 / tst 2B0h[r14].l (-> error -17h); sub_FFF33988 FFF339F8 #FFED7F48
+window	FFED7F50	FFED7F60	16	storage-driver constant table	u32[4] = 00FFF0FF 00FFF1FF 00FFF2FF 00FFF3FF	4	refs 1: FFF34CC4->FFED7F50
+window	FFED7F60	FFED819C	572	storage-driver mode records (Inferred card-capacity parameter sets)	i17_store_mode_t u32[11] stride 44 (0x2C): 2 records at FFED7F60 + 11 at FFED7FB8	13	sub_FFF362EF FFF362F7 cmp #7DFFFFh / FFF36301 #FFED7F60 / mov.l #2Ch,r3 -> copy; sub_FFF36327 FFF36340 #FFED7FB8 (+n*0x2C)
+window	FFED81F8	FFED8318	288	RAM-pointer records (initial values copied to RAM 683D0/68460)	i17_ramptr9_t u32[9] stride 36: 2 tables x 4 records (FFED81F8, FFED8288)	8	sub_FFF3B7B5 FFF3B7C1 mul #24h / FFF3B7C4 #FFED81F8 -> 683D0, FFF3B7EF #FFED8288 -> 68460, smovf 0x24
+window	FFED831C	FFED8338	28	char* list, NULL-terminated (FT3D\... paths)	u32[6] string pointers + u32 0	7	base FFED8318 typed by I2; refs 8: FFF3B944->FFED8318,FFF3B97B->FFED8318
+window	FFED84D8	FFED8528	80	index/value table	i17_idx_u32_t stride 8: 0..9 -> 200,500,1000,2000,5000,10000,20000,100000,500000,1000000	10	sub_FFF42981 FFF42A03 shll #3 / FFF42A06 #FFED84D8 (search by key byte)
+window	FFED8528	FFED85A8	128	sine table	i17_idx_f32_t stride 8: k, sin(k*22.5 deg) float	16	sub_FFF42981 FFF42BF4 #FFED8528
+window	FFED85A8	FFED8628	128	cosine table	i17_idx_f32_t stride 8: k, cos(k*22.5 deg) float	16	sub_FFF42981 FFF42C2C #FFED85A8
+window	FFED8974	FFED8978	4	CC-RX runtime const	u32 = 20 (stream count)	1	sub_FFEE1868 FFEE1897 #FFED8974 / cmp [r14].l (loop over 1CE14[]); sub_FFF45E0D FFF45E1F
+window	FFED8978	FFED89C0	72	CC-RX runtime const	u8[72] stream-control-block template	1	sub_FFF45E90 FFF45EA4 mov.l #48h,r3 / FFF45EA9 #FFED8978 / smovf
+window	FFED89C0	FFED89D8	24	CC-RX runtime const	u32[6] printf flag bits 1,2,4,8,16,0	6	sub_FFF45FF6 FFF46018 #FFC3E971 ' +-#0,;:_' / FFF4601E #FFED89C0
+window	FFED89D8	FFED89E8	16	CC-RX runtime const	u32[4] = 0,1,2,4	4	sub_FFF469D7 FFF469DD #FFED89D8 / mov.l [r14,r15] (index & 3)
+window	FFED89E8	FFED8A30	72	CC-RX runtime const	double[9] = 1e1,1e2,1e4,...,1e256 (binary powers of ten)	9	refs 1: FFF470A2->FFED89E8
+window	FFED8A30	FFED8A34	4	CC-RX runtime const	u32 = 0x400	1	sub_FFF46D28 FFF46D32 #FFED8A30
+window	FFED8A74	FFED8AB0	60	INTB vector slots = 0 (unused vectors)	u32[15]; vectors 1..15	15	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8AB4	FFED8AB8	4	INTB vector slots = 0 (unused vectors)	u32[1]; vectors 17..17	1	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8ABC	FFED8AC4	8	INTB vector slots = 0 (unused vectors)	u32[2]; vectors 19..20	2	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8AC8	FFED8ACC	4	INTB vector slots = 0 (unused vectors)	u32[1]; vectors 22..22	1	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8AD0	FFED8AD8	8	INTB vector slots = 0 (unused vectors)	u32[2]; vectors 24..25	2	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8AE0	FFED8AF0	16	INTB vector slots = 0 (unused vectors)	u32[4]; vectors 28..31	4	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8B00	FFED8B08	8	INTB vector slots = 0 (unused vectors)	u32[2]; vectors 36..37	2	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8B10	FFED8B18	8	INTB vector slots = 0 (unused vectors)	u32[2]; vectors 40..41	2	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8B34	FFED8B38	4	INTB vector slots = 0 (unused vectors)	u32[1]; vectors 49..49	1	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8B50	FFED8B58	8	INTB vector slots = 0 (unused vectors)	u32[2]; vectors 56..57	2	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8BDC	FFED8BE0	4	INTB vector slots = 0 (unused vectors)	u32[1]; vectors 91..91	1	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8C1C	FFED8C28	12	INTB vector slots = 0 (unused vectors)	u32[3]; vectors 107..109	3	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8C48	FFED8C54	12	INTB vector slots = 0 (unused vectors)	u32[3]; vectors 118..120	3	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFED8C84	FFED8C88	4	INTB vector slots = 0 (unused vectors)	u32[1]; vectors 133..133	1	INTB = FFED8A70 (BRIEF); nonzero slots typed by I2
+window	FFF48063	FFF48064	1	alignment pad	align pad 0xFF between W_1 (1-byte) and W_2 (2-byte) switch tables	1	H8 typed-data.tsv: 1-byte table FFF48059-FFF48063, 2-byte table FFF48064
+window	FFF483C8	FFF483D0	8	const bytes	const record {u16 0x0480, u8 08, u8 01, u8 00, u8 00} + 2 pad	1	sub_FFEDAB4C FFEDAB4E #FFF483C8 / mov.w [r14] / mov.b 2..5[r14]
+window	FFF483E6	FFF483E8	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF483F3	FFF48439	70	C strings	4 C strings (70 B)	4	refs 3: FFED4298->FFF48438,FFED42B0->FFF48438,FFED42BC->FFF48438
+window	FFF48444	FFF48474	48	C strings	4 C strings (48 B)	4	no direct ref
+window	FFF48481	FFF4848E	13	C strings	1 C strings (13 B)	1	no direct ref
+window	FFF48499	FFF484D1	56	fixed-width string slots char[12]	5 C strings (55 B); 1 B NUL padding	5	no direct ref
+window	FFF484F2	FFF484F4	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF484F6	FFF48554	94	fixed-width string slots char[16]	5 C strings (10 B); 84 B NUL padding	5	no direct ref
+window	FFF48567	FFF48570	9	C strings + u8 arrays	1 C strings (4 B); 5 B u8 arrays	1	refs 2: FFEE3360->FFF48567,FFEE3F60->FFF4856C
+window	FFF48575	FFF48578	3	NUL padding	3 B NUL padding	0	no direct ref
+window	FFF4857D	FFF48588	11	C strings	1 C strings (8 B); 3 B NUL padding	1	refs 1: FFEE80F7->FFF48580
+window	FFF485A6	FFF485A8	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF485B8	FFF485DD	37	C strings	3 C strings (37 B)	3	refs 2: FFEE9579->FFF485B8,FFEE9586->FFF485C6
+window	FFF485EE	FFF485F0	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF4862B	FFF48630	5	C strings + u8 arrays	1 C strings (1 B); 4 B u8 arrays	1	refs 1: FFEFC662->FFF4862B
+window	FFF4864D	FFF48650	3	NUL padding	3 B NUL padding	0	no direct ref
+window	FFF4865F	FFF48668	9	C strings + u8 arrays	2 C strings (5 B); 4 B u8 arrays	2	refs 3: FFEFD369->FFF4865F,FFEFD382->FFF48664,FFEFD54F->FFF48664
+window	FFF4868D	FFF48692	5	C strings + u8 arrays	1 C strings (1 B); 4 B u8 arrays	1	refs 1: FFEFD52C->FFF4868D
+window	FFF486A2	FFF486A4	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF486C8	FFF4877B	179	C strings	25 C strings (155 B); 24 B NUL padding	25	refs 51: FFF00790->FFF486C8,FFF0080A->FFF486D7,FFF00832->FFF486DD
+window	FFF487AC	FFF487B0	4	C strings	1 C strings (4 B)	1	refs 1: FFF00AB7->FFF487AC
+window	FFF487B6	FFF487BC	6	C strings	1 C strings (6 B)	1	refs 1: FFF00B6E->FFF487B6
+window	FFF4886E	FFF48937	201	fixed-width string slots char[13]	12 C strings (164 B); 37 B NUL padding	12	refs 2: FFF014D2->FFF488B0,FFF01548->FFF48932
+window	FFF48942	FFF48962	32	C strings	1 C strings (27 B); 5 B NUL padding	1	no direct ref
+window	FFF48AD8	FFF48ADE	6	C strings	1 C strings (6 B)	1	refs 1: FFF02B2E->FFF48AD8
+window	FFF48AE6	FFF48AEC	6	C strings	1 C strings (6 B)	1	refs 1: FFF02C42->FFF48AE6
+window	FFF48AF8	FFF48C74	380	fixed-width string slots char[16]	21 C strings (129 B); 251 B NUL padding	21	refs 1: FFF02D9A->FFF48BB4
+window	FFF48C81	FFF48E0B	394	fixed-width string slots char[8]	49 C strings (294 B); 100 B NUL padding	49	no direct ref
+window	FFF48E72	FFF48E87	21	C strings	7 C strings (21 B)	7	no direct ref
+window	FFF48F9C	FFF48FBF	35	C strings	5 C strings (35 B)	5	no direct ref
+window	FFF48FDD	FFF49018	59	fixed-width string slots char[9]	6 C strings (39 B); 20 B NUL padding	6	no direct ref
+window	FFF49045	FFF49073	46	fixed-width string slots char[10]	4 C strings (26 B); 20 B NUL padding	4	no direct ref
+window	FFF49094	FFF49113	127	fixed-width string slots char[10]	14 C strings (110 B); 17 B NUL padding	14	refs 3: FFF04D03->FFF4910E,FFF04D15->FFF49111,FFF04D27->FFF49111
+window	FFF49123	FFF4914F	44	C strings	11 C strings (44 B)	11	no direct ref
+window	FFF4915B	FFF49164	9	C strings	1 C strings (9 B)	1	no direct ref
+window	FFF491B4	FFF495D0	1052	fixed-width string slots char[16]	65 C strings (488 B); 564 B NUL padding	65	refs 1: FFF05453->FFF493C0
+window	FFF495D6	FFF4995F	905	fixed-width string slots char[16]	54 C strings (428 B); 439 B NUL padding; 38 B u8 arrays	54	refs 3: FFF054BD->FFF496D0,FFF054CC->FFF49800,FFF054DC->FFF49826
+window	FFF49979	FFF499F3	122	fixed-width string slots char[16]	7 C strings (49 B); 73 B NUL padding	7	no direct ref
+window	FFF49A1B	FFF49B35	282	fixed-width string slots char[16]	17 C strings (119 B); 163 B NUL padding	17	no direct ref
+window	FFF49B3E	FFF49BA5	103	fixed-width string slots char[16]	6 C strings (39 B); 64 B NUL padding	6	no direct ref
+window	FFF49BCE	FFF49BD7	9	C strings	3 C strings (9 B)	3	refs 3: FFF06046->FFF49BCE,FFF0605A->FFF49BD1,FFF06082->FFF49BD4
+window	FFF49BE6	FFF49C70	138	fixed-width string slots char[16]	8 C strings (49 B); 89 B NUL padding	8	no direct ref
+window	FFF49C9E	FFF49DD9	315	fixed-width string slots char[16]	19 C strings (95 B); 220 B NUL padding	19	no direct ref
+window	FFF49DE0	FFF49F19	313	fixed-width string slots char[16]	19 C strings (133 B); 180 B NUL padding	19	no direct ref
+window	FFF49F4C	FFF49FE5	153	fixed-width string slots char[16]	9 C strings (63 B); 90 B NUL padding	9	no direct ref
+window	FFF49FEA	FFF4A089	159	fixed-width string slots char[16]	10 C strings (53 B); 106 B NUL padding	10	refs 3: FFF0684E->FFF4A025,FFF06863->FFF4A029,FFF07055->FFF4A025
+window	FFF4A092	FFF4A09B	9	C strings	1 C strings (9 B)	1	no direct ref
+window	FFF4A10B	FFF4A118	13	C strings	1 C strings (13 B)	1	refs 1: FFF070E2->FFF4A10B
+window	FFF4A11F	FFF4A120	1	NUL padding	1 B NUL padding	0	no direct ref
+retype	FFF4A120	FFF4A122	2	local-array initializer image (rect records)	x of rect 0; I2 DB held a bogus 2-B strlit '[\0'	0	
+window	FFF4A122	FFF4A170	78	local-array initializer image (rect records)	i17_rect16_t {u16 x,u16 y,u16 w,u16 h} stride 8: 2 x 5 records (FFF4A120, FFF4A148)	10	sub_FFF070E2 FFF07125 mov.l #28h,r3 / FFF07128 #FFF4A148 / smovf
+window	FFF4A1AF	FFF4A296	231	fixed-width string slots char[16]	14 C strings (131 B); 100 B NUL padding	14	no direct ref
+window	FFF4A29D	FFF4A316	121	fixed-width string slots char[16]	7 C strings (67 B); 54 B NUL padding	7	no direct ref
+window	FFF4A31B	FFF4A38C	113	fixed-width string slots char[16]	8 C strings (37 B); 76 B NUL padding	8	refs 3: FFF07B3A->FFF4A346,FFF07C56->FFF4A386,FFF07CB6->FFF4A38A
+window	FFF4A397	FFF4A44E	183	C strings + NUL padding	6 C strings (62 B); 121 B NUL padding	6	refs 5: FFF07E93->FFF4A397,FFF07EB2->FFF4A3F1,FFF07FB5->FFF4A44B
+window	FFF4A524	FFF4A560	60	C strings + NUL padding	3 C strings (15 B); 45 B NUL padding	3	no direct ref
+window	FFF4A582	FFF4A58E	12	C strings	2 C strings (12 B)	2	refs 2: FFF097FB->FFF4A582,FFF0981B->FFF4A58A
+window	FFF4A59F	FFF4A5F7	88	C strings	11 C strings (88 B)	11	refs 11: FFF09850->FFF4A59F,FFF09870->FFF4A5A8,FFF09890->FFF4A5B5
+window	FFF4A607	FFF4A610	9	C strings	1 C strings (9 B)	1	refs 1: FFF09B22->FFF4A607
+window	FFF4A61B	FFF4A628	13	C strings	2 C strings (13 B)	2	refs 2: FFF09BAE->FFF4A61B,FFF09BCE->FFF4A623
+window	FFF4A641	FFF4A675	52	C strings	6 C strings (52 B)	6	refs 7: FFF09CA0->FFF4A641,FFF09CF5->FFF4A649,FFF09D49->FFF4A651
+window	FFF4A682	FFF4A68E	12	C strings	2 C strings (12 B)	2	refs 2: FFF09E34->FFF4A682,FFF09E88->FFF4A686
+window	FFF4A6AB	FFF4A6BD	18	C strings	2 C strings (18 B)	2	refs 2: FFF09F18->FFF4A6AB,FFF09F6E->FFF4A6B6
+window	FFF4A6CC	FFF4A6E6	26	C strings	3 C strings (26 B)	3	refs 3: FFF09FBB->FFF4A6CC,FFF09FDB->FFF4A6D5,FFF09FFB->FFF4A6E0
+window	FFF4A6EF	FFF4A6F8	9	C strings	1 C strings (9 B)	1	refs 1: FFF0A033->FFF4A6EF
+window	FFF4A704	FFF4A734	48	C strings	5 C strings (48 B)	5	refs 5: FFF0A08B->FFF4A704,FFF0A0EC->FFF4A70E,FFF0A133->FFF4A716
+window	FFF4A750	FFF4A761	17	C strings	2 C strings (17 B)	2	refs 2: FFF0A1EB->FFF4A750,FFF0A209->FFF4A75A
+window	FFF4A796	FFF4A7A7	17	C strings	1 C strings (17 B)	1	refs 1: FFF0A2D4->FFF4A796
+window	FFF4A7BC	FFF4A7D8	28	C strings	2 C strings (28 B)	2	refs 2: FFF0A32A->FFF4A7BC,FFF0A33D->FFF4A7CA
+window	FFF4A7DD	FFF4A7E6	9	C strings	1 C strings (9 B)	1	refs 1: FFF0A364->FFF4A7DD
+window	FFF4A7EF	FFF4A805	22	C strings	2 C strings (22 B)	2	refs 2: FFF0A388->FFF4A7EF,FFF0A39A->FFF4A7F8
+window	FFF4A80E	FFF4A821	19	C strings	2 C strings (19 B)	2	refs 2: FFF0A3BE->FFF4A80E,FFF0A3D0->FFF4A815
+window	FFF4A82B	FFF4A83F	20	C strings	2 C strings (20 B)	2	refs 2: FFF0A3F6->FFF4A82B,FFF0A40A->FFF4A836
+window	FFF4A847	FFF4A877	48	C strings	4 C strings (48 B)	4	refs 4: FFF0A42E->FFF4A847,FFF0A440->FFF4A84F,FFF0A453->FFF4A85E
+window	FFF4A891	FFF4A898	7	C strings	1 C strings (7 B)	1	refs 1: FFF0A4B6->FFF4A891
+window	FFF4A8BF	FFF4A8DA	27	C strings	2 C strings (27 B)	2	refs 2: FFF0A523->FFF4A8BF,FFF0A535->FFF4A8CA
+window	FFF4A8E9	FFF4A925	60	C strings	5 C strings (60 B)	5	refs 5: FFF0A55A->FFF4A8E9,FFF0A56C->FFF4A8F7,FFF0A57E->FFF4A905
+window	FFF4A92F	FFF4A96D	62	C strings	4 C strings (62 B)	4	refs 4: FFF0A5C8->FFF4A92F,FFF0A5DA->FFF4A93C,FFF0A5EC->FFF4A94D
+window	FFF4A977	FFF4A991	26	C strings	2 C strings (26 B)	2	refs 2: FFF0A630->FFF4A977,FFF0A643->FFF4A984
+window	FFF4A9BD	FFF4AA1E	97	C strings	10 C strings (97 B)	10	refs 10: FFF0A6A6->FFF4A9BD,FFF0A6B8->FFF4A9CA,FFF0A6CA->FFF4A9D3
+window	FFF4AA29	FFF4AA3F	22	C strings	2 C strings (22 B)	2	refs 2: FFF0A815->FFF4AA29,FFF0A827->FFF4AA31
+window	FFF4AA48	FFF4AA5C	20	C strings	2 C strings (16 B); 4 B NUL padding	2	refs 3: FFF0A85D->FFF4AA48,FFF0A910->FFF4AA58,FFF0A929->FFF4AA58
+window	FFF4ABDE	FFF4ABE0	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF4AC49	FFF4AC53	10	C strings	1 C strings (10 B)	1	no direct ref
+window	FFF4AC99	FFF4ACA8	15	NUL padding	15 B NUL padding	0	no direct ref
+window	FFF4ACD5	FFF4ACE5	16	C strings	1 C strings (11 B); 5 B NUL padding	1	no direct ref
+window	FFF4AD28	FFF4AD31	9	C strings	1 C strings (9 B)	1	no direct ref
+window	FFF4AD3C	FFF4AD44	8	C strings	1 C strings (8 B)	1	refs 1: FFF0E6E0->FFF4AD3C
+window	FFF4AD54	FFF4AD58	4	C strings	1 C strings (4 B)	1	refs 2: FFF12670->FFF4AD54,FFF126C4->FFF4AD54
+window	FFF4AD60	FFF4ADBC	92	C strings	12 C strings (92 B)	12	refs 24: FFF12C5B->FFF4ADAC,FFF12C7B->FFF4ADAC,FFF12CA3->FFF4ADAE
+window	FFF4ADCD	FFF4ADD0	3	NUL padding	3 B NUL padding	0	no direct ref
+window	FFF4ADD2	FFF4ADD3	1	C strings	1 C strings (1 B)	1	refs 1: FFF1485D->FFF4ADD2
+window	FFF4ADDA	FFF4ADF0	22	C strings	3 C strings (14 B); 8 B NUL padding	3	refs 3: FFF1F1B8->FFF4ADE6,FFF1F8BE->FFF4ADEE,FFF1F8CF->FFF4ADEE
+window	FFF4ADF7	FFF4ADF8	1	NUL padding	1 B NUL padding	0	no direct ref
+window	FFF4AE04	FFF4AE05	1	NUL padding	1 B NUL padding	0	no direct ref
+window	FFF4AE11	FFF4AE14	3	NUL padding	3 B NUL padding	0	no direct ref
+window	FFF4AE36	FFF4AE38	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF4AE47	FFF4AE48	1	NUL padding	1 B NUL padding	0	no direct ref
+window	FFF4AE4A	FFF4AE4C	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF4AE4E	FFF4AE5C	14	C strings	2 C strings (10 B); 4 B NUL padding	2	no direct ref
+window	FFF4AE6C	FFF4AEB5	73	C strings	15 C strings (73 B)	15	refs 5: FFF38AFE->FFF4AE6C,FFF38B44->FFF4AE6C,FFF38B58->FFF4AE6C
+window	FFF4AFB9	FFF4AFF7	62	C strings	7 C strings (62 B)	7	refs 21: FFF3B93C->FFF4AFF3,FFF3BB56->FFF4AFF3,FFF3C78E->FFF4AFF3
+window	FFF4B01A	FFF4B01C	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF4B023	FFF4B024	1	NUL padding	1 B NUL padding	0	no direct ref
+window	FFF4B046	FFF4B048	2	NUL padding	2 B NUL padding	0	no direct ref
+window	FFF4B04A	FFF4B059	15	C strings	3 C strings (13 B); 2 B NUL padding	3	no direct ref

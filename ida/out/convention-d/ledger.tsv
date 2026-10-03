@@ -1,0 +1,22 @@
+convention	definition	MAIN_term	SUB_term	headline	denominator	headline_pct	SUB_pct_of_524288
+A	MAIN named + SUB window code (headline_w2)	505165	464263	969428	1029972	94.1218%	88.5511%
+B	MAIN named + SUB code + DEAD residue (allwf)	505165	467999	973164	1029972	94.4845%	89.2637%
+C	MAIN named + SUB code + typed	505165	520552	1025717	1029972	99.5869%	99.2874%
+D	MAIN named + SUB code + typed + DEAD residue	505165	524288	1029453	1029972	99.9496%	100.0000%
+E	MAIN proven + SUB strict reach	365358	457342	822700	1029972	79.8760%	87.2311%
+
+term	bytes	source
+MAIN content 0x000000-0x07B754	505684	m_recon.py CONTENT; 0x07B754-0x100000 all FF
+MAIN named (FINAL7)	505165	final7_named_mask.bin
+MAIN proven (FINAL7)	365358	final7_proven_mask.bin
+MAIN unnamed	519	content - named; incl. 43 B stale copy 0x069A7F-0x069AAA
+SUB window FFED0000-FFF50000	524288	file 0x2D0000-0x350000
+SUB window code (headline_w2)	464263	mask_final3_after_headline_w2.bin
+SUB typed (window - allwf)	56289	complement of mask_final3_after_allwf.bin
+SUB DEAD residue (allwf - headline_w2)	3736	59 runs == sub-residue-final runs.tsv
+SUB code + typed + residue	524288	== window, partition exact
+SUB reach_w2	457462	mask_final3_after_reach_w2.bin
+SUB stale-root bytes	120	FFF2570F-FFF25771, FFF38800-FFF3880B, FFF38871-FFF3887C
+SUB strict reach	457342	reach_w2 - stale-root bytes
+denominator	1029972	505,684 + 524,288 (unchanged)
+named delta from N6	0	no byte newly named

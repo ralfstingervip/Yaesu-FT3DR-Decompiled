@@ -1,0 +1,82 @@
+
+;==== range FFF3E5F0-FFF3E6D0
+FFF3E5F0  ff               db
+FFF3E5F1  616e             cmp     #6, r14
+FFF3E5F3  2357             bltu.b  loc_FFF3E64A
+FFF3E5F5  6101             cmp     #0, r1
+FFF3E5F7  3b9200           bne.w   loc_FFF3E689
+FFF3E5FA  dd0136           mov.w   80h+var_14[sp], r1
+FFF3E5FD  6211             add     #1, r1
+FFF3E5FF  d70136           mov.w   r1, 80h+var_14[sp]
+FFF3E602  f9053400         mov.w   #0, 80h+var_18[sp]
+FFF3E606  2e2f             bra.b   loc_FFF3E635
+FFF3E608  5d0136           movu.w  80h+var_14[sp], r1   ; <- 0xfff3e63b
+FFF3E60B  af8a             mov.l   80h+var_4[sp], r2
+FFF3E60D  fec21e           movu.b  [r2, r1], r14
+FFF3E610  610e             cmp     #0, r14
+FFF3E612  202b             beq.b   loc_FFF3E63D
+FFF3E614  5d0136           movu.w  80h+var_14[sp], r1
+FFF3E617  af8a             mov.l   80h+var_4[sp], r2
+FFF3E619  fec21e           movu.b  [r2, r1], r14
+FFF3E61C  710f20           add     #80h+var_60, sp, r15
+FFF3E61F  5d0134           movu.w  80h+var_18[sp], r1
+FFF3E622  fe0f1e           mov.b   r14, [r15, r1]
+FFF3E625  dd0136           mov.w   80h+var_14[sp], r1
+FFF3E628  6211             add     #1, r1
+FFF3E62A  d70136           mov.w   r1, 80h+var_14[sp]
+FFF3E62D  dd0134           mov.w   80h+var_18[sp], r1
+FFF3E630  6211             add     #1, r1
+FFF3E632  d70134           mov.w   r1, 80h+var_18[sp]
+FFF3E635  5d0134           movu.w  80h+var_18[sp], r1
+FFF3E638  755140           cmp     #40h, r1 ; '@'
+FFF3E63B  29cd             blt.b   loc_FFF3E608
+FFF3E63D  5d0134           movu.w  80h+var_18[sp], r1
+FFF3E640  710e20           add     #80h+var_60, sp, r14
+FFF3E643  660f             mov.l   #0, r15
+FFF3E645  fe0e1f           mov.b   r15, [r14, r1]
+FFF3E648  2e41             bra.b   loc_FFF3E689
+FFF3E64A  f9053400         mov.w   #0, 80h+var_18[sp]   ; <- 0xfff3e5f3
+FFF3E64E  2e34             bra.b   loc_FFF3E682
+FFF3E650  5d013d           movu.w  80h+var_6[sp], r1   ; <- 0xfff3e687
+FFF3E653  751124           mul     #24h, r1 ; '$'
+FFF3E656  fb22d0830600     mov.l   #683D0h, r2
+FFF3E65C  4b12             add     r1, r2
+FFF3E65E  b8a1             movu.w  4[r2], r1
+FFF3E660  06c50134         cmp     80h+var_18[sp].uw, r1
+FFF3E664  2116             bne.b   loc_FFF3E67A
+FFF3E666  fbe21883edff     mov.l   #pathtab_bare, r14
+FFF3E66C  5d0134           movu.w  80h+var_18[sp], r1
+FFF3E66F  fe61e2           mov.l   [r1, r14], r2
+FFF3E672  fb36ff           mov.l   #-1, r3
+FFF3E675  710120           add     #80h+var_60, sp, r1
+FFF3E678  7f87             smovu
+FFF3E67A  dd0134           mov.w   80h+var_18[sp], r1
+FFF3E67D  6211             add     #1, r1
+FFF3E67F  d70134           mov.w   r1, 80h+var_18[sp]
+FFF3E682  5d0134           movu.w  80h+var_18[sp], r1
+FFF3E685  6171             cmp     #7, r1
+FFF3E687  29c9             blt.b   loc_FFF3E650
+FFF3E689  5d013d           movu.w  80h+var_6[sp], r1
+FFF3E68C  751124           mul     #24h, r1 ; '$'
+FFF3E68F  fb22d0830600     mov.l   #683D0h, r2
+FFF3E695  4b12             add     r1, r2
+FFF3E697  a8a1             mov.l   8[r2], r1
+FFF3E699  fb36ff           mov.l   #-1, r3
+FFF3E69C  710220           add     #80h+var_60, sp, r2
+FFF3E69F  7f87             smovu
+FFF3E6A1  fb12f0840600     mov.l   #684F0h, r1
+FFF3E6A7  b819             movu.w  2[r1], r1
+FFF3E6A9  6101             cmp     #0, r1
+FFF3E6AB  211a             bne.b   loc_FFF3E6C5
+FFF3E6AD  5d013d           movu.w  80h+var_6[sp], r1
+FFF3E6B0  751124           mul     #24h, r1 ; '$'
+FFF3E6B3  fb2260840600     mov.l   #68460h, r2
+FFF3E6B9  4b12             add     r1, r2
+FFF3E6BB  a8a1             mov.l   8[r2], r1
+FFF3E6BD  fb36ff           mov.l   #-1, r3
+FFF3E6C0  710220           add     #80h+var_60, sp, r2
+FFF3E6C3  7f87             smovu
+FFF3E6C5  5d0133           movu.w  80h+var_1A[sp], r1
+FFF3E6C8  711140           add     #40h, r1, r1 ; '@'
+FFF3E6CB  d70136           mov.w   r1, 80h+var_14[sp]
+FFF3E6CE  d5003633         mov.w   80h+var_14[sp], 80h+var_1A[sp]

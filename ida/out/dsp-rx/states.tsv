@@ -1,0 +1,29 @@
+state	slot_addr	entry	opcodes	DT_rx3_bits1_0	FI_rx1_bits7_6	resync_flag_0x56B6E	consumes	writes	next_states_live	next_states_dead_branch	reachable	label
+0	056B8A	056EE4	A6/B6	0,1,2,3	0 (HC) or 1 (CC)	0	rx[1..26]: FICH rx[1..4], rx[5..6], dest+src callsign rx[7..26]; rx[4]&0x7F DG-ID	BC01=op; B110=2; B111/B113 DG-ID verdict; B0C5=[8E20]; 9558=100; B112 (A) or BC5F (B)=DT; B11C b0/b1 + timer 957B/958C=50 when DT=1; 8EB5/8EC4=DT when [8D20]/[8DD5]==2; FEF920..FEF939 (26 B); BC02=BC01; host-link B3DA and sub_6C200 tag '1'; sub_56C2C DP-ID capture	HC: DT0->1 DT1->13 DT2->7 DT3->22; CC: DT0->4 DT1->16 DT2->10 DT3->25	CC with B110==0: 6/18/12/24 (B110 is always 2)	yes	Confirmed
+1	056B8E	0572F2	A7/B7	0	0	1	rx[7..26] downlink+uplink ID	B103=1; FEF93A (20 B); host tag '2'	3; else 0 (reset)	-	yes	Confirmed
+2	056B92	057366	A8/B8	0	0	1	none	B103=1	3; else 0	-	no (no writer stores 2)	Confirmed
+3	056B96	057602	A6/B6	0	1	0	rx[1..26] if FEF926==0xFF	BC01; FEF920 (26 B); host tag '1'	4	6 (B110==0)	yes	Confirmed
+4	056B9A	0576C0	A7/B7	0	1	1	rx[7..26] if FEF93A==0xFF	FEF93A; host tag '2'	5	6 (B110!=2)	yes	Confirmed
+5	056B9E	057772	A8/B8	0	1	1	rx[7..26] if FEF94E==0xFF	accumulator reset (B108=01 B109=FF B10A=00 B10B=FF B10E/F=0 B104=0 B118=FEF962); FEF94E; host tag '3'	6	-	yes	Confirmed
+6	056BA2	058678	A9/B9	0	1	1	rx[5] hi nibble frame no., lo nibble count (<6); rx[7..26] 20 B/frame to 0x03 then checksum	*B118 accumulator from FEF962; B104 sum; B1DC; then message dispatch on FEF963	stays 6 per frame; 0 at end or error	-	yes	Confirmed
+7	056BA6	05747A	A7/B7	2	0	1	rx[7..26]	B103=1; FEF93A; tag '2'	9	-	yes	Confirmed
+8	056BAA	0574EE	A8/B8	2	0	1	none	B103=1	9	-	no	Confirmed
+9	056BAE	057B2C	A6/B6	2	1	0	rx[1..26]; CC frame ignored if (B113==2 or B111) and rx[6] bit0==0	FEF920; tag '1'	10	12 (B110==0)	yes	Confirmed
+10	056BB2	057C06	A7/B7	2	1	1	rx[7..26] (same rx[6] gate)	FEF93A; tag '2'	11	12	yes	Confirmed
+11	056BB6	057CD4	A8/B8	2	1	1	rx[7..26] (same rx[6] gate)	accumulator reset; FEF94E; tag '3'	12	-	yes	Confirmed
+12	056BBA	058C06	AA/BA	2	1	1	rx[5] (count<3); rx[7..16] 10 B/frame	accumulator; message dispatch	stays 12; 0 at end/error	-	yes	Confirmed
+13	056BBE	0573B6	A7/B7	1	0	1	rx[7..26]	B103=1; FEF93A; tag '2'	15	-	yes	Confirmed
+14	056BC2	05742A	A8/B8	1	0	1	none	B103=1	15	-	no	Confirmed
+15	056BC6	057814	A6/B6	1	1	0	rx[1..26]	FEF920; tag '1'	16	18	yes	Confirmed
+16	056BCA	0578D2	A7/B7	1	1	1	rx[7..26]	FEF93A; tag '2'	17	18	yes	Confirmed
+17	056BCE	057984	A8/B8	1	1	1	rx[7..26]	accumulator reset; FEF94E; tag '3'	18	-	yes	Confirmed
+18	056BD2	058874	A9/B9	1	1	1	rx[1]&3 BN vs B10A; rx[2]>>6 BT; rx[5] count<0x0E; first frame rx[8]='N' rx[9] in b/c/d/e sets B256; rx[7..26] 20 B/frame	B11C b7 (B band) + b0/b1, 957B/958C=50; accumulator; message dispatch; AAE0=0x16 on error if [89C4] b4	stays 18; 19 after each block; 0 at end/error	-	yes	Confirmed
+19	056BD6	057A26	A6/B6 (0x9C ignored when [8DDE]<0)	1	1	0	header only, no copy	-	20	18 (B110==0)	yes	Confirmed
+20	056BDA	057A88	A7/B7	1	1	1	none	-	21	18	yes	Confirmed
+21	056BDE	057AE2	A8/B8	1	1	1	none	-	18	-	yes	Confirmed
+22	056BE2	05753E	A7/B7	3	0	1	rx[7..26]	B103=1; FEF93A; tag '2'	24	-	yes	Confirmed
+23	056BE6	0575B2	A8/B8	3	0	1	none	B103=1	24	-	no	Confirmed
+24	056BEA	057D92	A6/B6	3	1	0	rx[1..26]	FEF920; tag '1'; sub_58E02 if state==24	25	24 (B110==0)	yes	Confirmed
+25	056BEE	057E5C	A7/B7	3	1	1	rx[7..26]	FEF93A; tag '2'	26	24	yes	Confirmed
+26	056BF2	057F1A	A8/B8	3	1	1	rx[7..26]	accumulator reset; FEF94E; tag '3'; sub_58E02 voice-end (append canned 00 22 61 5F 30 03 08, filter, sub_5D316 caller registration)	24	-	yes	Confirmed
+27	056BF6	058C06	(duplicate of 12)	2	1	1	-	-	-	-	no (no writer stores 27)	Confirmed

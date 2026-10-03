@@ -1,0 +1,189 @@
+SUB FFF3B652 sender: channel 2
+SUB FFF3B654 sender: ring writer sub_FFEDAF2D
+SUB FFEE11D9 TPU0 vector-135 ISR calls tick fan-out sub_FFF36CAB
+SUB FFF36CB7 tick fan-out calls BT pump sub_FFF3B69B
+SUB FFF3B6CF pump: power-up countdown end -> P87
+SUB FFF3B6D4 pump: bset #7 P8.PODR
+SUB FFF3B71C pump: deferred LINK via sub_FFF39845
+SUB FFF3B74C pump: level detector sub_FFF3B115 every 2nd pass
+SUB FFF3B74F pump: line reader sub_FFF3A11F
+SUB FFF3B760 pump: classifier B dispatch sub_FFF3A259
+SUB FFF3B770 pump: classifier A dispatch sub_FFF3A204
+SUB FFF3B784 pump: ack-timeout retry sub_FFF3AA8E (timer 3)
+SUB FFF3B798 pump: HELLO timeout sub_FFF3A064 (timer 1)
+SUB FFF3B7AC pump: operation timeout sub_FFF3A08A (timer 2)
+SUB FFF3B7AF pump: SCO idle manager sub_FFF3951E
+SUB FFF3A1D4 line reader: get 1 byte from channel 2
+SUB FFF3A189 line reader: 256-byte cap (cmp #0FFh, IDA prints #-1)
+SUB FFF3A1AE line reader: LF ends line
+SUB FFF3A3F6 classifier A: indices 1..5
+SUB FFF3A404 classifier A: unmatched line answered ERROR\r\n
+SUB FFF3A398 classifier B: indices 1..7
+SUB FFF3A2FF classifier B: RXAT gated on [10578]
+SUB FFF3A31D classifier B: ERAT gated on [10578]
+SUB FFF3A41A HELL: 'O'
+SUB FFF3A468 HELL: echo HELL%c
+SUB FFF3A473 HELL: 122AD=2
+SUB FFF3A4AB FIND: list full at 8
+SUB FFF3A4B9 FIND: FIND=OVER reply
+SUB FFF3A50B FIND: 12 address chars
+SUB FFF3A57F FIND: name loop bound j<=15
+SUB FFF3A599 FIND: terminator at entry+0x0C+j (j=16 -> +0x1C)
+SUB FFF3A622 FIND: FIND=<sum4> reply
+SUB FFF3A2DF FIND: list copied to [683B0] (smovf)
+SUB FFF3A2FB FIND: scan callback(1)
+SUB FFF3A654 PAIR: '0'
+SUB FFF3A678 PAIR: PAIR=0 echo
+SUB FFF3A6AD PAIR=0: link cb(3) after own LINK=0
+SUB FFF3A6BE PAIR=0: link cb(9) remote drop
+SUB FFF3A75F PAIR: PAIR=<sum4> reply
+SUB FFF3A77B PAIR=<addr>: 122AE=5 linked
+SUB FFF3A786 PAIR=<addr>: link cb(1)
+SUB FFF3A7B7 SCOI: echo SCOI=%c
+SUB FFF3A7C0 SCOI: '0'
+SUB FFF3A7ED SCOI=0: cb(3) if 12CC2==1
+SUB FFF3A7F2 SCOI=0: cb(5) otherwise
+SUB FFF3A805 SCOI: '1'
+SUB FFF3A820 SCOI=1: cb(1)
+SUB FFF3A849 ERAT: echo ERAT=
+SUB FFF3A893 ERAT: up to 6 chars
+SUB FFF3A8B4 ERAT: TXAT cb(5)
+SUB FFF3A8CF ERRO: '+'
+SUB FFF3A927 ERRO: ERROR+SCOI echo
+SUB FFF3A946 ERRO: SCOL cb(2)
+SUB FFF3A972 RXAT: echo RXAT=
+SUB FFF3A9BC RXAT: up to 12 chars
+SUB FFF3AA79 RXAT CKPD=200: TXAT cb(6)
+SUB FFF3AA96 retry: index = [1054A]-1
+SUB FFF3AA9A retry: 11 cases
+SUB FFF3AC7B retry: ACK ERROR\r\n
+SUB FFF3AD5E SCAN=: '0'
+SUB FFF3ADA9 SCAN=0: scan cb(3)
+SUB FFF3ADE4 SCAN=1: scan cb(5)
+SUB FFF3AE11 LINK=: checksum compare
+SUB FFF3AE6E LINK=: cb(5) match
+SUB FFF3AE74 LINK=: cb(6) mismatch
+SUB FFF3AE86 SCOL=: ack only (clear pending)
+SUB FFF3AEB4 TXAT=1: 10578=1
+SUB FFF3AECB TXAT=1: cb(1)
+SUB FFF3AEDA TXAT=0: 10578=0
+SUB FFF3AF7B PINF=: cb(1) match
+SUB FFF3AF81 PINF=: cb(2) mismatch
+SUB FFF39771 SCAN sender: arg 1
+SUB FFF397C5 SCAN=1 send
+SUB FFF397EC SCAN: timer 2 = 3000
+SUB FFF39802 SCAN stop: arg 0
+SUB FFF39825 SCAN=0 send
+SUB FFF3989D LINK mode 0 -> LINK=1
+SUB FFF398FC LINK mode 1 -> LINK=<addr>
+SUB FFF3991A LINK: timer 2 = 2000
+SUB FFF399C0 deferred LINK: 683A8=1000
+SUB FFF39A23 LINK=0 send (sub_FFF399F9)
+SUB FFF39A5D LINK=0 send (sub_FFF39A53)
+SUB FFF39ADB SCOL=1 send
+SUB FFF39B14 SCOL=1: timer 2 = 1000
+SUB FFF39B5D SCOL=0 send (sub_FFF39B27)
+SUB FFF39B68 SCOL=0: 12CC2=1
+SUB FFF39B90 SCOL=0 send (sub_FFF39B86)
+SUB FFF39BB3 TXAT arg 1
+SUB FFF39BE8 TXAT=1 send
+SUB FFF39BF6 TXAT cb slot 683C4
+SUB FFF39C13 TXAT arg 0 (sub_FFF39C11)
+SUB FFF39C48 TXAT=0 send
+SUB FFF3AFD4 LINK=<12 hex> send
+SUB FFF3B01A LINK=1 send
+SUB FFF3B05B PINF=0 send
+SUB FFF3B0DB PINF=0,<12 hex> send
+SUB FFF397E5 ack timer 3 = 5
+SUB FFF396D2 HELLO wait timer 1 = 500
+SUB FFF396B9 power-on: P22 set
+SUB FFF396BE power-on: bset #2
+SUB FFF396F8 power-off: P22 clear
+SUB FFF39E43 CMT3 CMCR=0FFC0h
+SUB FFF39E4B CMT3 CMCOR=0EA5Fh
+SUB FFF3B12E level >= threshold: P24 set
+SUB FFF3B133 bset #4 P2.PODR
+SUB FFF3B136 level < threshold: P24 clear
+SUB FFF3B178 level cb(1)
+SUB FFF3B1F1 level cb(2)
+SUB FFF3B11A level read sub_FFF159DF
+SUB FFF15A09 ADC result 12510
+SUB FFF1583E ADC S12AD0 ADCSR (0x89000)
+SUB FFEDCE2A dispatcher: F3D5 compare
+SUB FFEDCE43 dispatcher: F3D5 -> sub_FFF38338
+SUB FFEDCFB6 dispatcher: frame+0x18 bit 7 (BT on)
+SUB FFEDCFBA dispatcher: BT off -> sub_FFF37CF4
+SUB FFEDCFBF dispatcher: BT on -> sub_FFF37CB9
+SUB FFEDCFD8 dispatcher: F3D6 compare
+SUB FFEDCFDD dispatcher: F3D3 compare
+SUB FFEDCFE2 dispatcher: F3D2 compare
+SUB FFEDCFF1 dispatcher: F3D2 -> sub_FFF37D88
+SUB FFEDCFFF dispatcher: F3D3 -> sub_FFF38292
+SUB FFEDD00D dispatcher: F3D6 -> sub_FFF38107
+SUB FFEDD019 dispatcher: every frame -> sub_FFF3850B
+SUB FFEDD025 dispatcher: every frame -> sub_FFF38402
+SUB FFF37CC6 BT on: only when 122A6==15h
+SUB FFF37CD7 BT on: sub_FFF3969B (power-up)
+SUB FFF37D0C BT off: sub_FFF396E5
+SUB FFF37DB5 F3D2: sub-op = frame+0x21
+SUB FFF37E40 F3D2/0: SCOL=1
+SUB FFF37ECB F3D2/1: SCOL=0 then deferred LINK=0
+SUB FFF37ED1 F3D2/1: LINK=0
+SUB FFF37EF0 F3D2/1: 12CBC=3 (no E6)
+SUB FFF37FB0 F3D2/2: E6(0)
+SUB FFF37FEC F3D2/2: E5(0)
+SUB FFF38007 F3D2/2: deferred re-link
+SUB FFF380E1 F3D2/3: LINK=<addr>
+SUB FFF380F9 F3D2/3: 122A7=3
+SUB FFF382B2 F3D3: frame+0x21 bit 7
+SUB FFF382EC F3D3: start scan
+SUB FFF3831C F3D3: stop scan
+SUB FFF38359 F3D5: frame+8 == 9
+SUB FFF383DE F3D5: PINF=0,<addr>
+SUB FFF381A8 F3D6: LINK=<addr> when 122A7==1
+SUB FFF38215 F3D6: E6(0)
+SUB FFF38251 F3D6: E5(0)
+SUB FFF3826C F3D6: deferred re-link
+SUB FFF38422 every frame: frame+9 & 20h
+SUB FFF38467 every frame: TXAT=1 once per link
+SUB FFF384AE every frame: SCOL=1
+SUB FFF384E9 TXAT callback = sub_FFF39216
+SUB FFF3851F header: frame+0x18 & 20h -> 1229D
+SUB FFF3852E header: frame+0x18 & 40h -> 1229E
+SUB FFF3853D header: frame+0x18 & 3 -> VOX mode
+SUB FFF38627 header: 12CB8=2 (BT off edge)
+SUB FFF3865A header: 12CB8=2 (BT on edge)
+SUB FFF3873B detector start sub_FFF39D6B(1)
+SUB FFF38759 detector running: 12CB8=1
+SUB FFF387B0 detector stop sub_FFF39D6B(2)
+SUB FFF387B6 detector stopped: 12CB8=2
+SUB FFF38AEA E4 builder send
+SUB FFF38C9E E4 code 3 direct send
+SUB FFF38B2F E4 code 12h (scan result)
+SUB FFF38B4A E4 code 11h (scan timeout)
+SUB FFF38B5E E4 code 13h
+SUB FFF38B91 E4 code 9 (PINF result)
+SUB FFF38CCF E4 code 0 (connected)
+SUB FFF38D63 E4 code 5 (connect failed)
+SUB FFF38EAB E4 code 2 (link lost)
+SUB FFF38EF2 E4 code 1 (disconnected)
+SUB FFF391F7 E4 code 1 (module ready)
+SUB FFF3920F module absent: 122A6=15h
+SUB FFF38FD2 E6 site: SCO up with 122A0==3
+SUB FFF3906F E6 site: SCO closed by radio
+SUB FFF39284 E6 site: CKPD key (save mode)
+SUB FFF39312 E6 site: CKPD key (12CB8==2)
+SUB FFF393B6 E6 site: CKPD unkey (save mode)
+SUB FFF393F4 E6 site: CKPD unkey (12CB8==2)
+SUB FFF38FA0 E5 site: SCO up with 122A0==4
+SUB FFF3903D E5 site: SCO closed, 122A0==1
+SUB FFF39095 E5 site: SCO closed, 122A0==4
+SUB FFF394CF E5 site: level cb(1) -> E5(1)
+SUB FFF39516 E5 site: level cb(2) -> E5(0)
+SUB FFF39225 CKPD cb: code 6 only
+SUB FFF39232 CKPD cb: 1229D == 20h
+SUB FFF39240 CKPD cb: 12CBC == 2 -> unkey branch
+SUB FFF392DF CKPD cb: 12CB8 == 2
+SUB FFF39482 VOX level: SCOL=1 (1251E==2)
+SUB FFF3959C SCO idle close after 1000 passes
+SUB FFF3953A SCO close request 1229C

@@ -1,0 +1,19 @@
+machine	sub_5DCFE (per-tick FSM) + sub_5DCDA (entry/kick); state var 0xFFB0C4 (0..7); timers 0xFF9552/0xFF9554; MAIN H8S file offset = mapped address
+scheduler	ticked from reset_handler at 0x2CE6, 0x38FC, 0x3A4A (3 sites); entered from strap/UI via sub_103C0 (0x103C0, pushes UI mode 0xEE through sub_3FF10) which clears 0xFFB0C4=0
+state	site	action	evidence
+0->1	sub_5DCDA 0x5DCDA	bclr #5 @0xFFFBA5; bset #0 @0xFFFF52 (assert DSP power/enable); timer 0xFF9552=0x0A; state=1	0x5DCE6 bset#0 0xFFFF52
+1->2	sub_5DCFE 0x5DD58 (timer 0xFF9552 expired)	mov #0xFB->0xFFFBA8 & 0xFF816E (port/DDR shadow); bset #3 @0xFFFF52 (assert DSP RESET); timer 0xFF9552=3; state=2	0x5DD62 bset#3
+1(mid)	0x5DD48 (timer==2)	btst #4 @0xFFFF52; if clear bset #4 @0xFFFF52 (pre-assert boot-mode)	0x5DD50 bset#4
+2->3	0x5DD70 (timer 0xFF9552==0)	bclr #3 @0xFFFF52 (release DSP RESET); timer 0xFF9554=0x0A; state=3	0x5DD76 bclr#3
+3->4	0x5DD84 (timer 0xFF9554==0)	bset #5 @0xFFFBA5; bset #5 @0xFFFB91; jsr sub_78222 (reconfig DSP SCI 0xFFFF88 -> ASYNC: SMR=0x08 8-bit, BRR=0x0C, SCR=0x70 RIE|TE|RE); state=4	0x5DD9E jsr sub_78222
+4->5	0x5DDAE	wait handshake 0xFFFF49 bit7 == 0 (btst #7; bne=ret); then bset #3 @0xFFFBA4; state=5	0x5DDAE btst#7 0xFFFF49
+5->6	0x5DDBE	wait handshake 0xFFFF49 bit7 == 1 (btst #7; beq=ret); then timer 0xFF9554=0x0B; state=6	0x5DDBE btst#7 0xFFFF49
+6->7	0x5DDCE (timer 0xFF9554==0)	bclr #4 @0xFFFF52 (release DSP boot-mode); mov #0x16 -> 0xFFAAE0 (post UI "complete" event); state=7	0x5DDD4 bclr#4; 0x5DDD8 0x16->0xFFAAE0
+5,6,7 (each tick)	sub_5DCFE 0x5DD12	if state>=5: jsr loc_7815C (queue-engine pump) -> streams firmware bytes DSP<->USB	0x5DD06 cmp#5,bcs skip; 0x5DD12 jsr loc_7815C
+7	done	no further transition; queue keeps pumping while UI mode active	0x5DD1E cmp#7,beq ret
+progress	sub_5E9E2 0x5E9E2	reads 0xFFB0C4 -> (phase,progress): <5 =(0,0); >=5 =(1,3); if 0xFF813A set =(1,6); <7 =(2,0x0A); pushes via sub_8532 to SUB status block 0x8C4D+0x20/+0x21	0x5E9E6..0x5EA04
+queue-block	0xFF6288	control block; loc_78508 inits +0/+0x40/+0x44 (=0xFEE008 staging, req 0xE1), +0x50/+0x54 (=0x10); second block 0xFF62D8; DSP-RX enqueue buffer 0xFF62C8	0x78508-0x78532
+usb-endpoint	loc_7815C 0x78192	btst #4 @0xFFEE00 (USB Function Module status); if set mov 0xFF6360 byte -> 0xFFEE2C (USB EPDR); sub_768A8 0x768A8 moves 0xFF6354/0xFF62C8 <-> USB	0x78192 btst#4 0xFFEE00; 0x781A0 ->0xFFEE2C
+dsp-tx	0x7701E	polled: wait DSP SSR 0xFFFF8C bit7 (TDRE); mov byte -> DSP TDR 0xFFFF8B; bclr TDRE	0x7701E-0x77024
+dsp-rx	loc_7711E 0x7711E	from bridge branch of SCI-C RX ISR sub_5615C (0x561B0); reads DSP RDR 0xFFFF8D, enqueues to 0xFF62C8	xref 0x561B0 jsr loc_7711E
+shutdown	sub_56056 0x56056	bclr bits 0,1,2,3,4 @0xFFFF52 (all DSP lines); reset link state	0x56056-0x5606C

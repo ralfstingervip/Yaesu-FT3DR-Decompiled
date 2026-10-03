@@ -1,0 +1,131 @@
+group	doc	item	got	expected	verdict	note
+pattern	85,R	jsr @0x026F08 (5e 02 6f 08) in MAIN content	125	125	PASS	
+pattern	85	whole MAIN image same pattern	125	125	PASS	
+pattern	85	mov.w @0xFFBBC2,Rn load sites (6b 0X bb c2)	84	84	PASS	doc 85: "78 of the 84 0xFFBBC2 load sites"
+pattern	86	jsr sub_6D052 (5e 06 d0 52)	['062DB2', '062E2C', '062EC4', '062F6A', '062FD8', '06304C']	['062DB2', '062E2C', '062EC4', '062F6A', '062FD8', '06304C']	PASS	
+pattern	86	fc imm 6a 8c b0 b9 stores	19	19	PASS	
+pattern	86	each of the six calls has 6a 0c 8d de 4a xx within the 16 B before it	True	True	PASS	
+pattern	93	abs16 stores to FF956D (6a 8X 95 6d)	11	12	FAIL	doc 93 says "Twelve sites"; its own list and ff956d.tsv give 11: 02F622 03111E 0341E4 03421A 03429A 0342BE 0342D2 034316 03433A 034860 039436
+pattern	93	those stores each preceded by fc 02	True	True	PASS	
+pattern	93	abs16 reads of FF956D (6a 0X 95 6d)	['02FA7C', '03497C']	['02FA7C', '03497C']	PASS	
+pattern	93	abs32 00 ff 95 6d / 00 ff 95 6c, word 6b xx 95 6c|6d	0	0	PASS	
+pattern	93	B0CC abs16 stores (6a 8X b0 cc)	['002E18', '073B3A', '0743BC', '0743CC']	['002E18', '073B3A', '0743BC', '0743CC']	PASS	doc 93: "4 stores"
+pattern	93	B0CC references in the whole image (abs16 6a/6b any, abs32)	9	8	FAIL	doc 93: "8 references in the whole image"; image has 9: 002E18 0358CA 035A22 035EDC 035F86 073B3A 0743BC 0743C2 0743CC; 0x035F86 (btst after bra at 0x035F84) is not final4-proven
+pattern	93	B0CC references inside final4-proven code	8	8	PASS	
+pattern	94	bb c2 in MAIN content	88	88	PASS	
+pattern	94	bb c3 in MAIN content	0	0	PASS	
+pattern	94	6b 8X bb c2	3	3	PASS	
+pattern	94	6a 8c fe f0	['002484']	['002484']	PASS	
+pattern	94	79 04 4e 20	['0024A2']	['0024A2']	PASS	
+pattern	94	79 2X 89 80	9	9	PASS	
+pattern	94	79 2X 89 80 sites == guard-sites.tsv	['0565FA', '056650', '05A1CA', '05A25C', '05A296', '05A304', '05A352', '05B8AC', '05B8E4']	['0565FA', '056650', '05A1CA', '05A25C', '05A296', '05A304', '05A352', '05B8AC', '05B8E4']	PASS	
+pattern	94	ff a9 e0 in content	0	0	PASS	
+pattern	94	5e/5a/00 03 c6 68	0	0	PASS	
+pattern	94	5e 03 35 32	['077DB2', '077DF6']	['077DB2', '077DF6']	PASS	
+pattern	94	jsr @0x3BDAC	32	32	PASS	
+pattern	94	jsr @0x3BF4C	31	31	PASS	
+pattern	94	abs16 89 ca references (6a/6b xx 89 ca)	['00E678']	['00E678']	PASS	
+pattern	94	fc 14 6a 8c a9 ed injector	['00FDFE']	['00FDFE']	PASS	
+pattern	94	fc 4f 6a 8c aa e0	['05548E']	['05548E']	PASS	
+pattern	96	mov.b stores to FF800F/10/11 (6a 8X 80 0f|10|11)	['00DE0A', '00DE10', '00DE1A', '00DF46', '0236E2', '0236E6', '073B12', '073B16', '073BA0', '073BA4', '0740F6', '0740FA']	['00DE0A', '00DE10', '00DE1A', '00DF46', '0236E2', '0236E6', '073B12', '073B16', '073BA0', '073BA4', '0740F6', '0740FA']	PASS	doc 96 writers table (12 mov.b + 68 9c + mov.l = 13 hits + pointer)
+pattern	96	mov.b stores to FF800E (6a 8X 80 0e)	0	0	PASS	
+pattern	96	mov.l #0xFF800E,erN	['03955E']	['03955E']	PASS	
+pattern	96	jsr sub_39534	['00DC8C', '00DCD6', '073B6C']	['00DC8C', '00DCD6', '073B6C']	PASS	
+pattern	96	jsr sub_39544	['00DCE2', '0236EA', '0740FE']	['00DCE2', '0236EA', '0740FE']	PASS	
+pattern	96	jmp sub_39534/39544	0	0	PASS	
+pattern	96	jsr/jmp sub_DDFE	['00DF2C']	['00DF2C']	PASS	
+pattern	96	mov.l #0x20,er0 (7a 00 00 00 00 20)	['039558']	['039558']	PASS	
+pattern	96	mov.l #0x21/22/23,er0	0	0	PASS	
+table	96	writers.tsv hex == image	[]	[]	PASS	
+pattern	97	jsr sub_34DC2	13	13	PASS	
+pattern	97	jsr sub_34E82	['025B98', '025FD0']	['025B98', '025FD0']	PASS	
+pattern	97	jsr sub_34E42	['034E84']	['034E84']	PASS	
+pattern	97	bsr 55 7c targeting 0x034E42	['034DC4']	['034DC4']	PASS	
+pattern	97	mov.l #FF92CE/#FF92D6,er5 (stores)	['03F4BA', '03F4C2', '03F4D2', '03F4E0']	['03F4BA', '03F4C2', '03F4D2', '03F4E0']	PASS	
+pattern	97	other #FF92CE immediates (non-er5)	['03478E', '034E48', '035D9C']	['03478E', '034E48', '035D9C']	PASS	
+pattern	97	jsr sub_3F4A2	['002DC8']	['002DC8']	PASS	
+pattern	97	jsr sub_32650	['01E114', '01E30E', '01E5A8', '032ACC']	['01E114', '01E30E', '01E5A8', '032ACC']	PASS	
+pattern	97	btst #4 on 6e xx 00 86	['010674']	['010674']	PASS	
+pattern	97	FF8010 abs16 in the literal range 0x034E42-0x03F4EA	1	0	FAIL	doc 97: "FF8010 does not occur in 0x034E42-0x03F4EA"; hits: 03F38E (6a 04 80 10 = mov.b @FF8010,r4h; outside sub_34E42 and sub_3F4A2)
+pattern	97	FF8010 abs16 inside sub_34E42 (034E42-034E82) or sub_3F4A2 (03F4A2-03F4EA)	0	0	PASS	
+table	97	SUB file 0x349073 SIMPLEX/-RPT/+RPT/DUPLEX	b'SIMPLEX\x00-RPT\x00+RPT\x00DUPLEX\x00'	b'SIMPLEX\x00-RPT\x00+RPT\x00DUPLEX\x00'	PASS	
+table	83,84,85	zone tables listed	99	99	PASS	
+table	83,84,85	sum of image counts (zones incl. 3 phantoms)	511	511	PASS	
+table	83	union of table extents (overruns counted once)	5296	5296	PASS	sum of 2+10n is 5308; the 3 overruns add 4 B each into the next table
+table	83,85	span 0x02702A-0x02853E minus table bytes = 3 unreferenced blocks	100	100	PASS	
+table	83	tsv count == image count, all rows	True	True	PASS	
+table	83	first / last table	('02702A', '02853E')	('02702A', '02853E')	PASS	
+table	83,85	tables overrunning the next table	['027648', '0276D2', '027784']	['027648', '0276D2', '027784']	PASS	
+table	83,85	overrun amount (bytes) each	[4, 4, 4]	[4, 4, 4]	PASS	
+table	83	helper-tables.tsv sites (distinct site column; 80 rows incl. 12 L1 sub-table rows)	71	71	PASS	
+table	83	helper tables (distinct)	79	79	PASS	see next row
+table	83	distinct table addresses incl. two-level sub-tables	79	79	PASS	
+table	83	slot total over the 79 distinct tables (N-1 each; 0x02AFF2 used with N=9 and N=8)	642	642	PASS	sum over the 80 rows is 649
+table	83	11 helpers at 0x02853E + 0x24k: cmp.w #N (79 24 00 NN at +4)	[3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 23]	[3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 23]	PASS	
+table	83	helper jsr @er6 sites (I8 nine) = 5d 60	['5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60']	['5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60']	PASS	
+table	85	0x028452 5 full-width rows Y 31-59..151-179 -> 1..5	[(31, 59, 1), (61, 89, 2), (91, 119, 3), (121, 149, 4), (151, 179, 5)]	[(31, 59, 1), (61, 89, 2), (91, 119, 3), (121, 149, 4), (151, 179, 5)]	PASS	
+table	85	0x02839A	[(1, 185, 104, 238, 6), (108, 185, 211, 238, 7)]	[(1, 185, 104, 238, 6), (108, 185, 211, 238, 7)]	PASS	
+table	85	0x02843C	[(1, 185, 104, 238, 61444), (215, 185, 318, 238, 61441)]	[(1, 185, 104, 238, 61444), (215, 185, 318, 238, 61441)]	PASS	
+table	85	0x02704C values / Y	[(128, 180, 7), (128, 180, 8), (128, 180, 9)]	[(128, 180, 7), (128, 180, 8), (128, 180, 9)]	PASS	
+table	85	0x02706C values	[10, 11, 12, 13]	[10, 11, 12, 13]	PASS	
+table	85	0x027096 values	[14, 15, 16, 17, 18]	[14, 15, 16, 17, 18]	PASS	
+table	85	0x02702A / 0x027036 zone counts	(1, 2)	(1, 2)	PASS	
+table	85	0x0270CA count 12 (3x4 keypad)	12	12	PASS	
+table	85	0x0271E6 count 14	14	14	PASS	
+table	85	0x027274 count 19, values 30-45,3,4,5	[3, 4, 5, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]	[3, 4, 5, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]	PASS	
+table	85	keyboards 0x027334/0x0273F4/0x0274BE/0x02757E counts 19-20	[19, 20, 19, 20]	[19, 20, 19, 20]	PASS	
+table	85	DISPLAY row table 0x01515C: 9 rows then pad 00	(True, 0)	(True, 0)	PASS	
+table	84	event-ladder.tsv arms	94	94	PASS	
+pattern	84	00 ff bb c8 occurrences in MAIN content	['006620', '047866']	['006620', '047866']	PASS	doc 84: immediate at 0x047864 (mov.l #, imm at +2) and data at 0x6620
+pattern	84	readers of FFBBD4 (mov.l 01 00 6b 0X bb d4, instruction start; plus any 6a 0X bb d4)	['026358', '02639C']	['026358', '02639C']	PASS	
+pattern	84	readers of FFBBD3 (6a 0X bb d3)	['026342']	['026342']	PASS	
+pattern	88	LE32 FFED7EB0 anywhere in SUB	['0xfff32c78']	['0xfff32c78']	PASS	only inside fb 12 imm32 at FFF32C76
+pattern	88	imm24 form b0 7e ed after fb ?e	0	0	PASS	
+pattern	88	LE32 FFF36999 anywhere in SUB	0	0	PASS	
+pattern	88	MSTPCRD bit clears: only FFF36D36 7b 32	['0xfff36d34']	['0xfff36d34']	PASS	
+table	89	dead.tsv rows	125	125	PASS	
+table	89	dead.tsv bytes_total sum	10670	10670	PASS	
+table	89	dead.tsv chunks all 1	True	True	PASS	
+table	89	dead.tsv inbound_edges_now all 0	True	True	PASS	
+table	89	merges.tsv rows	31	31	PASS	
+table	89	merges bytes_j10 / all chunks	(2279, 2890)	(2279, 2890)	PASS	
+table	89	merges owners	15	15	PASS	
+table	89	125 dead 7,780 + 2,890 merged	10670	10670	PASS	
+table	89	usb-scan.tsv rows (all scope C)	(184, {'C-le32-aligned'})	(184, {'C-le32-aligned'})	PASS	
+table	89	scope C classes: code@ / data@+4 / data@+0 / unexplored	(11, 85, 15, 73)	(11, 85, 15, 73)	PASS	doc 89: 6 bsr.a + 5 straddle = 11 code@; 100 typed = 85+15; 73 unexplored
+table	89	bsr.a FFEE7F8C target	0xffeefeee	0xffeefeee	PASS	
+table	89	bsr.a FFF26C30 target	0xfff2ec2c	0xfff2ec2c	PASS	
+table	89	bra.b FFEF05E9 2e 53 target	0xffef063c	0xffef063c	PASS	
+table	89	bsr.w FFF2A6F7 39 14 00 target	0xfff2a70b	0xfff2a70b	PASS	
+arith	95	flash 07B680 -> RAM	FF640E	FF640E	PASS	
+arith	95	flash 07B711 -> RAM	FF649F	FF649F	PASS	
+arith	95	flash 07B698 -> RAM	FF6426	FF6426	PASS	
+arith	95	flash 07B4B4 -> RAM	FF6242	FF6242	PASS	
+arith	95	flash 07B4B8 -> RAM	FF6246	FF6246	PASS	
+arith	95	flash 07B54A -> RAM	FF62D8	FF62D8	PASS	
+arith	95	flash 07B53A -> RAM	FF62C8	FF62C8	PASS	
+arith	95	flash 07B5A2 -> RAM	FF6330	FF6330	PASS	
+arith	95	flash 07B56A -> RAM	FF62F8	FF62F8	PASS	
+arith	95	flash 07B61E -> RAM	FF63AC	FF63AC	PASS	
+arith	95	flash 07B5F0 -> RAM	FF637E	FF637E	PASS	
+arith	95	flash 07B4B2 -> RAM	FF6240	FF6240	PASS	
+arith	95	0x07B754 - 0x07B2A6 = 0x4AE = 1198	(1198, 1198)	(1198, 1198)	PASS	
+arith	95	config record lengths	67	67	PASS	
+arith	95	07B2A6-07B4B1 = 524 B = 262 words; 524/4 = 131	(524, 262, 131)	(524, 262, 131)	PASS	
+table	95	0x078600-0x07B25F words: count/min/max/distinct	(5680, '0x2121', '0xffff', 3201)	(5680, '0x2121', '0xffff', 3201)	PASS	
+table	95	records 07B4B4.. masks/+4/handler	['80 00 00 00 00 00 00 07 84 be', '05 00 00 00 01 00 00 07 69 aa', '08 00 00 00 00 00 00 07 68 c8', '02 00 00 00 01 00 00 07 69 aa', '40 00 00 00 05 00 00 07 67 be', '10 00 00 00 04 00 00 07 68 a8', '00 00 00 00 ff 00 00 00 00 00']	['80 00 00 00 00 00 00 07 84 be', '05 00 00 00 01 00 00 07 69 aa', '08 00 00 00 00 00 00 07 68 c8', '02 00 00 00 01 00 00 07 69 aa', '40 00 00 00 05 00 00 07 67 be', '10 00 00 00 04 00 00 07 68 a8', '00 00 00 00 ff 00 00 00 00 00']	PASS	
+table	95	string descriptors 07B272/76/86	('04 03 09 04', 'Renesas', '000000000000')	('04 03 09 04', 'Renesas', '000000000000')	PASS	
+table	95	pointer records 07B5FA/07B600/07B60C	('04 00 00 07 b2 72', '10 00 00 07 b2 76', '1a 00 00 07 b2 86')	('04 00 00 07 b2 72', '10 00 00 07 b2 76', '1a 00 00 07 b2 86')	PASS	
+table	95	07B5F0/07B5F4/07B5F6	('00 ff 64 0e', '00 43', '00 ff 64 9f')	('00 ff 64 0e', '00 43', '00 ff 64 9f')	PASS	
+table	95	07B54A ring image / 07B53A / 07B5A2 / 07B56A	('00 fe e0 10 00 fe e0 10 00 fe e0 10 00 fe e1 0f', '00 fe e1 10 00 fe e1 10 00 fe e1 10 00 fe e2 0f', '00 ff ee 24', 'ff ff ff ff')	('00 fe e0 10 00 fe e0 10 00 fe e0 10 00 fe e1 0f', '00 fe e1 10 00 fe e1 10 00 fe e1 10 00 fe e2 0f', '00 ff ee 24', 'ff ff ff ff')	PASS	
+table	95	07B61E 50-byte burst image	00 00 10 00 00 15 20 80 00 01 25 28 80 00 02 34 38 10 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00	00 00 10 00 00 15 20 80 00 01 25 28 80 00 02 34 38 10 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00	PASS	
+table	95	0x078222 and 0x07823C same 26 bytes	True	True	PASS	
+table	95	no BE32 pointer to 07B680 / 07B697 / 07B698 / FF6426 in MAIN	[]	[]	PASS	
+table	95	07B697..: 119 ASCII bytes 07B699-07B70F	True	True	PASS	
+lane-table	95	ida\out\service-window\citations.tsv rows	465	465	PASS	
+lane-table	95	ida\out\service-window\citations.tsv rows not matching the image	[]	[]	PASS	
+lane-table	96	ida\out\market-values\citations.tsv rows	94	94	PASS	
+lane-table	96	ida\out\market-values\citations.tsv rows not matching the image	[]	[]	PASS	
+lane-table	97	ida\out\tx-freq-range\citations.tsv rows	92	92	PASS	
+lane-table	97	ida\out\tx-freq-range\citations.tsv rows not matching the image	[]	[]	PASS	
+lane-table	97	rows that match SUB only (RESUME: one SUB row, file 0x349073)	['349073']	['349073']	PASS	

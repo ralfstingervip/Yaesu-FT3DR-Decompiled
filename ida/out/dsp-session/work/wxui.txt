@@ -1,0 +1,107 @@
+008180  7a 05 00 ff 89 56        mov.l   #0xFF8956, er5                       
+008186  7a 06 00 ff 3d 94        mov.l   #0xFF3D94, er6                       
+00818c  7b d4 59 8f              eepmov.w                                     <- 8192
+008190  0d 44                    mov.w   r4, r4                               
+008192  46 f8                    bne     loc_818C:8                           
+008194  7a 05 00 ff 8d 26        mov.l   #0xFF8D26, er5                       
+00819a  5c 00 00 98              bsr     sub_8236:16                          
+00819e  79 04 00 0a              mov.w   #0xA, r4                             
+0081a2  7a 05 00 ff b0 5a        mov.l   #0xFFB05A, er5                       
+0081a8  7a 06 00 ff 3d a6        mov.l   #0xFF3DA6, er6                       
+0081ae  7b d4 59 8f              eepmov.w                                     <- 81b4
+0081b2  0d 44                    mov.w   r4, r4                               
+0081b4  46 f8                    bne     loc_81AE:8                           
+0081b6  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  
+0081ba  47 1a                    beq     loc_81D6:8                           
+0081bc  79 04 00 0a              mov.w   #0xA, r4                             
+0081c0  7a 05 00 00 82 64        mov.l   #0x8264, er5                         
+0081c6  7a 06 00 ff b0 5a        mov.l   #0xFFB05A, er6                       
+0081cc  7b d4 59 8f              eepmov.w                                     <- 81d2
+0081d0  0d 44                    mov.w   r4, r4                               
+0081d2  46 f8                    bne     loc_81CC:8                           
+0081d4  40 0a                    bra     loc_81E0:8                           
+0081d6  7a 05 00 ff 8a a2        mov.l   #0xFF8AA2, er5                       <- 81ba
+0081dc  5e 00 5d 96              jsr     sub_5D96:24                          
+0081e0  79 04 00 0a              mov.w   #0xA, r4                             <- 81d4
+0081e4  7a 05 00 ff b0 5a        mov.l   #0xFFB05A, er5                       
+0081ea  7a 06 00 ff 3d b0        mov.l   #0xFF3DB0, er6                       
+0081f0  7b d4 59 8f              eepmov.w                                     <- 81f6
+0081f4  0d 44                    mov.w   r4, r4                               
+0081f6  46 f8                    bne     loc_81F0:8                           
+0081f8  6a 0b a9 c2              mov.b   @0xFFFFA9C2:16, r3l                  
+0081fc  7a 06 00 ff 3d ba        mov.l   #0xFF3DBA, er6                       
+008202  7a 05 00 00 89 e2        mov.l   #0x89E2, er5                         
+008208  5e 00 c6 74              jsr     sub_C674:24                          
+00820c  7a 06 00 ff 3d c0        mov.l   #0xFF3DC0, er6                       
+008212  5e 00 89 86              jsr     sub_8986:24                          
+008216  6a 0c 89 55              mov.b   @0xFFFF8955:16, r4l                  
+00821a  7a 64 00 00 00 ff        and.l   #0xFF, er4                           
+008220  78 40 6a 2b 00 00 82 32  mov.b   @(0x8232:32,er4), r3l                
+008228  7a 06 00 ff 3d ca        mov.l   #0xFF3DCA, er6                       
+00822e  68 eb                    mov.b   r3l, @er6                            
+008230  54 70                    rts                                          
+008232  00                       .byte    0                                   
+008233  02                       .byte    2                                   
+008234  01                       .byte    1                                   
+008235  02                       .byte    2                                   
+
+;---- func 0x8236..0x824e
+008236  7a 06 00 ff b0 5a        mov.l   #0xFFB05A, er6                       <- 819a
+00823c  f4 0a                    mov.b   #0xA, r4h                            
+00823e  6c 5c                    mov.b   @er5+, r4l                           <- 824a
+008240  4a 02                    bpl     loc_8244:8                           
+008242  fc 20                    mov.b   #0x20, r4l ; ' '                     
+008244  68 ec                    mov.b   r4l, @er6                            <- 8240
+008246  0b 06                    adds    #1, er6                              
+008248  1a 04                    dec.b   r4h                                  
+00824a  46 f2                    bne     loc_823E:8                           
+00824c  54 70                    rts                                          
+00824e  00 12                    .word 0x12                                   <- 8166
+008250  00                       .byte    0                                   
+008251  00                       .byte    0                                   
+008252  20                       .byte 0x20                                   
+008253  20                       .byte 0x20                                   
+008254  20                       .byte 0x20                                   
+008255  20                       .byte 0x20                                   
+008256  20                       .byte 0x20                                   
+008257  20                       .byte 0x20                                   
+008258  20                       .byte 0x20                                   
+008259  20                       .byte 0x20                                   
+00825a  20                       .byte 0x20                                   
+00825b  20                       .byte 0x20                                   
+00825c  20                       .byte 0x20                                   
+00825d  20                       .byte 0x20                                   
+00825e  20                       .byte 0x20                                   
+00825f  20                       .byte 0x20                                   
+008260  20                       .byte 0x20                                   
+008261  20                       .byte 0x20                                   
+008262  00                       .byte    0                                   
+008263  00                       .byte    0                                   
+008264  57                       .byte 0x57 ; W                               
+008265  49                       .byte 0x49 ; I                               
+008266  52                       .byte 0x52 ; R                               
+008267  45                       .byte 0x45 ; E                               
+008268  53                       .byte 0x53 ; S                               
+008269  2d                       .byte 0x2D ; -                               
+00826a  58                       .byte 0x58 ; X                               
+00826b  20                       .byte 0x20                                   
+00826c  20                       .byte 0x20                                   
+00826d  20                       .byte 0x20                                   
+00826e  20                       .byte 0x20                                   
+00826f  20                       .byte 0x20                                   
+008270  20                       .byte 0x20                                   
+008271  20                       .byte 0x20                                   
+008272  20                       .byte 0x20                                   
+008273  20                       .byte 0x20                                   
+008274  00                       .byte    0                                   
+008275  00                       .byte    0                                   
+008276  57                       .byte 0x57 ; W                               
+008277  49                       .byte 0x49 ; I                               
+008278  52                       .byte 0x52 ; R                               
+008279  45                       .byte 0x45 ; E                               
+00827a  53                       .byte 0x53 ; S                               
+00827b  2d                       .byte 0x2D ; -                               
+00827c  58                       .byte 0x58 ; X                               
+00827d  20                       .byte 0x20                                   
+00827e  4e                       .byte 0x4E ; N                               
+00827f  4f                       .byte 0x4F ; O                               

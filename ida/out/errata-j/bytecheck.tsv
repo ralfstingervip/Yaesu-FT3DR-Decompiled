@@ -1,0 +1,62 @@
+id	image	addr	file_off	expected	actual	result	meaning
+C01	M	04E312	0x04E312	7a 01 00 ff b0 67	7a 01 00 ff b0 67	PASS	mov.l #0xFFB067,er1
+C02	M	04E318	0x04E318	5e 05 27 80	5e 05 27 80	PASS	jsr @0x052780
+C03	M	04E31C	0x04E31C	54 70	54 70	PASS	rts (J2 extent end)
+C04	M	026F42	0x026F42	6f 53 00 08 4b 1e	6f 53 00 08 4b 1e	PASS	mov.w @(8,er5),r3 ; bmi
+C05	M	026F48	0x026F48	6b 83 bb c2	6b 83 bb c2	PASS	mov.w r3,@0xFFBBC2
+C06	M	026F3C	0x026F3C	6b 84 bb c2	6b 84 bb c2	PASS	mov.w r4,@0xFFBBC2 (no-zone, cited correctly)
+C07	M	026F6A	0x026F6A	6b 84 bb c2	6b 84 bb c2	PASS	mov.w r4,@0xFFBBC2 (negative idx, cited correctly)
+C08	M	02B3A8	0x02B3A8	7a 06 00 02 b3 c2 5a 02 86 16	7a 06 00 02 b3 c2 5a 02 86 16	PASS	mov.l #0x02B3C2,er6 ; jmp @0x028616
+C09	M	02B3C0	0x02B3C0	54 70	54 70	PASS	rts ending the code before the table
+C10	M	02B3C2	0x02B3C2	00 02 b3 b2 00 02 b3 b2 00 02 b3 b2 00 02 b3 b2 00 02 b3 b2	00 02 b3 b2 00 02 b3 b2 00 02 b3 b2 00 02 b3 b2 00 02 b3 b2	PASS	table slots 0-4 = 0x02B3B2
+C11	M	02B3D6	0x02B3D6	00 06 5e fa	00 06 5e fa	PASS	table slot 5 = 0x065EFA
+C12	M	02B3DA	0x02B3DA	00 06 5f 00	00 06 5f 00	PASS	table slot 6 = 0x065F00
+C13	M	02B3DE	0x02B3DE	00 06 5f 06	00 06 5f 06	PASS	table slot 7 = 0x065F06
+C14	M	02B3E2	0x02B3E2	7a 06 00 02 b4 1a	7a 06 00 02 b4 1a	PASS	code after the table (mov.l #0x02B41A,er6)
+C15	M	028616	0x028616	6b 04 bb c2 79 24 00 09	6b 04 bb c2 79 24 00 09	PASS	helper: mov.w @0xFFBBC2,r4 ; cmp.w #9,r4
+C16	M	028630	0x028630	5d 60	5d 60	PASS	helper: jsr @er6
+C17	M	07433E	0x07433E	79 04 5a 03 6b 84 96 f8	79 04 5a 03 6b 84 96 f8	PASS	mov.w #0x5A03,r4 ; mov.w r4,@0xFF96F8
+C18	M	074340	0x074340	5a 03 6b 84	5a 03 6b 84	PASS	false abs24 match = jmp @0x036B84 (5A = jmp)
+C19	M	036B84	0x036B84	1d 1d 1d 1d 1d 1d 1d 1d 1d 1d 1e 1e	1d 1d 1d 1d 1d 1d 1d 1d 1d 1d 1e 1e	PASS	false target is a byte ramp
+C20	M	054F12	0x054F12	f4 01 fc 00 0d 4c 79 04 ff ff 01 00 6b 84 81 84	f4 01 fc 00 0d 4c 79 04 ff ff 01 00 6b 84 81 84	PASS	mov.b #1,r4h; mov.b #0,r4l; mov.w r4,e4; mov.w #0xFFFF,r4; mov.l er4,@0xFF8184
+C21	M	056012	0x056012	f4 01 fc 00 0d 4c 79 04 ff ff 01 00 6b 84 81 84	f4 01 fc 00 0d 4c 79 04 ff ff 01 00 6b 84 81 84	PASS	same sequence, second writer
+C22	M	05548E	0x05548E	fc 4f 6a 8c aa e0 fc 01 6a 8c 81 84 fc 08 6a 8c 81 83	fc 4f 6a 8c aa e0 fc 01 6a 8c 81 84 fc 08 6a 8c 81 83	PASS	mov.b #0x4F; ->@FFAAE0 ; mov.b #1; ->@FF8184 ; mov.b #8,r4l (05549A); ->@FF8183 (05549C)
+C23	M	038672	0x038672	fc 00 6a 8c aa e8	fc 00 6a 8c aa e8	PASS	mov.b #0,r4l (038672) ; mov.b r4l,@0xFFAAE8 (038674)
+C24	M	0001B8	0x0001B8	00 00 2a 30	00 00 2a 30	PASS	vector 110 -> 0x002A30
+C25	M	002A30	0x002A30	6d f4 6a 18 fe f5 72 00	6d f4 6a 18 fe f5 72 00	PASS	push.w r4 ; bclr #0,@0xFFFEF5
+C26	M	002A50	0x002A50	6a 0c 94 ba 47 06 1a 0c 6a 8c 94 ba 6d 74 56 70	6a 0c 94 ba 47 06 1a 0c 6a 8c 94 ba 6d 74 56 70	PASS	FF94BA countdown ; pop.w r4 (002A5C) ; rte (002A5E)
+C27	M	056772	0x056772	79 04 00 00 3c f0 6b 84 ff f6	79 04 00 00 3c f0 6b 84 ff f6	PASS	restart 1: mov.w #0,r4 ; mov.b r4l,@0xF0:8 (056776) ; mov.w r4,@0xFFF6
+C28	M	056822	0x056822	79 04 00 00 3c f0 6b 84 ff f6	79 04 00 00 3c f0 6b 84 ff f6	PASS	restart 2 (3c f0 at 056826)
+C29	M	05694C	0x05694C	79 04 00 00 3c f0 6b 84 ff f6	79 04 00 00 3c f0 6b 84 ff f6	PASS	restart 3 (3c f0 at 056950)
+C30	M	05B8A8	0x05B8A8	6b 0c ff f6 79 2c 89 80	6b 0c ff f6 79 2c 89 80	PASS	mov.w @0xFFF6:16,e4 ; cmp.w #0x8980,e4
+C31	M	0563CE	0x0563CE	6a 0b b0 be 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 05 b3 10 5d 60	6a 0b b0 be 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 05 b3 10 5d 60	PASS	r3l = B0BE ; indexed load from 0x05B310 ; jsr @er6
+C32	M	05B364	0x05B364	00 05 c3 f4	00 05 c3 f4	PASS	0x05B310 + 0x15*4 -> 0x05C3F4
+C33	M	05C3F4	0x05C3F4	6a 0b b0 bf 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 05 c4 0a 59 60	6a 0b b0 bf 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 05 c4 0a 59 60	PASS	r3l = B0BF (step) ; indexed load from 0x05C40A ; jmp @er6
+C34	M	05C41A	0x05C41A	00 05 c4 36	00 05 c4 36	PASS	step table slot 4 -> 0x05C436
+C35	M	05C436	0x05C436	6a 0c b0 a4 4a 2a 73 3c 46 26 fc 03 6a 8c b0 b8 5e 05 a0 40	6a 0c b0 a4 4a 2a 73 3c 46 26 fc 03 6a 8c b0 b8 5e 05 a0 40	PASS	step 4: test B0A4 ; mov.b #3,r4l ; ->@FFB0B8 ; jsr @0x05A040
+C36	M	05A040	0x05A040	7a 04 00 00 00 00 7a 05 00 ff b1 3e 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 f3 1c 6a 0b b0 b8 6b 83 b1 3e	7a 04 00 00 00 00 7a 05 00 ff b1 3e 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 01 00 69 d4 0b 95 f3 1c 6a 0b b0 b8 6b 83 b1 3e	PASS	er4=0 ; er5=0xFFB13E ; 8x(mov.l er4,@er5; adds #4) = 32 B cleared ; r3h=0x1C ; r3l=[B0B8] ; mov.w r3,@0xFFB13E
+C37	M	05A32E	0x05A32E	fc 15 6a 8c b0 b7	fc 15 6a 8c b0 b7	PASS	sub_5A2F8: B0B7 = 0x15
+C38	M	05A3A0	0x05A3A0	6a 0c b0 b7 6a 8c b0 be	6a 0c b0 b7 6a 8c b0 be	PASS	B0BE := B0B7
+C39	M	019352	0x019352	79 01 00 a9 5a 03 cc bc 79 01 00 aa 5a 03 cc bc 79 01 00 ac	79 01 00 a9 5a 03 cc bc 79 01 00 aa 5a 03 cc bc 79 01 00 ac	PASS	stubs n=0xA9 (019352), n=0xAA (01935A: mov.w #0xAA,r1 ; jmp @0x03CCBC at 01935E), n=0xAC
+C40	M	00CE1E	0x00CE1E	6a 0b 89 cb 7a 63 00 00 00 ff 78 30 6a 2b 00 00 ce 40 01 00 6b 06 bc 2c 7a 16 00 00 00 3e 68 eb 54 70	6a 0b 89 cb 7a 63 00 00 00 ff 78 30 6a 2b 00 00 ce 40 01 00 6b 06 bc 2c 7a 16 00 00 00 3e 68 eb 54 70	PASS	r3l=[FF89CB] ; r3l=[0xCE40+er3] ; er6=[FFBC2C]+0x3E ; mov.b r3l,@er6 ; rts
+C41	M	00CE40	0x00CE40	02 03 04 05 06 07 08 09 0a 01 0f 00	02 03 04 05 06 07 08 09 0a 01 0f 00	PASS	dial table, 12 B
+C42	M	00CE4C	0x00CE4C	6a 0c 94 c1	6a 0c 94 c1	PASS	code resumes after the table
+K01	M	04ACF4	0x04ACF4	00 04 e2 d6	00 04 e2 d6	PASS	0x04ABE4 slot 68 -> 0x04E2D6
+K02	M	02639C	0x02639C	01 00 6b 02 bb d4 79 24 f0 03	01 00 6b 02 bb d4 79 24 f0 03	PASS	ladder: mov.l @0xFFBBD4:16,er2 (02639C) ; first compare cmp.w #0xF003,r4 (0263A2)
+K03	M	00FC66	0x00FC66	2a 4e ea 80	2a 4e ea 80	PASS	PTT: mov.b @0x4E:8,r2l ; and.b #0x80,r2l
+K04	M	03497C	0x03497C	6a 0c 95 6d	6a 0c 95 6d	PASS	mov.b @0xFF956D,r4l (settle, not TOT)
+K05	M	034984	0x034984	7e 4d 73 30	7e 4d 73 30	PASS	btst #3,@0x4D:8 (interlock, not PTT)
+K06	M	005AAE	0x005AAE	79 0b f3 a3 6a 0b 8a a0	79 0b f3 a3 6a 0b 8a a0	PASS	F3A3 notifier sends [FF8AA0] (APRS MODEM)
+K07	M	034A5A	0x034A5A	6a 18 a4 f0 70 60	6a 18 a4 f0 70 60	PASS	bset #6,@0xFFA4F0 (APRS TX)
+K08	M	034A62	0x034A62	6a 18 a4 f0 70 70	6a 18 a4 f0 70 70	PASS	bset #7,@0xFFA4F0 (APRS TX)
+K09	M	0743BA	0x0743BA	fc 01 6a 8c b0 cc	fc 01 6a 8c b0 cc	PASS	remote ']' arg 1: B0CC = 1
+K10	M	0743CA	0x0743CA	fc 00 6a 8c b0 cc	fc 00 6a 8c b0 cc	PASS	remote ']' arg 0: B0CC = 0
+K11	M	0744B2	0x0744B2	00 07 3e 58	00 07 3e 58	PASS	table 0x074472 slot 0x10 -> 0x073E58
+K12	M	06D08A	0x06D08A	fc 17 6a 8c b0 b7 6a 8c b0 be	fc 17 6a 8c b0 b7 6a 8c b0 be	PASS	sub_6D052: B0B7 = B0BE = 0x17
+K13	S	FFF2A6F7	0x32A6F7	39 14 00	39 14 00	PASS	bsr.w -> FFF2A70B (separate subroutine)
+K14	S	FFED7F50	0x2D7F50	ff f0 ff 00 ff f1 ff 00 ff f2 ff 00 ff f3 ff 00	ff f0 ff 00 ff f1 ff 00 ff f2 ff 00 ff f3 ff 00	PASS	mask table entries 14-17 = CMD6 args 0x00FFF0FF..0x00FFF3FF
+X01				M 0x0376C8+152: non-decreasing runs	0376C8-0376F9 50B 11..1a; 0376FA-03772B 50B 11..19; 03772C-03775F 52B 0f..5b	PASS	computed
+X02				S 0xFFED4644 26x12 font blocks {u8 w,u8 h,u16 base,u32 ord,u32 pix} LE	blk3=7x14 base 0020; blocks 9-25 with base!=0x0020: [11, 18]; blk8==blk2 (12 B): True; blk9 14x27, blk25 4x7	PASS	computed
+X03				M 0x05C40A step table extent	11 step pointers 0x05C40A-0x05C435: 05B4E4,05B522,05B54C,05B3E2,05C436,05B3E2,05B7E6,05C44C,05BC7C,05B83C,05B41C; 0x05C436 = 6A0CB0A4 (code)	PASS	computed
+X04				M whole content: stores to 0xFFBBC2	mov.w Rn,@0xFFBBC2 stores in 0x000000-0x07FFFF: 026F3C,026F48,026F6A	PASS	computed
+X05				M whole content: hit-test call sites	jsr @0x026F08 (5e 02 6f 08) count = 125	PASS	computed

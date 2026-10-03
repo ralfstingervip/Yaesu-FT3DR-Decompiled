@@ -1,0 +1,95 @@
+addr	hex	label	claim
+0x00de08	fc 02 6a 8c 80 0f	sub_DDFE	immediate 2 and store of FF800F
+0x00de0e	fc 01 6a 8c 80 10	sub_DDFE	immediate 1 and store of FF8010
+0x00de14	fb 0a 5e 00 dd e4 6a 8d 80 11	sub_DDFE	sample count 10, call sub_DDE4, store FF8011
+0x00dde4	fd 00 7e 4e 77 20 67 0d f5 00 7e 4e 77 20 67 05 1c d5 46 04 1a 0b 46 f2 54 70	sub_DDE4	sample bit 2 of port 0xFFFF4E until two reads agree
+0x00defa	a9 02 47 34 f9 80	sub_DEFA	r1l==2 skips the word check; otherwise the count is 0x80
+0x00df00	79 04 00 00 6b 84 80 94 79 04 00 00 6b 84 81 14 5e 03 95 66 6b 0b 80 94 6b 03 81 14 6b 2c 00 00 f0 10 0d c4 1f b4 47 0e 1a 09 46 d4 5e 00 dd fe 40 18	sub_DEFA	clear check words, load EEPROM 0x40, compare with ROM 0xF010
+0x00df2c	5e 00 dd fe 40 18 5e 03 95 66 fb c8 5e 00 dd e4 46 0c 6a 0c 80 11 1c dc 47 04 6a 8d 80 11	sub_DEFA	failed check calls sub_DDFE; stable changed strap stored at 0xDF46
+0x00dc84	6a 09 80 03 a9 02 47 4a 5e 03 95 34 6a 0c 80 04 ac 03 47 14 fb c8 5e 00 dd e4 46 0c 6a 0c 80 11 1c dc 47 04 5a 00 db d8	boot	TAIS path loads the block; strap mismatch jumps to 0xDBD8
+0x00dcd4	f9 01 5e 03 95 34 5e 00 de fa 5e 00 e8 ae 5e 03 95 44	boot	non-TAIS path loads the block, runs sub_DEFA, saves the block
+0x00dce6	5e 03 95 76	boot	jsr sub_39576 saves the 0x100-byte image at EEPROM 0x40
+0x039576	01 30 6d f0 55 0a 5e 03 ad 20 01 30 6d 73 54 70	sub_39576	sub_39586 then sub_3AD20
+0x00dd0e	54 41 49 53 45 53 54 55 4d 41 52 55 43 48 41 4e 30 30 30 30	boot markers	TAIS ESTU MARU CHAN and the 0000 seed dword
+0x00f010	96 69	ROM 0xF010	check word 0x9669
+0x00de20	6a 0b 81 13 fc 80 7a 05 00 00 ef 92 7a 06 00 ff 80 16 5e 03 f3 6e fc 80 7a 05 00 00 ef 92 7a 06 00 ff 80 96 5e 03 f3 6e fc 10 7a 05 00 00 f0 12 7a 06 00 ff 80 c6 5e 03 f3 6e 6a 8b 81 13	sub_DE20	copies ROM into FF8016/FF8096/FF80C6; does not touch FF800E-11
+0x039554	79 06 00 08 7a 00 00 00 00 20 7a 01 00 ff 80 0e 54 70	sub_39554	r6=8, EEPROM 0x20, RAM 0xFF800E
+0x039534	01 30 6d f0 55 1a 5e 03 ab 80 01 30 6d 73 54 70	sub_39534	load helper: sub_39554 then sub_3AB80
+0x039544	01 30 6d f0 55 0a 5e 03 ad 20 01 30 6d 73 54 70	sub_39544	save helper: sub_39554 then sub_3AD20
+0x039586	79 06 01 00 7a 00 00 00 00 40 7a 01 00 ff 80 16 54 70	sub_39586	r6=0x100, EEPROM 0x40, RAM 0xFF8016
+0x039522	79 06 00 04 7a 00 00 00 00 10 7a 01 00 ff 80 06	sub_39522	r6=4, EEPROM 0x10, RAM 0xFF8006 marker dword
+0x03ab80	6a 0a 81 6e 5e 03 b1 4c	sub_3AB80	EEPROM read entry calls the address sender
+0x03ac52	68 9c 0b 01 70 0a 6a 8a fb a8 1b 56	sub_3AB80	store byte at er1, add 1, count on r6
+0x03ad5c	6c 1d	sub_3AD20	write path reads @er1+
+0x03b180	fd a0 55 16 58 60 ff 5c 0c 0d 55 0e 58 60 ff 54 0c 8d 55 06	sub_3B14C	device 0xA0 then EEPROM address r0h, r0l
+0x03f36e	f4 00 7b d4 59 8f 0d 44 46 f8 54 70	sub_3F36E	counted copy used by sub_DE20
+0x0100e4	f1 ff 7a 02 00 0f ff ff 6a 18 aa 38 72 60 6a 18 bb f4 72 70 2c 4c ec 7f ac 7f 47 3a 7a 02 00 00 00 00 0c ca	sub_100E4	port 0xFFFF4C masked with 0x7F becomes er2 unless the mask is 0x7F
+0x01017c	7a 22 00 0f ff ff 47 68	sub_10168	er2 of 0x000FFFFF skips the table
+0x010186	7a 06 00 01 02 16 f3 0b	sub_10168	matcher base 0x10216 and count 11
+0x01018e	6a 10 89 c2 73 00 47 1c 01 00 6d 64 1f a4 47 30 01 00 6b 24 00 01 02 2e 1f a4 46 42 fc 06 6a 8c a9 ef 40 3a 6a 0c 81 3a 47 06 5e 01 03 c0 40 28	sub_10168	FF89C2.0 and FF813A gate the index-7 dispatch
+0x010216	00 00 00 0f 00 00 00 1f 00 00 00 5f 00 00 00 7b 00 00 00 77 00 00 00 6f 00 00 00 7e 00 00 00 73 00 00 00 7d 00 00 00 37 00 00 00 67	port table	eleven power-on port longs; index 7 is 0x73
+0x010242	00 01 03 d8 00 01 03 e6 00 01 05 06 00 01 02 a6 00 07 35 40 00 01 05 28 00 01 04 44 00 01 02 6e 00 01 03 c0 00 01 05 56 00 01 05 4a	handler table	eleven handlers; index 7 is sub_1026E
+0x01026e	55 06 40 02	sub_1026E	bsr sub_10276 and bra to the rts
+0x010276	5e 02 34 10 46 26 6a 10 8e a7 73 70 46 1e 5e 01 03 10 6a 0c 80 0f 6a 8c ad 95 6a 0c 80 10 6a 8c ad 96 fc e8 6e 8c 00 01 fc 00 40 02 fc 01 54 70	sub_10276	gate, copy FF800F/FF8010, screen byte 0xE8
+0x010232	00 00 00 73	port table index 7	port long 0x00000073
+0x01025e	00 01 02 6e	handler index 7	pointer to sub_1026E
+0x023410	6a 0c 89 55 ac 02 46 26 6a 0c 89 58 4b 20 01 00 6b 04 89 58 01 00 6b 25 00 02 34 42 1f c5 46 0e 6b 04 89 5c 6b 25 00 02 34 46 1d 45 47 02 fc 01 54 70	sub_23410	opening-message compare; reject returns 1
+0x023442	41 48 30 37 32 4d	ROM gate	bytes compared with FF8958/FF895C
+0x02365c	6a 0c 80 11 46 18 6a 0c ad 95 ac 02 47 04 ac 03 46 24 7a 06 00 02 36 8c 5e 03 f6 2e 40 0a 7a 06 00 02 36 86 5e 03 f6 2e 54 70	sub_2365C	FF8011 selects destination table 0..7 or 2..3
+0x023686	00 07 00 ff ad 95 02 03 00 ff ad 95	editor tables	min/max 0..7 and 2..3, pointer FFAD95
+0x023692	5e 03 ff a0 54 70	sub_23692	reject path
+0x023698	6a 0c 80 11 47 f4 6a 0c ad 95 ac 06 47 ec ac 07 47 e8 6a 0c ad 96 ec 01 71 0c 6a 8c ad 96 54 70	sub_23698	FF8011==0 rejects; otherwise toggles FFAD96 bit 0
+0x0236b8	6a 0c 80 11 46 12 6a 0b ad 96 6a 0c ad 95 ac 02 47 18 ac 03 47 14 40 c2 fb 00 6a 0c ad 95 ac 06 47 08 ac 07 47 04 6a 0b ad 96 6a 8c 80 0f 6a 8b 80 10 5e 03 95 44 5a 00 db d8	sub_236B8	commit FF800F/FF8010, save block, jump 0xDBD8
+0x00dbc4	7a 07 00 ff 7f 00 6a 18 aa 31 72 50 fc 03 6a 8c 80 04 40 3a	sub_DBC4	sets FF8004=3 and enters boot at 0xDC12
+0x00dbd8	7a 07 00 ff 7f 00 6a 18 aa 31 72 50 fc 00 6a 8c 80 04 01 00 6b 24 00 00 dd 16 01 00 6b 84 80 06 5e 03 95 12	sub_DBD8	clears FF8004, copies MARU from 0xDD16, jsr sub_39512
+0x00dc12	7a 04 00 00 04 aa 01 00 6b 84 81 1a 7a 04 00 00 0e 5e 01 00 6b 84 81 1e fc 02 6a 8c 80 03 40 34	boot	sets FF8003=2 before the marker checks
+0x00209e	fc 00 6a 8c 80 04	reset	cold entry clears FF8004
+0x002b36	5e 07 35 1e	boot tail	calls sub_7351E after the block load
+0x07351e	6a 0c 80 04 47 54 ac 03 46 18 55 16 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 5e 07 3a fe 40 38 55 b2	sub_7351E	FF8004==3 falls through to sub_73AFE
+0x0734be	fc 02 54 70	sub_734BE	returns constant 2
+0x07357a	6a 0c 80 0f f4 01 f4 00 0d 4c 6a 04 80 10 6a 0c 80 11 54 70	sub_7357A	returns 00:FF800F:FF8010:FF8011
+0x0737c8	fc 05 7a 05 00 07 38 a2 7a 06 00 ff 96 f8 6c 53 6c 6b 1c 3b 46 1c 1a 0c 46 f4 6a 04 96 fd 5e 07 34 be 1c 4c 46 0c 01 00 6b 03 96 fe 5e 07 35 7a 1f b4 54 70	sub_737C8	clone ID compare; mismatch returns without a market store
+0x0738a2	41 48 37 32 4d 00	AH72M	five compare bytes plus the following 00
+0x0735a6	5e 07 37 c8 58 60 00 ca	clone receive	ID check before the EEPROM stream
+0x0735d4	7a 00 00 00 01 40	clone receive	first EEPROM address 0x140
+0x073610	7a 00 00 01 01 00	clone receive	second EEPROM address 0x10100
+0x073a20	6b 01 96 fa 79 09 00 00 6a 0b 97 fc 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 07 44 72 5d 60	sub_739FA	argument word FF96FA; dispatch through table 0x74472
+0x073a54	a2 00 47 2c aa 30 45 28 47 0c aa 60 44 22 6a 0c 80 04 ac 02 45 1a 0c ac fd 30 18 dc 6a 8c 97 fc fc 00 6a 8c 97 fb 5e 07 39 c4 fc 01 6a 8c 97 fe	sub_73A54	index = byte minus 0x30; other than 0 requires FF8004>=2
+0x074472	00 07 3a fe	cmd slot 0	pointer to sub_73AFE
+0x07447a	00 07 3b 6c	cmd slot 2	pointer to sub_73B6C
+0x0744ea	00 07 40 d8	cmd slot 0x1E	pointer to sub_740D8
+0x0740d8	55 08 40 04	sub_740D8	bsr sub_740E2
+0x0740e2	a1 08 44 20 a9 02 44 1c fb 00 a1 06 47 06 a1 07 47 02 0c 9b 6a 81 80 0f 6a 8b 80 10 5e 03 95 44 5a 00 db c4 5e 07 3a c2 54 70	sub_740E2	stores FF800F/FF8010 and saves the block
+0x073afe	fc 02 6a 8c 80 04 6a 18 aa 35 70 10 6a 18 89 c0 72 70 fc 01 6a 8c 80 10 6a 8c 80 11	sub_73AFE	RAM stores FF8010=1 and FF8011=1; sets FF8004=2
+0x073b6c	5e 03 95 34 79 04 32 0a 6b 84 96 f8 f4 00 5e 07 34 be 6b 84 96 fa 01 00 6b 04 80 0e 01 00 6b 84 96 fc f4 01 fc 02 0d 4c f4 00 fc 00 01 00 6b 84 97 00 fc 01 6a 8c 80 10 6a 8c 80 11	sub_73B6C	reloads the block, copies it out, then RAM-forces 1,1
+0x074ad4	5e 07 50 c2 5e 07 51 60 5e 07 54 bc 5e 07 5e b4 5e 07 5e b6 5e 03 95 04 5a 00 dc 4e	BACKUP apply	converters then marker save and jump 0xDC4E
+0x0750ac	55 14 5e 07 51 60 5e 07 5e b4 5e 07 5e b6 5e 03 95 04 5a 00 dc 4e	BACKUP apply 2	second converter call then jump 0xDC4E
+0x07516a	6a 0c 80 0f f4 01 ac 01 58 70 02 a6 ac 02 58 70 01 fe ac 03 58 70 01 f8 ac 04 58 70 01 50 ac 05 58 70 00 a8 ac 07 58 60 03 26	sub_75160	reads FF800F and branches; no store to the three bytes
+0x075518	55 3a 7a 04	sub_754BC	bsr sub_75554
+0x075546	55 0c 6d 73	sub_754BC	bsr sub_75554
+0x075554	6a 0c 80 0f f4 01 ac 01 58 70 07 7e ac 02 58 70 05 a0 ac 03 58 70 05 9a ac 04 58 70 03 bc ac 05 58 70 01 de ac 07 58 60 09 34	sub_75554	reads FF800F and branches on 1, 2, 3, 4, 5, 7
+0x075592	fc 06 6e 8c 00 04	sub_75554	writes 6 to record field +4
+0x03f62e	6a 10 a9 ee 73 00 46 20 01 00 6f 65 00 02 68 5b 69 64 1c bc 47 02 44 0a 0c 4b 6a 18 aa e1 72 20 40 02 0a 0b 68 db 54 70	sub_3F62E	cycles the pointed byte inside the table min..max
+0x01462c	00 02 36 5c	screen table	pointer to sub_2365C
+0x02a692	00 02 36 b8	screen table	pointer to sub_236B8
+0x00de0a	6a 8c 80 0f	store FF800F	sub_DDFE mov.b r4l,@FF800F
+0x00de10	6a 8c 80 10	store FF8010	sub_DDFE mov.b r4l,@FF8010
+0x00de1a	6a 8d 80 11	store FF8011	sub_DDFE mov.b r5l,@FF8011
+0x00df46	6a 8d 80 11	store FF8011	sub_DEFA mov.b r5l,@FF8011
+0x0236e2	6a 8c 80 0f	store FF800F	commit mov.b r4l,@FF800F
+0x0236e6	6a 8b 80 10	store FF8010	commit mov.b r3l,@FF8010
+0x073b12	6a 8c 80 10	store FF8010	sub_73AFE mov.b r4l,@FF8010
+0x073b16	6a 8c 80 11	store FF8011	sub_73AFE mov.b r4l,@FF8011
+0x073b82	01 00 6b 04 80 0e	read FF800E	mov.l @FF800E,er4 copies the four bytes out
+0x073ba0	6a 8c 80 10	store FF8010	sub_73B6C mov.b r4l,@FF8010
+0x073ba4	6a 8c 80 11	store FF8011	sub_73B6C mov.b r4l,@FF8011
+0x0740f6	6a 81 80 0f	store FF800F	sub_740E2 mov.b r1h,@FF800F
+0x0740fa	6a 8b 80 10	store FF8010	sub_740E2 mov.b r3l,@FF8010
+0x00dde6	7e 4e 77 20	sub_DDE4	bld #2,@0x4E
+0x03955e	7a 01 00 ff 80 0e	sub_39554	mov.l #0xFF800E,er1
+0x039558	7a 00 00 00 00 20	sub_39554	mov.l #0x20,er0
+0x00dc8c	5e 03 95 34	boot	jsr sub_39534
+0x00dcd6	5e 03 95 34	boot	jsr sub_39534
+0x00dce2	5e 03 95 44	boot	jsr sub_39544
+0x0236ea	5e 03 95 44	commit	jsr sub_39544
+0x0740fe	5e 03 95 44	sub_740E2	jsr sub_39544

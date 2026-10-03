@@ -1,0 +1,183 @@
+== 077018  region=MODULE  func=076FC8-07711E
+   xrefs->addr: 077016:code21[MODULE], 07704A:jump[MODULE]
+   xrefs->funcstart 076FC8: 0781C0:call[WINDOW]
+     077018 01 01 69 31 mov.l   @(4,er3), er1
+     07701C 68 10      mov.b   @er1, r0h
+     07701E 29 8C      mov.b   @0x8C:8, r1l
+     077020 4A FC      bpl     loc_7701E:8
+     077022 30 8B      mov.b   r0h, @0x8B:8
+     077024 7F 8C 72 70 bclr    #7, @0x8C:8
+     077028 01 01 69 30 mov.l   @(4,er3), er0
+     07702C 01 03 69 31 mov.l   @(0xC,er3), er1
+
+== 07701E  region=MODULE  func=076FC8-07711E
+   xrefs->addr: 07701C:code21[MODULE], 077020:jump[MODULE]
+   xrefs->funcstart 076FC8: 0781C0:call[WINDOW]
+     07701E 29 8C      mov.b   @0x8C:8, r1l
+     077020 4A FC      bpl     loc_7701E:8
+     077022 30 8B      mov.b   r0h, @0x8B:8
+     077024 7F 8C 72 70 bclr    #7, @0x8C:8
+     077028 01 01 69 30 mov.l   @(4,er3), er0
+     07702C 01 03 69 31 mov.l   @(0xC,er3), er1
+     077030 1F 90      cmp.l   er1, er0
+     077032 45 06      bcs     loc_7703A:8
+
+== 077022  region=MODULE  func=076FC8-07711E
+   xrefs->addr: 077020:code21[MODULE]
+   xrefs->funcstart 076FC8: 0781C0:call[WINDOW]
+     077022 30 8B      mov.b   r0h, @0x8B:8
+     077024 7F 8C 72 70 bclr    #7, @0x8C:8
+     077028 01 01 69 30 mov.l   @(4,er3), er0
+     07702C 01 03 69 31 mov.l   @(0xC,er3), er1
+     077030 1F 90      cmp.l   er1, er0
+     077032 45 06      bcs     loc_7703A:8
+     077034 01 08 23 13 mov.l   @(8,er3), @(4,er3)
+     077038 40 08      bra     loc_77042:8
+
+== 07711E  region=MODULE  func=07711E-0771AE
+   xrefs->addr: 0561B0:call[outside]
+     07711E 01 00 6D F2 push.l  er2
+     077122 20 8C      mov.b   @0x8C:8, r0h
+     077124 72 70      bclr    #7, r0h
+     077126 0C 01      mov.b   r0h, r1h
+     077128 E1 20      and.b   #0x20, r1h
+     07712A 73 40      btst    #4, r0h
+     07712C 47 34      beq     loc_77162:8
+     07712E 0C 11      mov.b   r1h, r1h
+
+== 0771E2  region=MODULE  func=0771E2-07720E
+   xrefs->addr: 03327C:call[outside]
+     0771E2 1B 97      subs    #4, sp
+     0771E4 7A 00 00 FF 60 00 mov.l   #0xFF6000, er0
+     0771EA 79 74 01 01 00 00 mov.w   #0x101, @er0
+     0771F0 79 74 11 05 C0 00 00 01 mov.w   #0x1105, @(1:16,er0)
+     0771F8 0F 81      mov.l   er0, er1
+     0771FA 7A 74 00 FF 60 0C 07 00 mov.l   #0xFF600C, @sp
+     077202 79 00 08 03 mov.w   #0x803, r0
+     077206 5E 07 7F 26 jsr     sub_77F26:24
+
+== 07720E  region=MODULE  func=07720E-077320
+   xrefs->addr: 0332EA:call[outside]
+     07720E 01 30 6D F2 stm.l   er2-er5, @-sp
+     077212 01 00 6D F6 push.l  er6
+     077216 7A 00 00 02 31 02 mov.l   #(loc_23100+2), er0
+     07721C 7A 05 00 07 7F C6 mov.l   #sub_77FC6, er5
+     077222 5D 50      jsr     @er5
+     077224 79 00 34 03 mov.w   #0x3403, r0
+     077228 7A 04 00 07 80 86 mov.l   #sub_78086, er4
+     07722E 5D 40      jsr     @er4
+
+== 07801C  region=MODULE  func=NONE
+   xrefs->addr: none
+     07801C 01 10 6D F2 stm.l   er2-er3, @-sp
+     078020 01 7D 48 10 00 FF 60 00 mov.b   #0x10, @0xFF6000:32
+     078028 7A 02 00 FF 60 00 mov.l   #0xFF6000, er2
+     07802E 7A 03 00 FF 60 0C mov.l   #0xFF600C, er3
+     078034 5E 07 7F 00 jsr     sub_77F00:24
+     078038 F8 01      mov.b   #1, r0l
+     07803A 0F A1      mov.l   er2, er1
+     07803C 5E 07 7E 28 jsr     sub_77E28:24
+
+== 0773E8  region=MODULE  func=NONE
+   xrefs->addr: none
+     0773E8 0C 89      mov.b   r0l, r1l
+     0773EA E9 3F      and.b   #0x3F, r1l
+     0773EC 17 51      extu.w  r1
+     0773EE 79 00 40 00 mov.w   #0x4000, r0
+     0773F2 0D 18      mov.w   r1, e0
+     0773F4 5E 07 7F C6 jsr     sub_77FC6:24
+     0773F8 79 00 40 01 mov.w   #0x4001, r0
+     0773FC 5E 07 80 86 jsr     sub_78086:24
+
+== 0779C4  region=MODULE  func=NONE
+   xrefs->addr: none
+     0779C4 0C 89      mov.b   r0l, r1l
+     0779C6 E9 3F      and.b   #0x3F, r1l
+     0779C8 17 51      extu.w  r1
+     0779CA 79 00 40 00 mov.w   #0x4000, r0
+     0779CE 0D 18      mov.w   r1, e0
+     0779D0 5E 07 7F C6 jsr     sub_77FC6:24
+     0779D4 79 00 40 01 mov.w   #0x4001, r0
+     0779D8 5E 07 80 86 jsr     sub_78086:24
+
+== 076B4E  region=MODULE  func=NONE
+   xrefs->addr: 076B2A:jump[MODULE]
+     076B4E 7A 00 01 00 00 00 mov.l   #0x1000000, er0
+     076B54 01 F0 66 01 and.l   er0, er1
+     076B58 1F 81      cmp.l   er0, er1
+     076B5A 58 70 00 9C beq     loc_76BFA:16
+     076B5E 7A 00 00 FF 62 FC mov.l   #0xFF62FC, er0
+     076B64 7A 01 00 FF 62 88 mov.l   #0xFF6288, er1
+     076B6A 5E 07 83 DA jsr     loc_783DA:24
+     076B6E 1F 10      cmp.w   #1, r0
+
+== 056450  region=outside  func=056272-05645C
+   xrefs->addr: 0562F8:jump[outside]
+   xrefs->funcstart 056272: 0030B8:call[outside]
+     056450 7E 52 73 00 btst    #0, @0x52:8
+     056454 47 04      beq     locret_5645A:8
+     056456 5E 05 60 46 jsr     sub_56046:24
+     05645A 54 70      rts
+     05645C 00 05 64 90 .long sub_56490
+     056470 00 05 65 C0 .long sub_565C0
+     056490 FC 00      mov.b   #0, r4l
+     056492 6A 8C B0 B2 mov.b   r4l, @0xFFFFB0B2:16
+
+== 05615C  region=outside  func=05615C-0561C2
+   xrefs->addr: 000250:data[outside], 000254:data[outside]
+     05615C 01 10 6D F4 stm.l   er4-er5, @-sp
+     056160 6A 0C 81 3A mov.b   @0xFFFF813A:16, r4l
+     056164 46 42      bne     loc_561A8:8
+     056166 2D 8C      mov.b   @0x8C:8, r5l
+     056168 0C D5      mov.b   r5l, r5h
+     05616A ED 20      and.b   #0x20, r5l
+     05616C 46 28      bne     loc_56196:8
+     05616E E5 87      and.b   #0x87, r5h
+
+== 0561A8  region=outside  func=05615C-0561C2
+   xrefs->addr: 056164:jump[outside]
+   xrefs->funcstart 05615C: 000250:data[outside], 000254:data[outside]
+     0561A8 01 30 6D F0 stm.l   er0-er3, @-sp
+     0561AC 01 20 6D F4 stm.l   er4-er6, @-sp
+     0561B0 5E 07 71 1E jsr     sub_7711E:24
+     0561B4 01 20 6D 76 ldm.l   @sp+, er4-er6
+     0561B8 01 30 6D 73 ldm.l   @sp+, er0-er3
+     0561BC 01 10 6D 75 ldm.l   @sp+, er4-er5
+     0561C0 56 70      rte
+     0561C2 6D F4      push.w  r4
+
+== 055FFE  region=outside  func=055FFE-056036
+   xrefs->addr: 002228:call[outside]
+     055FFE FC 00      mov.b   #0, r4l
+     056000 6A 8C 81 80 mov.b   r4l, @0xFFFF8180:16
+     056004 6A 8C 81 81 mov.b   r4l, @0xFFFF8181:16
+     056008 FC 00      mov.b   #0, r4l
+     05600A 6A 8C 81 83 mov.b   r4l, @0xFFFF8183:16
+     05600E 6A 8C 81 82 mov.b   r4l, @0xFFFF8182:16
+     056012 F4 01      mov.b   #1, r4h
+     056014 FC 00      mov.b   #0, r4l
+
+== 077008  region=MODULE  func=076FC8-07711E
+   xrefs->addr: 077006:code21[MODULE], 076FEC:jump[MODULE]
+   xrefs->funcstart 076FC8: 0781C0:call[WINDOW]
+     077008 79 2A 00 40 cmp.w   #0x40, e2 ; '@'
+     07700C 43 04      bls     loc_77012:8
+     07700E 79 0A 00 40 mov.w   #0x40, e2 ; '@'
+     077012 18 AA      sub.b   r2l, r2l
+     077014 0D AA      mov.w   e2, e2
+     077016 47 34      beq     loc_7704C:8
+     077018 01 01 69 31 mov.l   @(4,er3), er1
+     07701C 68 10      mov.b   @er1, r0h
+
+== 077000  region=MODULE  func=076FC8-07711E
+   xrefs->addr: 076FFE:code21[MODULE]
+   xrefs->funcstart 076FC8: 0781C0:call[WINDOW]
+     077000 0D 21      mov.w   r2, r1
+     077002 19 01      sub.w   r0, r1
+     077004 19 14      sub.w   r1, r4
+     077006 0D 4A      mov.w   r4, e2
+     077008 79 2A 00 40 cmp.w   #0x40, e2 ; '@'
+     07700C 43 04      bls     loc_77012:8
+     07700E 79 0A 00 40 mov.w   #0x40, e2 ; '@'
+     077012 18 AA      sub.b   r2l, r2l
+

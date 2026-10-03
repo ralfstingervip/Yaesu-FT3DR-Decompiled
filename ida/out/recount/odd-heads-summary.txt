@@ -1,0 +1,22 @@
+MAIN_FULL (before): is_code 380738; odd-head bytes 3102 (1501 heads); real even-code bytes hidden under odd heads 582; corrected is_code 378218
+G1_H8S (after): is_code 391452; odd-head bytes 3032 (1466 heads); real even-code bytes hidden under odd heads 530; corrected is_code 388950
+
+classes over the 1,501 MAIN_FULL odd heads:
+  bogus: overlaps proven even code (mis-decode across a real instruction)                         heads   223 bytes   452
+  bogus: overlaps structural even code (decodes cleanly, not reached from a proven entry)         heads    58 bytes   118
+  bogus: partly over proven even code, rest data                                                  heads    11 bytes    22
+  data: 0xFF fill                                                                                 heads     4 bytes     8
+  data: ASCII text                                                                                heads  1088 bytes  2256
+  data: typed table (pointer table)                                                               heads    63 bytes   138
+  data: untyped binary                                                                            heads    54 bytes   108
+
+bytes by region (MAIN_FULL odd heads), split by whether G1 removed the head:
+  MAIN_FULL-fn-not-validated                    still       14
+  run:fill                                      still        8
+  run:pointer table                             still      148
+  run:recovered code                            removed     70
+  run:recovered code                            still      730
+  run:string                                    still     2132
+
+odd heads present only after G1: 0 (0 B): 
+odd addresses hit as branch/flow targets by the corrected proven descent: 1

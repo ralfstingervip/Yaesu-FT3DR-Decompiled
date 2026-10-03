@@ -1,0 +1,53 @@
+L1 path references left unrewritten: ['l1_build_masks.py:ida\\out\\main-final5']
+L1 l1_build_masks.py rc=0 0.4s | named  delta: +868 window ; net +868 / proven removed runs: 1 ; proven added runs: 13 ; named added runs: 13 / OK
+L1 final4-to-final5-diff.tsv IDENTICAL 
+L1 final5_named_mask.bin IDENTICAL 
+L1 final5_proven_mask.bin IDENTICAL 
+L1 ledger.tsv DIFFERS-AS-EXPLAINED sizes 1301 vs 765; script writes '72.97%%' (bad literal, wrong value) in rows 5/9 and no percentage block; published rows 5/9 say 73.01%/98.54% and add 6 percentage rows - the published file was extended after the script ran
+L2 l2_reach.py rc=0 3.1s | reachedK bytes 366932 reachedN bytes 362082 fnonly runs 94 bytes 4850 / match published list: True
+L2 l2_back.py rc=0 4.5s | ok
+L2 l2_refs.py rc=0 6.1s | done 36 938
+L2 l2_emit.py rc=0 6.2s | {'DATA-MISTYPED': [12, 80], 'DEAD': [18, 760], 'REACHED': [4, 54], 'SPLIT-TAIL': [2, 44]} demote 32 884 cites 106
+L2 verify.py rc=0 8.3s | fnonly bytes reached with RN+3 callbacks: lo 54 hi 0 / ['018250-018262', '018ABE-018AD2', '01A094-01A09C', '01A0A4-01A0AC'] / newly reached bytes outside fnonly set: 0 of which unproven: 0
+L2 proposed-demotions.tsv IDENTICAL 
+L2 proposed-seeds.tsv IDENTICAL 
+L2 runs.tsv IDENTICAL 
+L2 backward-closure.txt vs _scr/back_lo.txt IDENTICAL
+L2 inbound-scan.txt vs _scr/refs_lo.txt IDENTICAL
+L3 path references left unrewritten: ['l3_classify.py:ida\\out\\fnindex-mid', 'l3_edges.py:ida\\out\\fnindex-mid']
+L3 l3_edges.py rc=0 38.1s |    pre  04A392 cmp.b #0x58,r5h                          normal unproven / == 04C3C8-04C3D2 10  seeds_in=04C3C8 root=04C3C8 <- fnindex 04C3C8 / done 35s
+L3 l3_classify.py rc=0 47.7s | B: also drop cross-lane seed(s) 022DF0 022E3A (run 022DF0) -> lost 2898 B; in my runs 2532 / 2532; by run {'022DF0': 114, '033790': 20, '0337AC': 20, '0337C8': 20, '033B70': 6, '03400E': 4, '03531E': 16, '035422': 16, '03799E': 74, '037A02': 18, '03A9A2': 84, '03C668': 820, '03CDBE': 44, '03CDFC': 38, '03D36E': 16, '03D3A6': 104, '03D436': 60, '03D61C': 50, '03D68A': 38, '03D70E': 60, '03DC48': 50
+L3 measure.txt IDENTICAL 
+L3 proposed-demotions.tsv IDENTICAL 
+L3 refs-detail.tsv IDENTICAL 
+L3 runs.tsv IDENTICAL-MOD-CRLF identical after CRLF->LF (the re-run writes CRLF; the published file has LF)
+L3 work\descents.pkl IDENTICAL 
+L3 work\edges.pkl IDENTICAL 
+L3 work\l3_edges_log.txt IDENTICAL 
+L5 l5_features.py rc=0 0.7s | 730
+L5 l5_evidence.py rc=0 1.4s | 1159
+L5 l5_classify.py rc=0 2.1s | string/label                128 runs  1073 B / value table                 215 runs  1860 B / left 0 0
+L5 l5_emit.py rc=0 2.7s | reached-code gap              3    58  T1     4 T2    54 T3    0 T4    0 / Unknown                       0     0  T1     0 T2     0 T3    0 T4    0 / residue mask sha256 0d453850c6a36595
+L5 l5_review.py rc=0 3.3s | 
+L5 class-summary.tsv IDENTICAL 
+L5 proposed-typing.tsv IDENTICAL 
+L5 runs.tsv IDENTICAL 
+L5 work\auto_listing.txt IDENTICAL 
+L5 work\auto_rows.json IDENTICAL 
+L5 work\evidence.json IDENTICAL 
+L5 work\features.tsv IDENTICAL 
+L5 work\left.json IDENTICAL 
+L5 work\review.txt IDENTICAL 
+L6 path references left unrewritten: ['zones.py:ida\\out\\home-keytable']
+L6 keytable.py rc=0 0.4s | 71
+L6 pages.py rc=0 0.9s | 256
+L6 zones.py rc=0 2.3s | (False, 'not-modelled') 4 / (False, 'resolved:single-handler') 17 / (False, 'resolved:state-dependent') 131
+L6 check_open.py rc=0 3.2s | # set P: roots=237 instructions=20493 ; window targets=0 ; USB/SCI-C operands=0 ; reset-entry jumps=0 ; screen-write sites=44 ; constant ids: 00 09 0A 0B 26 2B 52 6C 72 7F 8C ; in K3's 69 unopened: 0 ; indirect @erN sites=37 / # set J: roots=224 instructions=79881 ; window targets=3 ; USB/SCI-C operands=64 ; reset-entry jumps=2 ; screen-write sites=105 ; constant ids: 00 01 02 0A 0B 0D 20 26 2A 39
+L6 keytable.tsv IDENTICAL 
+L6 pages.tsv IDENTICAL 
+L6 work\open-check.tsv IDENTICAL 
+L6 zones-resolved.tsv IDENTICAL 
+orch recon_descent.py rc=0 4.5s | M6 new beyond MN not in P4: 0 / gap bytes in MK? [('0x6a0c', 0, 0), ('0x6a0d', 0, 0), ('0x77f8', 0, 0), ('0x77f9', 0, 0)] / P6 popcount 364750 removed from P5 4464
+orch drop_runs.tsv IDENTICAL 
+orch final6_proven_mask.bin DIFFERS-AS-DOCUMENTED 36 bytes differ; exactly the 36 hand-restored bytes 0x066FBE-0x066FC7 + 0x06726A-0x067283 (published 1, script 0): True
+orch rec_runs.tsv IDENTICAL 

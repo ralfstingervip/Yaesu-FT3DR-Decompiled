@@ -1,0 +1,37 @@
+
+;---- func 0x6a802..0x6a8aa  sub_6A802
+06a802 C 6a 18 ba 81 70 00              bset    #0, @0xFFFFBA81:16                         <- 55ab6,55f50
+06a808 C fc 0c                          mov.b   #0xC, r4l                                  
+06a80a C f4 00                          mov.b   #0, r4h                                    
+06a80c C 7a 05 00 ff ba 4a              mov.l   #0xFFBA4A, er5                             
+06a812 C 7a 06 00 ff 2f 9e              mov.l   #0xFF2F9E, er6                             
+06a818 C 7b d4 59 8f                    eepmov.w                                           <- 6a81e
+06a81c C 0d 44                          mov.w   r4, r4                                     
+06a81e C 46 f8                          bne     loc_6A818:8                                
+06a820 C fc 04                          mov.b   #4, r4l                                    
+06a822 C f4 00                          mov.b   #0, r4h                                    
+06a824 C 7a 05 00 06 a9 76              mov.l   #aJpg, er5; ".jpg"                         
+06a82a C 7a 06 00 ff 2f aa              mov.l   #0xFF2FAA, er6                             
+06a830 C 7b d4 59 8f                    eepmov.w                                           <- 6a836
+06a834 C 0d 44                          mov.w   r4, r4                                     
+06a836 C 46 f8                          bne     loc_6A830:8                                
+06a838 C 01 00 6b 04 ba 46              mov.l   @0xFFFFBA46:16, er4                        
+06a83e C 01 00 6b a4 00 ff 2f 9a        mov.l   er4, @0xFF2F9A:32                          
+06a846 C fb 00                          mov.b   #0, r3l                                    
+06a848 C 5e 03 dd a8                    jsr     sub_3DDA8:24                               
+06a84c C 6b 21 00 fe ef 10              mov.w   @0xFEEF10:32, r1                           <- 6a60c,6a6fa
+06a852 C 79 21 ff ff                    cmp.w   #0xFFFF, r1                                
+06a856 C 46 08                          bne     loc_6A860:8                                
+06a858 C 7a 01 00 00 00 01              mov.l   #1, er1                                    
+06a85e C 40 06                          bra     loc_6A866:8                                
+06a860 C 0b 51                          inc.w   #1, r1                                     <- 6a856
+06a862 C 79 09 00 00                    mov.w   #0, e1                                     
+06a866 C 5e 06 f2 ac                    jsr     sub_6F2AC:24                               <- 6a85e
+06a86a C 40 3c                          bra     locret_6A8A8:8                             
+06a86c C fc 00                          mov.b   #0, r4l                                    <- 6f28c,6f33e
+06a86e C 6a ac 00 ff 2e c9              mov.b   r4l, @0xFF2EC9:32                          
+06a874 C 6a 0c b3 ea                    mov.b   @0xFFFFB3EA:16, r4l                        
+06a878 C ac 32                          cmp.b   #0x32, r4l ; '2'                           
+06a87a C 47 2c                          beq     locret_6A8A8:8                             
+06a87c C ac 37                          cmp.b   #0x37, r4l ; '7'                           
+06a87e C 47 28                          beq     locret_6A8A8:8                             

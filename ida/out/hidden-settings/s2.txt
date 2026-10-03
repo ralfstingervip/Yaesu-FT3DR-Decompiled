@@ -1,0 +1,51 @@
+###### range FFF0C2A1-FFF0C330
+FFF0C2A1  60 c0                  sub     #0Ch, sp                             ; #0xC R0
+FFF0C2A3  fb 22 5e ab f4 ff      mov.l   #aUpload, r2                         ; #0xFFF4AB5E R2
+FFF0C2A9  a0 0a                  mov.l   r2, 0Ch+var_8[sp]                    ; R2 d(R0,+0x4)
+FFF0C2AB  3c 08 01               mov.b   #1, 0Ch+var_4[sp]                    ; #0x1 d(R0,+0x8)
+FFF0C2AE  f8 04 06               mov.b   #6, 0Ch+var_C[sp]                    ; #0x6 t3
+FFF0C2B1  5f 12                  movu.w  r1, r2                               ; R1 R2
+FFF0C2B3  5f 31                  movu.w  r3, r1                               ; R3 R1
+FFF0C2B5  66 04                  mov.l   #0, r4                               ; #0x0 R4
+FFF0C2B7  66 d3                  mov.l   #0Dh, r3                             ; #0xD R3
+FFF0C2B9  05 6a 58 fe            bsr.a   sub_FFEF1B23                         ; a=0xFFEF1B23
+FFF0C2BD  62 c0                  add     #0Ch, sp                             ; #0xC R0
+FFF0C2BF  b9 89                  movu.w  arg_A[sp], r1                        ; d(R0,+0xE) R1
+FFF0C2C1  71 11 62               add     #62h, r1, r1                         ; #0x62 R1 R1
+FFF0C2C4  91 89                  mov.w   r1, arg_A[sp]                        ; R1 d(R0,+0xE)
+FFF0C2C6  fb e2 46 8e 00 00      mov.l   #8E46h, r14                          ; #0x8E46 R14
+FFF0C2CC  58 ee                  movu.b  [r14], r14                           ; t3 R14
+FFF0C2CE  75 5e f8               cmp     #-8, r14                             ; #0xF8 R14
+FFF0C2D1  21 3b                  bne.b   loc_FFF0C30C                         ; a=0xFFF0C30C
+FFF0C2D3  fb 12 46 8e 00 00      mov.l   #8E46h, r1                           ; #0x8E46 R1
+FFF0C2D9  b0 19                  movu.b  1[r1], r1                            ; d(R1,+0x1) R1
+FFF0C2DB  75 51 16               cmp     #16h, r1                             ; #0x16 R1
+FFF0C2DE  20 24                  beq.b   loc_FFF0C302                         ; a=0xFFF0C302
+FFF0C2E0  75 51 12               cmp     #12h, r1                             ; #0x12 R1
+FFF0C2E3  20 13                  beq.b   loc_FFF0C2F6                         ; a=0xFFF0C2F6
+FFF0C2E5  75 51 11               cmp     #11h, r1                             ; #0x11 R1
+FFF0C2E8  21 24                  bne.b   loc_FFF0C30C                         ; a=0xFFF0C30C
+FFF0C2EA  fb e2 4d 8c 00 00      mov.l   #8C4Dh, r14                          ; #0x8C4D R14
+FFF0C2F0  c5 e0 38 11            mov.b   38h[r14], arg_D[sp]                  ; d(R14,+0x38) d(R0,+0x11)
+FFF0C2F4  2e 18                  bra.b   loc_FFF0C30C                         ; a=0xFFF0C30C
+FFF0C2F6  fb e2 4d 8c 00 00      mov.l   #8C4Dh, r14                          ; #0x8C4D R14
+FFF0C2FC  c5 e0 38 11            mov.b   38h[r14], arg_D[sp]                  ; d(R14,+0x38) d(R0,+0x11)
+FFF0C300  2e 0c                  bra.b   loc_FFF0C30C                         ; a=0xFFF0C30C
+FFF0C302  fb e2 4d 8c 00 00      mov.l   #8C4Dh, r14                          ; #0x8C4D R14
+FFF0C308  c5 e0 39 11            mov.b   39h[r14], arg_D[sp]                  ; d(R14,+0x39) d(R0,+0x11)
+FFF0C30C  75 43 10               mov.l   #10h, r3                             ; #0x10 R3
+FFF0C30F  66 02                  mov.l   #0, r2                               ; #0x0 R2
+FFF0C311  71 01 13               add     #arg_F, sp, r1                       ; #0x13 R0 R1
+FFF0C314  05 86 ef fe            bsr.a   sub_FFEFB29A                         ; a=0xFFEFB29A
+FFF0C318  b4 0b                  movu.b  arg_D[sp], r3                        ; d(R0,+0x11) R3
+FFF0C31A  71 02 12               add     #arg_E, sp, r2                       ; #0x12 R0 R2
+FFF0C31D  71 01 13               add     #arg_F, sp, r1                       ; #0x13 R0 R1
+FFF0C320  05 ab 5c fd            bsr.a   sub_FFEE1FCB                         ; a=0xFFEE1FCB
+FFF0C324  b4 81                  movu.b  arg_E[sp], r1                        ; d(R0,+0x12) R1
+FFF0C326  61 01                  cmp     #0, r1                               ; #0x0 R1
+FFF0C328  1c                     bne.s   loc_FFF0C32C                         ; a=0xFFF0C32C
+FFF0C329  3c 82 01               mov.b   #1, arg_E[sp]                        ; #0x1 d(R0,+0x12)
+FFF0C32C  b4 81                  movu.b  arg_E[sp], r1                        ; d(R0,+0x12) R1
+FFF0C32E  71 0e 13               add     #arg_F, sp, r14                      ; #0x13 R0 R14
+###### xref FFF0C2A1
+  from FFF0C29D type 21 fn FFF0C1F0

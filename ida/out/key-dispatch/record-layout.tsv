@@ -1,0 +1,24 @@
+# 0x028CBC key-dispatch record = per-screen touch-button action table. 32 bytes / 8 dwords.
+# A record is passed in er1 (mov.l #rec,er1 ; bra 0x028CBC). 0xFFBBC2 (the hit-tested button index) selects the field.
+field_off	dispatcher_site	selected_when_0xFFBBC2	role
++0x00	028D0C mov.l @(0,er1),er6; jsr @er6	10..19 (and >=20: sub-index = idx-10 -> 0xFFA9F0)	on-screen character/soft-key array handler (A9ED:=0)
++0x04	028D24 mov.l @(4,er1),er6; jsr @er6	20(0x14) when 0xFFBC34==3	secondary handler (null in 6 of 8 records)
++0x08	028D40 mov.l @(8,er1),er6; jsr @er6	4 or 5	char-set scroll handler; 4 sets A9ED=4, 5 sets A9ED=6
++0x0C	028D4A mov.l @(0xC,er1),er6; jsr @er6	3	handler (cursor/edit op)
++0x10	(not loaded)	-	always 0 (reserved/unused)
++0x14	028D86 mov.l @(0x14,er1),er6; jsr @er6	6	handler; pre-sets bit7 of 0xFFAA30
++0x18	028D90 mov.l @(0x18,er1),er6; jsr @er6	7	handler; usually 0x3FFA0 = no-op/clear
++0x1C	028DA0 mov.l @(0x1C,er1),er6; jsr @er6	20(0x14) when 0xFFBC34==0	handler (default commit, often sub_1A58C char-rotate)
+# key values 1,2 do NOT call a field: they toggle 0xFFBC34 (0/1/2) and clear bit3 of 0xFFBBF1 (cursor-mode state).
+# key values 0,8,9 and out-of-range (>=0x0a that is not 0x14) with idx<0x0a -> jsr sub_3FFA0 (no-op/clear soft-key state).
+#
+# The eight records (record / passer / enclosing fn sub_28B62 label / caller screen fn / screen-table ref):
+record	passer	family	caller_fn	screen_table_ref	fields(off=target)
+028B6C	028B62	1 (in sub_28B62)	sub_29C38	013EF4:dr_O	+00=69C22 +04=29C98 +08=69B94 +0C=29C3E +14=29C54 +18=29CBE +1C=28B8C
+028BB4	028BAA	1	sub_2B502	02AE50/02AE9C/02BB52:dr_O	+00=66666 +04=2B51E +08=664DA +0C=2B538 +14=2B540 +18=2B5AA +1C=28BD4
+028BF0	028BE6	1	sub_289BC	0112A0:dr_O	+00=17EB6 +08=17B5E +0C=28A00 +14=28A08 +18=28AC0 +1C=28C10
+028C2A	028C20	1	sub_2A8C6	01391C:dr_O	+00=188A8 +08=18840 +0C=2A91A +14=2A924 +18=03FFA0 +1C=28C4A
+028C62	028C5A	1	sub_2A95A	013784:dr_O	+00=18A5C +08=1890C +0C=156BC +14=0 +18=03FFA0 +1C=0
+028C8A	028C82	1	sub_2A99E	0139A4:dr_O	+00=18040 +08=17EFE +0C=2A9EA +14=2A9F4 +18=03FFA0 +1C=28CAA
+0296E8	0296DE	2 (table 0x02941C idx 0xFFB9E4 slot4)	sub_29406	012860->02941C	+00=29732 +08=5E33E +0C=29764 +14=2976C +18=03FFA0 +1C=29756
+029712	029708	2 (slot5)	sub_29406	012860->02941C	+00=29732 +08=5E37C +0C=29764 +14=2976C +18=03FFA0 +1C=29756

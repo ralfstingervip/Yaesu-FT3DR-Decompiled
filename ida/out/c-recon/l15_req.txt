@@ -1,0 +1,30 @@
+# ===== Target 1: USB vendor device path (MAIN) =====
+# Whole vendor stack incl. ISRs 234/235/238, init, dispatcher, FSM, EP1 loop, EP3 report, image dispatch
+dis 054B00 056100 vendor_stack_full
+# descriptors (data)
+dis 055810 055890 descriptors
+# control dispatcher + 12-slot table
+func 054FEC dispatcher
+xref 055002
+# key scan + D3 edge detector + PTT debounce (shared region)
+dis 00FB00 00FEA0 keyscan_ptt_d3
+func 00FDC8 d3_edge
+func 00FC66 ptt_debounce
+callers 054FEC
+callers 055B7A
+# ===== Target 2: TX gate (MAIN) =====
+dis 022440 022760 tx_request_sub2244C
+func 02244C tx_request
+func 022562 ptt_lock
+func 022718 tx_release
+dis 034780 035010 tx_setup_statemachine_tot
+func 034966 tx_state1
+func 034E42 txfreq_check
+func 034DC2 txfreq_vfo_entry
+func 034EEE tot
+xref 034984
+# ===== Target 3: 8-step key machine (MAIN) =====
+dis 014940 014AB0 keyseq_machine
+func 01494C keyseq_arm
+func 01CF0A lock_key_handler
+callers 01494C

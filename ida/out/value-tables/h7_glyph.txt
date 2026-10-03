@@ -1,0 +1,193 @@
+###### lin FFEF2184 x90
+FFEF2184  7e a6                  push.l  r6                                   ; R6
+FFEF2186  71 00 f0               add     #-10h, sp, sp                        ; #0xFFFFFFF0 R0 R0
+FFEF2189  83 89                  mov.b   r1, 10h+var_1[sp]                    ; R1 d(R0,+0xF)
+FFEF218B  91 82                  mov.w   r2, 10h+var_4[sp]                    ; R2 d(R0,+0xC)
+FFEF218D  a0 83                  mov.l   r3, 10h+var_8[sp]                    ; R3 d(R0,+0x8)
+FFEF218F  b9 81                  movu.w  10h+var_4[sp], r1                    ; d(R0,+0xC) R1
+FFEF2191  61 01                  cmp     #0, r1                               ; #0x0 R1
+FFEF2193  10                     beq.s   loc_FFEF219B                         ; a=0xFFEF219B
+FFEF2194  b3 89                  movu.b  10h+var_1[sp], r1                    ; d(R0,+0xF) R1
+FFEF2196  75 51 1a               cmp     #1Ah, r1                             ; #0x1A R1
+FFEF2199  29 06                  blt.b   loc_FFEF219F                         ; a=0xFFEF219F
+FFEF219B  f8 06 01               mov.l   #1, 10h+var_10[sp]                   ; #0x1 t3
+FFEF219E  0c                     bra.s   loc_FFEF21A2                         ; a=0xFFEF21A2
+FFEF219F  f8 06 00               mov.l   #0, 10h+var_10[sp]                   ; #0x0 t3
+FFEF21A2  ec 01                  mov.l   10h+var_10[sp], r1                   ; t3 R1
+FFEF21A4  61 01                  cmp     #0, r1                               ; #0x0 R1
+FFEF21A6  11                     beq.s   loc_FFEF21AF                         ; a=0xFFEF21AF
+FFEF21A7  a8 81                  mov.l   10h+var_8[sp], r1                    ; d(R0,+0x8) R1
+FFEF21A9  3e 11 00               mov.l   #0, 4[r1]                            ; #0x0 d(R1,+0x4)
+FFEF21AC  3f 66 05               rtsd    #14h, r6-r6                          ; #0x14 t10
+FFEF21AF  b3 89                  movu.b  10h+var_1[sp], r1                    ; d(R0,+0xF) R1
+FFEF21B1  61 71                  cmp     #7, r1                               ; #0x7 R1
+FFEF21B3  2a 35                  bgt.b   loc_FFEF21E8                         ; a=0xFFEF21E8
+FFEF21B5  3c 05 00               mov.b   #0, 10h+var_B[sp]                    ; #0x0 d(R0,+0x5)
+FFEF21B8  2e 1c                  bra.b   loc_FFEF21D4                         ; a=0xFFEF21D4
+FFEF21BA  b1 09                  movu.b  10h+var_B[sp], r1                    ; d(R0,+0x5) R1
+FFEF21BC  63 c1                  mul     #0Ch, r1                             ; #0xC R1
+FFEF21BE  fb e2 44 46 ed ff      mov.l   #unk_FFED4644, r14                   ; #0xFFED4644 R14
+FFEF21C4  4b 1e                  add     r1, r14                              ; R1 R14
+FFEF21C6  b9 81                  movu.w  10h+var_4[sp], r1                    ; d(R0,+0xC) R1
+FFEF21C8  06 c5 e1 01            cmp     2[r14].uw, r1                        ; d(R14,+0x2) R1
+FFEF21CC  28 0e                  bge.b   loc_FFEF21DA                         ; a=0xFFEF21DA
+FFEF21CE  b1 09                  movu.b  10h+var_B[sp], r1                    ; d(R0,+0x5) R1
+FFEF21D0  62 11                  add     #1, r1                               ; #0x1 R1
+FFEF21D2  81 09                  mov.b   r1, 10h+var_B[sp]                    ; R1 d(R0,+0x5)
+FFEF21D4  b1 09                  movu.b  10h+var_B[sp], r1                    ; d(R0,+0x5) R1
+FFEF21D6  61 81                  cmp     #8, r1                               ; #0x8 R1
+FFEF21D8  29 e2                  blt.b   loc_FFEF21BA                         ; a=0xFFEF21BA
+FFEF21DA  b1 09                  movu.b  10h+var_B[sp], r1                    ; d(R0,+0x5) R1
+FFEF21DC  61 81                  cmp     #8, r1                               ; #0x8 R1
+FFEF21DE  21 0e                  bne.b   loc_FFEF21EC                         ; a=0xFFEF21EC
+FFEF21E0  a8 81                  mov.l   10h+var_8[sp], r1                    ; d(R0,+0x8) R1
+FFEF21E2  3e 11 00               mov.l   #0, 4[r1]                            ; #0x0 d(R1,+0x4)
+FFEF21E5  3f 66 05               rtsd    #14h, r6-r6                          ; #0x14 t10
+FFEF21E8  c5 00 0f 05            mov.b   10h+var_1[sp], 10h+var_B[sp]         ; d(R0,+0xF) d(R0,+0x5)
+FFEF21EC  b9 82                  movu.w  10h+var_4[sp], r2                    ; d(R0,+0xC) R2
+FFEF21EE  b1 09                  movu.b  10h+var_B[sp], r1                    ; d(R0,+0x5) R1
+FFEF21F0  a8 86                  mov.l   10h+var_8[sp], r6                    ; d(R0,+0x8) R6
+FFEF21F2  05 77 30 ff            bsr.a   sub_FFEE5269                         ; a=0xFFEE5269
+FFEF21F6  d3 61                  mov.w   r1, [r6]                             ; R1 t3
+FFEF21F8  b1 09                  movu.b  10h+var_B[sp], r1                    ; d(R0,+0x5) R1
+FFEF21FA  63 c1                  mul     #0Ch, r1                             ; #0xC R1
+FFEF21FC  fb 22 44 46 ed ff      mov.l   #unk_FFED4644, r2                    ; #0xFFED4644 R2
+FFEF2202  4b 12                  add     r1, r2                               ; R1 R2
+FFEF2204  b0 29                  movu.b  1[r2], r1                            ; d(R2,+0x1) R1
+FFEF2206  a8 82                  mov.l   10h+var_8[sp], r2                    ; d(R0,+0x8) R2
+FFEF2208  90 29                  mov.w   r1, 2[r2]                            ; R1 d(R2,+0x2)
+FFEF220A  b1 09                  movu.b  10h+var_B[sp], r1                    ; d(R0,+0x5) R1
+FFEF220C  63 c1                  mul     #0Ch, r1                             ; #0xC R1
+FFEF220E  fb 22 44 46 ed ff      mov.l   #unk_FFED4644, r2                    ; #0xFFED4644 R2
+FFEF2214  4b 12                  add     r1, r2                               ; R1 R2
+FFEF2216  b9 81                  movu.w  10h+var_4[sp], r1                    ; d(R0,+0xC) R1
+FFEF2218  06 c1 21 01            sub     2[r2].uw, r1                         ; d(R2,+0x2) R1
+FFEF221C  a8 2a                  mov.l   4[r2], r2                            ; d(R2,+0x4) R2
+FFEF221E  fe 51 21               mov.w   [r1, r2], r1                         ; t3 R1
+FFEF2221  90 89                  mov.w   r1, 10h+var_A[sp]                    ; R1 d(R0,+0x6)
+FFEF2223  b1 09                  movu.b  10h+var_B[sp], r1                    ; d(R0,+0x5) R1
+FFEF2225  63 c1                  mul     #0Ch, r1                             ; #0xC R1
+FFEF2227  fb e2 44 46 ed ff      mov.l   #unk_FFED4644, r14                   ; #0xFFED4644 R14
+FFEF222D  4b 1e                  add     r1, r14                              ; R1 R14
+FFEF222F  a8 81                  mov.l   10h+var_8[sp], r1                    ; d(R0,+0x8) R1
+FFEF2231  b8 1a                  movu.w  2[r1], r2                            ; d(R1,+0x2) R2
+FFEF2233  06 cd 02 03            mul     10h+var_A[sp].uw, r2                 ; d(R0,+0x6) R2
+FFEF2237  5c 1f                  movu.w  [r1], r15                            ; t3 R15
+FFEF2239  62 7f                  add     #7, r15                              ; #0x7 R15
+FFEF223B  fd 74 8f 08            div     #8, r15                              ; #0x8 R15
+FFEF223F  4f f2                  mul     r15, r2                              ; R15 R2
+FFEF2241  06 89 e2 02            add     8[r14].l, r2                         ; d(R14,+0x8) R2
+FFEF2245  a0 1a                  mov.l   r2, 4[r1]                            ; R2 d(R1,+0x4)
+FFEF2247  a8 81                  mov.l   10h+var_8[sp], r1                    ; d(R0,+0x8) R1
+FFEF2249  3c 18 00               mov.b   #0, 8[r1]                            ; #0x0 d(R1,+0x8)
+FFEF224C  b9 81                  movu.w  10h+var_4[sp], r1                    ; d(R0,+0xC) R1
+FFEF224E  75 51 80               cmp     #-80h, r1                            ; #0x80 R1
+FFEF2251  21 0d                  bne.b   loc_FFEF225E                         ; a=0xFFEF225E
+FFEF2253  a8 81                  mov.l   10h+var_8[sp], r1                    ; d(R0,+0x8) R1
+FFEF2255  5c 1e                  movu.w  [r1], r14                            ; t3 R14
+FFEF2257  68 1e                  shlr    #1, r14                              ; #0x1 R14
+FFEF2259  d3 1e                  mov.w   r14, [r1]                            ; R14 t3
+FFEF225B  3f 66 05               rtsd    #14h, r6-r6                          ; #0x14 t10
+FFEF225E  3f 66 05               rtsd    #14h, r6-r6                          ; #0x14 t10
+###### lin FFEF190D x60
+FFEF190D  71 00 cc               add     #-34h, sp, sp                        ; #0xFFFFFFCC R0 R0
+FFEF1910  96 09                  mov.w   r1, 34h+var_2[sp]                    ; R1 d(R0,+0x32)
+FFEF1912  96 02                  mov.w   r2, 34h+var_4[sp]                    ; R2 d(R0,+0x30)
+FFEF1914  c7 03 2f               mov.b   r3, 34h+var_5[sp]                    ; R3 d(R0,+0x2F)
+FFEF1917  95 84                  mov.w   r4, 34h+var_8[sp]                    ; R4 d(R0,+0x2C)
+FFEF1919  c5 00 38 2b            mov.b   34h+arg_0[sp], 34h+var_9[sp]         ; d(R0,+0x38) d(R0,+0x2B)
+FFEF191D  bd 81                  movu.w  34h+var_8[sp], r1                    ; d(R0,+0x2C) R1
+FFEF191F  61 61                  cmp     #6, r1                               ; #0x6 R1
+FFEF1921  20 0d                  beq.b   loc_FFEF192E                         ; a=0xFFEF192E
+FFEF1923  bd 81                  movu.w  34h+var_8[sp], r1                    ; d(R0,+0x2C) R1
+FFEF1925  75 51 1f               cmp     #1Fh, r1                             ; #0x1F R1
+FFEF1928  2a 06                  bgt.b   loc_FFEF192E                         ; a=0xFFEF192E
+FFEF192A  f8 06 01               mov.l   #1, 34h+var_34[sp]                   ; #0x1 t3
+FFEF192D  0c                     bra.s   loc_FFEF1931                         ; a=0xFFEF1931
+FFEF192E  f8 06 00               mov.l   #0, 34h+var_34[sp]                   ; #0x0 t3
+FFEF1931  ec 01                  mov.l   34h+var_34[sp], r1                   ; t3 R1
+FFEF1933  61 01                  cmp     #0, r1                               ; #0x0 R1
+FFEF1935  3b df 00               bne.w   loc_FFEF1A14                         ; a=0xFFEF1A14
+FFEF1938  bd 81                  movu.w  34h+var_8[sp], r1                    ; d(R0,+0x2C) R1
+FFEF193A  61 61                  cmp     #6, r1                               ; #0x6 R1
+FFEF193C  1c                     bne.s   loc_FFEF1940                         ; a=0xFFEF1940
+FFEF193D  3d 86 df               mov.w   #-21h, 34h+var_8[sp]                 ; #0xDF d(R0,+0x2C)
+FFEF1940  f9 02 09 00 08 07 07   mov.l   #7070800h, 34h+var_10[sp]            ; #0x7070800 d(R0,+0x24)
+FFEF1947  bd 82                  movu.w  34h+var_8[sp], r2                    ; d(R0,+0x2C) R2
+FFEF1949  59 01 2f               movu.b  34h+var_5[sp], r1                    ; d(R0,+0x2F) R1
+FFEF194C  71 03 08               add     #34h+var_2C, sp, r3                  ; #0x8 R0 R3
+FFEF194F  39 35 08               bsr.w   sub_FFEF2184                         ; a=0xFFEF2184
+FFEF1952  59 01 2b               movu.b  34h+var_9[sp], r1                    ; d(R0,+0x2B) R1
+FFEF1955  61 11                  cmp     #1, r1                               ; #0x1 R1
+FFEF1957  aa 0a                  mov.l   34h+var_10[sp], r2                   ; d(R0,+0x24) R2
+FFEF1959  21 16                  bne.b   loc_FFEF196F                         ; a=0xFFEF196F
+FFEF195B  71 01 08               add     #34h+var_2C, sp, r1                  ; #0x8 R0 R1
+FFEF195E  39 b9 09               bsr.w   sub_FFEF2317                         ; a=0xFFEF2317
+FFEF1961  99 01                  mov.w   34h+var_2C[sp], r1                   ; d(R0,+0x8) R1
+FFEF1963  6c 11                  shll    #1, r1                               ; #0x1 R1
+FFEF1965  93 89                  mov.w   r1, 34h+var_16[sp]                   ; R1 d(R0,+0x1E)
+FFEF1967  99 09                  mov.w   34h+var_2A[sp], r1                   ; d(R0,+0xA) R1
+FFEF1969  6c 11                  shll    #1, r1                               ; #0x1 R1
+FFEF196B  93 81                  mov.w   r1, 34h+var_18[sp]                   ; R1 d(R0,+0x1C)
+FFEF196D  2e 10                  bra.b   loc_FFEF197D                         ; a=0xFFEF197D
+FFEF196F  71 01 08               add     #34h+var_2C, sp, r1                  ; #0x8 R0 R1
+FFEF1972  39 ef 08               bsr.w   sub_FFEF2261                         ; a=0xFFEF2261
+FFEF1975  d5 00 04 0f            mov.w   34h+var_2C[sp], 34h+var_16[sp]       ; d(R0,+0x8) d(R0,+0x1E)
+FFEF1979  d5 00 05 0e            mov.w   34h+var_2A[sp], 34h+var_18[sp]       ; d(R0,+0xA) d(R0,+0x1C)
+FFEF197D  fb ea 40 01            mov.l   #140h, r14                           ; #0x140 R14
+FFEF1981  06 c1 0e 19            sub     34h+var_2[sp].uw, r14                ; d(R0,+0x32) R14
+FFEF1985  bb 89                  movu.w  34h+var_16[sp], r1                   ; d(R0,+0x1E) R1
+FFEF1987  47 e1                  cmp     r14, r1                              ; R14 R1
+FFEF1989  2a 0f                  bgt.b   loc_FFEF1998                         ; a=0xFFEF1998
+FFEF198B  75 4e f0               mov.l   #-10h, r14                           ; #0xF0 R14
+FFEF198E  06 c1 0e 18            sub     34h+var_4[sp].uw, r14                ; d(R0,+0x30) R14
+FFEF1992  bb 81                  movu.w  34h+var_18[sp], r1                   ; d(R0,+0x1C) R1
+FFEF1994  47 e1                  cmp     r14, r1                              ; R14 R1
+FFEF1996  2b 06                  ble.b   loc_FFEF199C                         ; a=0xFFEF199C
+FFEF1998  f8 06 01               mov.l   #1, 34h+var_34[sp]                   ; #0x1 t3
+FFEF199B  0c                     bra.s   loc_FFEF199F                         ; a=0xFFEF199F
+FFEF199C  f8 06 00               mov.l   #0, 34h+var_34[sp]                   ; #0x0 t3
+FFEF199F  ec 01                  mov.l   34h+var_34[sp], r1                   ; t3 R1
+FFEF19A1  61 01                  cmp     #0, r1                               ; #0x0 R1
+FFEF19A3  21 71                  bne.b   loc_FFEF1A14                         ; a=0xFFEF1A14
+###### lin FFEE5269 x40
+FFEE5269  60 c0                  sub     #0Ch, sp                             ; #0xC R0
+FFEE526B  82 89                  mov.b   r1, 0Ch+var_1[sp]                    ; R1 d(R0,+0xB)
+FFEE526D  91 02                  mov.w   r2, 0Ch+var_4[sp]                    ; R2 d(R0,+0x8)
+FFEE526F  b2 89                  movu.b  0Ch+var_1[sp], r1                    ; d(R0,+0xB) R1
+FFEE5271  75 51 19               cmp     #19h, r1                             ; #0x19 R1
+FFEE5274  21 28                  bne.b   loc_FFEE529C                         ; a=0xFFEE529C
+FFEE5276  3d 02 00               mov.w   #0, 0Ch+var_8[sp]                    ; #0x0 d(R0,+0x4)
+FFEE5279  2e 1d                  bra.b   loc_FFEE5296                         ; a=0xFFEE5296
+FFEE527B  b8 81                  movu.w  0Ch+var_8[sp], r1                    ; d(R0,+0x4) R1
+FFEE527D  fb e2 a1 62 c3 ff      mov.l   #aMwxymwx, r14                       ; #0xFFC362A1 R14
+FFEE5283  fe ce 1e               movu.b  [r14, r1], r14                       ; t3 R14
+FFEE5286  06 c5 0e 04            cmp     0Ch+var_4[sp].uw, r14                ; d(R0,+0x8) R14
+FFEE528A  1e                     bne.s   loc_FFEE5290                         ; a=0xFFEE5290
+FFEE528B  3c 03 05               mov.b   #5, 0Ch+var_9[sp]                    ; #0x5 d(R0,+0x3)
+FFEE528E  2e 1d                  bra.b   loc_FFEE52AB                         ; a=0xFFEE52AB
+FFEE5290  98 81                  mov.w   0Ch+var_8[sp], r1                    ; d(R0,+0x4) R1
+FFEE5292  62 11                  add     #1, r1                               ; #0x1 R1
+FFEE5294  90 81                  mov.w   r1, 0Ch+var_8[sp]                    ; R1 d(R0,+0x4)
+FFEE5296  b8 81                  movu.w  0Ch+var_8[sp], r1                    ; d(R0,+0x4) R1
+FFEE5298  61 b1                  cmp     #0Bh, r1                             ; #0xB R1
+FFEE529A  23 e1                  bltu.b  loc_FFEE527B                         ; a=0xFFEE527B
+FFEE529C  b2 89                  movu.b  0Ch+var_1[sp], r1                    ; d(R0,+0xB) R1
+FFEE529E  63 c1                  mul     #0Ch, r1                             ; #0xC R1
+FFEE52A0  fb e2 44 46 ed ff      mov.l   #unk_FFED4644, r14                   ; #0xFFED4644 R14
+FFEE52A6  fe ce 11               movu.b  [r14, r1], r1                        ; t3 R1
+FFEE52A9  80 89                  mov.b   r1, 0Ch+var_9[sp]                    ; R1 d(R0,+0x3)
+FFEE52AB  c5 00 03 07            mov.b   0Ch+var_9[sp], 0Ch+var_5[sp]         ; d(R0,+0x3) d(R0,+0x7)
+FFEE52AF  b1 89                  movu.b  0Ch+var_5[sp], r1                    ; d(R0,+0x7) R1
+FFEE52B1  67 03                  rtsd    #3                                   ; #0x3
+FFEE52B3  fb e2 4c 8c 00 00      mov.l   #8C4Ch, r14                          ; #0x8C4C R14
+FFEE52B9  58 ee                  movu.b  [r14], r14                           ; t3 R14
+FFEE52BB  61 3e                  cmp     #3, r14                              ; #0x3 R14
+FFEE52BD  2a 16                  bgt.b   loc_FFEE52D3                         ; a=0xFFEE52D3
+FFEE52BF  fb e2 4c 8c 00 00      mov.l   #8C4Ch, r14                          ; #0x8C4C R14
+FFEE52C5  58 ee                  movu.b  [r14], r14                           ; t3 R14
+FFEE52C7  fb f2 48 4b ed ff      mov.l   #off_FFED4B48, r15                   ; #0xFFED4B48 R15
+FFEE52CD  fe 6e fe               mov.l   [r14, r15], r14                      ; t3 R14
+FFEE52D0  7f 1e                  jsr     r14                                  ; R14
+FFEE52D2  02                     rts                                          ; 
+FFEE52D3  fb e2 4c 8c 00 00      mov.l   #8C4Ch, r14                          ; #0x8C4C R14

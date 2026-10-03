@@ -1,0 +1,246 @@
+# Lane H13. MAIN screen ids 0x00-0xEE. Screen byte = band record +1, previous = +0 (records FF8EE0/FF8FE8/FF90F0/FF9190/FF922C; active = [FF812A]).
+# notify_stub = BE32 at 0x782C+4*id, called on entry/refresh (0x0481C/0x04DE4/0x06C6E/0x06E92); 0x04892 = rts (no notification).
+# exit_handler = 0x148A0 + BE16 at 0x19A9E+2*(id-0x0E), run by sub_19158 from the pop sub_3FF3A for 0x0E<=id<0xDC ('save Rk n' = mov.w #n,r1; jmp EEPROM writer).
+# dial_handler = BE32 at 0x12268+4*(id-0x0E) (sub_15E1E via sub_15E42); key_table = 0x125D4 + BE16 at 0x1208C+2*(id-1) (0x29AA0); generic = offset 0x374.
+# menu_rows = 1-based group [index] in row tables 0x1515C-0x151EB inside the cursor clamp records at 0x15102; f_code/sub_label joined from ida\out\sub-labels\f3xx-codes.tsv (lane G3).
+# set_by: screen-byte writers found by ida\jobs\h13_screens.py (all stores to @(1,ERn), push/pop callers, absolute aliases). checks ok: 52
+screen_id	notify_stub_0x782C	notify_opcodes	notify_calls	dial_handler_0x12268	exit_handler_0x19A9E	key_table_0x125D4	key_table_generic	menu_rows	set_by	f_code	sub_label	status	note
+0x00	04892 (rts)	-	-	-	-	-	-	-	constant 0 (0x24064, 0x240B2, 0x24434, 0x2444E push; 0x3FF90, 0x2CE12, 0x23E62 clear)	-	-	C	
+0x01	04C0C	-	0C8E6	-	-	125D4	no	-	push 0x25294	-	-	C	
+0x02	04C2A	-	0C972	-	-	12618	no	-	push 0x257E8	-	-	C	
+0x03	04C76	-	087F2	-	-	1265C	no	-	table 0x3BC6 (0x2CA98, 0x2D0F6, 0x2D4EA, 0x2DD5C, 0x2E10C, 0x33BC4; 0x33D84 to FF90F1)	-	-	C	
+0x04	04C30	-	0CA2E,08806	-	-	126A0	no	-	table 0x3BC6 (0x2CA98, 0x2D0F6, 0x2D4EA, 0x2DD5C, 0x2E10C, 0x33BC4; 0x33D84 to FF90F1)	-	-	C	
+0x05	04CB8	-	0881A	-	-	126E4	no	-	table 0x3BC6 (0x2CA98, 0x2D0F6, 0x2D4EA, 0x2DD5C, 0x2E10C, 0x33BC4; 0x33D84 to FF90F1)	-	-	C	
+0x06	04CB8	-	0881A	-	-	12728	no	-	table 0x3BC6 (0x2CA98, 0x2D0F6, 0x2D4EA, 0x2DD5C, 0x2E10C, 0x33BC4; 0x33D84 to FF90F1)	-	-	C	
+0x07	04CFA	-	0CA2E,0881A	-	-	1276C	no	-	table 0x3BC6 (0x2CA98, 0x2D0F6, 0x2D4EA, 0x2DD5C, 0x2E10C, 0x33BC4; 0x33D84 to FF90F1)	-	-	C	
+0x08	04892 (rts)	-	-	-	-	127B0	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x09	0D642	-	-	-	-	127F4	no	-	push 0x21A1A	F403	-	C	
+0x0A	04D84	-	09168	-	-	12838	no	-	push 0x14BDA, 0x24554; sub_3FF1E at 0x24580	-	-	C	
+0x0B	04D40	-	0901A	-	-	1287C	no	-	push 0x14BEA, 0x24A2C	-	-	C	
+0x0C	04E24	F300	09562	-	-	128C0	no	-	push 0x1492A, 0x14946, 0x14BAC	F300	-	C	
+0x0D	04E36	-	095C0	-	-	12904	no	-	push 0x14B48	F301	-	C	
+0x0E	04E48	-	-	15ED0	193C2 save R1 n=0xA3	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x0F	04E4A	F380	sub_976A	15EE6	19250 save R1 n=0x73	12948	yes	g8[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F380	APO	C	
+0x10	04E58	-	-	15F04	19258 save R1 n=0x74	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x11	04E5A	-	-	15F16	193B2 save R1 n=0xA1	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x12	04E5C	F38D	sub_976A	15F1E	1939A save R1 n=0x9E	12948	yes	g8[13]	row code (0x29A8C / 0x14B22 / 0x14E50)	F38D	RPT ARS	C	
+0x13	04E70	F320	sub_976A	15F34	19426	12948	yes	g2.a[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F320	ANTENNA ATT	C	
+0x14	04E84	F381	sub_976A	15FB6	193A2 save R1 n=0x9F	12948	yes	g8[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	F381	BCLO	C	
+0x15	04E98	F382	sub_9792	3FFA0	19260	1298C	no	g8[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	F382	BEEP	C	
+0x16	04EB4	F340	sub_9792	3FFA0	19270 save R1 n=0x75	129D0	no	g4[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F340	BELL	C	
+0x17	04ED2	-	-	16032	19270 save R1 n=0x75	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x18	04ED4	F397	sub_976A	1603A	19278 save R1 n=0x76	12948	yes	g8[3]	row code (0x29A8C / 0x14B22 / 0x14E50)	F397	BEEP LEVEL	C	
+0x19	04EE2	-	-	3FFA0	19444	12A14	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x1A	04EE4	F330	53634,09B9A,09DBC	3FFA0	196C6	12A58	no	g3[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F330	BANK LINK	C	
+0x1B	04F72	-	053F0,53634,09B9A	3FFA0	19454	12A9C	no	g3[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0x1C	05014	F383	sub_98CA	3FFA0	19382 save R1 n=0xA8	12AE0	no	g8[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	F383	BUSY LED	C	
+0x1D	0D38C	-	07C20	19CDA	193DA rts	12B24	no	g11[2]	row code (0x29A8C / 0x14B22 / 0x14E50); store 0x2C1C0	F3D3	DEVICE LIST	C	
+0x1E	0D2DE	-	07C20	19CFE	1946C save R1 n=0x0	12B68	no	g11[1]	row code (0x29A8C / 0x14B22 / 0x14E50); store 0x2C0BA	F3D2	Bluetooth	C	
+0x1F	0D526	F3D4	sub_976A	19D10	1946C save R1 n=0x0	12948	yes	g11[3]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3D4	Bluetooth Save	C	
+0x20	05046	F384	sub_976A	160D8	193DA rts	12948	yes	g8[5]	row code (0x29A8C / 0x14B22 / 0x14E50)	F384	CLOCK TYPE	C	
+0x21	04892 (rts)	-	-	3FFA0	19474	12BAC	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x22	04892 (rts)	-	-	160EE	19280 save R1 n=0x80	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x23	04892 (rts)	-	-	3FFA0	1948A	12BF0	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x24	04892 (rts)	-	-	3FFA0	194AE	12C34	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x25	0505A	-	-	3FFA0	193DA rts	12C78	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x26	0505E	-	09E58	3FFA0	1962C	12D00	no	g4[1]	row code (0x29A8C / 0x14B22 / 0x14E50); direct entry sub_148A0 at 21AB4	F341	DCS CODE	C	
+0x27	05142	F342	sub_976A	161A0	193DA rts	12948	yes	g4[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	F342	DCS INVERSION	C	
+0x28	05154	F317	sub_976A	161C4	19288 save R1 n=0x84	12948	yes	g1[5]	row code (0x29A8C / 0x14B22 / 0x14E50); direct entry sub_148A0 at 6CD34, 6CD5A	F317	LCD DIMMER	C	
+0x29	04892 (rts)	-	-	16208	193A2 save R1 n=0x9F	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x2A	05162	-	-	16210	1939A save R1 n=0x9E	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x2B	05164	F343	sub_98CA	3FFA0	19290	12D44	no	g4[3]	row code (0x29A8C / 0x14B22 / 0x14E50); direct entry sub_148A0 at 2192E	F343	DTMF MODE	C	
+0x2C	0518E	F280	0528C,0949C,3CE22	3FFA0	194E8	12D88	no	g4[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0x2D	052C8	-	-	163C8	1939A save R1 n=0x9E	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x2E	04892 (rts)	-	-	3FFA0	193AA save R1 n=0xA0	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x2F	04892 (rts)	-	-	3FFA0	193DA rts	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x30	052CA	-	-	163CA	193A2 save R1 n=0x9F	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x31	04892 (rts)	-	-	3FFA0	193DA rts	12DCC	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x32	04892 (rts)	-	-	3FFA0	193C2 save R1 n=0xA3	12E10	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x33	04892 (rts)	-	-	165DA	193C2 save R1 n=0xA3	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x34	04892 (rts)	-	-	165F0	193C2 save R1 n=0xA3	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x35	052E4	F321	sub_976A	165FC	193DA rts	12948	yes	g2.a[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	F321	FM BANDWIDTH	C	
+0x36	052F8	-	-	16608	193AA save R1 n=0xA0	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x37	052FA	F386	sub_976A	16610	193C2 save R1 n=0xA3	12948	yes	g8[7]	row code (0x29A8C / 0x14B22 / 0x14E50)	F386	HOME VFO	C	
+0x38	5E95C	F364	sub_976A	5E84C	19A3E	12948	yes	-	none found	F364	DP-ID LIST	C(table slot) / NF(writer)	
+0x39	5E96A	F365	sub_9922	3FFA0	19A3E	13CF0	no	-	direct entry sub_148A0 at 1CEC8	F365	DP-ID LIST	C	
+0x3A	04892 (rts)	-	-	3FFA0	193DA rts	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x3B	04892 (rts)	-	-	3FFA0	193DA rts	12E54	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x3C	04892 (rts)	-	-	3FFA0	193DA rts	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x3D	04892 (rts)	-	-	3FFA0	193DA rts	12E98	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x3E	04892 (rts)	-	-	16618	192B0 save R1 n=0x87	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x3F	05310	F315	sub_976A	16666	193BA save R1 n=0xA2	12948	yes	g1[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	F315	LANGUAGE	C	
+0x40	05326	F314	sub_9792	3FFA0	192B8	12CBC	no	g1[3]	row code (0x29A8C / 0x14B22 / 0x14E50); direct entry sub_148A0 at 6CEE6	F314	LAMP	C	
+0x41	0534C	F316	sub_976A	166AA	192C4 save R1 n=0x89	12948	yes	-	none found	F316	LANGUAGE	C(table slot) / NF(writer)	no writer of screen id 0x41: absent from row tables 0x1515C-0x151EB and from every constant/table source of the screen byte (scan in doc 49 Method)
+0x42	05362	F387	0A0B6	3FFA0	193DA rts	12C78	no	-	none found	F387	HOME VFO	C(table slot) / NF(writer)	
+0x43	05368	F388	sub_976A	166C0	192CC save R1 n=0x8B	12948	yes	g8[8]	row code (0x29A8C / 0x14B22 / 0x14E50)	F388	LOCK	C	
+0x44	05376	F389	sub_976A	166DE	193AA save R1 n=0xA0	12948	yes	g8[9]	row code (0x29A8C / 0x14B22 / 0x14E50)	F389	MONI/T-CALL	C	
+0x45	0538A	F326	sub_976A	16700	192D4 save R1 n=0x8D	12C78	no	g2.c[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F326	MIC GAIN	C	
+0x46	04892 (rts)	-	-	3FFA0	193DA rts	12EDC	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x47	04892 (rts)	-	-	3FFA0	193DA rts	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x48	04892 (rts)	-	-	3FFA0	193DA rts	12F20	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x49	05398	-	-	16716	192DC save R1 n=0x8C	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x4A	0539A	F335	sub_976A	16728	193B2 save R1 n=0xA1	12948	yes	g3[5]	row code (0x29A8C / 0x14B22 / 0x14E50)	F335	MEMORY WRITE	C	
+0x4B	053AE	F333	sub_976A	16730	193B2 save R1 n=0xA1	12948	yes	g3[3]	row code (0x29A8C / 0x14B22 / 0x14E50)	F333	MEMORY PROTECT	C	
+0x4C	053C2	-	-	16738	1950E save R1 n=0x9F	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x4D	053C4	-	-	3FFA0	19516	12F64	no	g3[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0x4E	05438	F327	sub_976A	1684C	192E4 save R1 n=0x93	12948	yes	g2.c[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	F327	MUTE	C	
+0x4F	05446	F38A	09834	3FFA0	1954A	12FA8	no	g8[10]	row code (0x29A8C / 0x14B22 / 0x14E50)	F38A	TIMER	C	
+0x50	0548A	-	-	3FFA0	1956E	12FEC	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x51	0548C	-	053F0,0C674	3FFA0	194D2	13030	no	g1[6]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0x52	0554E	F345	0997A	3FFA0	19584	13074	no	g4[5]	row code (0x29A8C / 0x14B22 / 0x14E50); direct entry sub_148A0 at 21AC0	F345	PAGER	C	
+0x53	05586	-	-	3FFA0	19584	13074	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x54	05586	-	-	3FFA0	19584	13074	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x55	05588	F38B,F006	0A0DA,0840C	3FFA0	1959A	130B8	no	g8[11]	row code (0x29A8C / 0x14B22 / 0x14E50)	F38B	PASSWORD	C	
+0x56	0566E	F38C	sub_976A	16A78	192EC save R1 n=0x90	12948	yes	g8[12]	row code (0x29A8C / 0x14B22 / 0x14E50)	F38C	PTT DELAY	C	
+0x57	0567C	F355	sub_976A	16A8A	193C2 save R1 n=0xA3	12948	yes	g5[5]	row code (0x29A8C / 0x14B22 / 0x14E50)	F355	PRIORITY REVERT	C	
+0x58	05690	F350	sub_976A	16A92	192F4 save R1 n=0x8F	12948	yes	g5[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F350	DW TIME	C	
+0x59	0569E	F354	sub_98CA	3FFA0	193D2 save R1 n=0xA5	130FC	no	g5[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	F354	SCAN WIDTH	C	
+0x5A	056C2	F353	sub_9792	3FFA0	192FC	13140	no	g5[3]	row code (0x29A8C / 0x14B22 / 0x14E50)	F353	SCAN RESUME	C	
+0x5B	056D8	F352	sub_976A	16B3C	1930A save R1 n=0x92	12948	yes	g5[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	F352	SCAN RE-START	C	
+0x5C	056E6	F31A	sub_976A	16B4E	19312 save R1 n=0x96	12948	yes	-	none found	F31A	SENSOR INFO	C(table slot) / NF(writer)	no writer of screen id 0x5C: absent from row tables 0x1515C-0x151EB and from every constant/table source of the screen byte (scan in doc 49 Method)
+0x5D	056F4	F348	sub_976A	16B60	193DA rts	12948	yes	g4[8]	row code (0x29A8C / 0x14B22 / 0x14E50)	F348	SQL S-METER	C	
+0x5E	05702	F38E	sub_976A	16B7E	193DA rts	12948	yes	g8[14]	row code (0x29A8C / 0x14B22 / 0x14E50)	F38E	RPT SHIFT	C	
+0x5F	05714	F322	sub_9D82	16BC0	193DA rts	12948	yes	g2.a[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	F322	RX MODE	C	
+0x60	0572C	F390	sub_976A	16C20	1931A save R1 n=0x91	12948	yes	g8[16]	row code (0x29A8C / 0x14B22 / 0x14E50)	F390	SAVE RX	C	
+0x61	04892 (rts)	-	-	16C46	193AA save R1 n=0xA0	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x62	0573A	F351	sub_976A	16C4E	1939A save R1 n=0x9E	12948	yes	g5[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	F351	SCAN LAMP	C	
+0x63	0574E	F38F	0A122	16C80	193DA rts	13184	no	g8[15]	row code (0x29A8C / 0x14B22 / 0x14E50)	F38F	RPT SHIFT FREQ	C	
+0x64	0575C	F334	sub_976A	16DC6	193DA rts	12948	yes	g3[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	F334	MEMORY SKIP	C	
+0x65	0577C	-	-	16E4E	19322 save R1 n=0x97	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x66	0577E	F396	0A206	3FFA0	1932A save R1 n=0x95	131C8	no	g8[21]	row code (0x29A8C / 0x14B22 / 0x14E50)	F396	DIAL KNOB CHANGE	C	
+0x67	05784	-	-	16E7E	193CA save R1 n=0xA4	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x68	05788	F313	sub_976A	16EA4	19332 save R1 n=0x99	12948	yes	g1[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	F313	BAND SCOPE	C	
+0x69	05786	-	-	16E86	193DA rts	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	only reference is the inert cmp #0x69 at 0x14EEC (doc 32)
+0x6A	057A8	F349	sub_976A	16EC4	1939A save R1 n=0x9E	12948	yes	g4[9]	row code (0x29A8C / 0x14B22 / 0x14E50)	F349	SQL EXPANSION	C	
+0x6B	057BC	F347	sub_976A	16EE8	19208	12948	yes	g4[7]	row code (0x29A8C / 0x14B22 / 0x14E50); push 0x1F968; store 0x1F9AE	F347	SQL LEVEL	C	
+0x6C	057F8	F34A	3EFEE,sub_976A	16F82	195D2	12948	yes	g4[10]	row code (0x29A8C / 0x14B22 / 0x14E50); direct entry sub_148A0 at 21944	F34A	SQL TYPE	C	
+0x6D	0580C	F391	sub_976A	1700A	193DA rts	12948	yes	g8[17]	row code (0x29A8C / 0x14B22 / 0x14E50)	F391	STEP	C	
+0x6E	05828	-	-	17104	193C2 save R1 n=0xA3	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x6F	0582A	F328	sub_976A	17134	19342 save R1 n=0x72	12948	yes	g2.c[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	F328	RX AF DUAL	C	
+0x70	0583A	F319	09CB2	3FFA0	193DA rts	1320C	no	g1[7]	row code (0x29A8C / 0x14B22 / 0x14E50)	F319	SENSOR INFO	C	
+0x71	05840	-	0A15C	3FFA0	193BA save R1 n=0xA2	13250	no	g8[18]	row code (0x29A8C / 0x14B22 / 0x14E50)	F392	DATE & TIME ADJ	C	
+0x72	05846	F341	09E28	3FFA0	1961E	13294	no	g4[11]	row code (0x29A8C / 0x14B22 / 0x14E50); direct entry sub_148A0 at 21AA8	F34B	TONE SQL FREQ	C	
+0x73	058BE	F393	sub_976A	17394	1933A save R1 n=0x9A	12948	yes	g8[19]	row code (0x29A8C / 0x14B22 / 0x14E50)	F393	TOT	C	
+0x74	04892 (rts)	-	-	3FFA0	193DA rts	132D8	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x75	04892 (rts)	-	-	3FFA0	193DA rts	1331C	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x76	058CC	F34C	sub_9792	3FFA0	19664	13360	no	g4[12]	row code (0x29A8C / 0x14B22 / 0x14E50)	F34C	TONE SEARCH	C	
+0x77	058EE	-	-	173D2	1939A save R1 n=0x9E	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x78	058F0	-	-	173D4	193A2 save R1 n=0x9F	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x79	058F2	-	-	3FFA0	196A0	133A4	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x7A	058F4	F394	sub_976A	173DC	1939A save R1 n=0x9E	12948	yes	g8[20]	row code (0x29A8C / 0x14B22 / 0x14E50)	F394	VFO MODE	C	
+0x7B	05908	-	-	173E4	193BA save R1 n=0xA2	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x7C	0590A	F32B	sub_9792	3FFA0	193DC	1342C	no	g2.c[3]	row code (0x29A8C / 0x14B22 / 0x14E50)	F32B	VOX	C	
+0x7D	05920	F32C	sub_9792	3FFA0	193EA	13470	no	g2.c[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	F32C	RECORDING	C	
+0x7E	04892 (rts)	-	-	3FFA0	193DA rts	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x7F	05A0C	F346	sub_976A	175CE	19674	12948	yes	g4[6]	row code (0x29A8C / 0x14B22 / 0x14E50); direct entry sub_148A0 at 21AE2	F346	PR FREQUENCY	C	
+0x80	052CC	F395	sub_9792	3FFA0	1934A save R1 n=0xA7	133E8	no	-	none found	F395	APO	C(table slot) / NF(writer)	
+0x81	05936	-	-	165D2	1934A save R1 n=0xA7	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x82	0D28E	-	07C20	3FFA0	193DA rts	12948	yes	g10[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3C4	MEMORY INFO	C	
+0x83	44B36	-	-	3FFA0	193DA rts	134B4	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x84	05938	F312	sub_976A	17488	19858	12948	yes	g1[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	F312	COMPASS	C	
+0x85	6FCF8	-	095C0	3FFA0	19362 save R1 n=0xAC	134F8	no	g10[3]	row code (0x29A8C / 0x14B22 / 0x14E50); 0x6FD1E from [FFADA1] (FFADA1 writer not found)	F301	-	C	
+0x86	6FD0C	-	5EA0C,6FB42,6FB42,6FCBA	3FFA0	193DA rts	1353C	no	-	none found	F3C0	BACKUP	C(table slot) / NF(writer)	
+0x87	0594C	F3D0	sub_98CA	3FFA0	1936A	13580	no	g11[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3D0	USB CAMERA	C	
+0x88	6FCBA	F3C0,F3C1	sub_976A,sub_976A	3FFA0	193DA rts	135C4	no	g10[0]	row code (0x29A8C / 0x14B22 / 0x14E50); 0x6FD1E from [FFADA1] (FFADA1 writer not found)	F3C0	BACKUP	C	
+0x89	6FCBA	F3C0,F3C1	sub_976A,sub_976A	3FFA0	193DA rts	13608	no	g10[1]	row code (0x29A8C / 0x14B22 / 0x14E50); 0x6FD1E from [FFADA1] (FFADA1 writer not found)	F3C0	BACKUP	C	
+0x8A	04892 (rts)	-	-	3FFA0	193DA rts	1364C	no	-	none found	-	-	C(table slot) / NF(writer)	
+0x8B	05970	F385	sub_976A	1759A	1937A save R1 n=0xB0	12948	yes	g8[6]	row code (0x29A8C / 0x14B22 / 0x14E50)	F385	GPS LOG	C	
+0x8C	0597E	F400	sub_976A	1F820	19406	12948	yes	-	direct entry sub_148A0 at 1F2C4, 1F402	F400	TX POWER (title drawn directly by sub_FFF0878C, group 0; not from the setup-label table)	C	
+0x8D	05990	F363	09EB4,09EB4	3FFA0	19762 rts	13690	no	g6[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	F363	RADIO ID CHECK	C	
+0x8E	059F8	F311	sub_976A	1761A	193D2 save R1 n=0xA5	12948	yes	g1[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F311	TARGET LOCATION	C	
+0x8F	05A1A	F34D	sub_976A	17622	193BA save R1 n=0xA2	12948	yes	g4[13]	row code (0x29A8C / 0x14B22 / 0x14E50)	F34D	WX ALERT	C	
+0x90	05A2E	F3A0	sub_976A	177A6	19842 save R2 n=0xB	12948	yes	g9[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3A0	APRS AF DUAL	C	
+0x91	05A42	-	-	3FFA0	19866	136D4	no	g9[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0x92	05AAE	F3A3	sub_976A	17822	1976C save R2 n=0x0	12948	yes	g9[3]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3A3	APRS MODEM	C	
+0x93	05ABC	F3A4	sub_98CA	3FFA0	19874	1386C	no	g9[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3A4	APRS MSG FLASH	C	
+0x94	05ADC	-	05B32,05BA0	3FFA0	197C0	138F4	no	g9[6]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0x95	05C86	F3A7	sub_976A	178E8	19842 save R2 n=0xB	12948	yes	g9[7]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3A7	APRS MUTE	C	
+0x96	05C9A	F3A9	sub_9C52	3FFA0	19834	13938	no	g9[9]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3A9	APRS RINGER	C	
+0x97	05CBC	-	-	1791E	19842 save R2 n=0xB	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0x98	05CBE	F3AA	099DE	3FFA0	1984A	137A0	no	g9[10]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3AA	APRS UNIT	C	
+0x99	05D1A	F3AB	sub_976A	17990	19774 save R2 n=0x1D	12948	yes	g9[11]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3AB	APRS TX DELAY	C	
+0x9A	05D28	F3AD	sub_976A	179C2	1977C save R2 n=0x1C	12948	yes	g9[13]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3AD	BEACON INTERVAL	C	
+0x9B	05D36	F3AE	sub_98CA,4FF10	3FFA0	196D6	1397C	no	g9[14]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3AE	BEACON STATUS TEXT	C	
+0x9C	05D66	F3AF	sub_976A	17A18	19842 save R2 n=0xB	12948	yes	g9[15]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3AF	BEACON TX	C	
+0x9D	05D74	-	05E02,25470	3FFA0	197CE	13718	no	g9[17]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3B1	DIGI PATH	C	
+0x9E	0601A	F3B4	sub_98CA	3FFA0	19784	137E4	no	g9[18]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3B4	GPS SETUP	C	
+0x9F	0605A	F3A1	0A252	3FFA0	193DA rts	12948	yes	g9[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3A1	APRS DESTINATION	C	
+0xA0	06060	F3B6	sub_976A	17AF4	19842 save R2 n=0xB	12948	yes	g9[20]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3B6	GPS TIME SET	C	
+0xA1	06074	F3B7	sub_98CA	3FFA0	19858	13828	no	g9[21]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3B7	GPS UNIT	C	
+0xA2	060A0	-	-	3FFA0	197F0	1375C	no	g9[5]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xA3	06196	F3B8	0A342	3FFA0	197FE	139C0	no	g9[22]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3B8	CALLSIGN (APRS)	C	
+0xA4	061BC	F3B9,F3BA	sub_976A,0A40E	3FFA0	19816	13A04	no	g9[23]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3B9	MY POSITION	C	
+0xA5	0624C	F3BB	0A55A	3FFA0	19794	13A48	no	g9[24]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3BB	MY SYMBOL	C	
+0xA6	062CA	F3BC	sub_976A,sub_976A	3FFA0	19824 save R2 n=0x9	13A8C	no	g9[25]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3BC	POSITION COMMENT	C	
+0xA7	062EC	F3BE	sub_976A	18238	1982C save R2 n=0x129	12948	yes	g9[27]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3BE	TIME ZONE	C	
+0xA8	062FA	F3BD	sub_9A54	3FFA0	1972C	13AD0	no	g9[26]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3BD	SmartBeaconing	C	
+0xA9	06046	F3B5	sub_976A	17ADC	19858	12948	yes	g9[19]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3B5	GPS POWER	C	
+0xAA	05ADA	-	-	3FFA0	19882	138B0	no	-	none found	-	-	C(table slot) / NF(writer)	
+0xAB	0634C	-	-	3FFA0	19890	13B14	no	g9[16]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xAC	063C4	F3A8	sub_9C16	3FFA0	1989E	13B58	no	g9[8]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3A8	APRS POPUP	C	
+0xAD	06408	-	-	3FFA0	198AC rts	13B9C	no	-	none found	-	-	C(table slot) / NF(writer)	
+0xAE	0640A	F3AC	sub_98CA	3FFA0	198AE	13BE0	no	g9[12]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3AC	BEACON INFO	C	
+0xAF	06436	-	-	3FFA0	19702	13C24	no	-	none found	-	-	C(table slot) / NF(writer)	
+0xB0	5E922	-	-	3FFA0	198DC	13C68	no	-	none found	-	-	C(table slot) / NF(writer)	
+0xB1	5E924	F323	sub_97DC	3FFA0	19946	13CAC	no	-	direct entry sub_148A0 at 1CEFE	F323	DIGITAL POPUP	C	
+0xB2	0D27E	F32A	sub_976A	5E514	198FA save R3 n=0xBC	12948	yes	g2.b[3]	row code (0x29A8C / 0x14B22 / 0x14E50)	F32A	DIGITAL VW	C	
+0xB3	5E90E	F004	0807A	3FFA0	19954	13D34	no	g12[0]	row code (0x29A8C / 0x14B22 / 0x14E50); store 0x3226	-	-	C	
+0xB4	5E944	F376	0A07C	5E4F6	1996E save R3 n=0x4	12948	yes	g7[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	F376	DG-ID	C	
+0xB5	5E9B2	F325	sub_976A	5E526	19976 save R3 n=0x62	12948	yes	g2.b[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	F325	LOCATION SERVICE	C	
+0xB6	04892 (rts)	-	-	3FFA0	193DA rts	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0xB7	04892 (rts)	-	-	3FFA0	199FA save R3 n=0x6C	13D78	no	g13[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xB8	063E6	F324	sub_976A	3FFA0	19A02 save R3 n=0x6D	13DBC	no	g2.b[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F324	DIGITAL POPUP	C	
+0xB9	0530E	-	-	3FFA0	19A0A save R3 n=0x6E	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0xBA	04892 (rts)	-	-	3FFA0	193DA rts	13E00	no	-	none found	-	-	C(table slot) / NF(writer)	
+0xBB	69890	-	699A6,699A6,6963C	3FFA0	193DA rts	13E44	no	g6[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xBC	69ADA	F371	09F9C	3FFA0	19A22	13E88	no	g7[0]	row code (0x29A8C / 0x14B22 / 0x14E50)	F371	RPT/WIRES FREQ	C	
+0xBD	5E9C6	F372	sub_976A	5E4E4	19A12 save R3 n=0x6F	12948	yes	g7[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	F372	SEARCH SETUP	C	
+0xBE	69F3A	-	6ED40,6ED0C	3FFA0	19A8A	13ECC	no	g7[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xBF	69F82	-	6EDAA,6EDB4,6ED76	3FFA0	193DA rts	13F10	no	g7[3]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xC0	5E9C0	F31B	09CF4	3FFA0	193DA rts	13F54	no	g1[8]	row code (0x29A8C / 0x14B22 / 0x14E50)	F31B	SOFTWARE VERSION	C	
+0xC1	5E9D4	F329	sub_976A	5E564	19A1A save R3 n=0xB4	12948	yes	g2.b[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	F329	STANDBY BEEP	C	
+0xC2	5EA38	-	-	3FFA0	19926 save R3 n=0x10A	13F98	no	g2.b[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xC3	5EA38	-	-	3FFA0	1997E	13FDC	no	g2.b[5]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xC4	5EA38	-	-	3FFA0	1998C	14020	no	g2.b[6]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xC5	5EA38	-	-	3FFA0	1999A	14064	no	g2.b[7]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xC6	5EA38	-	-	3FFA0	199A8 save R3 n=0x10E	12948	yes	g2.b[8]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xC7	5EA38	-	-	3FFA0	199B0	140A8	no	g2.b[9]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xC8	5EA38	-	-	3FFA0	199BE	140EC	no	g2.b[10]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xC9	5EA38	-	-	3FFA0	199CC save R3 n=0x116	14130	no	g2.b[11]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xCA	5EA38	-	-	3FFA0	199D4 save R3 n=0x11D	12948	yes	g2.b[12]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xCB	5EA38	-	-	3FFA0	199DC save R3 n=0x11E	12948	yes	g2.b[13]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xCC	5EA38	-	-	3FFA0	199E4 save R3 n=0x11F	12948	yes	g2.b[14]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xCD	5EA38	-	-	3FFA0	19910	14174	no	g2.b[15]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xCE	5EA38	-	-	3FFA0	1991E save R3 n=0x67	12948	yes	g2.b[16]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xCF	5EA38	-	-	3FFA0	1992E save R3 n=0x10B	12948	yes	g2.b[17]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xD0	5EA38	-	-	3FFA0	19936 save R3 n=0x10C	12948	yes	g2.b[18]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xD1	5EA38	-	-	3FFA0	1993E save R3 n=0x10D	12948	yes	g2.b[19]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xD2	5EA38	-	-	3FFA0	199EC	141B8	no	g13[1]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xD3	5EA38	-	-	3FFA0	199EC	141FC	no	g13[2]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xD4	06438	-	-	1762E	19392 save R1 n=0x94	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0xD5	06438	-	-	1767E	19392 save R1 n=0x94	12948	yes	-	none found	-	-	C(table slot) / NF(writer)	
+0xD6	0643A	-	0A654	3FFA0	196B0	14240	no	g2.b[20],g11[4],g13[4]	row code (0x29A8C / 0x14B22 / 0x14E50)	F3D1	-	C	
+0xD7	06438	-	-	190E6	198BC save R2 n=0x18B	12948	yes	g13[3]	row code (0x29A8C / 0x14B22 / 0x14E50)	-	-	C	
+0xD8	04892 (rts)	-	-	3FFA0	193DA rts	14284	no	-	none found	-	-	C(table slot) / NF(writer)	
+0xD9	04892 (rts)	-	-	3FFA0	193DA rts	142C8	no	-	none found	-	-	C(table slot) / NF(writer)	
+0xDA	04892 (rts)	-	-	3FFA0	193DA rts	1430C	no	-	none found	-	-	C(table slot) / NF(writer)	
+0xDB	066A4	-	06706,3CD4C,0CB8C	3FFA0	196C6	14350	no	-	push 0x1F7B4; sub_3FEFC at 0x1F79E	-	-	C	
+0xDC	0676C	-	0D156,0D13E,0D126,0D0E6	3FFA0	-	14394	no	-	store 0x102F4, 0x233B0	-	-	C	
+0xDD	0676C	-	0D156,0D13E,0D126,0D0E6	3FFA0	-	143D8	no	-	table 0x23156 via 0x23124	-	-	C	
+0xDE	0676C	-	0D156,0D13E,0D126,0D0E6	3FFA0	-	1441C	no	-	table 0x23156 via 0x23124	-	-	C	
+0xDF	067DA	-	0D156,0D0E6,3EDAA,0D116	3FFA0	-	14460	no	-	table 0x23156 via 0x23124	-	-	C	
+0xE0	067EE	-	0D156,0D0E6,3EDAA,0D116	3FFA0	-	144A4	no	-	table 0x23156 via 0x23124	-	-	C	
+0xE1	0676C	-	0D156,0D13E,0D126,0D0E6	2579C	-	144E8	no	-	table 0x23156 via 0x23124	-	-	C	
+0xE2	0676C	-	0D156,0D13E,0D126,0D0E6	3FFA0	-	144E8	no	-	table 0x23156 via 0x23124	-	-	C	
+0xE3	0676C	-	0D156,0D13E,0D126,0D0E6	3FFA0	-	1452C	no	-	table 0x23156 via 0x23124	-	-	C	
+0xE4	0676C	-	0D156,0D13E,0D126,0D0E6	3FFA0	-	1452C	no	-	table 0x23156 via 0x23124	-	-	C	
+0xE5	0676C	-	0D156,0D13E,0D126,0D0E6	3FFA0	-	14570	no	-	table 0x23156 via 0x23124	-	-	C	
+0xE6	0676C	-	0D156,0D13E,0D126,0D0E6	2579C	-	145B4	no	-	table 0x23156 via 0x23124	-	-	C	
+0xE7	0676C	-	0D156,0D13E,0D126,0D0E6	3FFA0	-	144E8	no	-	table 0x23156 via 0x23124	-	-	C	
+0xE8	0682C	F00B	048A4,08622	3FFA0	-	145F8	no	-	store 0x1029A (power-on handler, doc 50)	-	-	C	
+0xE9	048B2	F002	08056	-	-	1463C	no	-	store 0x3208	-	-	C	
+0xEA	06914	F000,F001	07FAA,08032	-	-	14680	no	-	push 0x1053E (power-on handler)	-	-	C	
+0xEB	0692C	F009	048A4,0856C	-	-	146C4	no	-	push 0x1051C (power-on handler)	-	-	C	
+0xEC	0693A	-	085DA	-	-	1474C	no	-	push 0x103DE (power-on handler)	-	-	C	
+0xED	06942	-	085DA	-	-	14708	no	-	none found	-	-	C(table slot) / NF(writer)	
+0xEE	5E9E2	F008	08532	-	-	14790	no	-	none found	-	-	C(table slot) / NF(writer)	

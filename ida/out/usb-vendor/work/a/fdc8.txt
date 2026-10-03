@@ -1,0 +1,119 @@
+00fd40 C 46 1a                          bne     locret_FD5C:8                              
+00fd42 C 6a 10 aa d2 73 00              btst    #0, @0xFFFFAAD2:16                         
+00fd48 C 46 0e                          bne     loc_FD58:8                                 
+00fd4a C fc ff                          mov.b   #0xFF, r4l                                 
+00fd4c C 6a 8c a9 ed                    mov.b   r4l, @0xFFFFA9ED:16                        
+00fd50 C 40 0a                          bra     locret_FD5C:8                              
+00fd52 C 6a 18 aa d2 70 00              bset    #0, @0xFFFFAAD2:16                         <- fd3c
+00fd58 C 6a 8c a9 ed                    mov.b   r4l, @0xFFFFA9ED:16                        <- fd48
+00fd5c C 54 70                          rts                                                <- fd28,fd40,fd50
+
+;---- func 0xfd5e..0xfd7e  sub_FD5E
+00fd5e C 2a 4e                          mov.b   @0x4E:8, r2l                               <- fb94
+00fd60 C ea 10                          and.b   #0x10, r2l                                 
+00fd62 C 6a 18 aa 30 72 00              bclr    #0, @0xFFFFAA30:16                         
+00fd68 C 6a 0b a9 eb                    mov.b   @0xFFFFA9EB:16, r3l                        
+00fd6c C 7a 63 00 00 00 ff              and.l   #0xFF, er3                                 
+00fd72 C 10 73                          shll.l  #2, er3                                    
+00fd74 C 78 b0 6b 26 00 00 fd 7e        mov.l   @(0xFD7E:32,er3), er6                      
+00fd7c C 59 60                          jmp     @er6                                       
+00fd7e d 00 00 fd 8a                    .long sub_FD8A                                     
+00fd82 d 00 00 fd 96                    .long sub_FD96                                     
+00fd86 d 00 00 fd ae                    .long sub_FDAE                                     
+
+;---- func 0xfd8a..0xfd96  sub_FD8A
+00fd8a C aa 00                          cmp.b   #0, r2l                                    <- fd7e
+00fd8c C 47 06                          beq     locret_FD94:8                              
+00fd8e C fc 01                          mov.b   #1, r4l                                    
+00fd90 C 6a 8c a9 eb                    mov.b   r4l, @0xFFFFA9EB:16                        
+00fd94 C 54 70                          rts                                                <- fd8c
+
+;---- func 0xfd96..0xfdae  sub_FD96
+00fd96 C aa 00                          cmp.b   #0, r2l                                    <- fd82
+00fd98 C 46 12                          bne     locret_FDAC:8                              
+00fd9a C fc 19                          mov.b   #0x19, r4l                                 
+00fd9c C 6a 8c a9 ed                    mov.b   r4l, @0xFFFFA9ED:16                        
+00fda0 C 6a 18 aa 30 70 00              bset    #0, @0xFFFFAA30:16                         
+00fda6 C fc 02                          mov.b   #2, r4l                                    
+00fda8 C 6a 8c a9 eb                    mov.b   r4l, @0xFFFFA9EB:16                        
+00fdac C 54 70                          rts                                                <- fd98
+
+;---- func 0xfdae..0xfdc8  sub_FDAE
+00fdae C aa 00                          cmp.b   #0, r2l                                    <- fd86
+00fdb0 C 47 0e                          beq     loc_FDC0:8                                 
+00fdb2 C fc 01                          mov.b   #1, r4l                                    
+00fdb4 C 6a 8c a9 eb                    mov.b   r4l, @0xFFFFA9EB:16                        
+00fdb8 C fc 19                          mov.b   #0x19, r4l                                 
+00fdba C 6a 8c a9 ed                    mov.b   r4l, @0xFFFFA9ED:16                        
+00fdbe C 40 06                          bra     locret_FDC6:8                              
+00fdc0 C 6a 18 aa 30 70 00              bset    #0, @0xFFFFAA30:16                         <- fdb0
+00fdc6 C 54 70                          rts                                                <- fdbe
+
+;---- func 0xfdc8..0xfde2  sub_FDC8
+00fdc8 C 6a 0a b0 96                    mov.b   @0xFFFFB096:16, r2l                        <- fb9e
+00fdcc C 6a 0b b0 97                    mov.b   @0xFFFFB097:16, r3l                        
+00fdd0 C 7a 63 00 00 00 ff              and.l   #0xFF, er3                                 
+00fdd6 C 10 73                          shll.l  #2, er3                                    
+00fdd8 C 78 b0 6b 26 00 00 fd e2        mov.l   @(0xFDE2:32,er3), er6                      
+00fde0 C 59 60                          jmp     @er6                                       
+00fde2 d 00 00 fd ee                    .long sub_FDEE                                     
+00fde6 d 00 00 fd fa                    .long sub_FDFA                                     
+00fdea d 00 00 fe 0c                    .long sub_FE0C                                     
+
+;---- func 0xfdee..0xfdfa  sub_FDEE
+00fdee C aa 00                          cmp.b   #0, r2l                                    <- fde2
+00fdf0 C 46 06                          bne     locret_FDF8:8                              
+00fdf2 C fc 01                          mov.b   #1, r4l                                    
+00fdf4 C 6a 8c b0 97                    mov.b   r4l, @0xFFFFB097:16                        
+00fdf8 C 54 70                          rts                                                <- fdf0
+
+;---- func 0xfdfa..0xfe0c  sub_FDFA
+00fdfa C aa 00                          cmp.b   #0, r2l                                    <- fde6
+00fdfc C 47 0c                          beq     locret_FE0A:8                              
+00fdfe C fc 14                          mov.b   #0x14, r4l                                 
+00fe00 C 6a 8c a9 ed                    mov.b   r4l, @0xFFFFA9ED:16                        
+00fe04 C fc 02                          mov.b   #2, r4l                                    
+00fe06 C 6a 8c b0 97                    mov.b   r4l, @0xFFFFB097:16                        
+00fe0a C 54 70                          rts                                                <- fdfc
+
+;---- func 0xfe0c..0xfe18  sub_FE0C
+00fe0c C aa 00                          cmp.b   #0, r2l                                    <- fdea
+00fe0e C 46 06                          bne     locret_FE16:8                              
+00fe10 C fc 01                          mov.b   #1, r4l                                    
+00fe12 C 6a 8c b0 97                    mov.b   r4l, @0xFFFFB097:16                        
+00fe16 C 54 70                          rts                                                <- fe0e
+
+;---- func 0xfe18..0xfe38  sub_FE18
+00fe18 C fc 07                          mov.b   #7, r4l                                    <- fb8a
+00fe1a C 6a 8c 94 ba                    mov.b   r4l, @0xFFFF94BA:16                        
+00fe1e C 5e 01 00 e4                    jsr     sub_100E4:24                               
+00fe22 C 6a 0b a9 ec                    mov.b   @0xFFFFA9EC:16, r3l                        
+00fe26 C 7a 63 00 00 00 ff              and.l   #0xFF, er3                                 
+00fe2c C 10 73                          shll.l  #2, er3                                    
+00fe2e C 78 b0 6b 26 00 00 fe 38        mov.l   @(0xFE38:32,er3), er6                      
+00fe36 C 59 60                          jmp     @er6                                       
+00fe38 d 00 00 fe 60                    .long sub_FE60                                     
+00fe3c d 00 00 fe 6c                    .long sub_FE6C                                     
+00fe40 d 00 00 fe 88                    .long sub_FE88                                     
+00fe44 d 00 00 ff 74                    .long sub_FF74                                     
+00fe48 d 00 00 ff ae                    .long sub_FFAE                                     
+00fe4c d 00 00 ff ce                    .long loc_FFCE                                     
+00fe50 d 00 01 00 50                    .long sub_10050                                    
+00fe54 d 00 01 00 74                    .long sub_10074                                    
+00fe58 d 00 01 00 82                    .long sub_10082                                    
+00fe5c d 00 01 00 c4                    .long sub_100C4                                    
+
+;---- func 0xfe60..0xfe6c  sub_FE60
+00fe60 C a1 ff                          cmp.b   #0xFF, r1h                                 <- fe38
+00fe62 C 46 06                          bne     locret_FE6A:8                              
+00fe64 C fc 01                          mov.b   #1, r4l                                    
+00fe66 C 6a 8c a9 ec                    mov.b   r4l, @0xFFFFA9EC:16                        
+00fe6a C 54 70                          rts                                                <- fe62
+
+;---- func 0xfe6c..0xfe88  sub_FE6C
+00fe6c C 6a 18 aa e1 72 00              bclr    #0, @0xFFFFAAE1:16                         <- fe3c
+00fe72 C a1 01                          cmp.b   #1, r1h                                    
+00fe74 C 46 10                          bne     locret_FE86:8                              
+00fe76 C 6a 89 a9 f1                    mov.b   r1l, @0xFFFFA9F1:16                        
+00fe7a C fc 03                          mov.b   #3, r4l                                    
+00fe7c C 6a 8c 95 3e                    mov.b   r4l, @0xFFFF953E:16                        

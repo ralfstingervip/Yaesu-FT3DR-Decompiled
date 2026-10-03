@@ -1,0 +1,57 @@
+G1 H8SX decode -- coverage arithmetic (MAIN content 0x000000-0x07B753 = 505,684 B)
+Database: ida\db\jobs\G1_H8S (copy of MAIN_FULL, processor switched h8s300a -> h8sxa, plan absorbed).
+Byte sets are recomputed from items_before.tsv / items_after.tsv (ida\out\h8s-decode\work).
+
+1. IDA instruction bytes (is_code) in G1_H8S
+   before (MAIN_FULL state)             380738
+   after                                391452
+   gained                                10739
+     in the plan (sites + downstream)     9773
+     IDA flow from tier-A plan code        928   (case heads of the 45-case switch at 0x076308: 488; jsr/bsr targets: 440)
+     not caused by the decode               38   (0x01A432 4 B lane-1 sub_1A432; 0x0703C4 34 B data-offset side effect) -- NOT credited
+   lost (junk the decode displaced)         25   (odd-aligned heads and IDA code over tables now typed by the MOV.L data refs)
+   credited new instruction bytes        10701   = 9773 plan + 928 flow
+     tier A (proven flow)                 7219
+     tier B (structural)                  3482
+     inside closed window 0x078106+          0
+   planned bytes that were already is_code (old mis-decodes, e.g. 6-byte tail of a 78 MOV.L) 353 -- not new
+
+2. Decodable-instruction companion (RESUME-FULL 380,782; this DB's baseline is 380,738, a 44 B difference in the source DB)
+   380,782 + 10701 new - 25 lost = 391458
+
+3. MAIN proven code (RESUME-FULL 369,071 / 380,782)
+   tier-A new bytes                       7219
+     of which inside main-indirect\proved.tsv extents (F1 credited extents, so already in 369,071) 0
+     of which inside fnindex validated extents (credited only as is_code, so not yet counted)   4
+   delta to the proven numerator          7219
+   369,071 + 7219 = 376290  of  391458 decodable  = 96.13%   (74.41% of 505,684 content)
+   tier-B bytes (3482) are code by structure but not reached from a proven entry; they stay out of the proven numerator.
+
+4. Headline numerator 930,393 (validated fn is_code + proved extents + typed runs + F2 983)
+   F2 newly-typed bytes re-read from split.tsv: 983 (expected 983)
+   new bytes already credited (as another type or as an extent) 9907: {'parameter table': 9201, 'string': 24, 'pointer table': 4, 'recovered code': 234, 'other': 444}
+   new bytes NOT previously credited        794
+     by where they sit: {'other': 714, 'in-function-not-validated': 74, 'fn-extent': 6}
+     by tier: {'A': 632, 'B': 162}
+   930,393 + 794 = 931187 / 1,029,972 = 90.41%
+
+5. Cross-check against main-raw-other\split.tsv (F2) -- new code bytes per F2 class
+   closed-window-left-closed                  F2 bytes   898   now new code     0
+   code                                       F2 bytes   535   now new code   444
+   code-proven                                F2 bytes   164   now new code     4
+   code-region-interstitial                   F2 bytes  1703   now new code   710
+   padding/fill-tail                          F2 bytes    47   now new code     0
+   parameter table (16-bit)                   F2 bytes   522   now new code     0
+   parameter table: byte curve tail           F2 bytes     5   now new code     0
+   parameter table: byte index LUT            F2 bytes    69   now new code     0
+   parameter table: byte ramp                 F2 bytes     5   now new code     0
+   small-data                                 F2 bytes   225   now new code     0
+
+   (bytes of F2 fragments now covered by a decoded H8SX-era instruction span incl. re-decoded tails:)
+   code 444, code-proven 4, code-region-interstitial 710
+
+6. Cross-check against main-indirect\proved.tsv (F1)
+   tier-A new bytes inside proved extents: 0 (already in F1's 19,848)
+   F1 rows whose start is mid-instruction (+2 into a 78 MOV.L): 034644, 038104, 04F3A4, 06AC14 (true instruction starts 2 B earlier)
+   F1 rows that start on ASCII text: 04DE6E (0x04DE6E-0x04DE93, 38 B) and 04DF72 (0x04DF72-0x04DF97, 38 B); true entries 0x04DE94 / 0x04DF98
+   -> 76 B of F1's 19,848 are text, not code (correction, not applied above)

@@ -1,0 +1,9 @@
+item	flash_offset	ram_addr	note	extra
+copy source base	0x07B2A6		dst 0xFF6034, len 0x4AE (EEPMOV.W @0x002162)	copy region 0x07B2A6..0x07B753
+table @0x07B4B2	0x07B4B2	0xFF6240		
+endpoint I/O table	0x07B580	0xFF630E	pairs RAM size-var w/ USB data reg 0xFFEE0C/0D/0E/18/24	
+descriptor pointer table	0x07B5F0	0xFF637E	holds 00 FF 64 0E , 00 FF 64 9F	
+string pointer table	0x07B5FC	0xFF638A	holds flash ptrs 0x07B272/76/86 (strings not relocated)	
+CDC device descriptor	0x07B680	0xFF640E	12 01 10 01 02 ... AA 26 20 00 (VID26AA PID0020 class02)	RAM image 0xFF640E == ptr@0x07B5F0
+CDC config descriptor	0x07B711	0xFF649F	09 02 43 00 02 01 ... (wTotalLength 0x43, CDC-ACM, EP01/82/83)	RAM image 0xFF649F == ptr@0x07B5F6
+IEEE-1284 ACME string	0x07B69C	0xFF642A	'MANUFACTURER:ACME...' boilerplate, len-prefixed at 0x07B698	leftover, unreferenced by CDC desc

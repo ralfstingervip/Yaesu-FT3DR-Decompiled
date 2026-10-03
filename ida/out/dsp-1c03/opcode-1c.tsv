@@ -1,0 +1,48 @@
+# Opcode 0x1C (MAIN->DSP, 32-byte frame). Builder sub_5A040. Frame base FFB13E.
+# [0]=0x1C, [1]=B0B8 (sub-op), [2]=payload (only for sub-op 9/0x0D), [3..30]=0, [31]=checksum.
+field	addr	bytes	meaning	status
+builder_entry	05A040	7a 04 00 00 00 00	clear 32-byte frame (8x mov.l #0 @FFB13E)	Confirmed
+set_op_subop	05A07C	f3 1c 6a 0b b0 b8 6b 83 b1 3e	[0]=0x1C (r3h), [1]=B0B8 (r3l); mov.w r3,@FFB13E	Confirmed
+subop_dispatch	05A086	6a 0c b0 b8 ac 09 47 0a ac 0d 46 1c	read B0B8; ==9 -> 05A098; ==0x0D -> 05A092; else skip [2]	Confirmed
+payload_subop09	05A098	6a 0c 8e 2b 10 4c 10 4c 10 0c 6a 0b 8e 2c eb 1f 14 cb	[2]=(FF8E2B<<5)|(FF8E2C & 0x1F)	Confirmed (DEAD: no B0B8=9 writer)
+payload_subop0D	05A092	6a 0b 8e 2d	[2]=FF8E2D	Confirmed (DEAD: no B0B8=0x0D writer)
+store_payload	05A0AA	6a 8b b1 40	[2]=packed value @FFB140	Confirmed
+finish	05A0AE	5e 05 8f a2	jsr frame_finish (checksum+queue)	Confirmed
+#
+# Sub-op census (B0B8 values). Whole-image scan: the ONLY writer of B0B8 is 05C442 = const 3.
+subop	writer_addr	writer_bytes	value	payload[2]	live	note
+0x03	05C442	fc 03 6a 8c b0 b8	3	none (stays 0)	YES	only live sub-op; sent by session 0x15 step sub_5C436
+0x09	-	-	9	(FF8E2B<<5)|(FF8E2C&0x1F)	NO	decode path exists in builder; no writer sets B0B8=9
+0x0D	-	-	0x0D	FF8E2D	NO	decode path exists in builder; no writer sets B0B8=0x0D
+#
+# Build sites (callers of sub_5A040):
+build_site	caller_func	note
+05A38C	sub_5A1BE	dsp_request B0B5>=2 branch -- DEAD (B0B5 only ever 1; see doc 52)
+05C446	sub_5C436	session 0x15 step 4 -- LIVE (the only reachable 1C 03 send)
+#
+# Session 0x15 (B0BE=0x15) script, table 0x05C40A, 11 steps (counter B0BF):
+step	handler	action
+0	05B4E4	SEND 12 (sub_059240/05923C)
+1	05B522	WAIT (ACK/NAK)
+2	05B54C	SEND 1A 01 (RX DISABLE) or 12
+3	05B3E2	WAIT
+4	05C436	SEND 1C 03 (B0B8=3; jsr sub_5A040)
+5	05B3E2	WAIT (ACK/NAK)
+6	05B7E6	TXON (P3DR.b2=0)
+7	05C44C	wait until B0BB.b0 clear (PTT released); clear stale B12D.b7
+8	05BC7C	TXOFF (P3DR.b2=1)
+9	05B83C	SEND 1A 00 (RX ENABLE)
+10	05B41C	END (B0BE=0)
+#
+# Arming of session 0x15: command ']' (SCI-A/host slot 0x2D), sub_74396.
+arm	addr	bytes	meaning
+cmd_arg1	0743BC	fc 01 6a 8c b0 cc	B0CC.b0 = 1 (gated: band comm-mode != 0 AND B0A4.b2 DSP-init done)
+cmd_arg0	0743CC	fc 00 6a 8c b0 cc	B0CC.b0 = 0 + jsr sub_56046 (re-init DSP link)
+boot_clear	002E18	-	B0CC=0 at boot
+remote0_clear	073B3A	-	B0CC=0 on remote-enter '0'
+read_tx	0358CA	6a 10 b0 cc 73 00	TX-start dispatcher: B0CC.b0 -> sub_5A2F8 -> session 0x15
+read_node	035EDC	6a 10 b0 cc 73 00	node TX-start twin -> session 0x15
+read_state10	035A22	6a 10 b0 cc 73 00	TX state 0x10: b0 suppresses 3.5s follow-up
+#
+# Reply MAIN parses after 1C 03: only the generic frame ACK/NAK (0xA0/0x90) via step-5 WAIT (B0A4 & 0x30). No dedicated 1C reply.
+# Vendor CPU>DSP trace formatter sub_5A506 has NO case for opcode 0x1C (falls to default 0x5AD8C). The "DATA TEXT SET" label belongs to the DSP->MAIN event 0x9C, not to 1C.

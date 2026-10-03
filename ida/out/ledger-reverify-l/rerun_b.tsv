@@ -1,0 +1,4 @@
+lane	script	command	result	outputs_compared	identical	note
+L10	ida\out\accessory-ptt\verify.py	copy to scratchpad\b\rerun\accessory-ptt; python verify.py (writes verify.tsv next to the copy)	# 185/185 pass; MAIN sha256 8e3ecd05...; SUB sha256 b93570b3...	verify.tsv	yes (byte-identical, sha256 f5b302e2c4225f4b)	no edit needed; output path is __file__-relative
+L8	ida\out\tx-states\build_tables.py	copy to scratchpad\b\rerun\tx-states with ROOT pinned to .; python build_tables.py	stdout "32 55" (32 state rows, 55 transitions)	states.tsv, transitions.tsv	yes, both byte-identical (sha256 e1418d16926b2aaf, 19c7f18dd26e2029)	ROOT is derived from __file__ (4 levels up), so the scratch copy pins it; OUT stays __file__-relative
+M13	m13_counts_b.py	python m13_counts_b.py	63 rows: 59 PASS, 3 FAIL, 1 INFO	counts_b.tsv	n/a (new)	published dirs ida\out\accessory-ptt and ida\out\tx-states listed before/after the re-runs: unchanged

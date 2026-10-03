@@ -1,0 +1,121 @@
+###### range 0003F600-0003F6A0
+0003F600  01 00 6f 65 00 02      mov.l   @(2:16,er6), er5                     ; d(R38,+0x0) R37
+0003F606  68 5b                  mov.b   @er5, r3l                            ; t3 R27
+0003F608  6a 10 a9 ee 73 00      btst    #0, @0xFFFFA9EE:16                   ; #0x0 a=0xFFFFA9EE
+0003F60E  46 0a                  bne     loc_3F61A:8                          ; a=0x3F61A
+0003F610  6e 6c 00 01            mov.b   @(1:16,er6), r4l                     ; d(R38,+0x0) R28
+0003F614  1c cb                  cmp.b   r4l, r3l                             ; R28 R27
+0003F616  47 08                  beq     loc_3F620:8                          ; a=0x3F620
+0003F618  40 0e                  bra     loc_3F628:8                          ; a=0x3F628
+0003F61A  68 6c                  mov.b   @er6, r4l                            ; t3 R28
+0003F61C  1c cb                  cmp.b   r4l, r3l                             ; R28 R27
+0003F61E  46 08                  bne     loc_3F628:8                          ; a=0x3F628
+0003F620  5e 03 ff a0            jsr     sub_3FFA0:24                         ; a=0x3FFA0
+0003F624  fc ff                  mov.b   #0xFF, r4l                           ; #0xFF R28
+0003F626  54 70                  rts                                          ; 
+0003F628  6a 18 aa 30 70 60      bset    #6, @0xFFFFAA30:16                   ; #0x6 a=0xFFFFAA30
+0003F62E  6a 10 a9 ee 73 00      btst    #0, @0xFFFFA9EE:16                   ; #0x0 a=0xFFFFA9EE
+0003F634  46 20                  bne     loc_3F656:8                          ; a=0x3F656
+0003F636  01 00 6f 65 00 02      mov.l   @(2:16,er6), er5                     ; d(R38,+0x0) R37
+0003F63C  68 5b                  mov.b   @er5, r3l                            ; t3 R27
+0003F63E  69 64                  mov.w   @er6, r4                             ; t3 R4
+0003F640  1c bc                  cmp.b   r3l, r4l                             ; R27 R28
+0003F642  47 02                  beq     loc_3F646:8                          ; a=0x3F646
+0003F644  44 0a                  bcc     loc_3F650:8                          ; a=0x3F650
+0003F646  0c 4b                  mov.b   r4h, r3l                             ; R20 R27
+0003F648  6a 18 aa e1 72 20      bclr    #2, @0xFFFFAAE1:16                   ; #0x2 a=0xFFFFAAE1
+0003F64E  40 02                  bra     loc_3F652:8                          ; a=0x3F652
+0003F650  0a 0b                  inc.b   r3l                                  ; #0x1 R27
+0003F652  68 db                  mov.b   r3l, @er5                            ; R27 t3
+0003F654  54 70                  rts                                          ; 
+0003F656  01 00 6f 65 00 02      mov.l   @(2:16,er6), er5                     ; d(R38,+0x0) R37
+0003F65C  68 5b                  mov.b   @er5, r3l                            ; t3 R27
+0003F65E  69 64                  mov.w   @er6, r4                             ; t3 R4
+0003F660  1c 4b                  cmp.b   r4h, r3l                             ; R20 R27
+0003F662  47 02                  beq     loc_3F666:8                          ; a=0x3F666
+0003F664  44 0a                  bcc     loc_3F670:8                          ; a=0x3F670
+0003F666  0c cb                  mov.b   r4l, r3l                             ; R28 R27
+0003F668  6a 18 aa e1 72 20      bclr    #2, @0xFFFFAAE1:16                   ; #0x2 a=0xFFFFAAE1
+0003F66E  40 02                  bra     loc_3F672:8                          ; a=0x3F672
+0003F670  1a 0b                  dec.b   r3l                                  ; #0x1 R27
+0003F672  68 db                  mov.b   r3l, @er5                            ; R27 t3
+0003F674  54 70                  rts                                          ; 
+0003F676  6a 10 a9 ee 73 00      btst    #0, @0xFFFFA9EE:16                   ; #0x0 a=0xFFFFA9EE
+0003F67C  46 18                  bne     loc_3F696:8                          ; a=0x3F696
+0003F67E  68 6b                  mov.b   @er6, r3l                            ; t3 R27
+0003F680  6b 24 00 ff b0 92      mov.w   @0xFFB092:32, r4                     ; a=0xFFB092 R4
+0003F686  1c bc                  cmp.b   r3l, r4l                             ; R27 R28
+0003F688  47 02                  beq     loc_3F68C:8                          ; a=0x3F68C
+0003F68A  44 04                  bcc     loc_3F690:8                          ; a=0x3F690
+0003F68C  0c 4b                  mov.b   r4h, r3l                             ; R20 R27
+0003F68E  40 02                  bra     loc_3F692:8                          ; a=0x3F692
+0003F690  0a 0b                  inc.b   r3l                                  ; #0x1 R27
+0003F692  68 eb                  mov.b   r3l, @er6                            ; R27 t3
+0003F694  54 70                  rts                                          ; 
+0003F696  68 6b                  mov.b   @er6, r3l                            ; t3 R27
+0003F698  6b 24 00 ff b0 92      mov.w   @0xFFB092:32, r4                     ; a=0xFFB092 R4
+0003F69E  1c 4b                  cmp.b   r4h, r3l                             ; R20 R27
+###### range 000069A0-000069AA
+000069A0  54 70                  rts                                          ; 
+000069A2  54 70                  rts                                          ; 
+000069A4  54 70                  rts                                          ; 
+000069A6  54 70                  rts                                          ; 
+000069A8  54 70                  rts                                          ; 
+###### range 000166AA-000166CC
+000166AA  7a 06 00 01 66 ba      .byte 0x7A                                   ; #0x166BA R38
+000166B0  5e 03 f6 00            jsr     sub_3F600:24                         ; a=0x3F600
+000166B4  5e 00 69 a6            jsr     nullsub_36:24                        ; a=0x69A6
+000166B8  54 70                  rts                                          ; 
+000166BA  ?? 13
+000166BB  21 00                  mov.b   @0:8, r1h                            ; a=0x0 R17
+000166BD  ff 89                  mov.b   #0x89, r7l                           ; #0x89 R31
+000166BF  a9 6a                  cmp.b   #0x6A, r1l                           ; #0x6A R25
+000166C1  0c 8d                  mov.b   r0l, r5l                             ; R24 R29
+000166C3  de 47                  xor.b   #0x47, r6l                           ; #0x47 R30
+000166C5  06 5e                  andc    #0x5E, ccr                           ; #0x5E R43
+000166C7  ?? 03
+000166C8  ff a0                  mov.b   #0xA0, r7l                           ; #0xA0 R31
+000166CA  54 70                  rts                                          ; 
+###### range 00016B4E-00016B68
+00016B4E  7a 06 00 01 6b 5a      .byte 0x7A                                   ; #0x16B5A R38
+00016B54  5e 03 f6 28            .byte 0x5E                                   ; a=0x3F628
+00016B58  54 70                  rts                                          ; 
+00016B5A  ?? 00
+00016B5B  03 00                  ldc.b   r0h, ccr                             ; R16 R43
+00016B5D  ff 89                  mov.b   #0x89, r7l                           ; #0x89 R31
+00016B5F  b6 6e                  subx    #0x6E, r6h                           ; #0x6E R22
+00016B61  0c 00                  mov.b   r0h, r0h                             ; R16 R16
+00016B63  37 6a                  mov.b   r7h, @0x6A:8                         ; R23 a=0x6A
+00016B65  8c aa                  add.b   #0xAA, r4l                           ; #0xAA R28
+00016B67  ?? 56
+###### range 0000E580-0000E596
+0000E580  6a 8c 8c 29            mov.b   r4l, @0xFFFF8C29:16                  ; R28 a=0xFFFF8C29
+0000E584  fc 3f                  mov.b   #0x3F, r4l                           ; #0x3F R28
+0000E586  6a 8c 8c 2a            mov.b   r4l, @0xFFFF8C2A:16                  ; R28 a=0xFFFF8C2A
+0000E58A  fc 19                  mov.b   #0x19, r4l                           ; #0x19 R28
+0000E58C  6a 8c 89 a9            mov.b   r4l, @0xFFFF89A9:16                  ; R28 a=0xFFFF89A9
+0000E590  fc 01                  mov.b   #1, r4l                              ; #0x1 R28
+0000E592  6a 8c 89 97            mov.b   r4l, @0xFFFF8997:16                  ; R28 a=0xFFFF8997
+###### range 00007C20-00007C70
+00007C20  fc 00                  mov.b   #0, r4l                              ; #0x0 R28
+00007C22  6a 8c bc 35            mov.b   r4l, @0xFFFFBC35:16                  ; R28 a=0xFFFFBC35
+00007C26  fb 02                  mov.b   #2, r3l                              ; #0x2 R27
+00007C28  6a ab 00 ff 3d 7a      mov.b   r3l, @0xFF3D7A:32                    ; R27 a=0xFF3D7A
+00007C2E  fb 00                  mov.b   #0, r3l                              ; #0x0 R27
+00007C30  6a 10 89 c2 77 10      bld     #1, @0xFFFF89C2:16                   ; #0x1 a=0xFFFF89C2
+00007C36  67 0b                  bst     #0, r3l                              ; #0x0 R27
+00007C38  6a 10 8a be 77 60      bld     #6, @0xFFFF8ABE:16                   ; #0x6 a=0xFFFF8ABE
+00007C3E  67 1b                  bst     #1, r3l                              ; #0x1 R27
+00007C40  6a 10 bb e0 77 70      bld     #7, @0xFFFFBBE0:16                   ; #0x7 a=0xFFFFBBE0
+00007C46  67 ab                  bist    #2, r3l                              ; #0x2 R27
+00007C48  6a 10 8b ca 77 00      bld     #0, @0xFFFF8BCA:16                   ; #0x0 a=0xFFFF8BCA
+00007C4E  67 3b                  bst     #3, r3l                              ; #0x3 R27
+00007C50  6a 10 8b ca 77 10      bld     #1, @0xFFFF8BCA:16                   ; #0x1 a=0xFFFF8BCA
+00007C56  67 4b                  bst     #4, r3l                              ; #0x4 R27
+00007C58  6a 0c 81 3e            mov.b   @0xFFFF813E:16, r4l                  ; a=0xFFFF813E R28
+00007C5C  46 02                  bne     loc_7C60:8                           ; a=0x7C60
+00007C5E  70 6b                  bset    #6, r3l                              ; #0x6 R27
+00007C60  70 7b                  bset    #7, r3l                              ; #0x7 R27
+00007C62  6a 10 89 c4 77 40      bld     #4, @0xFFFF89C4:16                   ; #0x4 a=0xFFFF89C4
+00007C68  67 7b                  bst     #7, r3l                              ; #0x7 R27
+00007C6A  6a ab 00 ff 3d 7b      mov.b   r3l, @0xFF3D7B:32                    ; R27 a=0xFF3D7B

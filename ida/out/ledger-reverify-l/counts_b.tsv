@@ -1,0 +1,64 @@
+doc	line	claim	expected	derived	verdict	note
+104-pdn-node-table.md	16	off_74472 = 48 BE32 handler pointers 0x074472-0x074531, all code addresses	48 even targets < 0x07B754	48 even targets in range; next dword at 0x074532 = 02020102	PASS	slot 1 = 002070 (sub_2070)
+104-pdn-node-table.md	25	slot 0x10 ('@') = sub_73E58	073E58	073E58	PASS	
+104-pdn-node-table.md	73	slots 0x2D/0x2E	074396 0743E0	074396 0743E0	PASS	
+104-pdn-node-table.md	19	byte_74532: 48 arg-length bytes, 0xFF = variable	48 B	len 48; 0xFF count 2; first 16 02 02 01 02 04 ff 04 ff 01 01 01 01 02 05 09 03	PASS	
+104-pdn-node-table.md	126	FF97FC: 3 abs16 references (read 0x073996, read 0x073A28, write 0x073A70), no abs32	reads 073996 073A28; write 073A70; abs32 0	raw "97 fc" 5 (009D41 00E595 073998 073A2A 073A72); abs16 reads 073996 073A28; writes 073A70; abs32 0	PASS	
+104-pdn-node-table.md	126	wording: "3 references, all in 0x0739xx"	all three in 0x073900-0x0739FF	only 0x073996 is; 0x073A28 and 0x073A70 are in 0x073Axx	FAIL	wording slip; the three addresses the doc lists are right
+104-pdn-node-table.md	108	off_73974 = 7 x BE32 phase handlers	073990 073992 0739DA 0739FA 073A54 073A86 073A98	073990 073992 0739DA 0739FA 073A54 073A86 073A98	PASS	
+104-pdn-node-table.md	148	command 'K' (slot 0x1B) handler 074070 contains jsr loc_73AC2	5e073ac2	at 074070 (+0)	PASS	
+104-pdn-node-table.md	148	command 'Q' (slot 0x21) handler 07415C contains jsr loc_73AC2	5e073ac2	at 07415C (+0)	PASS	
+104-pdn-node-table.md	148	command '\' (slot 0x2C) handler 074390 contains jsr loc_73AC2	5e073ac2	at 074390 (+0)	PASS	
+104-pdn-node-table.md	136	command '1' (slot 0x01) handler 002070 contains jmp loc_DC5A	5a00dc5a	at 00208E (+30)	PASS	
+104-pdn-node-table.md	136	command 'C' (slot 0x13) handler 073F08 contains jmp sub_DBD8	5a00dbd8	at 073F16 (+14)	PASS	
+104-pdn-node-table.md	136	command 'I' (slot 0x19) handler 07405A contains jmp loc_25AC	5a0025ac	at 07405C (+2)	PASS	
+105-tx-states.md	87	raw scan 0x000000-0x080000 for "aa d5": 44 hits	44	44	PASS	
+105-tx-states.md	89	"00 ff aa d5": 0 hits	0	0	PASS	
+105-tx-states.md	90	32 AAD5 store sites (mov.b rX,@AAD5:16); values {0,1,2,3,5,0x0D-0x14}, never 4 or 6-0x0C	32; {0,1,2,3,5,13..20}	32 stores; values [0, 1, 2, 3, 5, 13, 14, 15, 16, 17, 18, 19, 20]; unresolved 0	PASS	value = nearest preceding mov.b #imm to the stored register
+105-tx-states.md	19	main table 0x034674: 21 dwords, all code	21	0346FA 034966 034CCE 034D42 034D5C 034D66 034DB6 034DB8 034DBA 034DBC 034DBE 034DB8 034DC0 0346C8 0346D2 0346D8 035A04 035A8C 035ABE 035B4A 0359EA	PASS	dword after: 553CFC0E
+105-tx-states.md	19	twin table 0x035CD8: 21 dwords, all code	21	035D42 035E46 035E86 035E86 035E86 035E86 035E86 035E86 035E86 035E86 035E86 035E86 035E86 035D2C 035D36 035D3C 035F84 035FB8 035FE0 03600E 035F6A	PASS	dword after: 551EFC0E
+105-tx-states.md	216	main slots 6-0x0C -> 034DB6/B8/BA/BC/BE/B8/C0, each rts	034DB6 034DB8 034DBA 034DBC 034DBE 034DB8 034DC0	034DB6 034DB8 034DBA 034DBC 034DBE 034DB8 034DC0	PASS	
+105-tx-states.md	219	twin slots 2-0x0C all -> nullsub_34 0x035E86 (rts)	035E86 x11	035E86 035E86 035E86 035E86 035E86 035E86 035E86 035E86 035E86 035E86 035E86	PASS	
+105-tx-states.md	48	state 4 handler 0x034D5C (copy of state 5)	034D5C	034D5C	PASS	
+105-tx-states.md	290	word_35158: 50 CTCSS entries 670..2541 (x0.1 Hz)	670..2541, increasing	670..2541, increasing=True, next word 6A10	PASS	
+105-tx-states.md	186	sub-band table 03510A {lo,hi,idx} packed BCD, 10 Hz units	[(40, 75.995, 0), (108, 119.995, 1), (120, 173.995, 2), (174, 221.995, 3), (222, 229.995, 4)]	[(40.0, 75.995, 0), (108.0, 119.995, 1), (120.0, 173.995, 2), (174.0, 221.995, 3), (222.0, 229.995, 4)]	PASS	
+105-tx-states.md	187	sub-band table 035140 {lo,hi,idx} packed BCD, 10 Hz units	[(230, 419.995, 5), (420, 579.995, 6)]	[(300.0, 419.995, 5), (420.0, 579.995, 6)]	FAIL	image lo of idx 5 is BCD 30 00 00 00 = 300.000 MHz, not 230
+105-tx-states.md	229	AAD4.b7 setters (bset #7,@AAD4): three, 0x0631CC 0x067C30 0x067EFE	0631CC 067C30 067EFE	0631CC 067C30 067EFE	PASS	
+105-tx-states.md	326	A996: 3 xrefs (two writers and sub_35BAA)	2 writes + 1 read	034558 W, 035BB6 R, 035C34 W	PASS	
+105-tx-states.md	246	FF94C0 = 0 store at 02285A	fc 00 6a 8c 94 c0	fc 00 6a 8c 94 c0	PASS	
+105-tx-states.md	246	FF94C0 = 0 store at 0228A2	fc 00 6a 8c 94 c0	fc 00 6a 8c 94 c0	PASS	
+105-tx-states.md	246	FF94C0 = 0 store at 022912	fc 00 6a 8c 94 c0	fc 00 6a 8c 94 c0	PASS	
+105-tx-states.md	47	states 6-0x0C bare rts 0x034DB6-0x034DC1 (54 70 x6)	54 70 x6	54 70 54 70 54 70 54 70 54 70 54 70	PASS	
+105-tx-states.md	257	FF9598 = 0x1F loaded in sub_35872 (0x035872 fc 1f 6a 8c 95 98); stores of FF9598	store at 035874	035874 035EC2	PASS	INFO list of all abs16 stores
+107-accessory-ptt.md	333	TX-time table 011960 (n=1): event 14 / 15	229D2|3FFA0 / 22718	229D2 / 22718	PASS	
+107-accessory-ptt.md	333	TX-time table 011AB4 (n=6): event 14 / 15	229D2|3FFA0 / 22718	229D2 / 22718	PASS	
+107-accessory-ptt.md	333	TX-time table 011AF8 (n=7): event 14 / 15	229D2|3FFA0 / 22718	229D2 / 22718	PASS	
+107-accessory-ptt.md	333	TX-time table 011B3C (n=8): event 14 / 15	229D2|3FFA0 / 22718	3FFA0 / 22718	PASS	
+106-dsp-1c03-leftovers.md	19	B0B8: one store (0x05C442, value 3); no abs32 form; read only at 0x05A07E/0x05A086	W 05C442; R 05A07E 05A086; abs32 0	W 05C442 (imm fc 03); R 05A07E 05A086; abs32 0; raw "b0 b8" 3	PASS	
+106-dsp-1c03-leftovers.md	60	B0B9: 19 immediate stores (fc XX 6a 8c b0 b9) matching dsp-autoreply\b0b9-census.tsv	19	19 stores; census rows 19; differences ['06CAF8=20', '06CAFA=20']	INFO	count and values match; K4 census row 0x20 cites 0x06CAFA (the store) where its header promises the fc-imm address 0x06CAF8
+106-dsp-1c03-leftovers.md	178	b0b9-writers.tsv (L9) sites = immediate addresses of the 19 stores	identical to image	differences none	PASS	L9 table cites 0x20 at 06CAF8; the immediate fc 20 is at 06CAF8
+106-dsp-1c03-leftovers.md	107	callers of sub_5A040: 0x05A38C and 0x05C446	05A38C 05C446	05A38C 05C446	PASS	
+106-dsp-1c03-leftovers.md	39	sub_664C2's only caller is the key table: BE32 slot 0x0113E4, no abs24 jsr/jmp	slot 0113E4; jsr 0	BE32 0113E4; jsr/jmp 0	PASS	
+106-dsp-1c03-leftovers.md	148	FF9578 / FF9589 = 0xC8 stores (0x03013C, 0x031BEE)	C8 stores	FF9578 [('02F640', 'fc 00'), ('030124', 'fc 00'), ('03013C', 'fc c8'), ('03017C', '95 77'), ('0301E8', 'fc c8')]; FF9589 [('03112E', 'fc 00'), ('031BD8', 'fc 00'), ('031BF0', 'fc c8'), ('031C30', '95 88'), ('031C7A', 'fc c8')]	PASS	FF9589 store is at 0x031BF0 (doc cites 0x031BEE, the imm)
+106-dsp-1c03-leftovers.md	64	FF9579 and FF9578 inside the 10 ms tier FF9536-FF958D	inside	FF9578 True, FF9579 True, FF9589 True	PASS	
+106-dsp-1c03-leftovers.md	167	carrier = AACE 5 x FF9579 0x32 x 10 ms	2.5 s	2.5 s	PASS	
+106-dsp-1c03-leftovers.md	116	session 0x15 table 0x05C40A: 11 steps, step 4 = sub_5C436	11 code pointers	05B4E4 05B522 05B54C 05B3E2 05C436 05B3E2 05B7E6 05C44C 05BC7C 05B83C 05B41C	PASS	dword after: 6A0CB0A4
+107-accessory-ptt.md	70	10 start-byte stores in sub_4761E: 7a 01 00 00 00 00 ; 6e 9a 98 00	10 in 04761E-047791	10: 04765A 047678 047696 0476B6 0476D4 0476F2 047710 04772E 04774C 04776A	PASS	
+107-accessory-ptt.md	72	13 indexed body stores 6e 9a 98 00 (besides the 10 start stores)	13	13: 04781E 04792E 047A1E 047AF0 047B26 047BE6 047C22 047E92 047EDA 047FD2 0480B2 0481A2 048282	PASS	
+107-accessory-ptt.md	114	FFBB91: exactly one writer and one reader	1 W + 1 R	00FD30 R, 0481E8 W	PASS	
+107-accessory-ptt.md	200	SUB: 8 E6 sites (mov #0xE6,r1), all in 0xFFF37D88-0xFFF393F4, each followed by bsr.a	8	8: FFF37FAD FFF38212 FFF38FCF FFF3906C FFF39281 FFF3930F FFF393B3 FFF393F1; bsr.a targets ['FFEDD528']	PASS	
+107-accessory-ptt.md	299	L12's bsr.a addresses = E6 site + 3	FFF37FB0 FFF38215 FFF38FD2 FFF3906F FFF39284 FFF39312 FFF393B6 FFF393F4	FFF37FB0 FFF38215 FFF38FD2 FFF3906F FFF39284 FFF39312 FFF393B6 FFF393F4	PASS	
+107-accessory-ptt.md	44	callers of sub_FFEDD528: 17 sites	17	17 (bsr.a/bsr.w byte scan, not decode-checked)	PASS	raw relative-call scan over the whole SUB image; may include data false positives
+107-accessory-ptt.md	44	callers of sub_FFEDD182: 5 sites	5	5 (bsr.a/bsr.w byte scan, not decode-checked)	PASS	raw relative-call scan over the whole SUB image; may include data false positives
+107-accessory-ptt.md	310	[122A0] writer census (mov.l #0x122A0,r14 ; mov.b #v,[r14]): 3 x3, 2 x10, 0 x5, 4 x1, 1 x1	doc table	0: FFF37D58 FFF37EB9 FFF39099 FFF390A9 FFF39173; 1: FFF3885F; 2: FFF37E53 FFF384C0 FFF386EF FFF38997 FFF39101 FFF3915B FFF391A4 FFF39367 FFF39446 FFF39547; 3: FFF392C3 FFF3935D FFF3943C; 4: FFF39486	PASS	other 0x122A0 immediates not followed by mov.b #imm,[r14]: FFF38F21 FFF39001
+107-accessory-ptt.md	328	12CBC = 2 written only at FFF38FBC FFF3926E FFF392FC	FFF38FBC FFF3926E FFF392FC	FFF38FBC FFF3926E FFF392FC	PASS	all mov.w #v,[r14] after mov.l #0x12CBC: 1: FFF39027; 2: FFF38FBC FFF3926E FFF392FC; 3: FFF37D4F FFF37EF0 FFF37F9A FFF381FF FFF38CDB FFF38EB6 FFF39059 FFF393A0 FFF393DE
+107-accessory-ptt.md	388	12CBC = 3 without E6 at FFF37EF0, FFF38CDB, FFF38EB6 (plus FFF39059 in the code-3 path)	subset of 12CBC=3 stores	FFF37D4F FFF37EF0 FFF37F9A FFF381FF FFF38CDB FFF38EB6 FFF39059 FFF393A0 FFF393DE	PASS	
+107-accessory-ptt.md	353	[12CC2] = 1 set solely at FFF39B62 / FFF39B95	FFF39B62 FFF39B95	FFF39B62 FFF39B95	PASS	
+107-accessory-ptt.md	280	12CB8 = 2 at FFF38627/FFF3865A; = 1 at FFF38F7B	2: FFF38627 FFF3865A; 1: FFF38F7B	1: FFF38759 FFF388EB FFF38F75; 2: FFF38627 FFF3865A FFF387B6	FAIL	doc list incomplete: the image also stores 12CB8 = 2 at FFF387B6 and = 1 at FFF38759 / FFF388EB; FFF38F7B is the mov.w #1,[r14] of the FFF38F75 site
+107-accessory-ptt.md	11	compares 0xFFF3A9D3-0xFFF3AA5A spell CKPD=200 (75 51 xx)	CKPD=200	CKPD=200	PASS	
+107-accessory-ptt.md	104	E6 header sum: E6+0A = F0 (high byte 00); E4: E4+26 = 0x10A (high byte 01)	F0, 10A	F0, 10A	PASS	
+108-sub-frames-main.md	15	start-byte switch 0x047622-0x047656: exactly ten cmp.b #type; then rts 0x047658	E0 E1 E2 E3 E4 E5 E6 EA FE FF	E0 E1 E2 E3 E4 E5 E6 EA FE FF; 047658 = 54 70	PASS	
+108-sub-frames-main.md	56	ring 0xFF306A-0xFF3C6A = 3,073 B	3073	3073	PASS	
+108-sub-frames-main.md	163	FFBC60 (E2): no abs16 reader in 0-0x80000	0 readers	047A66 6b 84	PASS	abs16 forms 6a/6b with op nibble 0 (load), 1/3 (bit test) counted as readers
+108-sub-frames-main.md	163	FFBB92 (E5): no abs16 reader in 0-0x80000	0 readers	0482C8 6a 8c	PASS	abs16 forms 6a/6b with op nibble 0 (load), 1/3 (bit test) counted as readers
+108-sub-frames-main.md	163	FFBA92 bit 4 (E5 arrival flag) is never tested	bit 4: bset only	b0: 047F16 bset, 06FE02 btst, 06FE0C bclr, 06FECE btst, 06FED6 bclr, 06FF88 btst, 06FF92 bclr, 06FFD4 btst, 06FFDE bclr, 070018 btst, 070022 bclr, 07005C btst, 070066 bclr, 0700A8 btst, 0700B0 bclr, 070170 btst, 070178 bclr, 0702C4 btst, 0702CC bclr, 070356 btst, 07035E bclr; b1: 04800E bset, 07057E btst, 070588 bclr, 0705E4 btst, 0705EC bclr; b2: 0480EE bset, 0730EE btst, 0730F6 bclr, 073172 btst, 07317A bclr, 073280 btst, 073288 bclr, 0732C8 btst, 0732D0 bclr, 073310 btst, 073318 bclr, 073358 btst, 073362 bclr; b3: 00FD22 btst, 00FD2A bclr, 0481DE bset; b4: 0482BE bset	PASS	

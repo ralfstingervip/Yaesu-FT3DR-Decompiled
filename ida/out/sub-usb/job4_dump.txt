@@ -1,0 +1,326 @@
+
+=========== ICU group-interrupt enable (GENBL0/GENBL1) setup  FFEDB340..FFEDB3F0 ===========
+  FFEDB340  3F 70 08               rtsd    #20h, r7-sp ; ' '
+  FFEDB343  F0 E8                  bclr    #0, [r14].b
+  FFEDB345  FB EE 6E 70 08         mov.l   #8706Eh, r14
+  FFEDB34A  F0 E8                  bclr    #0, [r14].b
+  FFEDB34C  FB EE 07 72 08         mov.l   #87207h, r14
+  FFEDB351  F0 E3                  bset    #3, [r14].b
+  FFEDB353  FB EE 07 72 08         mov.l   #87207h, r14
+  FFEDB358  F0 E2                  bset    #2, [r14].b
+  FFEDB35A  FB EE 07 72 08         mov.l   #87207h, r14
+  FFEDB35F  F0 E7                  bset    #7, [r14].b
+  FFEDB361  FB EE 07 72 08         mov.l   #87207h, r14
+  FFEDB366  F0 E6                  bset    #6, [r14].b
+  FFEDB368  FB EE 0D 72 08         mov.l   #8720Dh, r14
+  FFEDB36D  F0 E6                  bset    #6, [r14].b
+  FFEDB36F  FB EE 70 76 08         mov.l   #87670h, r14
+  FFEDB374  EC EF                  mov.l   [r14], r15
+  FFEDB376  78 1F                  bset    #1, r15
+  FFEDB378  E3 EF                  mov.l   r15, [r14]
+  FFEDB37A  FB EE 70 76 08         mov.l   #87670h, r14
+  FFEDB37F  EC EF                  mov.l   [r14], r15
+  FFEDB381  78 0F                  bset    #0, r15
+  FFEDB383  E3 EF                  mov.l   r15, [r14]
+  FFEDB385  FB EE 70 76 08         mov.l   #87670h, r14
+  FFEDB38A  EC EF                  mov.l   [r14], r15
+  FFEDB38C  78 5F                  bset    #5, r15
+  FFEDB38E  E3 EF                  mov.l   r15, [r14]
+  FFEDB390  FB EE 70 76 08         mov.l   #87670h, r14
+  FFEDB395  EC EF                  mov.l   [r14], r15
+  FFEDB397  78 4F                  bset    #4, r15
+  FFEDB399  E3 EF                  mov.l   r15, [r14]
+  FFEDB39B  FB EE 50 73 08         mov.l   #87350h, r14
+  FFEDB3A0  58 EF                  movu.b  [r14], r15
+  FFEDB3A2  65 3F                  or      #3, r15
+  FFEDB3A4  76 2F F3 00            and     #0F3h, r15
+  FFEDB3A8  C3 EF                  mov.b   r15, [r14]
+  FFEDB3AA  FB EE 51 70 08         mov.l   #87051h, r14
+  FFEDB3AF  F0 E8                  bclr    #0, [r14].b
+  FFEDB3B1  FB EE 50 70 08         mov.l   #87050h, r14
+  FFEDB3B6  F0 E8                  bclr    #0, [r14].b
+  FFEDB3B8  FB EE 0A 72 08         mov.l   #8720Ah, r14
+  FFEDB3BD  F0 E1                  bset    #1, [r14].b
+  FFEDB3BF  FB EE 0A 72 08         mov.l   #8720Ah, r14
+  FFEDB3C4  F0 E0                  bset    #0, [r14].b
+  FFEDB3C6  FB EE 70 76 08         mov.l   #87670h, r14
+  FFEDB3CB  EC EF                  mov.l   [r14], r15
+  FFEDB3CD  78 6F                  bset    #6, r15
+  FFEDB3CF  E3 EF                  mov.l   r15, [r14]
+  FFEDB3D1  FB EE 70 76 08         mov.l   #87670h, r14
+  FFEDB3D6  EC EF                  mov.l   [r14], r15
+  FFEDB3D8  78 7F                  bset    #7, r15
+  FFEDB3DA  E3 EF                  mov.l   r15, [r14]
+  FFEDB3DC  FB 1E 00 A0 08         mov.l   #8A000h, r1
+  FFEDB3E1  3C 17 10               mov.b   #10h, 7[r1]
+  FFEDB3E4  FB EE 00 A0 08         mov.l   #8A000h, r14
+  FFEDB3E9  F8 E4 00               mov.b   #0, [r14]
+  FFEDB3EC  FB 1E 00 A0 08         mov.l   #8A000h, r1
+
+=========== GROUPBL0 handler (vector 110)  FFEDBCDD..FFEDBD60 ===========
+  FFEDBCDD  6E EF                  pushm   r14-r15
+  FFEDBCDF  6E 15                  pushm   r1-r5
+  FFEDBCE1  FB 1E 30 76 08         mov.l   #87630h, r1
+  FFEDBCE6  EC 11                  mov.l   [r1], r1
+  FFEDBCE8  6D F1                  shll    #1Fh, r1
+  FFEDBCEA  69 F1                  shlr    #1Fh, r1
+  FFEDBCEC  61 11                  cmp     #1, r1
+  FFEDBCEE  1C                     bne.s   unk_FFEDBCF2
+  FFEDBCEF  39 B6 FB               bsr.w   sub_FFEDB8A5
+  FFEDBCF2  FB 1E 30 76 08         mov.l   #87630h, r1
+  FFEDBCF7  EC 11                  mov.l   [r1], r1
+  FFEDBCF9  6D E1                  shll    #1Eh, r1
+  FFEDBCFB  69 F1                  shlr    #1Fh, r1
+  FFEDBCFD  61 11                  cmp     #1, r1
+  FFEDBCFF  1C                     bne.s   unk_FFEDBD03
+  FFEDBD00  39 B6 FA               bsr.w   sub_FFEDB7B6
+  FFEDBD03  FB 1E 30 76 08         mov.l   #87630h, r1
+  FFEDBD08  EC 11                  mov.l   [r1], r1
+  FFEDBD0A  6D B1                  shll    #1Bh, r1
+  FFEDBD0C  69 F1                  shlr    #1Fh, r1
+  FFEDBD0E  61 11                  cmp     #1, r1
+  FFEDBD10  1C                     bne.s   unk_FFEDBD14
+  FFEDBD11  39 80 FF               bsr.w   sub_FFEDBC91
+  FFEDBD14  FB 1E 30 76 08         mov.l   #87630h, r1
+  FFEDBD19  EC 11                  mov.l   [r1], r1
+  FFEDBD1B  6D A1                  shll    #1Ah, r1
+  FFEDBD1D  69 F1                  shlr    #1Fh, r1
+  FFEDBD1F  61 11                  cmp     #1, r1
+  FFEDBD21  1C                     bne.s   unk_FFEDBD25
+  FFEDBD22  39 80 FE               bsr.w   sub_FFEDBBA2
+  FFEDBD25  FB 1E 30 76 08         mov.l   #87630h, r1
+  FFEDBD2A  EC 11                  mov.l   [r1], r1
+  FFEDBD2C  6D 91                  shll    #19h, r1
+  FFEDBD2E  69 F1                  shlr    #1Fh, r1
+  FFEDBD30  61 11                  cmp     #1, r1
+  FFEDBD32  1C                     bne.s   unk_FFEDBD36
+  FFEDBD33  39 BC 03               bsr.w   sub_FFEDC0EF
+  FFEDBD36  FB 1E 30 76 08         mov.l   #87630h, r1
+  FFEDBD3B  EC 11                  mov.l   [r1], r1
+  FFEDBD3D  6D 81                  shll    #18h, r1
+  FFEDBD3F  69 F1                  shlr    #1Fh, r1
+  FFEDBD41  61 11                  cmp     #1, r1
+  FFEDBD43  1A                     bne.s   loc_FFEDBD4D
+  FFEDBD44  39 F7 03               bsr.w   sub_FFEDC13B
+  FFEDBD47  6F 15                  popm    r1-r5
+  FFEDBD49  6F EF                  popm    r14-r15
+  FFEDBD4B  7F 95                  rte
+  FFEDBD4D  6F 15                  popm    r1-r5
+  FFEDBD4F  6F EF                  popm    r14-r15
+  FFEDBD51  7F 95                  rte
+  FFEDBD53  60 80                  sub     #8, sp
+  FFEDBD55  A0 09                  mov.l   r1, 4[sp]
+  FFEDBD57  3C 03 00               mov.b   #0, 3[sp]
+  FFEDBD5A  3C 02 00               mov.b   #0, 2[sp]
+  FFEDBD5D  3C 01 00               mov.b   #0, 1[sp]
+
+=========== GROUPBL1 handler (vector 111)  FFF32C99..FFF32CE0 ===========
+  FFF32C99  6E EF                  pushm   r14-r15
+  FFF32C9B  6E 15                  pushm   r1-r5
+  FFF32C9D  05 8C FD FF            bsr.a   unk_FFF32A29
+  FFF32CA1  6F 15                  popm    r1-r5
+  FFF32CA3  6F EF                  popm    r14-r15
+  FFF32CA5  7F 95                  rte
+  FFF32CA7  6E EF                  pushm   r14-r15
+  FFF32CA9  6E 15                  pushm   r1-r5
+  FFF32CAB  05 FC 0D 00            bsr.a   unk_FFF33AA7
+  FFF32CAF  6F 15                  popm    r1-r5
+  FFF32CB1  6F EF                  popm    r14-r15
+  FFF32CB3  7F 95                  rte
+  FFF32CB5  02                     rts
+  FFF32CB6  60 40                  sub     #4, sp
+  FFF32CB8  F8 06 00               mov.l   #0, [sp]
+  FFF32CBB  66 01                  mov.l   #0, r1
+  FFF32CBD  67 01                  rtsd    #1
+  FFF32CBF  FB EE 07 C1 08         mov.l   #8C107h, r14
+  FFF32CC4  F0 E7                  bset    #7, [r14].b
+  FFF32CC6  FB EE 27 C0 08         mov.l   #8C027h, r14
+  FFF32CCB  F0 E7                  bset    #7, [r14].b
+  FFF32CCD  FB EE 67 C0 08         mov.l   #8C067h, r14
+  FFF32CD2  F0 E5                  bset    #5, [r14].b
+  FFF32CD4  FB EE 67 C0 08         mov.l   #8C067h, r14
+  FFF32CD9  F0 E6                  bset    #6, [r14].b
+  FFF32CDB  FB EE 67 C0 08         mov.l   #8C067h, r14
+
+=========== runtime MSTPCRA + MPC helper at FFEE1393  FFEE1393..FFEE1400 ===========
+  FFEE1393  FB EE 10 00 08         mov.l   #80010h, r14
+  FFEE1398  FA E9 F7 01 02 A5      mov.w   #-5AFEh, 3EEh[r14]
+  FFEE139E  FB EE 10 00 08         mov.l   #80010h, r14
+  FFEE13A3  EC EF                  mov.l   [r14], r15
+  FFEE13A5  7B 0F                  bclr    #10h, r15
+  FFEE13A7  E3 EF                  mov.l   r15, [r14]
+  FFEE13A9  FB EE 10 00 08         mov.l   #80010h, r14
+  FFEE13AE  FA E9 F7 01 00 A5      mov.w   #-5B00h, 3EEh[r14]
+  FFEE13B4  FB EE 60 C0 08         mov.l   #8C060h, r14
+  FFEE13B9  F0 E8                  bclr    #0, [r14].b
+  FFEE13BB  FB EE 60 C0 08         mov.l   #8C060h, r14
+  FFEE13C0  F0 E9                  bclr    #1, [r14].b
+  FFEE13C2  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFEE13C7  F0 EF                  bclr    #7, [r14].b
+  FFEE13C9  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFEE13CE  F0 E6                  bset    #6, [r14].b
+  FFEE13D0  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFEE13D5  F1 E7 21               bset    #7, 21h[r14].b
+  FFEE13D8  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFEE13DD  F1 E7 22               bset    #7, 22h[r14].b
+  FFEE13E0  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFEE13E5  F0 EE                  bclr    #6, [r14].b
+  FFEE13E7  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFEE13EC  F0 E7                  bset    #7, [r14].b
+  FFEE13EE  FB EE 00 91 08         mov.l   #89100h, r14
+  FFEE13F3  F8 E5 00               mov.w   #0, [r14]
+  FFEE13F6  FB 1E 00 91 08         mov.l   #89100h, r1
+  FFEE13FB  3D 12 00               mov.w   #0, 4[r1]
+  FFEE13FE  FB 1E 00 91 08         mov.l   #89100h, r1
+
+=========== runtime MSTPCRA helper at FFF15055  FFF15050..FFF150B0 ===========
+  FFF15050  03                     nop
+  FFF15051  B8 89                  movu.w  6[sp], r1
+  FFF15053  67 03                  rtsd    #3
+  FFF15055  FB EE 10 00 08         mov.l   #80010h, r14
+  FFF1505A  EC EF                  mov.l   [r14], r15
+  FFF1505C  7B 3F                  bclr    #13h, r15
+  FFF1505E  E3 EF                  mov.l   r15, [r14]
+  FFF15060  FB EE 45 80 08         mov.l   #88045h, r14
+  FFF15065  F8 E4 00               mov.b   #0, [r14]
+  FFF15068  FB 1E 45 80 08         mov.l   #88045h, r1
+  FFF1506D  3C 11 00               mov.b   #0, 1[r1]
+  FFF15070  FB EE 00 C0 08         mov.l   #8C000h, r14
+  FFF15075  F1 EB 60               bclr    #3, 60h[r14].b
+  FFF15078  FB EE 00 C0 08         mov.l   #8C000h, r14
+  FFF1507D  F0 EB                  bclr    #3, [r14].b
+  FFF1507F  FB EE 43 C1 08         mov.l   #8C143h, r14
+  FFF15084  F0 E7                  bset    #7, [r14].b
+  FFF15086  02                     rts
+  FFF15087  FB EE 86 70 08         mov.l   #87086h, r14
+  FFF1508C  F2 E2 94 01            bset    #2, 194h[r14].b
+  FFF15090  FB EE 80 1A 0C         mov.l   #0C1A80h, r14
+  FFF15095  F0 E6                  bset    #6, [r14].b
+  FFF15097  FB EE 00 90 08         mov.l   #89000h, r14
+  FFF1509C  5C EF                  movu.w  [r14], r15
+  FFF1509E  76 2F FF 7F            and     #7FFFh, r15
+  FFF150A2  D3 EF                  mov.w   r15, [r14]
+  FFF150A4  FB EE 86 70 08         mov.l   #87086h, r14
+  FFF150A9  F2 EE 8A 01            bclr    #6, 18Ah[r14].b
+  FFF150AD  FB EE 86 70 08         mov.l   #87086h, r14
+
+=========== MPC pin-function setup (PFS writes)  FFF37320..FFF37440 ===========
+  FFF37320  C0 08                  mov.b   [sp], [r8]
+  FFF37322  F8 E4 00               mov.b   #0, [r14]
+  FFF37325  FB EE 12 C0 08         mov.l   #8C012h, r14
+  FFF3732A  F9 E4 60 00            mov.b   #0, 60h[r14]
+  FFF3732E  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF37333  F0 EF                  bclr    #7, [r14].b
+  FFF37335  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF3733A  F0 E6                  bset    #6, [r14].b
+  FFF3733C  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF37341  59 EF 2C               movu.b  2Ch[r14], r15
+  FFF37344  65 AF                  or      #0Ah, r15
+  FFF37346  76 2F CA 00            and     #0CAh, r15
+  FFF3734A  C7 EF 2C               mov.b   r15, 2Ch[r14]
+  FFF3734D  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF37352  59 EF 2B               movu.b  2Bh[r14], r15
+  FFF37355  65 AF                  or      #0Ah, r15
+  FFF37357  76 2F CA 00            and     #0CAh, r15
+  FFF3735B  C7 EF 2B               mov.b   r15, 2Bh[r14]
+  FFF3735E  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF37363  59 EF 31               movu.b  31h[r14], r15
+  FFF37366  65 AF                  or      #0Ah, r15
+  FFF37368  76 2F CA 00            and     #0CAh, r15
+  FFF3736C  C7 EF 31               mov.b   r15, 31h[r14]
+  FFF3736F  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF37374  59 EF 32               movu.b  32h[r14], r15
+  FFF37377  65 AF                  or      #0Ah, r15
+  FFF37379  76 2F CA 00            and     #0CAh, r15
+  FFF3737D  C7 EF 32               mov.b   r15, 32h[r14]
+  FFF37380  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF37385  F1 E7 41               bset    #7, 41h[r14].b
+  FFF37388  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF3738D  F1 E7 21               bset    #7, 21h[r14].b
+  FFF37390  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF37395  F1 E7 22               bset    #7, 22h[r14].b
+  FFF37398  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF3739D  F9 E4 2B 0A            mov.b   #0Ah, 2Bh[r14]
+  FFF373A1  FB EE 01 C0 08         mov.l   #8C001h, r14
+  FFF373A6  F1 E2 60               bset    #2, 60h[r14].b
+  FFF373A9  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF373AE  F9 E4 2C 0A            mov.b   #0Ah, 2Ch[r14]
+  FFF373B2  FB EE 01 C0 08         mov.l   #8C001h, r14
+  FFF373B7  F1 E3 60               bset    #3, 60h[r14].b
+  FFF373BA  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF373BF  F9 E4 36 0A            mov.b   #0Ah, 36h[r14]
+  FFF373C3  FB EE 62 C0 08         mov.l   #8C062h, r14
+  FFF373C8  F0 E5                  bset    #5, [r14].b
+  FFF373CA  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF373CF  F9 E4 34 0A            mov.b   #0Ah, 34h[r14]
+  FFF373D3  FB EE 62 C0 08         mov.l   #8C062h, r14
+  FFF373D8  F0 E3                  bset    #3, [r14].b
+  FFF373DA  FB EE 02 C0 08         mov.l   #8C002h, r14
+  FFF373DF  F0 E2                  bset    #2, [r14].b
+  FFF373E1  FB EE 08 C0 08         mov.l   #8C008h, r14
+  FFF373E6  F0 E7                  bset    #7, [r14].b
+  FFF373E8  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF373ED  F0 EE                  bclr    #6, [r14].b
+  FFF373EF  FB EE 1F C1 08         mov.l   #8C11Fh, r14
+  FFF373F4  F0 E7                  bset    #7, [r14].b
+  FFF373F6  FB EE 01 C0 08         mov.l   #8C001h, r14
+  FFF373FB  F1 E2 60               bset    #2, 60h[r14].b
+  FFF373FE  FB EE 62 C0 08         mov.l   #8C062h, r14
+  FFF37403  F0 E0                  bset    #0, [r14].b
+  FFF37405  FB EE 62 C0 08         mov.l   #8C062h, r14
+  FFF3740A  F0 E1                  bset    #1, [r14].b
+  FFF3740C  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF37411  F1 E8 60               bclr    #0, 60h[r14].b
+  FFF37414  FB EE 00 C0 08         mov.l   #8C000h, r14
+  FFF37419  F1 E8 60               bclr    #0, 60h[r14].b
+  FFF3741C  FB EE 00 C0 08         mov.l   #8C000h, r14
+  FFF37421  F1 E9 60               bclr    #1, 60h[r14].b
+  FFF37424  FB EE FE 03 08         mov.l   #803FEh, r14
+  FFF37429  F8 E9 0B A5            mov.w   #-5AF5h, [r14]
+  FFF3742D  FB EE FE 03 08         mov.l   #803FEh, r14
+  FFF37432  F2 EE 82 BE            bclr    #6, -417Eh[r14].b
+  FFF37436  FB EE FE 03 08         mov.l   #803FEh, r14
+  FFF3743B  F8 E9 00 A5            mov.w   #-5B00h, [r14]
+  FFF3743F  7F A8                  setpsw  i
+
+=========== PORT init continued  FFF36FF0..FFF37080 ===========
+  FFF36FF0  EE 03 C0 08            mov.l   2300h[sp], r3
+  FFF36FF4  F0 EE                  bclr    #6, [r14].b
+  FFF36FF6  FB EE 03 C0 08         mov.l   #8C003h, r14
+  FFF36FFB  F0 EF                  bclr    #7, [r14].b
+  FFF36FFD  FB EE 03 C0 08         mov.l   #8C003h, r14
+  FFF37002  F9 E4 60 00            mov.b   #0, 60h[r14]
+  FFF37006  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF3700B  F9 E4 20 00            mov.b   #0, 20h[r14]
+  FFF3700F  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF37014  F0 E8                  bclr    #0, [r14].b
+  FFF37016  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF3701B  F0 E9                  bclr    #1, [r14].b
+  FFF3701D  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF37022  F0 EA                  bclr    #2, [r14].b
+  FFF37024  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF37029  F0 EB                  bclr    #3, [r14].b
+  FFF3702B  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF37030  F0 EC                  bclr    #4, [r14].b
+  FFF37032  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF37037  F0 ED                  bclr    #5, [r14].b
+  FFF37039  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF3703E  F0 EE                  bclr    #6, [r14].b
+  FFF37040  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF37045  F0 EF                  bclr    #7, [r14].b
+  FFF37047  FB EE 04 C0 08         mov.l   #8C004h, r14
+  FFF3704C  F9 E4 60 00            mov.b   #0, 60h[r14]
+  FFF37050  FB EE 25 C0 08         mov.l   #8C025h, r14
+  FFF37055  F0 E0                  bset    #0, [r14].b
+  FFF37057  FB EE 25 C0 08         mov.l   #8C025h, r14
+  FFF3705C  F0 E1                  bset    #1, [r14].b
+  FFF3705E  FB EE 25 C0 08         mov.l   #8C025h, r14
+  FFF37063  F0 E2                  bset    #2, [r14].b
+  FFF37065  FB EE 25 C0 08         mov.l   #8C025h, r14
+  FFF3706A  F0 E3                  bset    #3, [r14].b
+  FFF3706C  FB EE 25 C0 08         mov.l   #8C025h, r14
+  FFF37071  F0 EC                  bclr    #4, [r14].b
+  FFF37073  FB EE 25 C0 08         mov.l   #8C025h, r14
+  FFF37078  F0 ED                  bclr    #5, [r14].b
+  FFF3707A  FB EE 25 C0 08         mov.l   #8C025h, r14
+  FFF3707F  F0 EE                  bclr    #6, [r14].b

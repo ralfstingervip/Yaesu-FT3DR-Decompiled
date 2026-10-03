@@ -1,0 +1,125 @@
+038f80 d 73 00                      btst    #0, @0xFFFFAAE1:16                     
+038f82 C 46 22                      bne     locret_38FA6:8                         
+038f84 C 6a 0c bb c7                mov.b   @0xFFFFBBC7:16, r4l                    
+038f88 C 46 1c                      bne     locret_38FA6:8                         
+038f8a C 6a 0c 95 45                mov.b   @0xFFFF9545:16, r4l                    
+038f8e C 46 16                      bne     locret_38FA6:8                         
+038f90 C 5e 03 8d a0                jsr     sub_38DA0:24                           
+038f94 C fc 10                      mov.b   #0x10, r4l                             
+038f96 C 6a 8c ac 08                mov.b   r4l, @0xFFFFAC08:16                    
+038f9a C 6a 18 81 7e 70 10          bset    #1, @0xFFFF817E:16                     
+038fa0 C fc 03                      mov.b   #3, r4l                                
+038fa2 C 6a 8c ac 0a                mov.b   r4l, @0xFFFFAC0A:16                    
+038fa6 C 54 70                      rts                                            <- 38f82,38f88,38f8e
+
+;---- func 0x38fa8..0x38fc2  sub_38FA8
+038fa8 C 6a 10 ac 09 73 60          btst    #6, @0xFFFFAC09:16                     <- 38bea,38c00
+038fae C 47 10                      beq     locret_38FC0:8                         
+038fb0 C 5e 03 8c ca                jsr     sub_38CCA:24                           
+038fb4 C 4a 0a                      bpl     locret_38FC0:8                         
+038fb6 C 6a 0c 95 8f                mov.b   @0xFFFF958F:16, r4l                    
+038fba C 46 04                      bne     locret_38FC0:8                         
+038fbc C 5e 03 8e 84                jsr     sub_38E84:24                           
+038fc0 C 54 70                      rts                                            <- 38fae,38fb4,38fba
+
+;---- func 0x38fc2..0x39002  sub_38FC2
+038fc2 C 6d f2                      push.w  r2                                     <- 38bca,38c1a
+038fc4 C 0c ab                      mov.b   r2l, r3l                               
+038fc6 C aa 50                      cmp.b   #0x50, r2l ; 'P'                       
+038fc8 C 44 28                      bcc     loc_38FF2:8                            
+038fca C 5e 03 ce 22                jsr     sub_3CE22:24                           
+038fce C fe 10                      mov.b   #0x10, r6l                             
+038fd0 C 7a 01 00 ff ac 24          mov.l   #0xFFAC24, er1                         
+038fd6 C 68 1c                      mov.b   @er1, r4l                              
+038fd8 C 4b 1c                      bmi     loc_38FF6:8                            
+038fda C 6a 18 ac 09 70 00          bset    #0, @0xFFFFAC09:16                     
+038fe0 C 6a 18 ac 09 72 10          bclr    #1, @0xFFFFAC09:16                     
+038fe6 C 6c 1b                      mov.b   @er1+, r3l                             <- 38fee
+038fe8 C 4b 14                      bmi     loc_38FFE:8                            
+038fea C 55 16                      bsr     sub_39002:8                            
+038fec C 1a 0e                      dec.b   r6l                                    
+038fee C 46 f6                      bne     loc_38FE6:8                            
+038ff0 C 40 0c                      bra     loc_38FFE:8                            
+038ff2 C fc 50                      mov.b   #0x50, r4l ; 'P'                       <- 38fc8
+038ff4 C 18 cb                      sub.b   r4l, r3l                               
+038ff6 C 6a 18 ac 09 70 10          bset    #1, @0xFFFFAC09:16                     <- 38fd8
+038ffc C 55 04                      bsr     sub_39002:8                            
+038ffe C 6d 72                      pop.w   r2                                     <- 38fe8,38ff0
+039000 C 54 70                      rts                                            
+
+;---- func 0x39002..0x39030  sub_39002
+039002 C eb 1f                      and.b   #0x1F, r3l                             <- 38fea,38ffc
+039004 C 6a 0c ac 0c                mov.b   @0xFFFFAC0C:16, r4l                    
+039008 C 7a 64 00 00 00 ff          and.l   #0xFF, er4                             
+03900e C 6a 0d ac 0b                mov.b   @0xFFFFAC0B:16, r5l                    
+039012 C 1c dc                      cmp.b   r5l, r4l                               
+039014 C 46 08                      bne     loc_3901E:8                            
+039016 C 6e 4d ac 0e                mov.b   @(-0x53F2:16,er4), r5l                 
+03901a C ad ff                      cmp.b   #0xFF, r5l                             
+03901c C 46 10                      bne     locret_3902E:8                         
+03901e C 6e cb ac 0e                mov.b   r3l, @(-0x53F2:16,er4)                 <- 39014
+039022 C 0a 0c                      inc.b   r4l                                    
+039024 C ac 14                      cmp.b   #0x14, r4l                             
+039026 C 46 02                      bne     loc_3902A:8                            
+039028 C fc 00                      mov.b   #0, r4l                                
+03902a C 6a 8c ac 0c                mov.b   r4l, @0xFFFFAC0C:16                    <- 39026
+03902e C 54 70                      rts                                            <- 3901c
+
+;---- func 0x39030..0x39040  sub_39030
+039030 C 6a 18 aa d2 72 20          bclr    #2, @0xFFFFAAD2:16                     <- 38dc0,38e36,38f00,38f3c
+039036 C 5e 03 51 bc                jsr     sub_351BC:24                           
+03903a C fc 7f                      mov.b   #0x7F, r4l                             
+03903c C 3c 68                      mov.b   r4l, @0x68:8                           
+03903e C 54 70                      rts                                            
+039040 d 24 c2 34 30                .long 0x24C23430                               <- 38d40
+039044 d 1b                         .byte 0x1B                                     
+039045 d 3a                         .byte 0x3A ; :                                 
+039046 d 2f                         .byte 0x2F ; /                                 
+039047 d 3a                         .byte 0x3A ; :                                 
+039048 d 1b                         .byte 0x1B                                     
+039049 d 3a                         .byte 0x3A ; :                                 
+03904a d 34                         .byte 0x34 ; 4                                 
+03904b d 30                         .byte 0x30 ; 0                                 
+03904c d 1b                         .byte 0x1B                                     
+03904d d 3a                         .byte 0x3A ; :                                 
+03904e d 39                         .byte 0x39 ; 9                                 
+03904f d b2                         .byte 0xB2                                     
+039050 d 1e                         .byte 0x1E                                     
+039051 d 14                         .byte 0x14                                     
+039052 d 2f                         .byte 0x2F ; /                                 
+039053 d 3a                         .byte 0x3A ; :                                 
+039054 d 1e                         .byte 0x1E                                     
+039055 d 14                         .byte 0x14                                     
+039056 d 34                         .byte 0x34 ; 4                                 
+039057 d 30                         .byte 0x30 ; 0                                 
+039058 d 1e                         .byte 0x1E                                     
+039059 d 14                         .byte 0x14                                     
+03905a d 39                         .byte 0x39 ; 9                                 
+03905b d b2                         .byte 0xB2                                     
+03905c d 21                         .byte 0x21 ; !                                 
+03905d d 48                         .byte 0x48 ; H                                 
+03905e d 2f                         .byte 0x2F ; /                                 
+03905f d 3a                         .byte 0x3A ; :                                 
+039060 d 21                         .byte 0x21 ; !                                 
+039061 d 48                         .byte 0x48 ; H                                 
+039062 d 34                         .byte 0x34 ; 4                                 
+039063 d 30                         .byte 0x30 ; 0                                 
+039064 d 21                         .byte 0x21 ; !                                 
+039065 d 48                         .byte 0x48 ; H                                 
+039066 d 39                         .byte 0x39 ; 9                                 
+039067 d b2                         .byte 0xB2                                     
+039068 d 1b                         .byte 0x1B                                     
+039069 d 3a                         .byte 0x3A ; :                                 
+
+;---- func 0x3906a..0x390fc  sub_3906A
+03906a C 3f ca                      mov.b   r7l, @0xCA:8                           
+03906c C 1e 14                      subx    r1h, r4h                               
+03906e C 3f ca                      mov.b   r7l, @0xCA:8                           
+039070 C 21 48                      mov.b   @0x48:8, r1h                           
+039072 C 3f ca                      mov.b   r7l, @0xCA:8                           
+039074 C 24 c2                      mov.b   @0xC2:8, r4h                           
+039076 C 3f ca                      mov.b   r7l, @0xCA:8                           
+039078 C 24 c2                      mov.b   @0xC2:8, r4h                           
+03907a C 2f 3a                      mov.b   @0x3A:8, r7l                           
+03907c C 24 c2                      mov.b   @0xC2:8, r4h                           
+03907e C 39 b2                      mov.b   r1l, @0xB2:8                           

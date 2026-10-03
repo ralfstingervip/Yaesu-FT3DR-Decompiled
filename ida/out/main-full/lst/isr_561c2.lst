@@ -1,0 +1,52 @@
+000561C2  6df4                  push.w  r4  ; ==== sub_561C2 ====
+000561C4  6b04ff36              mov.w   @0xFFFFFF36:16, r4
+000561C8  722c                  bclr    #2, r4l
+000561CA  6b84ff36              mov.w   r4, @0xFFFFFF36:16
+000561CE  6b04fd6a              mov.w   @0xFFFFFD6A:16, r4
+000561D2  714c                  bnot    #4, r4l
+000561D4  715c                  bnot    #5, r4l
+000561D6  6b84fd6a              mov.w   r4, @0xFFFFFD6A:16
+000561DA  774c                  bld     #4, r4l
+000561DC  6a18b0a26770          bst     #7, @0xFFFFB0A2:16
+000561E2  4538                  bcs     loc_5621C:8
+000561E4  7ebc7340              btst    #4, @0xFFFFFFBC:8
+000561E8  4728                  beq     loc_56212:8
+000561EA  7fbc7240              bclr    #4, @0xFFFFFFBC:8
+000561EE  6a0cfee5              mov.b   @0xFFFFFEE5:16, r4l
+000561F2  734c                  btst    #4, r4l
+000561F4  4612                  bne     loc_56208:8
+000561F6  6b04fee6              mov.w   @0xFFFFFEE6:16, r4
+000561FA  79247d00              cmp.w   #0x7D00, r4
+000561FE  4412                  bcc     loc_56212:8
+00056200  fc01                  mov.b   #1, r4l
+00056202  6a8cb12c              mov.b   r4l, @0xFFFFB12C:16
+00056206  4010                  bra     loc_56218:8
+00056208  724c                  bclr    #4, r4l
+0005620A  6a8cfee5              mov.b   r4l, @0xFFFFFEE5:16
+0005620E  6a0cfee5              mov.b   @0xFFFFFEE5:16, r4l
+00056212  fc00                  mov.b   #0, r4l
+00056214  6a8cb12c              mov.b   r4l, @0xFFFFB12C:16
+00056218  6d74                  pop.w   r4
+0005621A  5670                  rte
+0005621C  6a0cb0a7              mov.b   @0xFFFFB0A7:16, r4l
+00056220  ac03                  cmp.b   #3, r4l
+00056222  4708                  beq     loc_5622C:8
+00056224  ac05                  cmp.b   #5, r4l
+00056226  4704                  beq     loc_5622C:8
+00056228  ac07                  cmp.b   #7, r4l
+0005622A  4606                  bne     loc_56232:8
+0005622C  6a18b0a27000          bset    #0, @0xFFFFB0A2:16
+00056232  6d74                  pop.w   r4
+00056234  5670                  rte
+00056236  6a18bbfa7200          bclr    #0, @0xFFFFBBFA:16  ; ==== sub_56236 ====
+0005623C  fc01                  mov.b   #1, r4l
+0005623E  6a8cb0cd              mov.b   r4l, @0xFFFFB0CD:16
+00056242  6a0c8d20              mov.b   @0xFFFF8D20:16, r4l
+00056246  4656                  bne     loc_5629E:8
+00056248  6a0c94c0              mov.b   @0xFFFF94C0:16, r4l
+0005624C  ac01                  cmp.b   #1, r4l
+0005624E  4712                  beq     loc_56262:8
+00056250  6a108ea07370          btst    #7, @0xFFFF8EA0:16
+00056256  4746                  beq     loc_5629E:8
+00056258  6a0c8dd5              mov.b   @0xFFFF8DD5:16, r4l
+0005625C  586001fa              bne     locret_5645A:16

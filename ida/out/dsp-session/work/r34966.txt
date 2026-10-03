@@ -1,0 +1,79 @@
+034940  e3 77                    and.b   #0x77, r3h                           
+034942  14 b3                    or.b    r3l, r3h                             
+034944  6a 83 81 73              mov.b   r3h, @0xFFFF8173:16                  
+034948  6a 18 81 73 72 30        bclr    #3, @0xFFFF8173:16                   
+03494e  40 00                    bra     loc_34950:8                          
+034950  5e 03 7a 1e              jsr     sub_37A1E:24                         <- 3494e
+034954  54 70                    rts                                          
+034956  02                       .byte 2                                      <- 34920
+034957  02                       .byte    2                                   
+034958  04                       .byte    4                                   
+034959  04                       .byte    4                                   
+03495a  04                       .byte    4                                   
+03495b  08                       .byte    8                                   
+03495c  08                       .byte    8                                   
+03495d  00                       .byte    0                                   
+03495e  00                       .byte 0                                      <- 34934
+03495f  00                       .byte    0                                   
+034960  00                       .byte    0                                   
+034961  00                       .byte    0                                   
+034962  00                       .byte    0                                   
+034963  00                       .byte    0                                   
+034964  00                       .byte    0                                   
+034965  00                       .byte    0                                   
+
+;---- func 0x34966..0x34a52
+034966  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  <- 34678
+03496a  4a 10                    bpl     loc_3497C:8                          
+03496c  6a 10 8d e0 73 70        btst    #7, @0xFFFF8DE0:16                   
+034972  46 18                    bne     loc_3498C:8                          
+034974  6a 10 b3 d9 73 20        btst    #2, @0xFFFFB3D9:16                   
+03497a  46 10                    bne     loc_3498C:8                          
+03497c  6a 0c 95 6d              mov.b   @0xFFFF956D:16, r4l                  <- 3496a
+034980  58 60 00 f6              bne     locret_34A7A:16                      
+034984  7e 4d 73 30              btst    #3, @0x4D:8                          
+034988  58 60 00 e4              bne     loc_34A70:16                         
+03498c  6a 10 aa d3 73 20        btst    #2, @0xFFFFAAD3:16                   <- 34972,3497a
+034992  46 6c                    bne     loc_34A00:8                          
+034994  6a 10 aa d3 73 00        btst    #0, @0xFFFFAAD3:16                   
+03499a  46 64                    bne     loc_34A00:8                          
+03499c  6a 10 8e a0 73 60        btst    #6, @0xFFFF8EA0:16                   
+0349a2  47 06                    beq     loc_349AA:8                          
+0349a4  6a 0c 8d d5              mov.b   @0xFFFF8DD5:16, r4l                  
+0349a8  40 04                    bra     loc_349AE:8                          
+0349aa  6a 0c 8d 20              mov.b   @0xFFFF8D20:16, r4l                  <- 349a2
+0349ae  47 20                    beq     loc_349D0:8                          <- 349a8
+0349b0  ac 01                    cmp.b   #1, r4l                              
+0349b2  47 16                    beq     loc_349CA:8                          
+0349b4  6a 10 8e a0 73 60        btst    #6, @0xFFFF8EA0:16                   
+0349ba  47 06                    beq     loc_349C2:8                          
+0349bc  6a 0c 8e c5              mov.b   @0xFFFF8EC5:16, r4l                  
+0349c0  40 04                    bra     loc_349C6:8                          
+0349c2  6a 0c 8e b6              mov.b   @0xFFFF8EB6:16, r4l                  <- 349ba
+0349c6  ac 04                    cmp.b   #4, r4l                              <- 349c0
+0349c8  44 04                    bcc     loc_349CE:8                          
+0349ca  fc 01                    mov.b   #1, r4l                              <- 349b2
+0349cc  40 02                    bra     loc_349D0:8                          
+0349ce  fc 00                    mov.b   #0, r4l                              <- 349c8
+0349d0  58 60 00 96              bne     loc_34A6A:16                         <- 349ae,349cc
+0349d4  6a 0c 89 bb              mov.b   @0xFFFF89BB:16, r4l                  
+0349d8  47 26                    beq     loc_34A00:8                          
+0349da  fc 03                    mov.b   #3, r4l                              
+0349dc  6a 8c bb 95              mov.b   r4l, @0xFFFFBB95:16                  
+0349e0  6a 18 b0 bb 70 00        bset    #0, @0xFFFFB0BB:16                   
+0349e6  fc 01                    mov.b   #1, r4l                              
+0349e8  6a 8c bb 94              mov.b   r4l, @0xFFFFBB94:16                  
+0349ec  fc 00                    mov.b   #0, r4l                              
+0349ee  6a 8c b0 ac              mov.b   r4l, @0xFFFFB0AC:16                  
+0349f2  fc 00                    mov.b   #0, r4l                              
+0349f4  6a 8c b0 bd              mov.b   r4l, @0xFFFFB0BD:16                  
+0349f8  6a 8c b0 be              mov.b   r4l, @0xFFFFB0BE:16                  
+0349fc  6a 8c b0 bf              mov.b   r4l, @0xFFFFB0BF:16                  
+034a00  5e 03 4a 7c              jsr     sub_34A7C:24                         <- 34992,3499a,349d8
+034a04  5e 03 4b 30              jsr     loc_34B30:24                         
+034a08  6a 18 aa 30 70 20        bset    #2, @0xFFFFAA30:16                   
+034a0e  6a 18 aa d1 72 70        bclr    #7, @0xFFFFAAD1:16                   
+034a14  5e 03 4b 44              jsr     sub_34B44:24                         
+034a18  fc 02                    mov.b   #2, r4l                              
+034a1a  6a 8c aa d5              mov.b   r4l, @0xFFFFAAD5:16                  
+034a1e  6a 10 aa d3 73 20        btst    #2, @0xFFFFAAD3:16                   

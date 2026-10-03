@@ -1,0 +1,66 @@
+addr	bytes	note
+054FEC	6a 0b 81 83	dispatcher reads FF8183
+054FF8	78 b0 6b 26 00 05 50 02	indexed jmp off_55002
+055002	00 05 50 34 00 05 50 42 00 05 51 96 00 05 51 aa	FSM table [0..3]
+055022	00 05 55 20 00 05 55 52 00 05 53 06 00 05 56 c8	FSM table [8..11]
+054D50	01 10 6d f4 6a 0c 81 3a 58 60 01 4c	ISR234: FF813A test->CDC edge
+054DB4	6a 0d ee 0e 68 cd	SETUP 8B read EE0E->ring
+054EC2	6d f4 6a 0c ee 01 ec 0f 73 0c	ISR235: IFR1 b0 VBUS
+054F0A	6a 8c 81 83	ISR235 VBUS-gone: FF8183=0
+054F1C	01 00 6b 84 81 84	ISR235 reset FF8184=0100FFFF
+054F4E	6a 0c 81 84 6a 8c ee 18	dead EP3 writer FF8184->EE18
+054CFA	6d f4 6a 18 81 80 70 10	ISR238 vector
+055042	01 00 6b 04 81 52	SETUP consume ring
+05507C	79 2a 80 06	SETUP word test 8006
+05540C	79 2a 41 d1 58 60 01 08	D1 handler
+055414	6a 0c 94 c0	D1 gate FF94C0
+05541E	6a 10 89 c1 73 30	D1 gate KEY LOCK
+055430	6a 2c 00 ff 2e c9	D1 gate FF2EC9 busy
+055488	6a 18 a9 e3 70 40	D1 set FFA9E3 b4
+05548E	fc 4f 6a 8c aa e0	D1 event 0x4F->FFAAE0
+055494	fc 01 6a 8c 81 84	D1 FF8184=1 (store at 055496)
+0554E6	6a 2c 00 ff 3d 6c 6a 8c b0 96	D3 handler FFB096
+055520	6a 0c aa e8 46 f8	state8 wait FFAAE8
+055552	6a 0c ee 00 73 6c	state9 IFR0 b6
+055684	6a 0c ee 10 68 dc	EP1 copy EPDR1->@er5
+05567E	7a 15 00 ff 58 06	EP1 dst=FF5806+index
+05569E	79 25 04 00 45 1c	EP1 wrap check 0x400 AFTER copy
+0555F4	79 2a 41 d2 46 56	D2 handler state9
+055202	6a 0c ee 27 73 5c	EP3 report DASTS b5 gate
+05520A	6a 0c 81 84 6a 8c ee 18	EP3 byte0 FF8184->EE18
+055216	6a 04 89 ce 6a 84 ee 18	EP3 byte1 FF89CE->EE18
+05523A	fc 40 6a 8c ee 2c	EP3 TRG=0x40
+054C7E	6a 8c ee 08	init ISR0 EE08
+054CA6	6a 18 ee 2d 70 20	init USB module enable
+00FC66	2a 4e ea 80	PTT debounce P4E&0x80
+00FC80	00 00 fc 90 00 00 fc 9c 00 00 fc e2 00 00 fc f4	PTT state table
+00FCCE	fc 17 6a 8c a9 ed	PTT raw 0x17->FFA9ED
+00FCDC	00 02 05 0a 14	PTT DELAY table 0/20/50/100/200ms
+00FCE6	fc 18 6a 8c a9 ed	PTT release raw 0x18
+034966	6a 0c 8d de 4a 10	TX state1 node-mode FF8DDE
+03497C	6a 0c 95 6d	TX state1 settle FF956D
+034984	7e 4d 73 30 58 60 00 e4	TX RF-status FFFF4D b3
+034A5A	6a 18 a4 f0 70 60	TX key FFA4F0 b6
+034A62	6a 18 a4 f0 70 70	TX key FFA4F0 b7
+034A70	6a 0c 95 68 46 04 5e 03 4f f4	TX abort FF9568->sub_34FF4
+034E42	01 00 6b 05 aa ae	freq-range reads FFAAAE
+034E6A	70 4c 6e 8c 00 86 fc 00	freq allow bset#4 r4l=0
+034E7E	fc 01 54 70	freq block r4l=1
+02244C	6a 10 8e a0 73 60	tx_request digital-mode
+022492	5e 02 25 62	tx_request PTT lock call
+022504	5e 03 4d c2 46 44	tx_request freq gate
+022542	6a 8c 94 c0	tx_request allow FF94C0=1
+02254E	fc 02 6a 8c 94 c0 fc 1d	tx_request block FF94C0=2 tone1D
+022562	6a 10 89 c1 73 30	ptt_lock FF89C1 b3
+01494C	6a 10 89 c1 73 30	keyseq arm KEY LOCK
+014954	6a 10 bc 8a 73 70	keyseq arm not-active
+01495C	6e 0c 00 01 ac 0c	keyseq arm screen id 0x0C
+01496A	6a 0c 8f 2e ac 05	keyseq arm FF8F2E switch
+01497E	01 00 6b 04 91 0a 7a 24 00 06 66 00	keyseq case10 FF910A==0x66600
+0149C4	6a 18 bc 8a 70 70 fc 08 6a 8c bc 8b	keyseq arm ACTIVE, counter=8
+014A1E	6a 10 bc 8a 73 70	keyseq step slot5
+014A32	ac 01 46 60	keyseq slot5 counter==1->complete
+014A36	6a 10 bc 8a 73 30	keyseq complete bit3
+014A70	fc 01 6a 8c b0 c8	keyseq complete FFB0C8=1
+014A8A	1a 0c 6a 8c bc 8b 5e 03 ff a0	keyseq step dec+consume
+014A96	6a 18 bc 8a 72 00 fc ff 6a 8c bc 8b 5e 01 4b ba	keyseq reset bclr#0 only

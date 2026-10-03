@@ -1,0 +1,923 @@
+=== fcs_test.py rc=0
+image @049892: 79 0a 08 84 ok
+image @0494A8: 79 0a 08 84 ok
+image @049904: 79 22 b8 f0 ok
+image @0494B0: 17 12 ok
+catalogue CRC-16/X.25('123456789') ref=0x906E (expect 0x906E)
+firmware-form FCS bytes on air: 6e 90 (expect 6e 90)
+firmware RX residue r2=0xB8F0 (accept iff 0xB8F0)
+UI frame 55 B: ref FCS 0xEA8F, firmware FCS bytes 8f ea -> PASS
+corrupted frame residue 0x07F6 (must differ from 0xB8F0)
+PYTHON RESULT: ALL PASS
+
+
+=== fcs.c gcc rc=0 run rc=0
+T1 reference CRC-16/X.25("123456789") = 0x906E (catalogue 0x906E) PASS
+T2 firmware TX encoder sub_49494 on "123456789": 17 out bytes, decoded 11 bytes, emitted FCS = 0x906E (lo byte first: 6E 90) PASS
+T3 firmware RX check sub_4986A on "123456789"+6E 90: r2 = 0xB8F0 (accept iff 0xB8F0) PASS
+T4 UI frame (55 B): ref FCS 0xEA8F, firmware-encoded FCS 0xEA8F, payload round-trip ok, closing flags seen 5 -> PASS
+T5 RX check on that frame: r2 = 0xB8F0 PASS
+T6 RX check after a 1-bit corruption: r2 = 0xEF36 (must NOT be 0xB8F0) PASS
+T7 2000 random frames (15..323 B, half 9600-mode tails, 1/7 all-0xFF): 0 mismatches PASS
+RESULT: ALL PASS
+
+ida/out/aprs-ax25/fcs.c: In function 'main':
+ida/out/aprs-ax25/fcs.c:211:25: warning: 'memset' specified size between 18446744073709551323 and 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
+  211 |         if (t % 7 == 0) memset(f, 0xFF, (size_t)m);          /* stuffing-heavy */
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+ida/out/aprs-ax25/fcs.c:185:13: note: destination object allocated here
+  185 |     uint8_t f[400]; int n = 0;
+      |             ^
+
+=== K5 k5_gen_tables.py rc=0 0.0s replaced=1
+checks ok: 76 f3 rows: 19 op rows: 27
+
+
+=== L96 l96_bytes.py rc=0 0.3s replaced=1
+wrote local-temp
+
+
+=== L96 l96_cite.py rc=0 0.1s replaced=2
+sha256 8e3ecd05409b2c314ebed77320ece5930bf31c8333cd84aeef4f6b0264c1bcce
+cites 94 writers 20
+code ranges with mask-clear bytes: 0
+data bytes cited 162 mask-clear 162
+store/pointer hits 13 window hits 0
+  0x00de0a len 4 win False 6a 8c 80 0f
+  0x00de10 len 4 win False 6a 8c 80 10
+  0x00de1a len 4 win False 6a 8d 80 11
+  0x00df46 len 4 win False 6a 8d 80 11
+  0x0236e2 len 4 win False 6a 8c 80 0f
+  0x0236e6 len 4 win False 6a 8b 80 10
+  0x03955e len 6 win False 7a 01 00 ff 80 0e
+  0x073b12 len 4 win False 6a 8c 80 10
+  0x073b16 len 4 win False 6a 8c 80 11
+  0x073ba0 len 4 win False 6a 8c 80 10
+  0x073ba4 len 4 win False 6a 8c 80 11
+  0x0740f6 len 4 win False 6a 81 80 0f
+  0x0740fa len 4 win False 6a 8b 80 10
+jsr/jmp helpers 7
+  0x00dc8c op 5e -> 0x039534
+  0x00dcd6 op 5e -> 0x039534
+  0x00dce2 op 5e -> 0x039544
+  0x00df2c op 5e -> 0x00ddfe
+  0x0236ea op 5e -> 0x039544
+  0x073b6c op 5e -> 0x039534
+  0x0740fe op 5e -> 0x039544
+mov.l small eeprom imm 26
+  0x039526 er0 #0x10
+  0x039558 er0 #0x20
+  0x03958a er0 #0x40
+  0x03d77c er0 #0x10
+  0x03dc08 er2 #0x20
+  0x03dc2c er2 #0x20
+  0x04838e er4 #0x20
+  0x04e0ae er3 #0x10
+  0x04e386 er3 #0x10
+  0x04e3fc er3 #0x10
+  0x04e720 er3 #0x10
+  0x0633a8 er2 #0x23
+  0x063596 er2 #0x23
+  0x063cc8 er2 #0x20
+  0x063d30 er2 #0x10
+  0x063d5a er2 #0x20
+  0x063d78 er2 #0x10
+  0x063dac er2 #0x20
+  0x0663a0 er2 #0x20
+  0x0687cc er2 #0x20
+  0x0688c8 er2 #0x20
+  0x068af4 er2 #0x20
+  0x068b24 er2 #0x20
+  0x0695ec er2 #0x20
+  0x0710aa er4 #0x20
+  0x0747f2 er4 #0x40
+
+
+
+=== L97 l97_scan.py rc=0 0.1s replaced=1
+wrote local-temp
+
+
+=== L97 l97_tables.py rc=0 0.1s replaced=1
+
+
+=== L97 l97_cite.py rc=0 0.0s replaced=1
+rows 92
+
+
+=== L95 l95_oracle.py rc=0 0.8s replaced=1
+er6),er2
+
+== bad decodes (first 30) ==
+== conflicts (first 20) ==
+== bad window_seed heads (mid-instruction) 0 ==
+
+== routines ==
+078106-07815B    86 B   24 ins  ext 002234  calls 07845A
+07815C-0781C5   106 B   26 ins  ext 05DD12  calls 0768A8,076FC8
+078222-07823B    26 B   13 ins  ext 05DD9E  calls -
+078260-07827B    28 B   10 ins  ext 07845E  calls -
+07827C-078333   184 B   57 ins  ext 054EB0  calls -
+07837C-0783D9    94 B   34 ins  ext 0768BC  calls -
+07845A-0784BD   100 B   26 ins  ext 078150  calls 078260
+
+== immediates inside window ==
+
+== most-referenced abs24 (top 40) ==
+  FFEE04  4
+  FFEE05  4
+  FFEE06  4
+  FF62F8  4
+  FFEE2D  4
+  FFFF8A  4
+  FF63F8  3
+  FFEE00  3
+  FFEE2C  3
+  07845A  2
+  FFFF88  2
+  FFFF89  2
+  FFEE01  2
+  FFEE02  2
+  0768A8  1
+  FF6358  1
+  FF6360  1
+  076FC8  1
+  FFEE32  1
+  FF6246  1
+  FF6330  1
+  078260  1
+  FFEE2F  1
+  FFEE08  1
+  FFEE09  1
+  FFEE0A  1
+  FF6240  1
+
+== outside text refs into window, by target ==
+  078106  1
+  07815C  1
+  078222  1
+  07827C  1
+  07837C  1
+  078546  1
+  0785A0  1
+  0785B0  1
+  0785C0  1
+  0785D0  1
+  0785E0  1
+  0785F0  1
+  078600  1
+  078740  1
+  078880  1
+  078970  1
+  078A10  1
+  078B50  1
+  078E20  1
+  079000  1
+  0790F0  1
+  0791E0  1
+  0793C0  1
+  079550  1
+  079910  1
+  079A00  1
+  079B40  1
+  079C30  1
+  079DC0  1
+  079EB0  1
+  079FA0  1
+  07A040  1
+  07A1D0  1
+  07A270  1
+  07A2C0  1
+  07A310  1
+  07A360  1
+  07A400  1
+  07A5E0  1
+  07A720  1
+  07A810  1
+  07A8B0  1
+  07A9F0  1
+  07AAE0  1
+  07AB80  1
+  07ABD0  1
+  07AC20  1
+  07ACC0  1
+  07AD60  1
+  07AE00  1
+  07AEA0  1
+  07AEF0  1
+  07AF90  1
+  07AFE0  1
+  07B030  1
+  07B080  1
+  07B120  1
+  07B260  1
+  07B270  1
+  07B271  1
+  07B2A6  2
+
+== H9 insns mentioning ffbc7 / 813a / 76fc8 / 768a8 ==
+-- ffbc7
+  01A2F6  7a 06 00 ff bc 79  mov.l #0xffbc79,er6
+  075F56  01 00 6b 26 00 ff bc 7c  mov.l @0xffbc7c:32,er6
+  075FEC  01 00 6b 22 00 ff bc 7c  mov.l @0xffbc7c:32,er2
+  07609E  01 00 6b 22 00 ff bc 7c  mov.l @0xffbc7c:32,er2
+  07615E  6a 20 00 ff bc 70  mov.b @0xffbc70:32,r0h
+  0761C0  6a a9 00 ff bc 71  mov.b r1l,@0xffbc71:32
+  0761D4  6b 2b 00 ff bc 72  mov.w @0xffbc72:32,e3
+  07624E  6b a0 00 ff bc 74  mov.w r0,@0xffbc74:32
+  0762E4  6a 20 00 ff bc 76  mov.b @0xffbc76:32,r0h
+  0762F0  7a 03 00 ff bc 79  mov.l #0xffbc79,er3
+  0762F6  7a 02 00 ff bc 77  mov.l #0xffbc77,er2
+  0767B6  6b a1 00 ff bc 74  mov.w r1,@0xffbc74:32
+-- 813a
+  0021FA  6a 8c 81 3a  mov.b r4l,@0x813a:16
+  002224  6a 8c 81 3a  mov.b r4l,@0x813a:16
+  002BE2  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  002C06  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  0037EA  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  00380C  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  00392C  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  003950  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  00DCC4  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  00EE82  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  0101B2  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  0267AE  7a 05 00 02 81 3a  mov.l #0x2813a,er5
+  054D54  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  056160  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  0580CE  47 6a  beq .+106 (0x5813a)
+  05E9F2  6a 04 81 3a  mov.b @0x813a:16,r4h
+-- 76fc8
+  0781C0  5e 07 6f c8  jsr @0x76fc8:24
+-- 768a8
+  078176  5e 07 68 a8  jsr @0x768a8:24
+-- 78546
+  0762FE  78 01 6b 20 00 07 85 46  mov.w @(0x78546:32,r0l.b),r0
+-- fee01
+  026238  6a ac 00 fe e0 13  mov.b r4l,@0xfee013:32
+  026246  7a 06 00 fe e0 14  mov.l #0xfee014,er6
+  02625C  6a ab 00 fe e0 1d  mov.b r3l,@0xfee01d:32
+  06BD82  7a 06 00 fe e0 16  mov.l #0xfee016,er6
+  06BD98  7a 06 00 fe e0 19  mov.l #0xfee019,er6
+  06BDB6  7a 06 00 fe e0 1c  mov.l #0xfee01c,er6
+  06BE88  6a ac 00 fe e0 1e  mov.b r4l,@0xfee01e:32
+  06C1E4  7a 06 00 fe e0 10  mov.l #0xfee010,er6
+  078106  7a 00 00 fe e0 10  mov.l #0xfee010,er0
+-- ee2d
+  0027B0  6a 18 ee 2d 72 20  bclr #0x2,@0xee2d:16
+  03EC52  6a 18 ee 2d 72 20  bclr #0x2,@0xee2d:16
+  054CA6  6a 18 ee 2d 70 20  bset #0x2,@0xee2d:16
+  054CC4  6a 8c ee 2d  mov.b r4l,@0xee2d:16
+  078154  6a 18 ee 2d 70 20  bset #0x2,@0xee2d:16
+  078470  6a 08 ee 2d  mov.b @0xee2d:16,r0l
+  078476  6a 88 ee 2d  mov.b r0l,@0xee2d:16
+
+== newest mask vs this code ==
+mask ida/out/main-final5/final5_proven_mask.bin len 1048576 set 369214
+  window_set 1088 code_already_set 950 code_unset 0
+  unset_code_ranges 0
+== final4 mask vs this code ==
+mask ida/out/main-final4/final4_proven_mask.bin len 1048576 set 368624
+  window_set 220 code_already_set 220 code_unset 730
+  unset_code_ranges 14
+    07810C-07815B (80)
+    0781A4-0781A9 (6)
+    0781C4-0781C5 (2)
+    0781FC-078221 (38)
+    07823C-078255 (26)
+    078268-078279 (18)
+    07827C-078333 (184)
+    07833C-07837B (64)
+    078384-0783D9 (86)
+    0783EE-07842D (64)
+    078440-078441 (2)
+    078448-078459 (18)
+    078462-0784BD (92)
+    078514-078545 (50)
+
+== raw 5E/5A hits that are reached heads ==
+  002234 -> 078106 opc 5E agreed 1 jsr @0x78106:24
+  054EB0 -> 07827C opc 5E agreed 1 jsr @0x7827c:24
+  05DD12 -> 07815C opc 5E agreed 1 jsr @0x7815c:24
+  05DD9E -> 078222 opc 5E agreed 1 jsr @0x78222:24
+  0768BC -> 07837C opc 5E agreed 1 jsr @0x7837c:24
+  078150 -> 07845A opc 5E agreed 1 jsr @0x7845a:24
+  07845E -> 078260 opc 5E agreed 1 jsr @0x78260:24
+== raw 5E/5A agreed but NOT a reached head (possible mid-insn) count 21 ==
+  076844 -> 078334 jsr @0x78334:24
+  0768A2 -> 078334 jsr @0x78334:24
+  076916 -> 078334 jsr @0x78334:24
+  076944 -> 07837C jsr @0x7837c:24
+  0769E6 -> 078334 jsr @0x78334:24
+  076A08 -> 0783DA jsr @0x783da:24
+  076A88 -> 07823C jsr @0x7823c:24
+  076A8E -> 07821E jsr @0x7821e:24
+  076AD8 -> 07837C jsr @0x7837c:24
+  076B1A -> 07837C jsr @0x7837c:24
+  076B46 -> 078334 jsr @0x78334:24
+  076B6A -> 0783DA jsr @0x783da:24
+  076BEA -> 07823C jsr @0x7823c:24
+  076BF2 -> 07821E jsr @0x7821e:24
+  076D84 -> 078442 jsr @0x78442:24
+  076DE0 -> 078442 jsr @0x78442:24
+  076E3C -> 078442 jsr @0x78442:24
+  076E9C -> 078442 jsr @0x78442:24
+  076F30 -> 078508 jsr @0x78508:24
+  076F54 -> 078442 jsr @0x78442:24
+  078212 -> 07845A jsr @0x7845a:24
+
+
+
+=== L95 l95_heads.py rc=0 0.4s replaced=1
+
+; ---- from 0781C6 ----
+0781C6  7a 01 00 fe e0 10         mov.l #0xfee010,er1
+0781CC  0f c8                     mov.l #0x4,er0
+0781CE  01 0d 01 00               mov.l #0x0,@er1
+0781D2  0a 81                     add.l er0,er1
+0781D4  7a 21 00 fe e2 0c         cmp.l #0xfee20c,er1
+0781DA  43 f2                     bls .-14 (0x781ce)
+0781DC  54 70                     rts 
+
+; ---- from 0781DE ----
+0781DE  6a 09 ee 04               mov.b @0xee04:16,r1l
+0781E2  17 61                     extu.l #2,er1
+0781E4  03 98 10 31               shll.l #0x18,er1
+0781E8  6a 08 ee 05               mov.b @0xee05:16,r0l
+0781EC  17 60                     extu.l #2,er0
+0781EE  10 f8                     shll.l #16,er0
+0781F0  01 f0 64 01               or.l er0,er1
+0781F4  6a 08 ee 06               mov.b @0xee06:16,r0l
+0781F8  17 60                     extu.l #2,er0
+0781FA  10 78                     shll.l #8,er0
+
+; ---- from 078256 ----
+078256  f8 08                     mov.b #0x8,r0l
+078258  38 88                     mov.b r0l,@0x88:8
+07825A  f8 0c                     mov.b #0xc,r0l
+07825C  38 89                     mov.b r0l,@0x89:8
+07825E  54 70                     rts 
+
+; ---- from 0784BE ----
+0784BE  7a 01 00 fe e0 08         mov.l #0xfee008,er1
+0784C4  7a 00 00 ff 62 88         mov.l #0xff6288,er0
+0784CA  01 01 69 81               mov.l er1,@(0x4:2,er0)
+0784CE  01 00 69 81               mov.l er1,@er0
+0784D2  f9 10                     mov.b #0x10,r1l
+0784D4  01 00 6f 81 00 54         mov.l er1,@(0x54:16,er0)
+0784DA  01 00 6f 81 00 50         mov.l er1,@(0x50:16,er0)
+0784E0  f1 e1                     mov.b #0xe1,r1h
+0784E2  01 00 6f 81 00 44         mov.l er1,@(0x44:16,er0)
+0784E8  01 00 6f 81 00 40         mov.l er1,@(0x40:16,er0)
+0784EE  6a f1 00 ff 62 40         mov.b #0x1,@0xff6240:32
+0784F4  6b f0 00 ff 63 f8         mov.w #0x0,@0xff63f8:32
+0784FA  01 7d 40 7f ee 00         mov.b #0x7f,@0xee00:16
+078500  01 7d 40 73 ee 28         mov.b #0x73,@0xee28:16
+078506  54 70                     rts 
+
+; ---- image references (BE24 after 5A/5E, or BE32) ----
+0781C6  NONE
+0781DE  NONE
+0781FC  NONE
+07821E  jsr/jmp@076A8E, jsr/jmp@076BF2
+078256  NONE
+07823C  jsr/jmp@076A88, jsr/jmp@076BEA
+078334  jsr/jmp@076844, jsr/jmp@0768A2, jsr/jmp@076916, jsr/jmp@0769E6, jsr/jmp@076B46
+0783DA  jsr/jmp@076A08, jsr/jmp@076B6A
+07842E  NONE
+078442  jsr/jmp@076D84, jsr/jmp@076DE0, jsr/jmp@076E3C, jsr/jmp@076E9C, jsr/jmp@076F54
+0784BE  be32@07B4BA
+078508  jsr/jmp@076F30
+078260  jsr/jmp@07845E
+07845A  jsr/jmp@078150, jsr/jmp@078212
+
+; ---- relative branch opcodes in 070000-078106 targeting the window ----
+rel_hits 0
+
+heads 336 bytes 1088 overlap_ok True
+
+
+=== L95 l95_facts.py rc=0 0.5s replaced=1
+ffff unique 3201 ==
+pair 07B2A6-07B4B2 bytes 524 words 262
+pair head 24 21 24 22 24 22 24 21 24 23 24 24 24 24 24 23
+pair tail 25 6f 25 6e 25 74 25 26 25 75 25 2c 25 76 25 32
+
+== handlers at 07B4B4 ==
+  07B4B4 80 00 00 00 00 00 00 07 84 be
+  07B4BE 05 00 00 00 01 00 00 07 69 aa
+  07B4C8 08 00 00 00 00 00 00 07 68 c8
+  07B4D2 02 00 00 00 01 00 00 07 69 aa
+  07B4DC 40 00 00 00 05 00 00 07 67 be
+  07B4E6 10 00 00 00 04 00 00 07 68 a8
+  07B4F0 00 00 00 00 ff 00 00 00 00 00
+ee32 07B61E 00 00 10 00 00 15 20 80 00 01 25 28 80 00 02 34 38 10 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+dev 07B680 12 01 10 01 02 00 00 08 aa 26 20 00 00 01 00 00 03 01
+cfg 07B711 09 02 43 00 02 01 00 c0 10 09 04 00 00 01 02 02 01 00 05 24 00 10 01 04 24 02 06 05 24 06 00 01 05 24 01 03 01 07 05 83 03 08 00 10 09 04 01 00 02 0a 00 00 00 07 05 01 02 40 00 00 07 05 82 02 40 00 00
+str 07B270 00 00 04 03 09 04 10 03 52 00 65 00 6e 00 65 00 73 00 61 00 73 00 1a 03 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00 00 00 00 00 00 ff
+ff6240img 07B4B2 01 00 80 00
+ff6288img 07B4FA 00 fe e0 08 00 fe e0 08 00 fe e0 08 00 fe e0 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ff62c8img 07B53A 00 fe e1 10 00 fe e1 10 00 fe e1 10 00 fe e2 0f
+ff62d8img 07B54A 00 fe e0 10 00 fe e0 10 00 fe e0 10 00 fe e1 0f
+ff62f8img 07B56A ff ff ff ff
+ff6330img 07B5A2 00 ff ee 24
+ff6354img 07B5C6 02 00 00 01 00 ff 64 23 00 ff ee 14 10 00 10 04 00 00 40 00 01 00 00 01 00 ff ee 25 00 ff ee 10 00 20 20 02 00 00 40 00 12 00 00 ff 64 0e 00 43
+
+== be32 sites ==
+000781C6 NONE
+000781DE NONE
+00078256 NONE
+0007842E NONE
+000784BE 07B4BA
+00078106 NONE
+0007B276 07B602
+0007B286 07B60E
+0007B680 NONE
+0007B698 NONE
+0007B711 NONE
+0007B2A6 002158, 002524
+00FF640E 07B5F0
+00FF649F 07B5F6
+00FF6034 00215E, 00252A, 0761FE, 076218, 076230, 076288, 0762A2, 0762BA
+acme_len_prefix 80 00 79 4d ascii yMANUFACTURER:ACME Manufacturing;COMMAND SET:PCL,MPL;MODEL:LaserBeam ?;COMMENT:Anything you like;ACTIVE COMMAND SET:PCL;
+
+== eepmov ==
+  002152 79 04 04 ae mov.w #0x4ae,r4
+  002156 7a 05 00 07 b2 a6 mov.l #0x7b2a6,er5
+  00215C 7a 06 00 ff 60 34 mov.l #0xff6034,er6
+  002162 7b d4 59 8f eepmov.w 
+  002166 0d 44 mov.w r4,r4
+  002168 46 f8 bne .-8 (0x2162)
+  00251E 79 04 04 ae mov.w #0x4ae,r4
+  002522 7a 05 00 07 b2 a6 mov.l #0x7b2a6,er5
+  002528 7a 06 00 ff 60 34 mov.l #0xff6034,er6
+  00252E 7b d4 59 8f eepmov.w 
+  002532 0d 44 mov.w r4,r4
+  002534 46 f8 bne .-8 (0x252e)
+
+== named ==
+0021FA 6a 8c 81 3a mov.b r4l,@0x813a:16 OK [mov.b r4l,@0x813a:16]
+0021FE fe c8 mov.b #0xc8,r6l OK [mov.b #0xc8,r6l]
+002200 2c 4c mov.b @0x4c:8,r4l OK [mov.b @0x4c:8,r4l]
+002202 ec 7f and.b #0x7f,r4l OK [and.b #0x7f,r4l]
+002204 ac 7d cmp.b #0x7d,r4l OK [cmp.b #0x7d,r4l]
+002206 47 16 beq .+22 (0x221e) OK [beq .+22 (0x221e)]
+002214 5e 05 4b f8 jsr @0x54bf8:24 OK [jsr @0x54bf8:24]
+002218 5e 05 4c 44 jsr @0x54c44:24 OK [jsr @0x54c44:24]
+00221C 40 22 bra .+34 (0x2240) OK [bra .+34 (0x2240)]
+002224 6a 8c 81 3a mov.b r4l,@0x813a:16 OK [mov.b r4l,@0x813a:16]
+002228 5e 05 5f fe jsr @0x55ffe:24 OK [jsr @0x55ffe:24]
+002234 5e 07 81 06 jsr @0x78106:24 OK [jsr @0x78106:24]
+054D54 6a 0c 81 3a mov.b @0x813a:16,r4l OK [mov.b @0x813a:16,r4l]
+054D58 58 60 01 4c bne .+332 (0x54ea8) OK [bne .+332 (0x54ea8)]
+054EA8 01 30 6d f0 stm.l er0-er3,@-sp OK [stm.l er0-er3,@-sp]
+054EB0 5e 07 82 7c jsr @0x7827c:24 OK [jsr @0x7827c:24]
+054EC0 56 70 rte  OK [rte ]
+05DCFE 6a 0c b0 c4 mov.b @0xb0c4:16,r4l OK [mov.b @0xb0c4:16,r4l]
+05DD02 58 70 00 e4 beq .+228 (0x5ddea) OK [beq .+228 (0x5ddea)]
+05DD06 ac 05 cmp.b #0x5,r4l OK [cmp.b #0x5,r4l]
+05DD08 45 14 bcs .+20 (0x5dd1e) OK [bcs .+20 (0x5dd1e)]
+05DD12 5e 07 81 5c jsr @0x7815c:24 OK [jsr @0x7815c:24]
+05DD8A 6a 18 fb a5 70 50 bset #0x5,@0xfba5:16 OK [bset #0x5,@0xfba5:16]
+05DD98 6a 18 fb 91 70 50 bset #0x5,@0xfb91:16 OK [bset #0x5,@0xfb91:16]
+05DD9E 5e 07 82 22 jsr @0x78222:24 OK [jsr @0x78222:24]
+07615E 6a 20 00 ff bc 70 mov.b @0xffbc70:32,r0h OK [mov.b @0xffbc70:32,r0h]
+076186 78 01 6a 29 00 07 85 f0 mov.b @(0x785f0:32,r0l.b),r1l OK [mov.b @(0x785f0:32,r0l.b),r1l]
+076190 78 01 6a 29 00 07 85 e0 mov.b @(0x785e0:32,r0l.b),r1l OK [mov.b @(0x785e0:32,r0l.b),r1l]
+07619A 78 01 6a 29 00 07 85 d0 mov.b @(0x785d0:32,r0l.b),r1l OK [mov.b @(0x785d0:32,r0l.b),r1l]
+0761A4 78 01 6a 29 00 07 85 c0 mov.b @(0x785c0:32,r0l.b),r1l OK [mov.b @(0x785c0:32,r0l.b),r1l]
+0761AE 78 01 6a 29 00 07 85 b0 mov.b @(0x785b0:32,r0l.b),r1l OK [mov.b @(0x785b0:32,r0l.b),r1l]
+0761B8 78 01 6a 29 00 07 85 a0 mov.b @(0x785a0:32,r0l.b),r1l OK [mov.b @(0x785a0:32,r0l.b),r1l]
+0761C0 6a a9 00 ff bc 71 mov.b r1l,@0xffbc71:32 OK [mov.b r1l,@0xffbc71:32]
+0761D4 6b 2b 00 ff bc 72 mov.w @0xffbc72:32,e3 OK [mov.w @0xffbc72:32,e3]
+0761DA 79 2b 24 21 cmp.w #0x2421,e3 OK [cmp.w #0x2421,e3]
+0761E2 79 2b 25 76 cmp.w #0x2576,e3 OK [cmp.w #0x2576,e3]
+0761FA 78 88 7a c6 00 ff 60 34 mova/l.l @(0xff6034:32,r0l.b),er6 OK [mova/l.l @(0xff6034:32,r0l.b),er6]
+0762EA a0 2c cmp.b #0x2c,r0h OK [cmp.b #0x2c,r0h]
+0762FE 78 01 6b 20 00 07 85 46 mov.w @(0x78546:32,r0l.b),r0 OK [mov.w @(0x78546:32,r0l.b),r0]
+076306 11 10 shlr.w r0 OK [shlr.w r0]
+076308 59 06 bra r0.w OK [bra r0.w]
+0767B6 6b a1 00 ff bc 74 mov.w r1,@0xffbc74:32 OK [mov.w r1,@0xffbc74:32]
+0768A8 6a 10 ee 00 73 40 btst #0x4,@0xee00:16 OK [btst #0x4,@0xee00:16]
+0768B0 7a 00 00 ff 63 54 mov.l #0xff6354,er0 OK [mov.l #0xff6354,er0]
+0768B6 7a 01 00 ff 62 c8 mov.l #0xff62c8,er1 OK [mov.l #0xff62c8,er1]
+0768BC 5e 07 83 7c jsr @0x7837c:24 OK [jsr @0x7837c:24]
+0768C0 6b a0 00 ff 63 f8 mov.w r0,@0xff63f8:32 OK [mov.w r0,@0xff63f8:32]
+076FC8 01 30 6d f2 stm.l er2-er5,@-sp OK [stm.l er2-er5,@-sp]
+076FD2 7a 06 00 ff 62 88 mov.l #0xff6288,er6 OK [mov.l #0xff6288,er6]
+077008 79 2a 00 40 cmp.w #0x40,e2 OK [cmp.w #0x40,e2]
+07701E 29 8c mov.b @0x8c:8,r1l OK [mov.b @0x8c:8,r1l]
+077022 30 8b mov.b r0h,@0x8b:8 OK [mov.b r0h,@0x8b:8]
+
+sha 8e3ecd05409b2c314ebed77320ece5930bf31c8333cd84aeef4f6b0264c1bcce len 1048576
+span 13902 last 00 next ff
+
+
+
+=== L95 l95_data.py rc=0 0.4s replaced=1
+7 326a 4c3d 4c3e 4c3f 4c40  last ffff ffff ffff ffff
+  07AC20..07ACBF  160 B  first 4c4e 4c4f 4c50 4174 4153 4c51 4c52 4c53  last ffff ffff ffff ffff
+  07ACC0..07AD5F  160 B  first 4c69 4c6a 4c6b 4c6c 4c6d 4c6e 4c6f 4c70  last ffff ffff ffff ffff
+  07AD60..07ADFF  160 B  first 4c7b 4c7c 4c7d 4c7e 4d21 4d22 4572 4d23  last ffff ffff ffff ffff
+  07AE00..07AE9F  160 B  first 4d3d 4d3e 4d3f 4d40 4d41 4d42 4024 4265  last ffff ffff ffff ffff
+  07AEA0..07AEEF   80 B  first 4d65 4d66 4d67 5947 4d68 4d69 4d6a 4d6b  last ffff ffff ffff ffff
+  07AEF0..07AF8F  160 B  first 4d78 4d79 4d7a 4d7b 4d7c 4d7d 4d7e 4e21  last ffff ffff ffff ffff
+  07AF90..07AFDF   80 B  first 4e5c 4e31 4e2e 4e5d 4e5e 4e5f 4e60 ffff  last ffff ffff ffff ffff
+  07AFE0..07B02F   80 B  first 4e61 4e62 4e63 4e64 4e65 4e66 4e67 4e68  last ffff ffff ffff ffff
+  07B030..07B07F   80 B  first 4f24 4f25 4f26 4f27 4f28 4f29 4f2a 4f2b  last ffff ffff ffff ffff
+  07B080..07B11F  160 B  first 4f41 4f42 4f43 4e58 4f44 4f45 3c63 4a4c  last ffff ffff ffff ffff
+  07B120..07B25F  320 B  first 2121 2122 2123 2124 2125 2126 2127 2128  last ffff ffff 2658 2656
+  07B260..07B26F   16 B  first 0000 0000 0000 0000 0000 0000 0000 0000  last 0000 0000 0000 0000
+  07B270..07B270    1 B  00
+  07B271..07B2A5   53 B  00 04 03 09 04 10 03 52 00 65 00 6e 00 65 00 73
+  07B2A6..07B2A5    0 B  
+
+== word stats 078600-07B25F ==
+n 5680 min 2121 max ffff unique 3201
+first 24 3021 3022 3023 3024 3025 3026 3027 3028 416a 4d75 3456 3029 3271 3967 4178 343a 4044 4173 302a 3644 407a 4056 3c6b 3924
+at 078740 304a 304b 304c 304d 304e 304f 3050 3051 3052 3053 3054 3055
+
+== byte patterns FF BC 7x ==
+  site 01A2F8 insn 01A2F6 mov.l #0xffbc79,er6
+  site 075F5A insn 075F58 mov.w @0xffbc7c:32,r6
+  site 075FF0 insn 075FEE mov.w @0xffbc7c:32,r2
+  site 0760A2 insn 0760A0 mov.w @0xffbc7c:32,r2
+  site 076160 insn 07615E mov.b @0xffbc70:32,r0h
+  site 0761C2 insn 0761C0 mov.b r1l,@0xffbc71:32
+  site 0761D6 insn 0761D4 mov.w @0xffbc72:32,e3
+  site 076250 insn 07624E mov.w r0,@0xffbc74:32
+  site 0762E6 insn 0762E4 mov.b @0xffbc76:32,r0h
+  site 0762F2 insn 0762F0 mov.l #0xffbc79,er3
+  site 0762F8 insn 0762F6 mov.l #0xffbc77,er2
+  site 0767B8 insn 0767B6 mov.w r1,@0xffbc74:32
+pattern hits shown 12
+
+== around 002522 and 002156 ==
+002140  BAD .word H'0,H'fe
+---
+002500  00 00                   nop 
+002502  00 00                   nop 
+002504  7a 04 00 ff 73 00       mov.l #0xff7300,er4
+00250A  7a 05 00 fe e0 00       mov.l #0xfee000,er5
+002510  1a d4                   sub.l er5,er4
+002512  11 74                   shlr.l #2,er4
+002514  01 00 69 d6             mov.l er6,@er5
+002518  0b 95                   adds #4,er5
+00251A  1b 74                   dec.l #1,er4
+00251C  46 f6                   bne .-10 (0x2514)
+00251E  79 04 04 ae             mov.w #0x4ae,r4
+002522  7a 05 00 07 b2 a6       mov.l #0x7b2a6,er5
+002528  7a 06 00 ff 60 34       mov.l #0xff6034,er6
+00252E  7b d4 59 8f             eepmov.w 
+002532  0d 44                   mov.w r4,r4
+002534  46 f8                   bne .-8 (0x252e)
+
+== 077E20 and 077F40 ==
+077E20  4d b4                   blt .-76 (0x77dd6)
+077E22  0b f7                   inc.l #2,er7
+077E24  6d 76                   mov.w @er7+,r6
+077E26  54 35                   rts/l er2-er5
+---
+077F40  01 03 69 71             mov.l @(0xc:2,er7),er1
+077F44  5e 07 7d b8             jsr @0x77db8:24
+077F48  54 13                   rts/l er2-er3
+
+== descriptor walk 07B680 ==
+device 12 01 10 01 02 00 00 08 aa 26 20 00 00 01 00 00 03 01
+config 07B711..07FA11
+  07B711 len 09 type 02 09 02 43 00 02 01 00 c0 10
+  07B71A len 09 type 04 09 04 00 00 01 02 02 01 00
+  07B723 len 05 type 24 05 24 00 10 01
+  07B728 len 04 type 24 04 24 02 06
+  07B72C len 05 type 24 05 24 06 00 01
+  07B731 len 05 type 24 05 24 01 03 01
+  07B736 len 07 type 05 07 05 83 03 08 00 10
+  07B73D len 09 type 04 09 04 01 00 02 0a 00 00 00
+  07B746 len 07 type 05 07 05 01 02 40 00 00
+  07B74D len 07 type 05 07 05 82 02 40 00 00
+
+== 07B690-07B711 hex ==
+03 01 08 10 31 40 80 00 79 4d 41 4e 55 46 41 43 54 55 52 45 52 3a 41 43 4d 45 20 4d 61 6e 75 66 61 63 74 75 72 69 6e 67 3b 43 4f 4d 4d 41 4e 44 20 53 45 54 3a 50 43 4c 2c 4d 50 4c 3b 4d 4f 44 45 4c 3a 4c 61 73 65 72 42 65 61 6d 20 3f 3b 43 4f 4d 4d 45 4e 54 3a 41 6e 79 74 68 69 6e 67 20 79 6f 75 20 6c 69 6b 65 3b 41 43 54 49 56 45 20 43 4f 4d 4d 41 4e 44 20 53 45 54 3a 50 43 4c 3b 18
+
+== long FF runs ==
+  0785D7-0785DF (9)
+  07870A-07873F (54)
+  078844-07887F (60)
+  07892C-07896F (68)
+  078A02-078A0F (14)
+  078B06-078B4F (74)
+  078DF2-078E1F (46)
+  078FD6-078FFF (42)
+  0790C4-0790EF (44)
+  0791D4-0791DF (12)
+  0793A0-0793BF (32)
+  07950C-07954F (68)
+  0798CE-07990F (66)
+  0799CC-0799FF (52)
+  079B04-079B3F (60)
+  079DAE-079DBF (18)
+  079E92-079EAF (30)
+  079F72-079F9F (46)
+  07A02E-07A03F (18)
+  07A1A6-07A1CF (42)
+  07A256-07A26F (26)
+  07A2D4-07A30F (60)
+  07A344-07A35F (28)
+  07A3B4-07A3FF (76)
+  07A592-07A5DF (78)
+  07A706-07A71F (26)
+  07A7FC-07A80F (20)
+  07A864-07A8AF (76)
+  07A9B0-07A9EF (64)
+  07AAB4-07AADF (44)
+  07AB62-07AB7F (30)
+  07ABC2-07ABCF (14)
+  07AC08-07AC1F (24)
+  07AC90-07ACBF (48)
+  07AD22-07AD5F (62)
+  07ADBE-07ADFF (66)
+  07AE8A-07AE9F (22)
+  07AECA-07AEEF (38)
+  07AF80-07AF8F (16)
+  07AF9E-07AFDF (66)
+  07B024-07B02F (12)
+  07B06C-07B07F (20)
+  07B0E0-07B11F (64)
+
+== 07B200-07B2C0 hex rows ==
+07B200  22 3e 22 3f 22 40 22 41 22 4a 22 4b 22 4c 22 4d
+07B210  22 4e 22 4f 22 50 22 5c 22 5d 22 5e 22 5f 22 60
+07B220  22 61 22 62 22 63 22 64 22 65 22 66 22 67 22 68
+07B230  22 69 22 6a 22 72 22 73 22 74 22 75 22 76 24 70
+07B240  24 71 25 70 25 71 26 38 26 41 26 42 26 43 26 45
+07B250  26 48 26 4b 26 4c 26 50 26 56 26 58 ff ff ff ff
+07B260  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+07B270  00 00 04 03 09 04 10 03 52 00 65 00 6e 00 65 00
+07B280  73 00 61 00 73 00 1a 03 30 00 30 00 30 00 30 00
+07B290  30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00
+07B2A0  00 00 00 00 00 ff 24 21 24 22 24 22 24 21 24 23
+07B2B0  24 24 24 24 24 23 24 25 24 26 24 26 24 25 24 27
+
+
+
+=== L95 l95_cite.py rc=0 0.4s replaced=1
+rows 465 disasm 1183
+
+
+=== L97-frozen l97_scan.py rc=0 0.1s replaced=2
+wrote local-temp
+
+
+=== L95-frozen l95_oracle.py rc=0 0.8s replaced=2
+42  FFFF88  38 88  mov.b r0l,@0x88:8
+078246  FFFF89  38 89  mov.b r0l,@0x89:8
+078252  FFFF8A  38 8a  mov.b r0l,@0x8a:8
+
+== indirect ==
+UNRES 078308 jsr @er2 | clobber mov.l @(0x6:16,er6),er2
+
+== bad decodes (first 30) ==
+== conflicts (first 20) ==
+== bad window_seed heads (mid-instruction) 0 ==
+
+== routines ==
+078106-07815B    86 B   24 ins  ext 002234  calls 07845A
+07815C-0781C5   106 B   26 ins  ext 05DD12  calls 0768A8,076FC8
+078222-07823B    26 B   13 ins  ext 05DD9E  calls -
+078260-07827B    28 B   10 ins  ext 07845E  calls -
+07827C-078333   184 B   57 ins  ext 054EB0  calls -
+07837C-0783D9    94 B   34 ins  ext 0768BC  calls -
+07845A-0784BD   100 B   26 ins  ext 078150  calls 078260
+
+== immediates inside window ==
+
+== most-referenced abs24 (top 40) ==
+  FFEE04  4
+  FFEE05  4
+  FFEE06  4
+  FF62F8  4
+  FFEE2D  4
+  FFFF8A  4
+  FF63F8  3
+  FFEE00  3
+  FFEE2C  3
+  07845A  2
+  FFFF88  2
+  FFFF89  2
+  FFEE01  2
+  FFEE02  2
+  0768A8  1
+  FF6358  1
+  FF6360  1
+  076FC8  1
+  FFEE32  1
+  FF6246  1
+  FF6330  1
+  078260  1
+  FFEE2F  1
+  FFEE08  1
+  FFEE09  1
+  FFEE0A  1
+  FF6240  1
+
+== outside text refs into window, by target ==
+  078106  1
+  07815C  1
+  078222  1
+  07827C  1
+  07837C  1
+  078546  1
+  0785A0  1
+  0785B0  1
+  0785C0  1
+  0785D0  1
+  0785E0  1
+  0785F0  1
+  078600  1
+  078740  1
+  078880  1
+  078970  1
+  078A10  1
+  078B50  1
+  078E20  1
+  079000  1
+  0790F0  1
+  0791E0  1
+  0793C0  1
+  079550  1
+  079910  1
+  079A00  1
+  079B40  1
+  079C30  1
+  079DC0  1
+  079EB0  1
+  079FA0  1
+  07A040  1
+  07A1D0  1
+  07A270  1
+  07A2C0  1
+  07A310  1
+  07A360  1
+  07A400  1
+  07A5E0  1
+  07A720  1
+  07A810  1
+  07A8B0  1
+  07A9F0  1
+  07AAE0  1
+  07AB80  1
+  07ABD0  1
+  07AC20  1
+  07ACC0  1
+  07AD60  1
+  07AE00  1
+  07AEA0  1
+  07AEF0  1
+  07AF90  1
+  07AFE0  1
+  07B030  1
+  07B080  1
+  07B120  1
+  07B260  1
+  07B270  1
+  07B271  1
+  07B2A6  2
+
+== H9 insns mentioning ffbc7 / 813a / 76fc8 / 768a8 ==
+-- ffbc7
+  01A2F6  7a 06 00 ff bc 79  mov.l #0xffbc79,er6
+  075F56  01 00 6b 26 00 ff bc 7c  mov.l @0xffbc7c:32,er6
+  075FEC  01 00 6b 22 00 ff bc 7c  mov.l @0xffbc7c:32,er2
+  07609E  01 00 6b 22 00 ff bc 7c  mov.l @0xffbc7c:32,er2
+  07615E  6a 20 00 ff bc 70  mov.b @0xffbc70:32,r0h
+  0761C0  6a a9 00 ff bc 71  mov.b r1l,@0xffbc71:32
+  0761D4  6b 2b 00 ff bc 72  mov.w @0xffbc72:32,e3
+  07624E  6b a0 00 ff bc 74  mov.w r0,@0xffbc74:32
+  0762E4  6a 20 00 ff bc 76  mov.b @0xffbc76:32,r0h
+  0762F0  7a 03 00 ff bc 79  mov.l #0xffbc79,er3
+  0762F6  7a 02 00 ff bc 77  mov.l #0xffbc77,er2
+  0767B6  6b a1 00 ff bc 74  mov.w r1,@0xffbc74:32
+-- 813a
+  0021FA  6a 8c 81 3a  mov.b r4l,@0x813a:16
+  002224  6a 8c 81 3a  mov.b r4l,@0x813a:16
+  002BE2  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  002C06  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  0037EA  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  00380C  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  00392C  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  003950  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  00DCC4  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  00EE82  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  0101B2  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  0267AE  7a 05 00 02 81 3a  mov.l #0x2813a,er5
+  054D54  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  056160  6a 0c 81 3a  mov.b @0x813a:16,r4l
+  0580CE  47 6a  beq .+106 (0x5813a)
+  05E9F2  6a 04 81 3a  mov.b @0x813a:16,r4h
+-- 76fc8
+  0781C0  5e 07 6f c8  jsr @0x76fc8:24
+-- 768a8
+  078176  5e 07 68 a8  jsr @0x768a8:24
+-- 78546
+  0762FE  78 01 6b 20 00 07 85 46  mov.w @(0x78546:32,r0l.b),r0
+-- fee01
+  026238  6a ac 00 fe e0 13  mov.b r4l,@0xfee013:32
+  026246  7a 06 00 fe e0 14  mov.l #0xfee014,er6
+  02625C  6a ab 00 fe e0 1d  mov.b r3l,@0xfee01d:32
+  06BD82  7a 06 00 fe e0 16  mov.l #0xfee016,er6
+  06BD98  7a 06 00 fe e0 19  mov.l #0xfee019,er6
+  06BDB6  7a 06 00 fe e0 1c  mov.l #0xfee01c,er6
+  06BE88  6a ac 00 fe e0 1e  mov.b r4l,@0xfee01e:32
+  06C1E4  7a 06 00 fe e0 10  mov.l #0xfee010,er6
+  078106  7a 00 00 fe e0 10  mov.l #0xfee010,er0
+-- ee2d
+  0027B0  6a 18 ee 2d 72 20  bclr #0x2,@0xee2d:16
+  03EC52  6a 18 ee 2d 72 20  bclr #0x2,@0xee2d:16
+  054CA6  6a 18 ee 2d 70 20  bset #0x2,@0xee2d:16
+  054CC4  6a 8c ee 2d  mov.b r4l,@0xee2d:16
+  078154  6a 18 ee 2d 70 20  bset #0x2,@0xee2d:16
+  078470  6a 08 ee 2d  mov.b @0xee2d:16,r0l
+  078476  6a 88 ee 2d  mov.b r0l,@0xee2d:16
+
+== newest mask vs this code ==
+mask ida/out/main-final4/final4_proven_mask.bin len 1048576 set 368624
+  window_set 220 code_already_set 220 code_unset 730
+  unset_code_ranges 14
+    07810C-07815B (80)
+    0781A4-0781A9 (6)
+    0781C4-0781C5 (2)
+    0781FC-078221 (38)
+    07823C-078255 (26)
+    078268-078279 (18)
+    07827C-078333 (184)
+    07833C-07837B (64)
+    078384-0783D9 (86)
+    0783EE-07842D (64)
+    078440-078441 (2)
+    078448-078459 (18)
+    078462-0784BD (92)
+    078514-078545 (50)
+(newest is final4)
+
+== raw 5E/5A hits that are reached heads ==
+  002234 -> 078106 opc 5E agreed 1 jsr @0x78106:24
+  054EB0 -> 07827C opc 5E agreed 1 jsr @0x7827c:24
+  05DD12 -> 07815C opc 5E agreed 1 jsr @0x7815c:24
+  05DD9E -> 078222 opc 5E agreed 1 jsr @0x78222:24
+  0768BC -> 07837C opc 5E agreed 1 jsr @0x7837c:24
+  078150 -> 07845A opc 5E agreed 1 jsr @0x7845a:24
+  07845E -> 078260 opc 5E agreed 1 jsr @0x78260:24
+== raw 5E/5A agreed but NOT a reached head (possible mid-insn) count 21 ==
+  076844 -> 078334 jsr @0x78334:24
+  0768A2 -> 078334 jsr @0x78334:24
+  076916 -> 078334 jsr @0x78334:24
+  076944 -> 07837C jsr @0x7837c:24
+  0769E6 -> 078334 jsr @0x78334:24
+  076A08 -> 0783DA jsr @0x783da:24
+  076A88 -> 07823C jsr @0x7823c:24
+  076A8E -> 07821E jsr @0x7821e:24
+  076AD8 -> 07837C jsr @0x7837c:24
+  076B1A -> 07837C jsr @0x7837c:24
+  076B46 -> 078334 jsr @0x78334:24
+  076B6A -> 0783DA jsr @0x783da:24
+  076BEA -> 07823C jsr @0x7823c:24
+  076BF2 -> 07821E jsr @0x7821e:24
+  076D84 -> 078442 jsr @0x78442:24
+  076DE0 -> 078442 jsr @0x78442:24
+  076E3C -> 078442 jsr @0x78442:24
+  076E9C -> 078442 jsr @0x78442:24
+  076F30 -> 078508 jsr @0x78508:24
+  076F54 -> 078442 jsr @0x78442:24
+  078212 -> 07845A jsr @0x7845a:24
+
+
+
+=== K1 k1_build_masks.py rc=0 6.6s replaced=1
+image sha256 8e3ecd05409b2c31 len 1048576
+H9 proven 365570 (== h9_proven_mask.bin)
+final3 masks on disk: proven 368366 named 497314
+H9 full descent reproduced: reached bytes 363758
+J1 one-descent reproduced: final3 proven 368366 == final3_proven_mask.bin
+K1a: withdrawn H2 exclusions: 03467C(slot of 034674 #2)->034CCE, 04ACF4(slot of 04AB70 #97)->04E2D6, 04ADFC(slot of 04AB70 #163)->04E2D6, 04AE4C(slot of 04AB70 #183)->04E2D6, 04AFB8(slot of 04AB70 #274)->04E2D6, 04B108(slot of 04AB70 #358)->04E2D6
+K1a: re-admitted (table, slot, target): 034674[2]@03467C->034CCE; 04AB70[97]@04ACF4->04E2D6; 04AB70[163]@04ADFC->04E2D6; 04AB70[183]@04AE4C->04E2D6; 04AB70[274]@04AFB8->04E2D6; 04AB70[358]@04B108->04E2D6; 04ABE4[68]@04ACF4->04E2D6; 04ABE4[134]@04ADFC->04E2D6; 04ABE4[154]@04AE4C->04E2D6; 04ABE4[245]@04AFB8->04E2D6
+K1b: helper family (11): 02853E:N=3 028562:N=4 028586:N=5 0285AA:N=6 0285CE:N=7 0285F2:N=8 028616:N=9 02863A:N=10 02865E:N=11 028682:N=19 0286A6:N=23
+ONE folded descent: newly reached vs H9 3174 | J1 union 2916 | beyond J1 258 (K1a alone 72, K1b alone 186, K1a&K1b 0) | J1 bytes lost 0
+folded descent reaches 0 bytes of either I12 block
+MAIN proven FINAL4 = 368624 (final3 368366 + 258)
+  +0179DA-0179E2   8 K1b  root 0179DA <- K1b helper 02863A(N=10) table 0287E2 slot 1 (idx 2) via site 02877E | ends 'beq .+30 (0x17a00)'
+  +029174-02917A   6 K1b  root 029174 <- K1b helper 0285CE(N=7) table 02917A slot 3 (idx 4) via site 02916A | ends 'rts '
+  +02B026-02B030  10 K1b  root 02B026 <- K1b helper 028616(N=9) table 02B032 slot 0 (idx 1) via site 02B01C | ends 'jsr @0x608a6:24'
+  +02B36A-02B37C  18 K1b  root 02B36A <- K1b helper 028616(N=9) table 02B37E slot 0 (idx 1) via site 02B360 | ends 'jsr @0x65b04:24'
+  +02B3B2-02B3C0  14 K1b  root 02B3B2 <- K1b helper 028616(N=9) table 02B3C2 slot 0 (idx 1) via site 02B3A8 | ends 'jsr @0x65ed4:24'
+  +02B64A-02B68A  64 K1b  root 02B64A <- K1b helper 02863A(N=10) table 02B68A slot 0 (idx 1) via site 02B5D2 | ends 'rts '
+  +02B8BC-02B8C6  10 K1b  root 02B8BC <- K1b helper 0285AA(N=6) table 02B8C6 slot 3 (idx 4) via site 02B8B2 | ends 'rts '
+  +02C25E-02C268  10 K1b  root 02C25E <- K1b helper 028586(N=5) table 02C2CA slot 3 (idx 4) via site 02C208 L1 02C2BA | ends 'rts '
+  +04E2D6-04E31E  72 K1a  root 04E2D6 <- table 04AB70 slot 04ACF4 | ends 'rts '
+  +064BE6-064BF6  16 K1b  root 02B8BC <- K1b helper 0285AA(N=6) table 02B8C6 slot 3 (idx 4) via site 02B8B2 | ends 'bra .+10 (0x64c00)'
+  +065EFA-065F0A  16 K1b  root 065EFA <- K1b helper 028616(N=9) table 02B3C2 slot 5 (idx 6) via site 02B3A8 | ends 'jsr @0x65ba6:24'
+  +0696BC-0696CA  14 K1b  root 0696BC <- K1b helper 028562(N=4) table 02A572 slot 2 (idx 3) via site 02A542 | ends 'bra .+220 (0x697a6)'
+touch-zone tables: 99 referenced (J3 nine included), 5296 B, overlaps between tables: []; named-before 5296/5296; proven 0
+MAIN named FINAL4 = 497451 (final3 497314 + 137) {'proven code delta (K1a+K1b)': 95, 'Baro/-hPa label 0x04E31E-0x04E32D': 2, 'touch-zone tables': 0, 'helper slot tables (K1b)': 40, 'K1a table cells': 0}
+proven bytes not named: 0
+wrote final4 masks, ledger.tsv, ledger-delta.tsv, new-proven-runs.tsv, new-heads.tsv, helper-tables.tsv, touch-zone-tables.tsv, typing-plan.tsv, crefs-plan.tsv
+
+

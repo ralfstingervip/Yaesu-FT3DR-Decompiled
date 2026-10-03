@@ -1,0 +1,705 @@
+====================================================================================================
+RUN 00245C-00246C len 16  root 00245C <fnindex 00245C>  fnseeds-in-run 00245C(end 00246C)
+bytes: 0000000000000000ffffffffffffffff
+  pred 00245A len 2 'mov.b #0xff,r7l' [untyped]
+  bytes before: 0000000000000000ffffffffffffffff
+    00245C 0000           nop    <FNSEED>
+    00245E 0000           nop 
+    002460 0000           nop 
+    002462 0000           nop 
+    002464 ffff           mov.b #0xff,r7l
+    002466 ffff           mov.b #0xff,r7l
+    002468 ffff           mov.b #0xff,r7l
+    00246A ffff           mov.b #0xff,r7l
+  after: 00246C 7a04000186a00000 [reachedN-head]
+  BE32 ->00245C at 002418 pre=7a05 [reachedN-mid]
+  BE32 ->00245C at 002430 pre=7a05 [reachedN-mid]
+  BE32 ->00245C at 0025CE pre=7a05 [reachedN-mid]
+  BE32 ->00245C at 0025E6 pre=7a05 [reachedN-mid]
+  BE32 ->00245C at 0026B4 pre=7a05 [reachedN-mid]
+  BE32 ->00245C at 0026CC pre=7a05 [reachedN-mid]
+  DEC ->00245C at 002416 'mov.l #0x245c,er5' [reachedN-head]
+  DEC ->00245C at 00242E 'mov.l #0x245c,er5' [reachedN-head]
+  DEC ->00245C at 0025CC 'mov.l #0x245c,er5' [reachedN-head]
+  DEC ->00245C at 0025E4 'mov.l #0x245c,er5' [reachedN-head]
+  DEC ->00245C at 0026B2 'mov.l #0x245c,er5' [reachedN-head]
+  DEC ->00245C at 0026CA 'mov.l #0x245c,er5' [reachedN-head]
+  BE16 ->00245C at 00241A [reachedN-mid]
+  BE16 ->00245C at 002432 [reachedN-mid]
+  BE16 ->00245C at 0025D0 [reachedN-mid]
+  BE16 ->00245C at 0025E8 [reachedN-mid]
+  BE16 ->00245C at 0026B6 [reachedN-mid]
+  BE16 ->00245C at 0026CE [reachedN-mid]
+  BE16 ->00245C at 07B37C [window]
+  BE16 ->00245C at 07B37E [window]
+  BE32 ->002468 at 0484C9 pre=1600 [reachedN-mid]
+  BE32 ->002468 at 048517 pre=1600 [reachedN-mid]
+  BE32 ->00246A at 02A03B pre=1100 [reachedN-mid]
+  total BE32/DEC refs into run: 15
+====================================================================================================
+RUN 00619C-0061A4 len 8  root 00619C <fnindex 00619C>  fnseeds-in-run 00619C(end 0061A4)
+bytes: 790400046b84b050
+  pred 00619A len 2 'rts ' [reachedN-head]
+  bytes before: fb090f955e005af054705e00a3425470
+    00619C 79040004       mov.w #0x4,r4   <FNSEED>
+    0061A0 6b84b050       mov.w r4,@0xb050:16
+  after: 0061A4 7a0500ffa56d5e00 [reachedN-head]
+  DEC ->00619C at 04FB44 'jsr @0x619c:24' [untyped]
+  BE16 ->00619C at 04FB46 [untyped]
+  total BE32/DEC refs into run: 1
+====================================================================================================
+RUN 00C63C-00C640 len 4  root 00C63C <fnindex 00C63C>  fnseeds-in-run 00C63C(end 00C640)
+bytes: 5ade0102
+  bytes before: 020202eb5ade020201eb5ade010101eb
+    00C63C 5ade0102       jmp @0xde0102:24   <FNSEED>
+  after: 00C640 01ebfcde00060101 [named-data/unproven]
+  DEC ->00C63C at 00C5EE 'ble .+76 (0xc63c)' [named-data/unproven]
+  total BE32/DEC refs into run: 1
+====================================================================================================
+RUN 00CFC2-00CFE4 len 34  root 00CFC2 <fnindex 00CFC2>  fnseeds-in-run 00CFC2(end 00CFE4)
+bytes: 7a63000000ff78306a2b0000772a01006b06bc2c7a160000003f68eb5e00d0325470
+  pred 00CFC0 len 2 'rts ' [reachedN-head]
+  bytes before: 5e00d03240087a0600ff3d9f68eb5470
+    00CFC2 7a63000000ff   and.l #0xff,er3   <FNSEED>
+    00CFC8 78306a2b0000772a mov.b @(0x772a:32,er3),r3l
+    00CFD0 01006b06bc2c   mov.l @0xbc2c:16,er6
+    00CFD6 7a160000003f   add.l #0x3f,er6
+    00CFDC 68eb           mov.b r3l,@er6
+    00CFDE 5e00d032       jsr @0xd032:24
+    00CFE2 5470           rts 
+  after: 00CFE4 7a63000000ff7830 [reachedN-head]
+  DEC ->00CFC2 at 0076DA 'jsr @0xcfc2:24' [proven-unreached]
+  total BE32/DEC refs into run: 1
+====================================================================================================
+RUN 0151E6-0151EC len 6  root 0151E6 <fnindex 0151E6>  fnseeds-in-run 0151E6(end 0151EC)
+bytes: b7d2d3d7d600
+  pred 0151E4 len 2 'subx #0x0,r3h' [untyped]
+  bytes before: a5a6a8a788898285871e1d1fd600b300
+    0151E6 b7d2           subx #0xd2,r7h   <FNSEED>
+    0151E8 d3d7           xor.b #0xd7,r3h
+    0151EA d600           xor.b #0x0,r6h
+  after: 0151EC fc007a0200000000 [reachedN-head]
+  BE32 ->0151E6 at 014D9A pre=51e4 [named-data/unproven]
+  BE32 ->0151E6 at 01509E pre=6a2b [reachedN-mid]
+  DEC ->0151E6 at 01509A 'mov.b @(0x151e6:32,er3),r3l' [reachedN-head]
+  DEC ->0151E6 at 01509C 'mov.b @0x151e6:32,r3l' [reachedN-mid]
+  total BE32/DEC refs into run: 4
+====================================================================================================
+RUN 01522E-01525A len 44  root 01522E <fnindex 01522E>  fnseeds-in-run 01522E(end 015260)
+bytes: 01006df5fc0001006d757a02000000006a0aad6846065e014e0440141b7210720aa50100695647085d604004
+  pred 01522C len 2 'rts ' [reachedN-head]
+  bytes before: 46040caa40085d107a02000000005470
+    01522E 01006df5       mov.l er5,@-er7   <FNSEED>
+    015232 fc00           mov.b #0x0,r4l
+    015234 01006d75       mov.l @er7+,er5
+    015238 7a0200000000   mov.l #0x0,er2
+    01523E 6a0aad68       mov.b @0xad68:16,r2l
+    015242 4606           bne .+6 (0x1524a)
+    015244 5e014e04       jsr @0x14e04:24
+    015248 4014           bra .+20 (0x1525e)
+    01524A 1b72           dec.l #1,er2
+    01524C 1072           shll.l #2,er2
+    01524E 0aa5           add.l er2,er5
+    015250 01006956       mov.l @er5,er6
+    015254 4708           beq .+8 (0x1525e)
+    015256 5d60           jsr @er6
+    015258 4004           bra .+4 (0x1525e)
+  after: 01525A 01006d7554700100 [untyped]
+  BE32 ->015230 (non-head) at 06C5D7 pre=3130 [named-data/unproven]
+  BE32 ->015230 (non-head) at 06C5DF pre=3932 [named-data/unproven]
+  DEC ->01524A at 015242 'bne .+6 (0x1524a)' [fnonly-head]
+  DEC ->01524C at 015246 'bgt .+4 (0x1524c)' [fnonly-mid]
+  total BE32/DEC refs into run: 4
+====================================================================================================
+RUN 01525E-015260 len 2  root 01522E <fnindex 01522E>  fnseeds-in-run 
+bytes: 5470
+  pred 01525A len 4 'mov.l @er7+,er5' [untyped]
+  pred 01525C len 2 'mov.w @er7+,r5' [untyped]
+  bytes before: 0aa50100695647085d60400401006d75
+    01525E 5470           rts 
+  after: 015260 01006df5fc000100 [reachedN-head]
+  DEC ->01525E at 015248 'bra .+20 (0x1525e)' [fnonly-head]
+  DEC ->01525E at 015254 'beq .+8 (0x1525e)' [fnonly-head]
+  DEC ->01525E at 015258 'bra .+4 (0x1525e)' [fnonly-head]
+  total BE32/DEC refs into run: 3
+====================================================================================================
+RUN 015EB4-015ED0 len 28  root 015EB4 <fnindex 015EB4>  fnseeds-in-run 015EB4(end 015ED0)
+bytes: 790300006a0b8f4e4704fc0851c30c3d7a63000000ff6e3c89785470
+  pred 015EB2 len 2 'bra .+10 (0x15ebe)' [named-data/unproven]
+  bytes before: ffa05470790300006a0bb08a4710400a
+    015EB4 79030000       mov.w #0x0,r3   <FNSEED>
+    015EB8 6a0b8f4e       mov.b @0x8f4e:16,r3l
+    015EBC 4704           beq .+4 (0x15ec2)
+    015EBE fc08           mov.b #0x8,r4l
+    015EC0 51c3           divxu.b r4l,r3
+    015EC2 0c3d           mov.b r3h,r5l
+    015EC4 7a63000000ff   and.l #0xff,er3
+    015ECA 6e3c8978       mov.b @(0x8978:16,er3),r4l
+    015ECE 5470           rts 
+  after: 015ED0 fc055e0177886a10 [reachedN-head]
+  DEC ->015EB4 at 015E80 'bsr .+50 (0x15eb4)' [named-data/unproven]
+  DEC ->015EB4 at 015E86 'bsr .+44 (0x15eb4)' [named-data/unproven]
+  DEC ->015EBE at 015EB2 'bra .+10 (0x15ebe)' [named-data/unproven]
+  DEC ->015EC2 at 015EB0 'beq .+16 (0x15ec2)' [named-data/unproven]
+  DEC ->015EC2 at 015EBC 'beq .+4 (0x15ec2)' [fnonly-head]
+  total BE32/DEC refs into run: 5
+====================================================================================================
+RUN 016642-016648 len 6  root 016642 <fnindex 016642>  fnseeds-in-run 016642(end 016648)
+bytes: 1e3246649600
+  pred 016640 len 2 'rts ' [reachedN-head]
+  bytes before: 00ff78406a2c000166426a8c953f5470
+    016642 1e32           subx r3h,r2h   <FNSEED>
+    016644 4664           bne .+100 (0x166aa)
+    016646 9600           addx #0x0,r6h
+  after: 016648 6a0c89a77a640000 [reachedN-head]
+  BE32 ->016642 at 016638 pre=6a2c [reachedN-mid]
+  DEC ->016642 at 016634 'mov.b @(0x16642:32,er4),r4l' [reachedN-head]
+  DEC ->016642 at 016636 'mov.b @0x16642:32,r4l' [reachedN-mid]
+  total BE32/DEC refs into run: 3
+====================================================================================================
+RUN 018250-018262 len 18  root 018250 <fnindex 018250>  fnseeds-in-run 018250(end 018262)
+bytes: 6a0c8bcc47065e01a0dc40045e03ffa05470
+  pred 01824E len 2 'add.b #0xc9,r3l' [untyped]
+  bytes before: f6286a189d2672005470003400ff8bc9
+    018250 6a0c8bcc       mov.b @0x8bcc:16,r4l   <FNSEED>
+    018254 4706           beq .+6 (0x1825c)
+    018256 5e01a0dc       jsr @0x1a0dc:24
+    01825A 4004           bra .+4 (0x18260)
+    01825C 5e03ffa0       jsr @0x3ffa0:24
+    018260 5470           rts 
+  after: 018262 5e0449a80f95fc07 [reachedN-head]
+  BE32 ->018250 at 018278 pre=7a01 [reachedN-mid]
+  DEC ->018250 at 018276 'mov.l #0x18250,er1' [reachedN-head]
+  DEC ->01825C at 018254 'beq .+6 (0x1825c)' [fnonly-head]
+  DEC ->018260 at 01825A 'bra .+4 (0x18260)' [fnonly-head]
+  total BE32/DEC refs into run: 4
+====================================================================================================
+RUN 018464-01848E len 42  root 018464 <fnindex 018464>  fnseeds-in-run 018464(end 01848E)
+bytes: 790400006b84aa566a8cad686a8c9542fc006a8cb054fc016a8cb0556a18aa3072606a18aa3172205470
+  pred 018462 len 2 'rts ' [named-data/unproven]
+  bytes before: 5e014c905e02407c5e03ff1055025470
+    018464 79040000       mov.w #0x0,r4   <FNSEED>
+    018468 6b84aa56       mov.w r4,@0xaa56:16
+    01846C 6a8cad68       mov.b r4l,@0xad68:16
+    018470 6a8c9542       mov.b r4l,@0x9542:16
+    018474 fc00           mov.b #0x0,r4l
+    018476 6a8cb054       mov.b r4l,@0xb054:16
+    01847A fc01           mov.b #0x1,r4l
+    01847C 6a8cb055       mov.b r4l,@0xb055:16
+    018480 6a18aa307260   bclr #0x6,@0xaa30:16
+    018486 6a18aa317220   bclr #0x2,@0xaa31:16
+    01848C 5470           rts 
+  after: 01848E 6a0cad684742ac06 [reachedN-head]
+  DEC ->018464 at 018460 'bsr .+2 (0x18464)' [named-data/unproven]
+  BE32 ->01847A at 0640A9 pre=ee58 [reachedN-mid]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 018A74-018A7C len 8  root 018A74 <fnindex 018A74>  fnseeds-in-run 018A74(end 018A7C)
+bytes: 6a10a9ee73704710
+  pred 018A72 len 2 'rts ' [reachedN-head]
+  bytes before: 1bd2fd095e01a90e6a18aa3070605470
+    018A74 6a10a9ee7370   btst #0x7,@0xa9ee:16   <FNSEED>
+    018A7A 4710           beq .+16 (0x18a8c)
+  after: 018A7C 7a02000000006a0a [reachedN-head]
+  DEC ->018A74 at 0188D0 'jsr @0x18a74:24' [named-data/unproven]
+  DEC ->018A74 at 018A94 'bsr .-34 (0x18a74)' [named-data/unproven]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 018ABE-018AD2 len 20  root 018ABE <fnindex 018ABE>  fnseeds-in-run 018ABE(end 018AD2)
+bytes: 6a108c26737047065e01a0a440045e03ffa05470
+  pred 018ABC len 2 'rts ' [reachedN-head]
+  bytes before: 1bd2fd095e0188f640045e03ffa05470
+    018ABE 6a108c267370   btst #0x7,@0x8c26:16   <FNSEED>
+    018AC4 4706           beq .+6 (0x18acc)
+    018AC6 5e01a0a4       jsr @0x1a0a4:24
+    018ACA 4004           bra .+4 (0x18ad0)
+    018ACC 5e03ffa0       jsr @0x3ffa0:24
+    018AD0 5470           rts 
+  after: 018AD2 7a0100018abe5e01 [reachedN-head]
+  BE32 ->018ABE at 018AD4 pre=7a01 [reachedN-mid]
+  DEC ->018ABE at 018AD2 'mov.l #0x18abe,er1' [reachedN-head]
+  DEC ->018ACC at 018AC4 'beq .+6 (0x18acc)' [fnonly-head]
+  DEC ->018AD0 at 018ACA 'bra .+4 (0x18ad0)' [fnonly-head]
+  total BE32/DEC refs into run: 4
+====================================================================================================
+RUN 0192A0-0192A8 len 8  root 0192A0 <fnindex 0192A0>  fnseeds-in-run 0192A0(end 0192A8)
+bytes: 790100165a03ccbc
+  pred 01929C len 4 'jmp @0x3ccbc:24' [reachedN-head]
+  pred 01929E len 2 'or.b #0xbc,r4l' [reachedN-mid]
+  bytes before: 790100855e03ccbc7901009e5a03ccbc
+    0192A0 79010016       mov.w #0x16,r1   <FNSEED>
+    0192A4 5a03ccbc       jmp @0x3ccbc:24
+  after: 0192A8 790100175a03ccbc [named-data/unproven]
+  DEC ->0192A0 at 022E24 'jsr @0x192a0:24' [fnonly-head]
+  total BE32/DEC refs into run: 1
+====================================================================================================
+RUN 0198C4-0198CC len 8  root 0198C4 <fnindex 0198C4>  fnseeds-in-run 0198C4(end 0198CC)
+bytes: 7901018c5a03ccec
+  pred 0198C0 len 4 'jmp @0x3ccec:24' [reachedN-head]
+  pred 0198C2 len 2 'or.b #0xec,r4l' [reachedN-mid]
+  bytes before: 790600025a03cd007901018b5a03ccec
+    0198C4 7901018c       mov.w #0x18c,r1   <FNSEED>
+    0198C8 5a03ccec       jmp @0x3ccec:24
+  after: 0198CC 790100005a03cd1c [reachedN-head]
+  DEC ->0198C4 at 05142C 'jsr @0x198c4:24' [untyped]
+  DEC ->0198C4 at 051472 'jsr @0x198c4:24' [named-data/unproven]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 01A094-01A09C len 8  root 01A094 <fnindex 01A094>  fnseeds-in-run 01A094(end 01A09C)
+bytes: 7a020001a1ec404e
+  pred 01A092 len 2 'bra .+86 (0x1a0ea)' [named-data/unproven]
+  bytes before: 7a020001a1f8405e7a020001a1f24056
+    01A094 7a020001a1ec   mov.l #0x1a1ec,er2   <FNSEED>
+    01A09A 404e           bra .+78 (0x1a0ea)
+  after: 01A09C 7a020001a1e64046 [named-data/unproven]
+  BE32 ->01A094 at 018BEA pre=7a01 [reachedN-mid]
+  DEC ->01A094 at 018BE8 'mov.l #0x1a094,er1' [reachedN-head]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 01A0A4-01A0AC len 8  root 01A0A4 <fnindex 01A0A4>  fnseeds-in-run 01A0A4(end 01A0AC)
+bytes: 7a020001a1e0403e
+  pred 01A0A2 len 2 'bra .+70 (0x1a0ea)' [named-data/unproven]
+  bytes before: 7a020001a1ec404e7a020001a1e64046
+    01A0A4 7a020001a1e0   mov.l #0x1a1e0,er2   <FNSEED>
+    01A0AA 403e           bra .+62 (0x1a0ea)
+  after: 01A0AC 7a020001a1a44036 [reachedN-head]
+  DEC ->01A0A4 at 017594 'jsr @0x1a0a4:24' [untyped]
+  DEC ->01A0A4 at 018AC6 'jsr @0x1a0a4:24' [fnonly-head]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 01C4D2-01C594 len 194  root 01C4D2 <fnindex 01C4D2>  fnseeds-in-run 01C4D2(end 01C594)
+bytes: fc026a8c8eadfc006a8c8ebd6e0c0089737c586000a66a188ebd70706a108ea077606a188ebd67506a188ebd72606a108ea0737047066a188ebd70606a108ea0737046166a108ea0736047066a0c8dd540046a0c8d204646400c6a0c8d20463e6a0c8dd546386a108ea07360461a01006f04001a01006b84ae8c5e0250504736fc006a8c8ead402e6a10aa37731047266a188ebd7000fc006a8c8ead4018fc006a8c8ead6a108ea07360470a6a188ea070205e01cd385e0249ee40045e03ffa05470
+  pred 01C4D0 len 2 'rts ' [reachedN-head]
+  bytes before: 47e84008ab0347e6ab0447defb045470
+    01C4D2 fc02           mov.b #0x2,r4l   <FNSEED>
+    01C4D4 6a8c8ead       mov.b r4l,@0x8ead:16
+    01C4D8 fc00           mov.b #0x0,r4l
+    01C4DA 6a8c8ebd       mov.b r4l,@0x8ebd:16
+    01C4DE 6e0c0089       mov.b @(0x89:16,er0),r4l
+    01C4E2 737c           btst #0x7,r4l
+    01C4E4 586000a6       bne .+166 (0x1c58e)
+    01C4E8 6a188ebd7070   bset #0x7,@0x8ebd:16
+    01C4EE 6a108ea07760   bld #0x6,@0x8ea0:16
+    01C4F4 6a188ebd6750   bst #0x5,@0x8ebd:16
+    01C4FA 6a188ebd7260   bclr #0x6,@0x8ebd:16
+    01C500 6a108ea07370   btst #0x7,@0x8ea0:16
+    01C506 4706           beq .+6 (0x1c50e)
+    01C508 6a188ebd7060   bset #0x6,@0x8ebd:16
+    01C50E 6a108ea07370   btst #0x7,@0x8ea0:16
+    01C514 4616           bne .+22 (0x1c52c)
+    01C516 6a108ea07360   btst #0x6,@0x8ea0:16
+    01C51C 4706           beq .+6 (0x1c524)
+    01C51E 6a0c8dd5       mov.b @0x8dd5:16,r4l
+    01C522 4004           bra .+4 (0x1c528)
+    01C524 6a0c8d20       mov.b @0x8d20:16,r4l
+    01C528 4646           bne .+70 (0x1c570)
+    01C52A 400c           bra .+12 (0x1c538)
+    01C52C 6a0c8d20       mov.b @0x8d20:16,r4l
+    01C530 463e           bne .+62 (0x1c570)
+    01C532 6a0c8dd5       mov.b @0x8dd5:16,r4l
+    01C536 4638           bne .+56 (0x1c570)
+    01C538 6a108ea07360   btst #0x6,@0x8ea0:16
+    01C53E 461a           bne .+26 (0x1c55a)
+    01C540 01006f04001a   mov.l @(0x1a:16,er0),er4
+    01C546 01006b84ae8c   mov.l er4,@0xae8c:16
+    01C54C 5e025050       jsr @0x25050:24
+    01C550 4736           beq .+54 (0x1c588)
+    01C552 fc00           mov.b #0x0,r4l
+    01C554 6a8c8ead       mov.b r4l,@0x8ead:16
+    01C558 402e           bra .+46 (0x1c588)
+    01C55A 6a10aa377310   btst #0x1,@0xaa37:16
+    01C560 4726           beq .+38 (0x1c588)
+    01C562 6a188ebd7000   bset #0x0,@0x8ebd:16
+    01C568 fc00           mov.b #0x0,r4l
+    01C56A 6a8c8ead       mov.b r4l,@0x8ead:16
+    01C56E 4018           bra .+24 (0x1c588)
+    01C570 fc00           mov.b #0x0,r4l
+    01C572 6a8c8ead       mov.b r4l,@0x8ead:16
+    01C576 6a108ea07360   btst #0x6,@0x8ea0:16
+    01C57C 470a           beq .+10 (0x1c588)
+    01C57E 6a188ea07020   bset #0x2,@0x8ea0:16
+    01C584 5e01cd38       jsr @0x1cd38:24
+    01C588 5e0249ee       jsr @0x249ee:24
+    01C58C 4004           bra .+4 (0x1c592)
+    01C58E 5e03ffa0       jsr @0x3ffa0:24
+    01C592 5470           rts 
+  after: 01C594 6a188ebd72006a10 [reachedN-head]
+  DEC ->01C4D2 at 01C28E 'jsr @0x1c4d2:24' [proven-unreached]
+  DEC ->01C4D2 at 01D93C 'jsr @0x1c4d2:24' [untyped]
+  DEC ->01C50E at 01C506 'beq .+6 (0x1c50e)' [fnonly-head]
+  DEC ->01C524 at 01C51C 'beq .+6 (0x1c524)' [fnonly-head]
+  DEC ->01C528 at 01C522 'bra .+4 (0x1c528)' [fnonly-head]
+  DEC ->01C52C at 01C514 'bne .+22 (0x1c52c)' [fnonly-head]
+  BE32 ->01C530 at 006762 pre=6eed [reachedN-mid]
+  BE32 ->01C530 at 00D274 pre=6eed [reachedN-mid]
+  BE32 ->01C530 at 060A22 pre=6eed [reachedN-mid]
+  DEC ->01C538 at 01C52A 'bra .+12 (0x1c538)' [fnonly-head]
+  DEC ->01C55A at 01C53E 'bne .+26 (0x1c55a)' [fnonly-head]
+  DEC ->01C570 at 01C528 'bne .+70 (0x1c570)' [fnonly-head]
+  DEC ->01C570 at 01C530 'bne .+62 (0x1c570)' [fnonly-head]
+  DEC ->01C570 at 01C536 'bne .+56 (0x1c570)' [fnonly-head]
+  DEC ->01C57A (non-head) at 01C58A 'bvs .-18 (0x1c57a)' [fnonly-mid]
+  DEC ->01C588 at 01C550 'beq .+54 (0x1c588)' [fnonly-head]
+  DEC ->01C588 at 01C558 'bra .+46 (0x1c588)' [fnonly-head]
+  DEC ->01C588 at 01C560 'beq .+38 (0x1c588)' [fnonly-head]
+  DEC ->01C588 at 01C56E 'bra .+24 (0x1c588)' [fnonly-head]
+  DEC ->01C588 at 01C57C 'beq .+10 (0x1c588)' [fnonly-head]
+  DEC ->01C58E at 01C4E4 'bne .+166 (0x1c58e)' [fnonly-head]
+  DEC ->01C592 at 01C58C 'bra .+4 (0x1c592)' [fnonly-head]
+  total BE32/DEC refs into run: 22
+====================================================================================================
+RUN 01CCD6-01CCF2 len 28  root 01CCD6 <fnindex 01CCD6>  fnseeds-in-run 01CCD6(end 01CCF4)
+bytes: 01306df0fc006a8c8d20fc006a8c8eb35e05e5be5e0198dc01306d73
+  pred 01CCD4 len 2 'bra .0 (0x1ccd6)' [named-data/unproven]
+  bytes before: ac01470cac014602fc026a8c8eb74000
+    01CCD6 01306df0       stm.l er0-er3,@-sp   <FNSEED>
+    01CCDA fc00           mov.b #0x0,r4l
+    01CCDC 6a8c8d20       mov.b r4l,@0x8d20:16
+    01CCE0 fc00           mov.b #0x0,r4l
+    01CCE2 6a8c8eb3       mov.b r4l,@0x8eb3:16
+    01CCE6 5e05e5be       jsr @0x5e5be:24
+    01CCEA 5e0198dc       jsr @0x198dc:24
+    01CCEE 01306d73       ldm.l @sp+,er0-er3
+  after: 01CCF2 54705e01cbe6403c [reachedN-head]
+  DEC ->01CCD6 at 01CCC8 'beq .+12 (0x1ccd6)' [named-data/unproven]
+  DEC ->01CCD6 at 01CCD4 'bra .0 (0x1ccd6)' [named-data/unproven]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 01CD26-01CD36 len 16  root 01CD26 <fnindex 01CD26>  fnseeds-in-run 01CD26(end 01CD38)
+bytes: 01306df05e05e5be5e0198dc01306d73
+  pred 01CD22 len 4 'mov.b r4l,@0x8eb3:16' [untyped]
+  pred 01CD24 len 2 'add.b #0xb3,r6l' [untyped]
+  bytes before: 6a0c8ebe6a8c8d206a0c8ebf6a8c8eb3
+    01CD26 01306df0       stm.l er0-er3,@-sp   <FNSEED>
+    01CD2A 5e05e5be       jsr @0x5e5be:24
+    01CD2E 5e0198dc       jsr @0x198dc:24
+    01CD32 01306d73       ldm.l @sp+,er0-er3
+  after: 01CD36 54706a0c8d206a8c [reachedN-head]
+  DEC ->01CD26 at 01CD14 'bra .+16 (0x1cd26)' [untyped]
+  total BE32/DEC refs into run: 1
+====================================================================================================
+RUN 01CD38-01CD7C len 68  root 01CD38 <fnindex 01CD38>  fnseeds-in-run 01CD38(end 01CD5E) 01CD5E(end 01CD7C)
+bytes: 6a0c8d206a8c8ec06a0c8eb36a8c8ec16a0c8d20472cac01470cac014602fc026a8c8eb7400001306df0fc006a8c8d20fc006a8c8eb35e05e5be5e0198dc01306d735470
+  pred 01CD36 len 2 'rts ' [reachedN-head]
+  bytes before: 6df05e05e5be5e0198dc01306d735470
+    01CD38 6a0c8d20       mov.b @0x8d20:16,r4l   <FNSEED>
+    01CD3C 6a8c8ec0       mov.b r4l,@0x8ec0:16
+    01CD40 6a0c8eb3       mov.b @0x8eb3:16,r4l
+    01CD44 6a8c8ec1       mov.b r4l,@0x8ec1:16
+    01CD48 6a0c8d20       mov.b @0x8d20:16,r4l
+    01CD4C 472c           beq .+44 (0x1cd7a)
+    01CD4E ac01           cmp.b #0x1,r4l
+    01CD50 470c           beq .+12 (0x1cd5e)
+    01CD52 ac01           cmp.b #0x1,r4l
+    01CD54 4602           bne .+2 (0x1cd58)
+    01CD56 fc02           mov.b #0x2,r4l
+    01CD58 6a8c8eb7       mov.b r4l,@0x8eb7:16
+    01CD5C 4000           bra .0 (0x1cd5e)
+    01CD5E 01306df0       stm.l er0-er3,@-sp   <FNSEED>
+    01CD62 fc00           mov.b #0x0,r4l
+    01CD64 6a8c8d20       mov.b r4l,@0x8d20:16
+    01CD68 fc00           mov.b #0x0,r4l
+    01CD6A 6a8c8eb3       mov.b r4l,@0x8eb3:16
+    01CD6E 5e05e5be       jsr @0x5e5be:24
+    01CD72 5e0198dc       jsr @0x198dc:24
+    01CD76 01306d73       ldm.l @sp+,er0-er3
+    01CD7A 5470           rts 
+  after: 01CD7C 6a0c8ec04736ac01 [reachedN-head]
+  DEC ->01CD38 at 01C584 'jsr @0x1cd38:24' [fnonly-head]
+  DEC ->01CD58 at 01CD54 'bne .+2 (0x1cd58)' [fnonly-head]
+  DEC ->01CD5E at 01CD50 'beq .+12 (0x1cd5e)' [fnonly-head]
+  DEC ->01CD5E at 01CD5C 'bra .0 (0x1cd5e)' [fnonly-head]
+  DEC ->01CD7A at 01CD4C 'beq .+44 (0x1cd7a)' [fnonly-head]
+  total BE32/DEC refs into run: 5
+====================================================================================================
+RUN 01E22C-01E238 len 12  root 01E22C <fnindex 01E22C>  fnseeds-in-run 01E22C(end 01E238)
+bytes: 252037904110809085909140
+  pred 01E22A len 2 'addx #0x10,r6h' [untyped]
+  bytes before: 86809401276038304160846090109610
+    01E22C 2520           mov.b @0x20:8,r5h   <FNSEED>
+    01E22E 3790           mov.b r7h,@0x90:8
+    01E230 4110           brn .+16 (0x1e242)
+    01E232 8090           add.b #0x90,r0h
+    01E234 8590           add.b #0x90,r5h
+    01E236 9140           addx #0x40,r1h
+  after: 01E238 6a10aae17320461e [reachedN-head]
+  BE32 ->01E22C at 01E176 pre=7a05 [reachedN-mid]
+  BE32 ->01E22C at 01E362 pre=7a05 [reachedN-mid]
+  BE32 ->01E22C at 032632 pre=7a05 [reachedN-mid]
+  DEC ->01E22C at 01E174 'mov.l #0x1e22c,er5' [reachedN-head]
+  DEC ->01E22C at 01E360 'mov.l #0x1e22c,er5' [reachedN-head]
+  DEC ->01E22C at 032630 'mov.l #0x1e22c,er5' [reachedN-head]
+  total BE32/DEC refs into run: 6
+====================================================================================================
+RUN 01E5EE-01E5F6 len 8  root 01E5EE <fnindex 01E5EE>  fnseeds-in-run 01E5EE(end 01E5F6)
+bytes: 3802125038131250
+  pred 01E5EC len 2 'rts ' [reachedN-head]
+  bytes before: 400cfc006e8c0015fc014002fc005470
+    01E5EE 3802           mov.b r0l,@0x2:8   <FNSEED>
+    01E5F0 1250           rotxl.w #2,r0
+    01E5F2 3813           mov.b r0l,@0x13:8
+    01E5F4 1250           rotxl.w #2,r0
+  after: 01E5F6 5e03ecb8461c7a26 [reachedN-head]
+  BE32 ->01E5EE at 01E5C0 pre=7a06 [reachedN-mid]
+  DEC ->01E5EE at 01E5BE 'mov.l #0x1e5ee,er6' [reachedN-head]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 01F540-01F596 len 86  root 01F540 <fnindex 01F540>  fnseeds-in-run 01F540(end 01F596)
+bytes: 6e0c0046730c46226e0c0015ac00474001006f04001e47385e032b1246266e0c0046700c6e8c0046400a6e0c0046720c6e8c00465e01fa26fc276a8caae05e01c0504010fc1d6a8caae05e01fa2640045e01fa225470
+  pred 01F53E len 2 'rts ' [named-data/unproven]
+  bytes before: 5e01fa264008557640045e01fa1c5470
+    01F540 6e0c0046       mov.b @(0x46:16,er0),r4l   <FNSEED>
+    01F544 730c           btst #0x0,r4l
+    01F546 4622           bne .+34 (0x1f56a)
+    01F548 6e0c0015       mov.b @(0x15:16,er0),r4l
+    01F54C ac00           cmp.b #0x0,r4l
+    01F54E 4740           beq .+64 (0x1f590)
+    01F550 01006f04001e   mov.l @(0x1e:16,er0),er4
+    01F556 4738           beq .+56 (0x1f590)
+    01F558 5e032b12       jsr @0x32b12:24
+    01F55C 4626           bne .+38 (0x1f584)
+    01F55E 6e0c0046       mov.b @(0x46:16,er0),r4l
+    01F562 700c           bset #0x0,r4l
+    01F564 6e8c0046       mov.b r4l,@(0x46:16,er0)
+    01F568 400a           bra .+10 (0x1f574)
+    01F56A 6e0c0046       mov.b @(0x46:16,er0),r4l
+    01F56E 720c           bclr #0x0,r4l
+    01F570 6e8c0046       mov.b r4l,@(0x46:16,er0)
+    01F574 5e01fa26       jsr @0x1fa26:24
+    01F578 fc27           mov.b #0x27,r4l
+    01F57A 6a8caae0       mov.b r4l,@0xaae0:16
+    01F57E 5e01c050       jsr @0x1c050:24
+    01F582 4010           bra .+16 (0x1f594)
+    01F584 fc1d           mov.b #0x1d,r4l
+    01F586 6a8caae0       mov.b r4l,@0xaae0:16
+    01F58A 5e01fa26       jsr @0x1fa26:24
+    01F58E 4004           bra .+4 (0x1f594)
+    01F590 5e01fa22       jsr @0x1fa22:24
+    01F594 5470           rts 
+  after: 01F596 6a18aa3472106a18 [named-data/unproven]
+  DEC ->01F540 at 01F4F2 'bsr .+76 (0x1f540)' [named-data/unproven]
+  DEC ->01F540 at 01F520 'bsr .+30 (0x1f540)' [named-data/unproven]
+  DEC ->01F56A at 01F546 'bne .+34 (0x1f56a)' [fnonly-head]
+  DEC ->01F574 at 01F568 'bra .+10 (0x1f574)' [fnonly-head]
+  DEC ->01F584 at 01F55C 'bne .+38 (0x1f584)' [fnonly-head]
+  DEC ->01F590 at 01F54E 'beq .+64 (0x1f590)' [fnonly-head]
+  DEC ->01F590 at 01F556 'beq .+56 (0x1f590)' [fnonly-head]
+  DEC ->01F594 at 01F582 'bra .+16 (0x1f594)' [fnonly-head]
+  DEC ->01F594 at 01F58E 'bra .+4 (0x1f594)' [fnonly-head]
+  total BE32/DEC refs into run: 9
+====================================================================================================
+RUN 01F930-01F940 len 16  root 01F930 <fnindex 01F930>  fnseeds-in-run 01F930(end 01F940)
+bytes: 6e0b00006e8b0001fc006e8c00005470
+  pred 01F92E len 2 'rts ' [named-data/unproven]
+  bytes before: 446e460655e4550840045e0244645470
+    01F930 6e0b0000       mov.b @(0x0:16,er0),r3l   <FNSEED>
+    01F934 6e8b0001       mov.b r3l,@(0x1:16,er0)
+    01F938 fc00           mov.b #0x0,r4l
+    01F93A 6e8c0000       mov.b r4l,@(0x0:16,er0)
+    01F93E 5470           rts 
+  after: 01F940 6a1089c073004604 [named-data/unproven]
+  DEC ->01F930 at 01F926 'bsr .+8 (0x1f930)' [named-data/unproven]
+  DEC ->01F930 at 01F98C 'bsr .-94 (0x1f930)' [untyped]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 01F996-01F9C6 len 48  root 01F996 <fnindex 01F996>  fnseeds-in-run 01F996(end 01F9B4) 01F9B4(end 01F9C6)
+bytes: fc016a8cad6a6a18aa307260fc016a8cad685e01fa26fc6b6e8c000154705e022a2847065e01f90a40045e01f9e45470
+  pred 01F994 len 2 'rts ' [untyped]
+  bytes before: 47085e01f90a55a240045e0244645470
+    01F996 fc01           mov.b #0x1,r4l   <FNSEED>
+    01F998 6a8cad6a       mov.b r4l,@0xad6a:16
+    01F99C 6a18aa307260   bclr #0x6,@0xaa30:16
+    01F9A2 fc01           mov.b #0x1,r4l
+    01F9A4 6a8cad68       mov.b r4l,@0xad68:16
+    01F9A8 5e01fa26       jsr @0x1fa26:24
+    01F9AC fc6b           mov.b #0x6b,r4l
+    01F9AE 6e8c0001       mov.b r4l,@(0x1:16,er0)
+    01F9B2 5470           rts 
+    01F9B4 5e022a28       jsr @0x22a28:24   <FNSEED>
+    01F9B8 4706           beq .+6 (0x1f9c0)
+    01F9BA 5e01f90a       jsr @0x1f90a:24
+    01F9BE 4004           bra .+4 (0x1f9c4)
+    01F9C0 5e01f9e4       jsr @0x1f9e4:24
+    01F9C4 5470           rts 
+  after: 01F9C6 6a18a9ee70005e01 [reachedN-head]
+  DEC ->01F996 at 01F976 'bsr .+30 (0x1f996)' [untyped]
+  DEC ->01F9B4 at 01F94C 'bsr .+102 (0x1f9b4)' [named-data/unproven]
+  DEC ->01F9C0 at 01F9B8 'beq .+6 (0x1f9c0)' [fnonly-head]
+  DEC ->01F9C4 at 01F9BE 'bra .+4 (0x1f9c4)' [fnonly-head]
+  total BE32/DEC refs into run: 4
+====================================================================================================
+RUN 022DF0-022E62 len 114  root 022DF0 <fnindex 022DF0>  fnseeds-in-run 022DF0(end 022E3A) 022E3A(end 022E62)
+bytes: 6a18aad270506a1089be7300472e6a0989366a0b89365e03ce0a4a10fb005e03ce0a4a080a0bab0a441a40f26a8b89361c9b47045e0192a05e03ce22fc006a8caae040045e03ffa05470553a46226a1089be7300470e6a0cac244b106a0c89365512400c6a0c8937550840045e03ffa05470
+  pred 022DEE len 2 'rts ' [named-data/unproven]
+  bytes before: aad273504604550840045e022e3a5470
+    022DF0 6a18aad27050   bset #0x5,@0xaad2:16   <FNSEED>
+    022DF6 6a1089be7300   btst #0x0,@0x89be:16
+    022DFC 472e           beq .+46 (0x22e2c)
+    022DFE 6a098936       mov.b @0x8936:16,r1l
+    022E02 6a0b8936       mov.b @0x8936:16,r3l
+    022E06 5e03ce0a       jsr @0x3ce0a:24
+    022E0A 4a10           bpl .+16 (0x22e1c)
+    022E0C fb00           mov.b #0x0,r3l
+    022E0E 5e03ce0a       jsr @0x3ce0a:24
+    022E12 4a08           bpl .+8 (0x22e1c)
+    022E14 0a0b           inc r3l
+    022E16 ab0a           cmp.b #0xa,r3l
+    022E18 441a           bcc .+26 (0x22e34)
+    022E1A 40f2           bra .-14 (0x22e0e)
+    022E1C 6a8b8936       mov.b r3l,@0x8936:16
+    022E20 1c9b           cmp.b r1l,r3l
+    022E22 4704           beq .+4 (0x22e28)
+    022E24 5e0192a0       jsr @0x192a0:24
+    022E28 5e03ce22       jsr @0x3ce22:24
+    022E2C fc00           mov.b #0x0,r4l
+    022E2E 6a8caae0       mov.b r4l,@0xaae0:16
+    022E32 4004           bra .+4 (0x22e38)
+    022E34 5e03ffa0       jsr @0x3ffa0:24
+    022E38 5470           rts 
+    022E3A 553a           bsr .+58 (0x22e76)   <FNSEED>
+    022E3C 4622           bne .+34 (0x22e60)
+    022E3E 6a1089be7300   btst #0x0,@0x89be:16
+    022E44 470e           beq .+14 (0x22e54)
+    022E46 6a0cac24       mov.b @0xac24:16,r4l
+    022E4A 4b10           bmi .+16 (0x22e5c)
+    022E4C 6a0c8936       mov.b @0x8936:16,r4l
+    022E50 5512           bsr .+18 (0x22e64)
+    022E52 400c           bra .+12 (0x22e60)
+    022E54 6a0c8937       mov.b @0x8937:16,r4l
+    022E58 5508           bsr .+8 (0x22e62)
+    022E5A 4004           bra .+4 (0x22e60)
+    022E5C 5e03ffa0       jsr @0x3ffa0:24
+    022E60 5470           rts 
+  after: 022E62 8c506a18ac097070 [reachedN-head]
+  DEC ->022DF0 at 022DE6 'bsr .+8 (0x22df0)' [named-data/unproven]
+  DEC ->022E0E at 022E1A 'bra .-14 (0x22e0e)' [fnonly-head]
+  DEC ->022E1C at 022E0A 'bpl .+16 (0x22e1c)' [fnonly-head]
+  DEC ->022E1C at 022E12 'bpl .+8 (0x22e1c)' [fnonly-head]
+  DEC ->022E28 at 022E22 'beq .+4 (0x22e28)' [fnonly-head]
+  DEC ->022E2C at 022DFC 'beq .+46 (0x22e2c)' [fnonly-head]
+  DEC ->022E34 at 022E18 'bcc .+26 (0x22e34)' [fnonly-head]
+  DEC ->022E38 at 022E32 'bra .+4 (0x22e38)' [fnonly-head]
+  DEC ->022E3A at 022DEA 'jsr @0x22e3a:24' [named-data/unproven]
+  DEC ->022E54 at 022E44 'beq .+14 (0x22e54)' [fnonly-head]
+  DEC ->022E5C at 022E4A 'bmi .+16 (0x22e5c)' [fnonly-head]
+  DEC ->022E60 at 022E3C 'bne .+34 (0x22e60)' [fnonly-head]
+  DEC ->022E60 at 022E52 'bra .+12 (0x22e60)' [fnonly-head]
+  DEC ->022E60 at 022E5A 'bra .+4 (0x22e60)' [fnonly-head]
+  total BE32/DEC refs into run: 14
+====================================================================================================
+RUN 02370E-02372C len 30  root 02370E <fnindex 02370E>  fnseeds-in-run 02370E(end 02372C)
+bytes: 6a10a9ee77006a10817e730047086a188eae671040066a188eae67004010
+  pred 02370C len 2 'rts ' [reachedN-head]
+  bytes before: 6e0b00014604552640045e03ffa05470
+    02370E 6a10a9ee7700   bld #0x0,@0xa9ee:16   <FNSEED>
+    023714 6a10817e7300   btst #0x0,@0x817e:16
+    02371A 4708           beq .+8 (0x23724)
+    02371C 6a188eae6710   bst #0x1,@0x8eae:16
+    023722 4006           bra .+6 (0x2372a)
+    023724 6a188eae6700   bst #0x0,@0x8eae:16
+    02372A 4010           bra .+16 (0x2373c)
+  after: 02372C fc006a10817e7700 [reachedN-head]
+  DEC ->02370E at 01DB46 'jsr @0x2370e:24' [named-data/unproven]
+  DEC ->02370E at 01E87C 'jsr @0x2370e:24' [named-data/unproven]
+  DEC ->023724 at 02371A 'beq .+8 (0x23724)' [fnonly-head]
+  DEC ->02372A at 023722 'bra .+6 (0x2372a)' [fnonly-head]
+  total BE32/DEC refs into run: 4
+====================================================================================================
+RUN 024000-024006 len 6  root 024000 <fnindex 024000>  fnseeds-in-run 024000(end 024006)
+bytes: 050405060708
+  pred 023FFE len 2 'rts ' [reachedN-head]
+  bytes before: 60c0fc026e8c008840045e03ffa05470
+    024000 0504           xorc #0x4,ccr   <FNSEED>
+    024002 0506           xorc #0x6,ccr
+    024004 0708           ldc #0x8,ccr
+  after: 024006 6a10817e73004706 [reachedN-head]
+  BE32 ->024000 at 023FA2 pre=6a2b [reachedN-mid]
+  BE32 ->024000 at 023FDA pre=6a2b [reachedN-mid]
+  DEC ->024000 at 023F9E 'mov.b @(0x24000:32,er4),r3l' [reachedN-head]
+  DEC ->024000 at 023FA0 'mov.b @0x24000:32,r3l' [reachedN-mid]
+  DEC ->024000 at 023FD6 'mov.b @(0x24000:32,er4),r3l' [reachedN-head]
+  DEC ->024000 at 023FD8 'mov.b @0x24000:32,r3l' [reachedN-mid]
+  BE32 ->024003 (non-head) at 042967 pre=0000 [named-data/unproven]
+  total BE32/DEC refs into run: 7
+====================================================================================================
+RUN 024440-024454 len 20  root 024440 <fnindex 024440>  fnseeds-in-run 024440(end 024444) 024444(end 024454)
+bytes: 6e0c008a460c6a18b0567200fb005e03ff105470
+  pred 02443E len 2 'rts ' [reachedN-head]
+  bytes before: f26afb005e03ff1040045e03ffa05470
+    024440 6e0c008a       mov.b @(0x8a:16,er0),r4l   <FNSEED>
+    024444 460c           bne .+12 (0x24452)   <FNSEED>
+    024446 6a18b0567200   bclr #0x0,@0xb056:16
+    02444C fb00           mov.b #0x0,r3l
+    02444E 5e03ff10       jsr @0x3ff10:24
+    024452 5470           rts 
+  after: 024454 fc2b5e01bf405e01 [reachedN-head]
+  DEC ->024440 at 010B44 'jsr @0x24440:24' [untyped]
+  BE32 ->02444A (non-head) at 023D56 pre=7921 [reachedN-mid]
+  BE32 ->024450 (non-head) at 020D6A pre=9500 [named-data/unproven]
+  DEC ->024452 at 024444 'bne .+12 (0x24452)' [fnonly-head]
+  total BE32/DEC refs into run: 4
+====================================================================================================
+RUN 02AAE8-02AAEA len 2  root 02AAE8 <fnindex 02AAE8>  fnseeds-in-run 02AAE8(end 02AAEA)
+bytes: 5470
+  pred 02AAE6 len 2 'rts ' [reachedN-head]
+  bytes before: 6a8bb3f55e06fbe640045e03ffa05470
+    02AAE8 5470           rts    <FNSEED>
+  after: 02AAEA fc006a8cbbf5ab40 [named-data/unproven]
+  DEC ->02AAE8 at 02AB92 'jsr @0x2aae8:24' [named-data/unproven]
+  total BE32/DEC refs into run: 1
+====================================================================================================
+RUN 02D704-02D708 len 4  root 02D704 <fnindex 02D704>  fnseeds-in-run 02D704(end 02D718)
+bytes: 27292a29
+  pred 02D702 len 2 'rts ' [reachedN-head]
+  bytes before: 470c5e02e5087a050002d70455185470
+    02D704 2729           mov.b @0x29:8,r7h   <FNSEED>
+    02D706 2a29           mov.b @0x29:8,r2l
+  after: 02D708 6a0c956f46085e03 [reachedN-head]
+  BE32 ->02D704 at 02D6FC pre=7a05 [reachedN-mid]
+  DEC ->02D704 at 02D6FA 'mov.l #0x2d704,er5' [reachedN-head]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 02D7FE-02D802 len 4  root 02D7FE <fnindex 02D7FE>  fnseeds-in-run 02D7FE(end 02D812)
+bytes: 20222322
+  pred 02D7FC len 2 'rts ' [reachedN-head]
+  bytes before: 470c5e02e5087a050002d7fe55185470
+    02D7FE 2022           mov.b @0x22:8,r0h   <FNSEED>
+    02D800 2322           mov.b @0x22:8,r3h
+  after: 02D802 6a0c956f46085e03 [reachedN-head]
+  BE32 ->02D7FE at 02D7F6 pre=7a05 [reachedN-mid]
+  DEC ->02D7FE at 02D7F4 'mov.l #0x2d7fe,er5' [reachedN-head]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 02E2D8-02E2DC len 4  root 02E2D8 <fnindex 02E2D8>  fnseeds-in-run 02E2D8(end 02E2EC)
+bytes: 27292a29
+  pred 02E2D6 len 2 'rts ' [reachedN-head]
+  bytes before: 470c5e02e5087a050002e2d855185470
+    02E2D8 2729           mov.b @0x29:8,r7h   <FNSEED>
+    02E2DA 2a29           mov.b @0x29:8,r2l
+  after: 02E2DC 6a0c958246085e03 [reachedN-head]
+  BE32 ->02E2D8 at 02E2D0 pre=7a05 [reachedN-mid]
+  DEC ->02E2D8 at 02E2CE 'mov.l #0x2e2d8,er5' [reachedN-head]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 02E3D2-02E3D6 len 4  root 02E3D2 <fnindex 02E3D2>  fnseeds-in-run 02E3D2(end 02E3E6)
+bytes: 20222322
+  pred 02E3D0 len 2 'rts ' [reachedN-head]
+  bytes before: 470c5e02e5087a050002e3d255185470
+    02E3D2 2022           mov.b @0x22:8,r0h   <FNSEED>
+    02E3D4 2322           mov.b @0x22:8,r3h
+  after: 02E3D6 6a0c958246085e03 [reachedN-head]
+  BE32 ->02E3D2 at 02E3CA pre=7a05 [reachedN-mid]
+  DEC ->02E3D2 at 02E3C8 'mov.l #0x2e3d2,er5' [reachedN-head]
+  total BE32/DEC refs into run: 2
+====================================================================================================
+RUN 02E640-02E646 len 6  root 02E640 <fnindex 02E640>  fnseeds-in-run 02E640(end 02E646)
+bytes: 03060d10ff00
+  pred 02E63E len 2 'rts ' [reachedN-head]
+  bytes before: 00384606fc196a8caae05e02eaac5470
+    02E640 0306           ldc r6h,ccr   <FNSEED>
+    02E642 0d10           mov.w r1,r0
+    02E644 ff00           mov.b #0x0,r7l
+  after: 02E646 fc006a10817e7700 [reachedN-head]
+  BE32 ->02E640 at 02E61C pre=7a05 [reachedN-mid]
+  DEC ->02E640 at 02E61A 'mov.l #0x2e640,er5' [reachedN-head]
+  total BE32/DEC refs into run: 2

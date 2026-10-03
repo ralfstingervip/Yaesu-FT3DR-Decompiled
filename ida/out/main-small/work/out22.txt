@@ -1,0 +1,39 @@
+### dis 3F600-3F670 
+03F600  01 00 6f 65 00 02                     mov.l   @(2:16,er6), er5
+03F606  68 5b                                 mov.b   @er5, r3l
+03F608  6a 10 a9 ee 73 00                     btst    #0, @0xFFFFA9EE:16
+03F60E  46 0a                                 bne     loc_3F61A:8
+03F610  6e 6c 00 01                           mov.b   @(1:16,er6), r4l
+03F614  1c cb                                 cmp.b   r4l, r3l
+03F616  47 08                                 beq     loc_3F620:8
+03F618  40 0e                                 bra     loc_3F628:8
+03F61A  68 6c                                 mov.b   @er6, r4l
+03F61C  1c cb                                 cmp.b   r4l, r3l
+03F61E  46 08                                 bne     loc_3F628:8
+03F620  5e 03 ff a0                           jsr     sub_3FFA0:24
+03F624  fc ff                                 mov.b   #0xFF, r4l
+03F626  54 70                                 rts
+03F628  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16
+03F62E  6a 10 a9 ee 73 00                     btst    #0, @0xFFFFA9EE:16
+03F634  46 20                                 bne     loc_3F656:8
+03F636  01 00 6f 65 00 02                     mov.l   @(2:16,er6), er5
+03F63C  68 5b                                 mov.b   @er5, r3l
+03F63E  69 64                                 mov.w   @er6, r4
+03F640  1c bc                                 cmp.b   r3l, r4l
+03F642  47 02                                 beq     loc_3F646:8
+03F644  44 0a                                 bcc     loc_3F650:8
+03F646  0c 4b                                 mov.b   r4h, r3l
+03F648  6a 18 aa e1 72 20                     bclr    #2, @0xFFFFAAE1:16
+03F64E  40 02                                 bra     loc_3F652:8
+03F650  0a 0b                                 inc.b   r3l
+03F652  68 db                                 mov.b   r3l, @er5
+03F654  54 70                                 rts
+03F656  01 00 6f 65 00 02                     mov.l   @(2:16,er6), er5
+03F65C  68 5b                                 mov.b   @er5, r3l
+03F65E  69 64                                 mov.w   @er6, r4
+03F660  1c 4b                                 cmp.b   r4h, r3l
+03F662  47 02                                 beq     loc_3F666:8
+03F664  44 0a                                 bcc     loc_3F670:8
+03F666  0c cb                                 mov.b   r4l, r3l
+03F668  6a 18 aa e1 72 20                     bclr    #2, @0xFFFFAAE1:16
+03F66E  40 02                                 bra     loc_3F672:8

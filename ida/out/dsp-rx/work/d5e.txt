@@ -1,0 +1,112 @@
+05ea30  bb e1                    mov.b   r4l, @0xFFFFBBE1:16                  
+05ea32  54 70                    rts                                          <- 5ea2a
+
+;---- func 0x5ea34..0x5ea36
+05ea34  54 70                    rts                                          <- 624b8
+
+;---- func 0x5ea36..0x5ea38
+05ea36  54 70                    rts                                          <- 483c
+
+;---- func 0x5ea38..0x5ea3a
+05ea38  54 70                    rts                                          <- 7b34,7b38,7b3c,7b40,7b44,7b48,7b4c,7b50
+
+;---- func 0x5ea3a..0x5eaca
+05ea3a  6a 0c b3 e0              mov.b   @0xFFFFB3E0:16, r4l                  <- 587c2,58b46,58d50
+05ea3e  58 70 00 86              beq     locret_5EAC8:16                      
+05ea42  6a 2c 00 fe f9 22        mov.b   @0xFEF922:32, r4l                    
+05ea48  ec 04                    and.b   #4, r4l                              
+05ea4a  46 7c                    bne     locret_5EAC8:8                       
+05ea4c  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  
+05ea50  4a 12                    bpl     loc_5EA64:8                          
+05ea52  6a 04 8e d7              mov.b   @0xFFFF8ED7:16, r4h                  
+05ea56  47 0c                    beq     loc_5EA64:8                          
+05ea58  6a 2c 00 fe f9 23        mov.b   @0xFEF923:32, r4l                    
+05ea5e  ec 7f                    and.b   #0x7F, r4l                           
+05ea60  1c 4c                    cmp.b   r4h, r4l                             
+05ea62  46 64                    bne     locret_5EAC8:8                       
+05ea64  6a 2c 00 fe f9 22        mov.b   @0xFEF922:32, r4l                    <- 5ea50,5ea56
+05ea6a  ec 03                    and.b   #3, r4l                              
+05ea6c  ac 03                    cmp.b   #3, r4l                              
+05ea6e  47 58                    beq     locret_5EAC8:8                       
+05ea70  0c ca                    mov.b   r4l, r2l                             
+05ea72  ac 01                    cmp.b   #1, r4l                              
+05ea74  47 08                    beq     loc_5EA7E:8                          
+05ea76  6a 0c b1 11              mov.b   @0xFFFFB111:16, r4l                  
+05ea7a  47 4c                    beq     locret_5EAC8:8                       
+05ea7c  40 08                    bra     loc_5EA86:8                          
+05ea7e  6a 0c b3 da              mov.b   @0xFFFFB3DA:16, r4l                  <- 5ea74
+05ea82  ac 02                    cmp.b   #2, r4l                              
+05ea84  47 42                    beq     locret_5EAC8:8                       
+05ea86  7a 35 00 fe f9 62        sub.l   #0xFEF962, er5                       <- 5ea7c
+05ea8c  6b 85 b1 16              mov.w   r5, @0xFFFFB116:16                   
+05ea90  6a 18 b3 d7 72 10        bclr    #1, @0xFFFFB3D7:16                   
+05ea96  6a 18 b3 d7 70 20        bset    #2, @0xFFFFB3D7:16                   
+05ea9c  6b 85 b3 ce              mov.w   r5, @0xFFFFB3CE:16                   
+05eaa0  0d 54                    mov.w   r5, r4                               
+05eaa2  79 14 00 42              add.w   #0x42, r4 ; 'B'                      
+05eaa6  7a 05 00 fe f9 20        mov.l   #0xFEF920, er5                       
+05eaac  7a 06 00 fe fd 72        mov.l   #0xFEFD72, er6                       
+05eab2  7b d4 59 8f              eepmov.w                                     <- 5eab8
+05eab6  0d 44                    mov.w   r4, r4                               
+05eab8  46 f8                    bne     loc_5EAB2:8                          
+05eaba  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  
+05eabe  4a 08                    bpl     locret_5EAC8:8                       
+05eac0  aa 02                    cmp.b   #2, r2l                              
+05eac2  46 04                    bne     locret_5EAC8:8                       
+05eac4  5e 05 d3 82              jsr     sub_5D382:24                         
+05eac8  54 70                    rts                                          <- 5ea3e,5ea4a,5ea62,5ea6e,5ea7a,5ea84,5eabe,5eac2
+
+;---- func 0x5eaca..0x5eaee
+05eaca  6a 2c 00 fe f9 63        mov.b   @0xFEF963:32, r4l                    <- 587bc,58b40,58d4a
+05ead0  ac 5d                    cmp.b   #0x5D, r4l ; ']'                     
+05ead2  46 18                    bne     locret_5EAEC:8                       
+05ead4  6a 2c 00 fe f9 64        mov.b   @0xFEF964:32, r4l                    
+05eada  ac 66                    cmp.b   #0x66, r4l ; 'f'                     
+05eadc  47 0e                    beq     locret_5EAEC:8                       
+05eade  ac 67                    cmp.b   #0x67, r4l ; 'g'                     
+05eae0  47 0a                    beq     locret_5EAEC:8                       
+05eae2  ac 23                    cmp.b   #0x23, r4l ; '#'                     
+05eae4  47 06                    beq     locret_5EAEC:8                       
+05eae6  ac 2a                    cmp.b   #0x2A, r4l ; '*'                     
+05eae8  47 02                    beq     locret_5EAEC:8                       
+05eaea  ac 71                    cmp.b   #0x71, r4l ; 'q'                     
+05eaec  54 70                    rts                                          <- 5ead2,5eadc,5eae0,5eae4,5eae8
+
+;---- func 0x5eaee..0x5eb4e
+05eaee  7a 04 00 00 00 00        mov.l   #0, er4                              <- 5b166
+05eaf4  7a 05 00 ff b1 3e        mov.l   #0xFFB13E, er5                       
+05eafa  01 00 69 d4              mov.l   er4, @er5                            
+05eafe  0b 95                    adds    #4, er5                              
+05eb00  01 00 69 d4              mov.l   er4, @er5                            
+05eb04  0b 95                    adds    #4, er5                              
+05eb06  01 00 69 d4              mov.l   er4, @er5                            
+05eb0a  0b 95                    adds    #4, er5                              
+05eb0c  01 00 69 d4              mov.l   er4, @er5                            
+05eb10  0b 95                    adds    #4, er5                              
+05eb12  01 00 69 d4              mov.l   er4, @er5                            
+05eb16  0b 95                    adds    #4, er5                              
+05eb18  01 00 69 d4              mov.l   er4, @er5                            
+05eb1c  0b 95                    adds    #4, er5                              
+05eb1e  01 00 69 d4              mov.l   er4, @er5                            
+05eb22  0b 95                    adds    #4, er5                              
+05eb24  01 00 69 d4              mov.l   er4, @er5                            
+05eb28  0b 95                    adds    #4, er5                              
+05eb2a  f3 31                    mov.b   #0x31, r3h ; '1'                     
+05eb2c  fb 00                    mov.b   #0, r3l                              
+05eb2e  6b 83 b1 3e              mov.w   r3, @0xFFFFB13E:16                   
+05eb32  f3 30                    mov.b   #0x30, r3h ; '0'                     
+05eb34  fb 44                    mov.b   #0x44, r3l ; 'D'                     
+05eb36  6b 83 b1 40              mov.w   r3, @0xFFFFB140:16                   
+05eb3a  f3 40                    mov.b   #0x40, r3h ; '@'                     
+05eb3c  fb a0                    mov.b   #0xA0, r3l                           
+05eb3e  6b 83 b1 42              mov.w   r3, @0xFFFFB142:16                   
+05eb42  fc a0                    mov.b   #0xA0, r4l                           
+05eb44  6a 8c b1 44              mov.b   r4l, @0xFFFFB144:16                  
+05eb48  5e 05 8f a2              jsr     sub_58FA2:24                         
+05eb4c  54 70                    rts                                          
+
+;---- func 0x5eb4e..0x5ebd2
+05eb4e  7a 04 00 00 00 00        mov.l   #0, er4                              <- 5b17c,5b2ea
+05eb54  7a 05 00 ff b1 3e        mov.l   #0xFFB13E, er5                       
+05eb5a  01 00 69 d4              mov.l   er4, @er5                            
+05eb5e  0b 95                    adds    #4, er5                              

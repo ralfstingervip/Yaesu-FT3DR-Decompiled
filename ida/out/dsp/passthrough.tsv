@@ -1,0 +1,14 @@
+item	address	where	meaning	confidence	evidence
+bridge flag	0xFF813A	MAIN RAM	0 = DSP frame driver owns SCI_A; 1 = SCI_A is bridged to the generic byte-queue serial engine	confirmed	written only at MAIN 0x21FA (#0) and 0x2224 (#1); read at 0x56160 (the SCI_A ISR) and 0x5E9F2
+boot strap poll	0xFFFF4C	MAIN input port	polled up to 200 times during reset init; if (value & 0x7F) == 0x7D the bridge flag is set to 1	confirmed	MAIN 0x21FE-0x2206 (mov.b #0xC8,r6l / mov.b @0xFFFF4C:8 / and.b #0x7F / cmp.b #0x7D / beq 0x221E)
+observed strap value	0xFF813B	MAIN RAM	the value actually read from 0xFFFF4C is stored here in both branches	confirmed	MAIN 0x220C and 0x221E
+bridge init	sub_55FFE	0x00055FFE	called only in the bridge branch; sets up ring pointers 0xFF8152 and 0xFF8156 = 0xFF3CEA, 0xFF8180..0xFF8187	confirmed	MAIN 0x2228 -> 0x55FFE
+bridge engine start	loc_78106	0x00078106	called only in the bridge branch, starts the generic serial engine	confirmed	MAIN 0x2234
+bridge RX path	loc_7711E	0x0007711E	SCI_A receive ISR hands each byte to the serial engine when the bridge flag is set	confirmed	MAIN sub_5615C 0x56160-0x56164 -> 0x561B0 jsr 0x7711E
+bridge TX path	0x0007701E	-	polled loop: wait SSR.TDRE at 0xFFFF8C, write 0xFFFF8B, clear TDRE; up to 0x40 bytes per call	confirmed	MAIN 0x7701E-0x77026
+normal RX ring	0xFF23C8..0xFF27C7	MAIN RAM	1 KB ring for DSP bytes in normal mode; write pointer 0xFF815E, read pointer 0xFF815A, wrap test cmp.w #0x27C8	confirmed	MAIN sub_5615C 0x56174-0x5618A; consumer sub_5683E 0x56848-0x5685E
+DSP write mode state	0xFFB0C4	MAIN RAM	0..7 progress; entered by sub_5DCDA, driven by sub_5DD00, displayed via sub_5E9E2	confirmed	writers 0x103CA (=0), 0x5DCF2 (=1), 0x5DDE0 (state)
+DSP write mode UI	SUB	0xFFF0DE56	---DSP WRITE MODE----, Push DISP Key!, Loading..., Complete; reads bytes 0x20/0x21 of the shared status block at SUB RAM 0x00008C4D	confirmed	SUB 0xFFF0DE5C/0xFFF0DE69/0xFFF0DE76 and 0xFFF0DE96-0xFFF0DEA6
+negative: command buffer	0xFFB13E	MAIN RAM	every instruction that writes the DSP command buffer lies in 0x58FD4-0x5EB54, i.e. inside the digital-voice module; no CAT, SD, inter-processor or display module writes it	not found	whole-image byte-pattern scan for all @aa:16 / @aa:32 / imm32 forms referencing 0xFFB13E..0xFFB17F
+negative: DMA source	0xFFFC20	MAIN DMAC	the DMA source register is written once, from ER5 in sub_4834E, and ER5 is only ever 0xFFB13E, 0xFFB1A0, ROM 0x5901E or ROM 0x5903E	confirmed	sub_4834E 0x48360; callers sub_566E4 0x5670E and sub_5678E 0x567B8; pointer writers sub_58FA2/sub_58F86/sub_58F94
+negative: request index	0xFFB0B6	MAIN RAM	no absolute-addressing instruction writes the packet-builder request index; it is only read, at 0x5A3AC	not found	whole-image scan of every @aa:16/@aa:32 byte, word, long and bit form

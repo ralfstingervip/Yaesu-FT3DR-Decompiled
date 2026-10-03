@@ -1,0 +1,110 @@
+# sha256 MAIN 8e3ecd05409b2c31 SUB b93570b3c2f69ccb
+image	addr	file_offset	len	bytes	status	what
+MAIN	055810	055810	8	08 01 00 02 00 00 00 08	OK	8-byte first-request device descriptor stub (bLength patched to 8)
+MAIN	055818	055818	18	12 01 00 02 00 00 00 08 aa 26 01 00 00 00 00 00 00 01	OK	device descriptor 26AA:0001
+MAIN	05582A	05582A	32	09 02 20 00 01 01 00 c0 32 09 04 00 00 02 ff 01 ff 00 07 05 01 02 40 00 00 07 05 83 03 08 00 64	OK	config copy A (only its first 9 bytes are ever sent)
+MAIN	05584A	05584A	20	00 05 58 5e 00 05 58 7e 00 05 58 9e 00 05 58 be 00 05 58 de	OK	config variant pointer table (index forced to 0)
+MAIN	05585E	05585E	32	09 02 20 00 01 01 00 c0 32 09 04 00 00 02 ff 01 ff 00 07 05 01 02 40 00 00 07 05 83 03 08 00 14	OK	config variant 0 = the 32 bytes actually served (EP 0x83 bInterval 0x14)
+MAIN	05589D	05589D	1	64	OK	variant 1 bInterval (never served)
+MAIN	0558BD	0558BD	1	96	OK	variant 2 bInterval (never served)
+MAIN	0558DD	0558DD	1	c8	OK	variant 3 bInterval (never served)
+MAIN	0558FD	0558FD	1	fa	OK	variant 4 bInterval (never served)
+MAIN	0558FE	0558FE	64	80 06 00 01 00 00 08 00 00 80 06 00 01 00 00 08 08 00 80 06 00 01 00 00 00 08 00 80 06 00 01 00 00 00 08 00 80 06 00 01 01 00 00 08 00 80 06 00 00 01 00 00 08 00 80 06 06 00 01 00 00 08 00 80	OK	8 byte-rotations of GET_DESCRIPTOR(device,8): SETUP resync templates
+MAIN	05593E	05593E	56	80 06 00 01 00 00 12 00 80 06 00 02 00 00 09 00 80 06 00 02 00 00 20 00 c1 d4 00 00 00 00 01 00 41 d1 ff ff ff ff 00 00 41 d2 ff ff ff ff 00 00 41 d3 ff ff ff ff 00 00	OK	7 unreferenced reference SETUP templates (wLength of D1/D2/D3 = 0, D4 = 1)
+MAIN	054C12	054C12	20	00 00 10 00 00 14 20 80 00 01 24 28 80 00 02 34 38 10 00 03	OK	endpoint-information table, 4 live 5-byte entries (EP0 ctl 8, EP1 bulk OUT 64, EP2 bulk IN 64, EP3 int IN 8)
+MAIN	054BF8	054BF8	18	f4 32 7a 05 00 05 4c 12 6c 5c 6a 8c ee 32 1a 04 46 f6	OK	sub_54BF8: 0x32 bytes -> 0xFFEE32 (EPIR)
+MAIN	054C60	054C60	10	79 04 ff ff 01 00 6b 84 81 84	OK	init FF8184 dword = 0x0100FFFF (e4=0x0100)
+MAIN	054C94	054C94	24	fc 8d 6a 8c ee 04 fc 03 6a 8c ee 05 fc 18 6a 8c ee 06 6a 18 ee 2d 70 20	OK	IER0=0x8D IER1=0x03 IER2=0x18, enable module (bset #2 EE2D)
+MAIN	054D20	054D20	8	40 2a fc 08 6a 8c ee 2f	OK	vec238: bra over dead EE2F pulse block 0x054D22
+MAIN	054D54	054D54	8	6a 0c 81 3a 58 60 01 4c	OK	vec234: selector 0xFF813A !=0 -> window edge 0x054EB0
+MAIN	054D86	054D86	12	fc 73 6a 8c ee 28 6a 18 81 80 70 60	OK	IFR0 b7 (bus reset): FIFO clear 0x73, flag 8180.6; FF8183 untouched
+MAIN	054DAC	054DAC	14	f5 08 01 00 6b 04 81 56 6a 0d ee 0e 68 cd	OK	IFR0 b3: 8 SETUP bytes from 0xFFEE0E into ring
+MAIN	054DD2	054DD2	6	fc 04 6a 8c ee 2c	OK	TRG=0x04 after SETUP read
+MAIN	054DF2	054DF2	16	6a 04 ee 24 47 12 7a 05 00 ff 3c 6a 6a 0c ee 0d	OK	IFR0 b2: EPSZ0o bytes from 0xFFEE0D into 0xFF3C6A
+MAIN	054E30	054E30	26	6a 0c 81 83 ac 04 46 12 fc 8d 6a 8c ee 04 fc 00 6a 8c b0 94 fc 01 6a 8c ee 2c	OK	IFR0 b1: in state 4 send zero-length status packet
+MAIN	054E84	054E84	6	6c 54 6a 84 ee 0c	OK	IFR0 b0: EP0 IN bytes from [0xFFB09E] to 0xFFEE0C
+MAIN	054EB0	054EB0	4	5e 07 82 7c	OK	edge into closed window (CDC service routine 0x07827C)
+MAIN	054EE0	054EE0	8	77 3c 6a 18 81 80 67 00	OK	vec235 IFR1 b0: copy IFR1 b3 (VBUS level) to 8180.0
+MAIN	054EF0	054EF0	4	6a 8c 81 83	OK	vec235: FF8183 = 0 on every VBUS change
+MAIN	054F36	054F36	8	6d 74 56 70 73 2c 47 4a	OK	rte, then the unreachable EP3 block at 0x054F3A
+MAIN	054FEC	054FEC	22	6a 0b 81 83 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 05 50 02 59 60	OK	poll dispatcher on FF8183
+MAIN	055002	055002	48	00 05 50 34 00 05 50 42 00 05 51 96 00 05 51 aa 00 05 51 c2 00 05 50 42 00 05 51 da 00 05 53 06 00 05 55 20 00 05 55 52 00 05 53 06 00 05 56 c8	OK	12-slot control state table
+MAIN	05507C	05507C	30	79 2a 80 06 47 56 79 2a c1 d4 47 50 79 2a 41 d3 47 4a 79 2a 41 d1 47 44 79 2a 41 d2 47 3e	OK	known-request pre-filter (skips template search)
+MAIN	0550D8	0550D8	26	79 2a 80 06 58 60 ff 52 aa 01 47 44 aa 02 47 0a aa 03 58 60 ff 44 58 00 ff 40	OK	state 1/5 accepts 0x8006 only; type 3 (string) dropped
+MAIN	0550FE	0550FE	8	6a 0d 89 cf fd 00 10 4d	OK	config index read from FF89CF then overwritten with 0
+MAIN	05510C	05510C	8	78 d0 6b 25 00 05 58 4a	OK	config pointer = table[0]
+MAIN	055116	055116	16	6a 18 81 81 70 00 fb 05 fe 09 7a 05 00 05 58 2a	OK	first config request: 9 bytes, next state 5
+MAIN	055128	055128	28	fb 05 6a 0c 81 83 ac 01 47 0a fe 12 7a 05 00 05 58 18 40 08 fe 08 7a 05 00 05 58 10	OK	device descriptor: 8 bytes in state 1, 18 bytes in state 5
+MAIN	0550FA	0550FA	4	fb 06 fe 20	OK	full config: 0x20 bytes, next state 6
+MAIN	055144	055144	14	6a 8e b0 94 01 00 6b 85 b0 9e 6a 8b 81 82	OK	sub_55144: length, source pointer, next-state latch
+MAIN	0552D8	0552D8	10	79 2a c1 d4 46 26 fb 07 fe 01	OK	state 6 accepts C1 D4 only: 1 byte, next state 7
+MAIN	0552F6	0552F6	14	6a 8c b0 95 7a 05 00 ff b0 95 5e 05 51 44	OK	D4 data stage = quality code at 0xFFB095
+MAIN	055404	055404	16	79 2a 41 d3 58 70 00 da 79 2a 41 d1 58 60 01 08	OK	state 7/10 accepts 41 D3 and 41 D1 only
+MAIN	055414	055414	36	6a 0c 94 c0 ac 00 58 60 00 94 6a 10 89 c1 73 30 47 0a 6a 10 89 ab 73 00 58 70 00 82 6a 2c 00 ff 2e c9 46 7a	OK	D1 gates: TX state, KEY LOCK + lock type, picture busy
+MAIN	05543E	05543E	16	7a 06 00 ff 3d 6c 6c 6c 6c 64 6c 6d f5 00 0d 5c	OK	D1 size = wIndexL<<16 | wValue
+MAIN	05546E	05546E	4	6b 84 b0 9c	OK	packet count to FFB09C (no reader)
+MAIN	055488	055488	24	6a 18 a9 e3 70 40 fc 4f 6a 8c aa e0 fc 01 6a 8c 81 84 fc 08 6a 8c 81 83	OK	D1 accept: A9E3.4, tone/event 0x4F, FF8184=1, state 8
+MAIN	0554A4	0554A4	12	7a 04 00 ff 58 06 01 00 6b 84 bc 48	OK	forward pointer = 0xFF5806
+MAIN	0554B2	0554B2	12	fc 01 6a 8c ba 72 fc 0b 6a 8c 81 82	OK	D1 refuse: discard flag, next state 11
+MAIN	0554E6	0554E6	16	6a 2c 00 ff 3d 6c 6a 8c b0 96 fc 07 6a 8c 81 82	OK	D3: wValueL -> FFB096, next state 7
+MAIN	055520	055520	8	6a 0c aa e8 46 f8 fc 09	OK	state 8: hold D1 status stage until FFAAE8 == 0
+MAIN	055552	055552	10	6a 0c ee 00 73 6c 58 60 00 f6	OK	state 9: IFR0 b6 (EP1 full) -> bulk read
+MAIN	0555F4	0555F4	6	79 2a 41 d2 46 56	OK	state 9 accepts 41 D2 only
+MAIN	055612	055612	24	5e 05 59 f4 fc 00 6a ac 00 ff 2e c9 fc ff 6a 8c 81 85 fc 0a 6a 8c 81 82	OK	D2: flush last block, clear busy, force EP3 report, next state 10
+MAIN	055652	055652	4	6a 04 ee 25	OK	EP1 byte count
+MAIN	055684	055684	6	6a 0c ee 10 68 dc	OK	EP1 byte copy into 0xFF5806+index
+MAIN	0556C0	0556C0	6	fc 20 6a 8c ee 2c	OK	TRG=0x20 (EP1 read done)
+MAIN	055768	055768	14	79 2a 41 d2 46 32 fc ff 6a 8c 81 85 fc 0a	OK	state 11: D2 after refused D1 -> state 10, no forward
+MAIN	0557A2	0557A2	6	fc 01 6a 8c 81 84	OK	sub_557A2 forces FF8184=1
+MAIN	0557D0	0557D0	16	6a 0c ee 27 73 5c 46 36 6a 0c 81 84 6a 8c ee 18	OK	EP3 report byte0 = FF8184 (skipped while EE27 b5 set)
+MAIN	0557E4	0557E4	8	6a 04 89 ce 6a 84 ee 18	OK	EP3 report byte1 = FF89CE (SIZE)
+MAIN	0557EC	0557EC	24	6a 0c 89 cd 47 0c ac 01 47 04 fc 50 40 06 fc 30 40 02 fc 18 6a 8c ee 18	OK	EP3 report byte2 = 0x18/0x30/0x50 from FF89CD (QUALITY)
+MAIN	055804	055804	10	6b 84 81 86 fc 40 6a 8c ee 2c	OK	remember sent bytes 1-2; TRG=0x40 (EP3 packet enable)
+MAIN	055B6E	055B6E	4	6a 8c bc 4f	OK	orphan 0x055B58: only non-zero writer of FFBC4F
+MAIN	055B98	055B98	10	78 b0 6b 26 00 05 5b f2 5d 60	OK	jsr via table 0x055BF2 (5 slots, state FFBC50)
+MAIN	055BC0	055BC0	10	78 b0 6b 26 00 05 5c 06 5d 60	OK	jsr via table 0x055C06 (3 slots, state FFBC54)
+MAIN	055BE8	055BE8	10	78 b0 6b 26 00 05 5c 12 59 60	OK	jmp via table 0x055C12 (3 slots, state FFBC57)
+MAIN	055BF2	055BF2	44	00 05 5c 1e 00 05 5c 7e 00 05 5c ea 00 05 5d 6c 00 05 5d 8a 00 05 5d 8c 00 05 5d e8 00 05 5d fa 00 05 5f 84 00 05 5f 96 00 05 5f f0	OK	the three sub-dispatch tables, 5+3+3 slots
+MAIN	055BAA	055BAA	4	6a 8c bc 51	OK	only writer of FFBC51 (writes 0)
+MAIN	055DD4	055DD4	12	7a 04 00 ff 58 06 01 00 6b 84 bc 48	OK	read-back destination pointer = 0xFF5806
+MAIN	055DEE	055DEE	4	5e 00 b5 ce	OK	FE00 read-back request issued here (not at 0x055FDE)
+MAIN	00B5DE	00B5DE	4	79 04 fe 00	OK	FE00 SCI-D command word
+MAIN	055EAE	055EAE	2	68 ec	OK	second writer of the 0xFF5806 window (through FFBC48)
+MAIN	055EE8	055EE8	4	5e 06 ee 36	OK	1 KB read-back flush call
+MAIN	06EE36	06EE36	2	54 70	OK	... which is a bare rts
+MAIN	055FDE	055FDE	4	5e 00 b6 10	OK	0x055FDE is an FFFF block send (SM-C), not a read-back
+MAIN	055F76	055F76	6	fc 1d 6a 8c aa e0	OK	read-back error -> event 0x1D (internal only)
+MAIN	00FB9E	00FB9E	4	5e 00 fd c8	OK	key scan polls the D3 edge machine
+MAIN	00FDC8	00FDC8	8	6a 0a b0 96 6a 0b b0 97	OK	D3 edge machine reads FFB096/FFB097
+MAIN	00FDFE	00FDFE	12	fc 14 6a 8c a9 ed fc 02 6a 8c b0 97	OK	D3 0->non-zero edge posts key code 0x14
+MAIN	06F5D0	06F5D0	6	6a 10 8e a0 73 60	OK	key 0x14 handler entry (main key table col 11)
+MAIN	06F640	06F640	6	7a 04 2e 6a 70 67	OK	'.jpg' appended to last picture name
+MAIN	0020F6	0020F6	6	f9 01 40 02 f9 00	OK	boot entry flag r1l: 0x20F6 -> 1, 0x20FA -> 0
+MAIN	0021F8	0021F8	16	fc 00 6a 8c 81 3a fe c8 2c 4c ec 7f ac 7d 47 16	OK	selector=0, 200 polls of port 0xFFFF4C for 0x7D
+MAIN	002210	002210	12	a9 00 46 04 5e 05 4b f8 5e 05 4c 44	OK	normal personality: EPIR load (cold entry only) + vendor init
+MAIN	002222	002222	10	fc 01 6a 8c 81 3a 5e 05 5f fe	OK	strap personality: selector=1
+MAIN	002234	002234	4	5e 07 81 06	OK	edge into closed window (CDC init 0x078106)
+MAIN	002BE2	002BE2	10	6a 0c 81 3a 46 04 5e 05 4f ec	OK	main loop: control machine only when selector==0
+MAIN	002C06	002C06	6	6a 0c 81 3a 46 1c	OK	main loop: image sub-dispatch block only when selector==0
+MAIN	002C20	002C20	4	5e 05 5b 7a	OK	jsr sub_55B7A
+MAIN	0393DC	0393DC	4	6a 8b 81 84	OK	FF8184 = r3l (0 or 1) in sub_391C0
+MAIN	03935A	03935A	26	6a 10 89 c5 73 10 47 04 fb 01 40 76 6a 0c a9 e3 ec 2c 47 04 fb 00 40 6a fb 01	OK	byte0 logic: SP SEL bit -> 1; A9E3&0x2C -> 0
+MAIN	039462	039462	4	6a 8c 81 84	OK	FF8184 = 1 in sub_39454
+MAIN	00594C	00594C	30	6a 03 89 ce 6a 0b 89 cd 6b 83 b0 5a fb 00 6a 10 89 c5 77 10 67 0b 6a 8b b0 5c 79 0b f3 d0	OK	F3D0 USB CAMERA sender: [89CE, 89CD, 89C5.1]
+MAIN	022562	022562	14	6a 10 89 c1 73 30 47 0c 6a 0c 89 ab ac 03	OK	TX inhibit: KEY LOCK on and lock type >= 3 (PTT ...)
+MAIN	0383AC	0383AC	6	7a 05 00 03 83 9c	OK	tone/event sequencer list pointer
+MAIN	03839C	03839C	5	4f 1e 35 5d ff	OK	event list containing D1's 0x4F
+MAIN	00A654	00A654	24	6a 0c 89 c6 ec 7f f4 00 10 54 7a 64 00 00 ff ff 78 c0 6b 25 00 00 64 4c	OK	RAM DISPLAY (F3D1) base = table 0x00644C[FF89C6 & 0x7F]
+MAIN	00A694	00A694	4	79 04 f3 d1	OK	F3D1 frame code
+MAIN	006528	006528	16	00 ff 81 80 00 ff b0 94 00 ff 3c 6a 00 ff ee 00	OK	RAM DISPLAY slots 55-58: FF8180, FFB094, FF3C6A, FFEE00 (USB state)
+MAIN	055460	055460	2	47 50	OK	D1 refused when size == 0
+MAIN	055A2C	055A2C	6	7a 04 00 00 4e 20	OK	busy-wait 0x4E20 after each 1 KB wrap
+MAIN	00B614	00B614	6	6a 0c bb e4 46 fa	OK	sub_B610 blocks until SCI-D TX idle
+MAIN	06F5E6	06F5E6	18	6a 0c ba 32 58 70 00 b0 6a 2c 00 ff 2e c9 58 60 00 a6	OK	key 0x14 handler gates FFBA32 / FF2EC9
+MAIN	00FD5E	00FD5E	4	2a 4e ea 10	OK	sibling debouncer on port 0xFFFF4E b4
+MAIN	054ECC	054ECC	4	58 70 00 b8	OK	IFR1 b0 false -> 0x054F88 (skips 0x054F3A)
+MAIN	05E9F2	05E9F2	4	6a 04 81 3a	OK	12th reader of FF813A
+MAIN	055EAE	055EAE	4	68 ec 0b 06	OK	read-back store loop through FFBC48
+SUB	FFC3E709	03E709	11	55 53 42 20 43 41 4d 45 52 41 00	OK	'USB CAMERA' setup label
+SUB	FFF4A496	34A496	16	33 32 30 2a 32 34 30 00 31 36 30 2a 31 32 30 00	OK	SIZE values 320*240 / 160*120
+SUB	FFF48FD9	348FD9	58	4b 45 59 00 00 00 00 00 00 44 49 41 4c 00 00 00 00 00 4b 45 59 26 44 49 41 4c 00 50 54 54 00 00 00 00 00 00 4b 45 59 26 50 54 54 00 00 44 49 41 4c 26 50 54 54 00 41 4c 4c 00	OK	LOCK type list KEY/DIAL/KEY&DIAL/PTT/KEY&PTT/DIAL&PTT/ALL (9-byte stride)

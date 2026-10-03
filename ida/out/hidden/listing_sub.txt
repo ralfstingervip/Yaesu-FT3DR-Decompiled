@@ -1,0 +1,642 @@
+==============================================================================
+TARGET 0xFFF4ACF3  ---DSP WRITE MODE----
+  xrefs_to: NONE
+==============================================================================
+  FFF4ACB4  00                                    brk
+  FFF4ACB5  00                                    brk
+  FFF4ACB6  00                                    brk
+  FFF4ACB7  00                                    brk
+  FFF4ACB8  2D 2D                                 bno.b   loc_FFF4ACE5
+  FFF4ACBA  43 6F                                 sub     r6, r15
+  FFF4ACBC  6D 70                                 shll    #17h, sp
+  FFF4ACBE  6C 65                                 shll    #6, r5
+  FFF4ACC0  74 65 2D                              int     #2Dh ; '-'
+  FFF4ACC3  2D 00                                 bno.b   loc_FFF4ACC3
+  FFF4ACC5  00                                    brk
+  FFF4ACC6  00                                    brk
+  FFF4ACC7  00                                    brk
+  FFF4ACC8  43 68                                 sub     r6, r8
+  FFF4ACCA  61 72                                 cmp     #7, r2
+  FFF4ACCC  67 65                                 rtsd    #65h ; 'e'
+  FFF4ACCE  20 45                                 beq.b   aPushDispKey+5; "DISP Key!"
+  FFF4ACD0  72 72 6F 72                           add     #726Fh, r7, r2
+  FFF4ACD4  00                                    brk
+  FFF4ACD5  00                                    brk
+  FFF4ACD6  00                                    brk
+  FFF4ACD7  00                                    brk
+  FFF4ACD8  4E 6F 20 42                           mul     4220h[r6], r15
+  FFF4ACDC  61 74                                 cmp     #7, r4
+  FFF4ACDE  74 65 72                              int     #72h ; 'r'
+  FFF4ACE1  79 00                                 bset    #10h, sp
+  FFF4ACE3  00                                    brk
+  FFF4ACE4  00                                    brk
+  FFF4ACE5  00                                    brk
+  FFF4ACE6  00                                    brk
+  FFF4ACE7  00                                    brk
+  FFF4ACE8  45 78 74                              cmp     74h[r7], r8
+  FFF4ACEB  65 72                                 or      #7, r2
+  FFF4ACED  6E 61                                 pushm   r6-r1
+  FFF4ACEF  6C 20                                 shll    #2, sp
+  FFF4ACF1  44 43                                 cmp     [r4], r3
+* FFF4ACF3  00                                    brk
+  FFF4ACF4  00                                    brk
+  FFF4ACF5  00                                    brk
+  FFF4ACF6  00                                    brk
+  FFF4ACF7  00                                    brk
+  FFF4ACF8  2D 2D 2D 44 53 50 20 57               .string '---DSP WRITE MODE----',0
+  FFF4AD0E  50 75 73 68 20 44 49 53               .string 'Push DISP Key!',0
+  FFF4AD1D  4C 6F 61 64 69 6E 67 2E               .string 'Loading...',0
+  FFF4AD28  43 6F                                 sub     r6, r15
+  FFF4AD2A  6D 70                                 shll    #17h, sp
+  FFF4AD2C  6C 65                                 shll    #6, r5
+  FFF4AD2E  74 65 00                              int     #0
+  FFF4AD31  54 59 50 45 20 20 20 20               .string 'TYPE    : ',0
+
+==============================================================================
+TARGET 0xFFF4AD0F  Push DISP Key!
+  xrefs_to: NONE
+==============================================================================
+* FFF4AD0F  75 73 68 20 44 49 53 50               .string 'Push DISP Key!',0
+  FFF4AD1D  4C 6F 61 64 69 6E 67 2E               .string 'Loading...',0
+  FFF4AD28  43 6F                                 sub     r6, r15
+  FFF4AD2A  6D 70                                 shll    #17h, sp
+  FFF4AD2C  6C 65                                 shll    #6, r5
+  FFF4AD2E  74 65 00                              int     #0
+  FFF4AD31  54 59 50 45 20 20 20 20               .string 'TYPE    : ',0
+  FFF4AD3C  00                                    brk
+  FFF4AD3D  00                                    brk
+  FFF4AD3E  00                                    brk
+  FFF4AD3F  00                                    brk
+  FFF4AD40  00                                    brk
+  FFF4AD41  00                                    brk
+  FFF4AD42  00                                    brk
+  FFF4AD43  00                                    brk
+  FFF4AD44  41 44 44 20 54 4F 20 43               .string 'ADD TO CATEGORY',0
+
+==============================================================================
+TARGET 0xFFF48588  PASSWORD INPUT
+  xrefs_to: 0xFFEE81C8(sub_FFEE80A9)
+==============================================================================
+  FFF48587  00                                    brk
+* FFF48588  50 41 53 53 57 4F 52 44               .string 'PASSWORD INPUT',0
+  FFF48597  50 41 53 53 57 4F 52 44               .string 'PASSWORD ENTRY',0
+  FFF485A6  00                                    brk
+  FFF485A7  00                                    brk
+  FFF485A8  20 20 20 20 20 20 20 00               .string '       ',0
+  FFF485B0  20 20 3A 20 20 20 20 00               .string '  :    ',0
+  FFF485B8  4E 20 20 20                           mul     2020h[r2], sp
+  FFF485BC  20 06                                 beq.b   loc_FFF485C2
+  FFF485BE  20 20                                 beq.b   aAltiM+1; "LTI       m "
+  FFF485C0  2E 20                                 bra.b   aAltiM+3; "I       m "
+  FFF485C2  20 20                                 beq.b   aAltiM+5; "      m "
+  FFF485C4  20 00                                 beq.b   loc_FFF485C4
+  FFF485C6  45 20 20                              cmp     20h[r2], sp
+
+==============================================================================
+TARGET 0xFFF48597  PASSWORD ENTRY
+  xrefs_to: 0xFFEE81E8(sub_FFEE80A9)
+==============================================================================
+  FFF48587  00                                    brk
+  FFF48588  50 41 53 53 57 4F 52 44               .string 'PASSWORD INPUT',0
+* FFF48597  50 41 53 53 57 4F 52 44               .string 'PASSWORD ENTRY',0
+  FFF485A6  00                                    brk
+  FFF485A7  00                                    brk
+  FFF485A8  20 20 20 20 20 20 20 00               .string '       ',0
+  FFF485B0  20 20 3A 20 20 20 20 00               .string '  :    ',0
+  FFF485B8  4E 20 20 20                           mul     2020h[r2], sp
+  FFF485BC  20 06                                 beq.b   loc_FFF485C2
+  FFF485BE  20 20                                 beq.b   aAltiM+1; "LTI       m "
+  FFF485C0  2E 20                                 bra.b   aAltiM+3; "I       m "
+  FFF485C2  20 20                                 beq.b   aAltiM+5; "      m "
+  FFF485C4  20 00                                 beq.b   loc_FFF485C4
+  FFF485C6  45 20 20                              cmp     20h[r2], sp
+  FFF485C9  20 20                                 beq.b   aAltiM+0Ch; " "
+  FFF485CB  06                                    .byte    6
+  FFF485CC  20 20                                 beq.b   asc_FFF485EB+1; " "
+  FFF485CE  2E 20                                 bra.b   loc_FFF485EE
+  FFF485D0  20 20                                 beq.b   aA12; "A12"
+  FFF485D2  20 00                                 beq.b   loc_FFF485D2
+  FFF485D4  20 20                                 beq.b   aA96; "A96"
+  FFF485D6  20 20                                 beq.b   aA96+2; "6"
+
+==============================================================================
+TARGET 0xFFF484D1  lowsrc local tree, not in this repo
+  xrefs_to: 0xFFF48481, 0xFFEE17B6, 0xFFEE18B2(sub_FFEE18A6)
+==============================================================================
+  FFF484C7  00                                    brk
+  FFF484C8  45 4E 56                              cmp     56h[r4], r14
+  FFF484CB  39 3D 65                              bsr.w   loc_FFF4EA04+4
+  FFF484CE  6E 64                                 pushm   r6-r4
+  FFF484D0  00                                    brk
+* FFF484D1  43 3A 5C 73 74 64 69 6E               .string 'C:',5Ch,'stdin',0
+  FFF484DA  72                                    .byte  72h ; r
+  FFF484DB  00                                    brk
+  FFF484DC  43 3A 5C 73 74 64 6F 75               .string 'C:',5Ch,'stdout',0
+  FFF484E6  77 00                                 .string 'w',0
+  FFF484E8  43 3A 5C 73 74 64 65 72               .string 'C:',5Ch,'stderr',0
+  FFF484F2  00                                    brk
+  FFF484F3  00                                    brk
+  FFF484F4  35 00                                 .string '5',0
+  FFF484F6  00                                    brk
+  FFF484F7  00                                    brk
+  FFF484F8  00                                    brk
+  FFF484F9  00                                    brk
+  FFF484FA  00                                    brk
+  FFF484FB  00                                    brk
+  FFF484FC  00                                    brk
+  FFF484FD  00                                    brk
+  FFF484FE  00                                    brk
+  FFF484FF  00                                    brk
+  FFF48500  00                                    brk
+  FFF48501  00                                    brk
+  FFF48502  00                                    brk
+  FFF48503  00                                    brk
+  FFF48504  34                                    .byte  34h ; 4
+  FFF48505  00                                    brk
+  FFF48506  00                                    brk
+  FFF48507  00                                    brk
+  FFF48508  00                                    brk
+  FFF48509  00                                    brk
+  FFF4850A  00                                    brk
+  FFF4850B  00                                    brk
+  FFF4850C  00                                    brk
+  FFF4850D  00                                    brk
+  FFF4850E  00                                    brk
+  FFF4850F  00                                    brk
+  FFF48510  00                                    brk
+  FFF48511  00                                    brk
+  FFF48512  00                                    brk
+  FFF48513  00                                    brk
+  FFF48514  33                                    .byte  33h ; 3
+  FFF48515  00                                    brk
+  FFF48516  00                                    brk
+  FFF48517  00                                    brk
+  FFF48518  00                                    brk
+  FFF48519  00                                    brk
+  FFF4851A  00                                    brk
+  FFF4851B  00                                    brk
+  FFF4851C  00                                    brk
+  FFF4851D  00                                    brk
+  FFF4851E  00                                    brk
+  FFF4851F  00                                    brk
+  FFF48520  00                                    brk
+  FFF48521  00                                    brk
+  FFF48522  00                                    brk
+  FFF48523  00                                    brk
+  FFF48524  32                                    .byte  32h ; 2
+  FFF48525  00                                    brk
+  FFF48526  00                                    brk
+  FFF48527  00                                    brk
+  FFF48528  00                                    brk
+  FFF48529  00                                    brk
+  FFF4852A  00                                    brk
+  FFF4852B  00                                    brk
+  FFF4852C  00                                    brk
+  FFF4852D  00                                    brk
+  FFF4852E  00                                    brk
+  FFF4852F  00                                    brk
+  FFF48530  00                                    brk
+
+==============================================================================
+TARGET 0xFFF484B0  lowsrc ENV1=temp01
+  xrefs_to: NONE
+==============================================================================
+  FFF484AC  2C 32                                 bo.b    aCStdout+2; "\\stdout"
+  FFF484AE  00                                    brk
+  FFF484AF  00                                    brk
+* FFF484B0  45 4E 56                              cmp     56h[r4], r14
+  FFF484B3  31                                    .byte  31h ; 1
+  FFF484B4  3D 74 65                              mov.w   #65h, 8[r7] ; 'e'
+  FFF484B7  6D 70                                 shll    #17h, sp
+  FFF484B9  30                                    .byte  30h ; 0
+  FFF484BA  31                                    .byte  31h ; 1
+  FFF484BB  00                                    brk
+  FFF484BC  45 4E 56                              cmp     56h[r4], r14
+  FFF484BF  32                                    .byte  32h ; 2
+  FFF484C0  3D 74 65                              mov.w   #65h, 8[r7] ; 'e'
+  FFF484C3  6D 70                                 shll    #17h, sp
+  FFF484C5  30                                    .byte  30h ; 0
+  FFF484C6  32                                    .byte  32h ; 2
+  FFF484C7  00                                    brk
+  FFF484C8  45 4E 56                              cmp     56h[r4], r14
+  FFF484CB  39 3D 65                              bsr.w   loc_FFF4EA04+4
+  FFF484CE  6E 64                                 pushm   r6-r4
+  FFF484D0  00                                    brk
+  FFF484D1  43 3A 5C 73 74 64 69 6E               .string 'C:',5Ch,'stdin',0
+  FFF484DA  72                                    .byte  72h ; r
+  FFF484DB  00                                    brk
+  FFF484DC  43 3A 5C 73 74 64 6F 75               .string 'C:',5Ch,'stdout',0
+  FFF484E6  77 00                                 .string 'w',0
+  FFF484E8  43 3A 5C 73 74 64 65 72               .string 'C:',5Ch,'stderr',0
+  FFF484F2  00                                    brk
+  FFF484F3  00                                    brk
+  FFF484F4  35 00                                 .string '5',0
+  FFF484F6  00                                    brk
+  FFF484F7  00                                    brk
+  FFF484F8  00                                    brk
+  FFF484F9  00                                    brk
+  FFF484FA  00                                    brk
+  FFF484FB  00                                    brk
+  FFF484FC  00                                    brk
+  FFF484FD  00                                    brk
+  FFF484FE  00                                    brk
+  FFF484FF  00                                    brk
+  FFF48500  00                                    brk
+  FFF48501  00                                    brk
+  FFF48502  00                                    brk
+  FFF48503  00                                    brk
+  FFF48504  34                                    .byte  34h ; 4
+  FFF48505  00                                    brk
+  FFF48506  00                                    brk
+  FFF48507  00                                    brk
+  FFF48508  00                                    brk
+  FFF48509  00                                    brk
+  FFF4850A  00                                    brk
+  FFF4850B  00                                    brk
+  FFF4850C  00                                    brk
+  FFF4850D  00                                    brk
+  FFF4850E  00                                    brk
+  FFF4850F  00                                    brk
+
+==============================================================================
+TARGET 0xFFF487EC  Main Ver. screen
+  xrefs_to: 0xFFF00ED4(sub_FFF00684)
+==============================================================================
+  FFF487AD  F3 D9                                 bclr    #1, [r13].b
+  FFF487AF  00                                    brk
+  FFF487B0  4C 45 56 45 4C 00                     .string 'LEVEL',0
+  FFF487B6  DA F3 D9 20 20 00                     mov.w   41B2h[r15], 40h[r3]
+  FFF487BC  4C 45 56 45 4C 20 20 00               .string 'LEVEL  ',0
+  FFF487C4  44 43 00                              .string 'DC',0
+  FFF487C7  3A 20 00                              .string ': ',0
+  FFF487CA  4D 45 53 53 41 47 45 00               .string 'MESSAGE',0
+  FFF487D2  50 55 53 48 00                        .string 'PUSH',0
+  FFF487D7  44 49 53 50 00                        .string 'DISP',0
+  FFF487DC  43 41 4C 4C 53 49 47 4E               .string 'CALLSIGN',0
+  FFF487E5  56 4F 4C 54 00                        .string 'VOLT',0
+  FFF487EA  3A 00                                 .string ':',0
+* FFF487EC  4D 61 69 6E 20 56 65 72               .string 'Main Ver.  :  .    ',0
+  FFF48800  53 75 62 20 20 56 65 72               .string 'Sub  Ver.  :  .    ',0
+  FFF48814  44 53 50 20 20 56 65 72               .string 'DSP  Ver.  :  .    ',0
+  FFF48828  57 49 44 45 00                        .string 'WIDE',0
+  FFF4882D  4E 41 52 52 4F 57 00                  .string 'NARROW',0
+  FFF48834  46 4D 00                              .string 'FM',0
+  FFF48837  41 4D 00                              .string 'AM',0
+  FFF4883A  41 55 54 4F 00                        .string 'AUTO',0
+  FFF4883F  53 51 4C 20 54 59 50 45               .string 'SQL TYPE :',0
+  FFF4884A  43 4F 44 45 00                        .string 'CODE',0
+
+==============================================================================
+TARGET 0xFFF48814  DSP Ver. screen
+  xrefs_to: 0xFFF00EF0(sub_FFF00684)
+==============================================================================
+  FFF48800  53 75 62 20 20 56 65 72               .string 'Sub  Ver.  :  .    ',0
+* FFF48814  44 53 50 20 20 56 65 72               .string 'DSP  Ver.  :  .    ',0
+  FFF48828  57 49 44 45 00                        .string 'WIDE',0
+  FFF4882D  4E 41 52 52 4F 57 00                  .string 'NARROW',0
+  FFF48834  46 4D 00                              .string 'FM',0
+  FFF48837  41 4D 00                              .string 'AM',0
+  FFF4883A  41 55 54 4F 00                        .string 'AUTO',0
+  FFF4883F  53 51 4C 20 54 59 50 45               .string 'SQL TYPE :',0
+  FFF4884A  43 4F 44 45 00                        .string 'CODE',0
+  FFF4884F  42 52 45 41 4B 00                     .string 'BREAK',0
+
+==============================================================================
+TARGET 0xFFC3E3AD  PASSWORD setup label
+  xrefs_to: NONE
+==============================================================================
+* FFC3E3AD  50                                    .byte  50h ; P
+  FFC3E3AE  41                                    .byte  41h ; A
+  FFC3E3AF  53                                    .byte  53h ; S
+  FFC3E3B0  53                                    .byte  53h ; S
+  FFC3E3B1  57                                    .byte  57h ; W
+  FFC3E3B2  4F                                    .byte  4Fh ; O
+  FFC3E3B3  52                                    .byte  52h ; R
+  FFC3E3B4  44                                    .byte  44h ; D
+  FFC3E3B5  00                                    .byte    0
+  FFC3E3B6  00                                    .byte    0
+  FFC3E3B7  00                                    .byte    0
+  FFC3E3B8  00                                    .byte    0
+  FFC3E3B9  00                                    .byte    0
+  FFC3E3BA  00                                    .byte    0
+  FFC3E3BB  00                                    .byte    0
+  FFC3E3BC  00                                    .byte    0
+  FFC3E3BD  00                                    .byte    0
+  FFC3E3BE  00                                    .byte    0
+  FFC3E3BF  00                                    .byte    0
+  FFC3E3C0  00                                    .byte    0
+  FFC3E3C1  50                                    .byte  50h ; P
+  FFC3E3C2  54                                    .byte  54h ; T
+  FFC3E3C3  54                                    .byte  54h ; T
+  FFC3E3C4  20                                    .byte  20h
+  FFC3E3C5  44                                    .byte  44h ; D
+  FFC3E3C6  45                                    .byte  45h ; E
+  FFC3E3C7  4C                                    .byte  4Ch ; L
+  FFC3E3C8  41                                    .byte  41h ; A
+  FFC3E3C9  59                                    .byte  59h ; Y
+  FFC3E3CA  00                                    .byte    0
+  FFC3E3CB  00                                    .byte    0
+  FFC3E3CC  00                                    .byte    0
+  FFC3E3CD  00                                    .byte    0
+  FFC3E3CE  00                                    .byte    0
+  FFC3E3CF  00                                    .byte    0
+  FFC3E3D0  00                                    .byte    0
+  FFC3E3D1  00                                    .byte    0
+  FFC3E3D2  00                                    .byte    0
+  FFC3E3D3  00                                    .byte    0
+  FFC3E3D4  00                                    .byte    0
+  FFC3E3D5  52                                    .byte  52h ; R
+  FFC3E3D6  50                                    .byte  50h ; P
+  FFC3E3D7  54                                    .byte  54h ; T
+  FFC3E3D8  20                                    .byte  20h
+  FFC3E3D9  41                                    .byte  41h ; A
+  FFC3E3DA  52                                    .byte  52h ; R
+  FFC3E3DB  53                                    .byte  53h ; S
+  FFC3E3DC  00                                    .byte    0
+  FFC3E3DD  00                                    .byte    0
+  FFC3E3DE  00                                    .byte    0
+  FFC3E3DF  00                                    .byte    0
+  FFC3E3E0  00                                    .byte    0
+  FFC3E3E1  00                                    .byte    0
+  FFC3E3E2  00                                    .byte    0
+  FFC3E3E3  00                                    .byte    0
+  FFC3E3E4  00                                    .byte    0
+  FFC3E3E5  00                                    .byte    0
+  FFC3E3E6  00                                    .byte    0
+  FFC3E3E7  00                                    .byte    0
+  FFC3E3E8  00                                    .byte    0
+  FFC3E3E9  52                                    .byte  52h ; R
+  FFC3E3EA  50                                    .byte  50h ; P
+  FFC3E3EB  54                                    .byte  54h ; T
+  FFC3E3EC  20                                    .byte  20h
+
+==============================================================================
+TARGET 0xFFC3E709  USB CAMERA setup label
+  xrefs_to: NONE
+==============================================================================
+* FFC3E709  55                                    .byte  55h ; U
+  FFC3E70A  53                                    .byte  53h ; S
+  FFC3E70B  42                                    .byte  42h ; B
+  FFC3E70C  20                                    .byte  20h
+  FFC3E70D  43                                    .byte  43h ; C
+  FFC3E70E  41                                    .byte  41h ; A
+  FFC3E70F  4D                                    .byte  4Dh ; M
+  FFC3E710  45                                    .byte  45h ; E
+  FFC3E711  52                                    .byte  52h ; R
+  FFC3E712  41                                    .byte  41h ; A
+  FFC3E713  00                                    .byte    0
+  FFC3E714  00                                    .byte    0
+  FFC3E715  00                                    .byte    0
+  FFC3E716  00                                    .byte    0
+  FFC3E717  00                                    .byte    0
+  FFC3E718  00                                    .byte    0
+  FFC3E719  00                                    .byte    0
+  FFC3E71A  00                                    .byte    0
+  FFC3E71B  00                                    .byte    0
+  FFC3E71C  00                                    .byte    0
+  FFC3E71D  42                                    .byte  42h ; B
+  FFC3E71E  6C                                    .byte  6Ch ; l
+  FFC3E71F  75                                    .byte  75h ; u
+  FFC3E720  65                                    .byte  65h ; e
+  FFC3E721  74                                    .byte  74h ; t
+  FFC3E722  6F                                    .byte  6Fh ; o
+  FFC3E723  6F                                    .byte  6Fh ; o
+  FFC3E724  74                                    .byte  74h ; t
+  FFC3E725  68                                    .byte  68h ; h
+  FFC3E726  00                                    .byte    0
+  FFC3E727  00                                    .byte    0
+  FFC3E728  00                                    .byte    0
+  FFC3E729  00                                    .byte    0
+  FFC3E72A  00                                    .byte    0
+  FFC3E72B  00                                    .byte    0
+  FFC3E72C  00                                    .byte    0
+  FFC3E72D  00                                    .byte    0
+  FFC3E72E  00                                    .byte    0
+  FFC3E72F  00                                    .byte    0
+  FFC3E730  00                                    .byte    0
+  FFC3E731  44                                    .byte  44h ; D
+  FFC3E732  45                                    .byte  45h ; E
+  FFC3E733  56                                    .byte  56h ; V
+  FFC3E734  49                                    .byte  49h ; I
+  FFC3E735  43                                    .byte  43h ; C
+  FFC3E736  45                                    .byte  45h ; E
+  FFC3E737  20                                    .byte  20h
+  FFC3E738  4C                                    .byte  4Ch ; L
+  FFC3E739  49                                    .byte  49h ; I
+  FFC3E73A  53                                    .byte  53h ; S
+  FFC3E73B  54                                    .byte  54h ; T
+  FFC3E73C  00                                    .byte    0
+  FFC3E73D  00                                    .byte    0
+  FFC3E73E  00                                    .byte    0
+  FFC3E73F  00                                    .byte    0
+  FFC3E740  00                                    .byte    0
+  FFC3E741  00                                    .byte    0
+  FFC3E742  00                                    .byte    0
+  FFC3E743  00                                    .byte    0
+  FFC3E744  00                                    .byte    0
+  FFC3E745  42                                    .byte  42h ; B
+  FFC3E746  6C                                    .byte  6Ch ; l
+  FFC3E747  75                                    .byte  75h ; u
+  FFC3E748  65                                    .byte  65h ; e
+
+==============================================================================
+TARGET 0xFFF4A4C1  CAMERA
+  xrefs_to: 0xFFF08372(sub_FFF08201)
+==============================================================================
+  FFF4A496  33 32 30 2A 32 34 30 00               .string '320*240',0
+  FFF4A49E  31 36 30 2A 31 32 30 00               .string '160*120',0
+  FFF4A4A6  32 68 3C 41 20 20 20 3A               .string '2h<A   :',0
+  FFF4A4AF  51 55 41 4C 49 54 59 3A               .string 'QUALITY:',0
+  FFF4A4B8  53 50 20 53 45 4C 20 3A               .string 'SP SEL :',0
+* FFF4A4C1  43 41 4D 45 52 41 00                  .string 'CAMERA',0
+  FFF4A4C8  49 4E 54 20 53 50 00                  .string 'INT SP',0
+  FFF4A4CF  40 5C 42 33 3A 51 24 5F               .string '@',5Ch,'B3:Q$_',0
+  FFF4A4D8  4C 24 40 5C 42 33 00                  .string 'L$@',5Ch,'B3',0
+  FFF4A4DF  40 5C 42 33 43 66 00                  .string '@',5Ch,'B3Cf',0
+  FFF4A4E6  43 6F 6E 6E 65 63 74 65               .string 'Connected',0
+  FFF4A4F0  4E 6F 74 20 43 6F 6E 6E               .string 'Not Connected',0
+  FFF4A4FE  43 6F 6E 6E 65 63 74 69               .string 'Connecting',0
+
+==============================================================================
+TARGET 0xFFF4AD9A  local tree, not in this repo
+  xrefs_to: NONE
+==============================================================================
+  FFF4AD7A  4C 4F                                 mul     [r4], r15
+  FFF4AD7C  47 00                                 cmp     sp, sp
+  FFF4AD7E  49 3A 5C                              add     5Ch[r3], r10
+  FFF4AD81  46 54 33 44                           cmp     4433h[r5], r4
+  FFF4AD85  5F 4D                                 movu.w  r4, r13
+  FFF4AD87  45 4D 4F                              cmp     4Fh[r4], r13
+  FFF4AD8A  52 59 2D 43                           and     432Dh[r5], r9
+  FFF4AD8E  48 00                                 add     [sp], sp
+  FFF4AD90  49 3A 5C                              add     5Ch[r3], r10
+  FFF4AD93  51 53 4F                              and     4Fh[r5], r3
+  FFF4AD96  4C 4F                                 mul     [r4], r15
+  FFF4AD98  47 00                                 cmp     sp, sp
+* FFF4AD9A  49 3A 5C                              add     5Ch[r3], r10
+  FFF4AD9D  50 48                                 and     [r4], r8
+  FFF4AD9F  4F 54                                 mul     r5, r4
+  FFF4ADA1  4F 00                                 mul     sp, sp
+  FFF4ADA3  49 3A 5C                              add     5Ch[r3], r10
+  FFF4ADA6  56 4F 49 43                           or      4349h[r4], r15
+  FFF4ADAA  45 00 77                              cmp     77h[sp], sp
+  FFF4ADAD  00                                    brk
+  FFF4ADAE  61 00                                 cmp     #0, sp
+  FFF4ADB0  72 2B 00 72                           add     #7200h, r2, r11
+  FFF4ADB4  00                                    brk
+  FFF4ADB5  30                                    .byte  30h ; 0
+  FFF4ADB6  25 64                                 bleu.b  aFat32; "FAT32"
+  FFF4ADB8  00                                    brk
+  FFF4ADB9  25 64                                 bleu.b  aFat32+3; "32"
+  FFF4ADBB  00                                    brk
+  FFF4ADBC  2E 77 61 76 00                        .string '.wav',0
+  FFF4ADC1  5C 42 61 63 6B 75 70 2E               .string 5Ch,'Backup.bin',0
+  FFF4ADCD  00                                    brk
+  FFF4ADCE  00                                    brk
+  FFF4ADCF  00                                    brk
+  FFF4ADD0  72 00                                 .string 'r',0
+  FFF4ADD2  00                                    brk
+  FFF4ADD3  77 00                                 .string 'w',0
+  FFF4ADD5  72 2B 00                              .string 'r+',0
+  FFF4ADD8  61 00                                 .string 'a',0
+
+==============================================================================
+TARGET 0xFFF4AEB2  SCAN=%d bluetooth cmd
+  xrefs_to: NONE
+==============================================================================
+* FFF4AEB2  52                                    cmp     52h[r5], r2
+  FFF4AEB3  4F 00                                 mul     sp, sp
+  FFF4AEB5  53 43 41 4E 3D 25 64 0D               .string 'SCAN=%d',0Dh,0Ah,0
+  FFF4AEBF  4C 49 4E 4B 3D 30 0D 0A               .string 'LINK=0',0Dh,0Ah,0
+  FFF4AEC8  53 43 4F 4C 3D 31 0D 0A               .string 'SCOL=1',0Dh,0Ah,0
+  FFF4AED1  53 43 4F 4C 3D 30 0D 0A               .string 'SCOL=0',0Dh,0Ah,0
+  FFF4AEDA  54 58 41 54 3D 25 64 0D               .string 'TXAT=%d',0Dh,0Ah,0
+  FFF4AEE4  45 52 52 4F 52 0D 0A 00               .string 'ERROR',0Dh,0Ah,0
+  FFF4AEEC  48 45 4C 4C 25 63 0D 0A               .string 'HELL%c',0Dh,0Ah,0
+
+==============================================================================
+TARGET 0xFFED8E74  PLL REF
+  xrefs_to: NONE
+==============================================================================
+* FFED8E74  50 4C                                 and     [r4], r12
+  FFED8E76  4C 20                                 mul     [r2], sp
+  FFED8E78  52 45 46 00                           and     46h[r4], r5
+  FFED8E7C  00                                    brk
+  FFED8E7D  00                                    brk
+  FFED8E7E  00                                    brk
+  FFED8E7F  00                                    brk
+  FFED8E80  00                                    brk
+  FFED8E81  00                                    brk
+  FFED8E82  00                                    brk
+  FFED8E83  00                                    brk
+  FFED8E84  48 49                                 add     [r4], r9
+  FFED8E86  53 20                                 and     r2, sp
+  FFED8E88  53 51                                 and     r5, r1
+  FFED8E8A  4C 00                                 mul     [sp], sp
+  FFED8E8C  00                                    brk
+  FFED8E8D  00                                    brk
+  FFED8E8E  00                                    brk
+  FFED8E8F  00                                    brk
+  FFED8E90  00                                    brk
+  FFED8E91  00                                    brk
+  FFED8E92  00                                    brk
+  FFED8E93  00                                    brk
+  FFED8E94  54 48                                 or      [r4], r8
+  FFED8E96  4C 44                                 mul     [r4], r4
+  FFED8E98  20 53                                 beq.b   loc_FFED8EEA+1
+  FFED8E9A  51 4C 00                              and     [r4], r12
+  FFED8E9D  00                                    brk
+  FFED8E9E  00                                    brk
+  FFED8E9F  00                                    brk
+  FFED8EA0  00                                    brk
+  FFED8EA1  00                                    brk
+  FFED8EA2  00                                    brk
+  FFED8EA3  00                                    brk
+  FFED8EA4  54 49                                 or      [r4], r9
+  FFED8EA6  47 48                                 cmp     r4, r8
+  FFED8EA8  20 53                                 beq.b   loc_FFED8EFA+1
+  FFED8EAA  51 4C 00                              and     [r4], r12
+  FFED8EAD  00                                    brk
+  FFED8EAE  00                                    brk
+  FFED8EAF  00                                    brk
+  FFED8EB0  00                                    brk
+  FFED8EB1  00                                    brk
+  FFED8EB2  00                                    brk
+  FFED8EB3  00                                    brk
+
+==============================================================================
+TARGET 0xFFF483E8  PMTK313 GPS
+  xrefs_to: 0xFFED4288
+==============================================================================
+  FFF483CC  00                       [sub_FFF483C8] brk
+  FFF483CD  00                       [sub_FFF483C8] brk
+  FFF483CE  00                       [sub_FFF483C8] brk
+  FFF483CF  00                       [sub_FFF483C8] brk
+  FFF483D0  57 61                    [sub_FFF483C8] or      r6, r1
+  FFF483D2  69 74                    [sub_FFF483C8] shlr    #17h, r4
+  FFF483D4  69 6E                    [sub_FFF483C8] shlr    #16h, r14
+  FFF483D6  67 00                    [sub_FFF483C8] rtsd    #0
+  FFF483D8  41 64 6A                              sub     6Ah[r6], r4
+  FFF483DB  00                                    brk
+  FFF483DC  44 61                                 cmp     [r6], r1
+  FFF483DE  74 61 00                              int     #0
+  FFF483E1  4D 6F 64                              mul     64h[r6], r15
+  FFF483E4  65 00                                 or      #0, sp
+  FFF483E6  00                                    brk
+  FFF483E7  00                                    brk
+* FFF483E8  24 50                                 bgtu.b  loc_FFF48438
+  FFF483EA  4D 54 4B                              mul     4Bh[r5], r4
+  FFF483ED  33                                    .byte  33h ; 3
+  FFF483EE  31                                    .byte  31h ; 1
+  FFF483EF  33                                    .byte  33h ; 3
+  FFF483F0  2C 31                                 bo.b    loc_FFF48421
+  FFF483F2  00                                    brk
+  FFF483F3  24 50                                 bgtu.b  loc_FFF48443
+  FFF483F5  4D 54 4B                              mul     4Bh[r5], r4
+  FFF483F8  33                                    .byte  33h ; 3
+  FFF483F9  31                                    .byte  31h ; 1
+  FFF483FA  34                                    .byte  34h ; 4
+  FFF483FB  2C 30                                 bo.b    loc_FFF4842A+1
+  FFF483FD  2C 31                                 bo.b    loc_FFF4842D+1
+  FFF483FF  2C 31                                 bo.b    loc_FFF4842F+1
+  FFF48401  2C 31                                 bo.b    unk_FFF48432
+  FFF48403  2C 31                                 bo.b    sub_FFF48433+1
+  FFF48405  2C 31                                 bo.b    unk_FFF48436
+  FFF48407  2C 30                                 bo.b    loc_FFF48437
+  FFF48409  2C 30                                 bo.b    loc_FFF48439
+  FFF4840B  2C 30                                 bo.b    loc_FFF4843B
+  FFF4840D  2C 30                                 bo.b    loc_FFF4843B+2
+  FFF4840F  2C 30                                 bo.b    unk_FFF4843F
+  FFF48411  2C 30                                 bo.b    loc_FFF48441
+  FFF48413  2C 30                                 bo.b    loc_FFF48443
+  FFF48415  2C 30                                 bo.b    loc_FFF48444+1
+  FFF48417  2C 30                                 bo.b    loc_FFF48446+1
+  FFF48419  2C 30                                 bo.b    unk_FFF48449
+  FFF4841B  2C 30                                 bo.b    unk_FFF4844B
+  FFF4841D  2C 30                                 bo.b    loc_FFF4844C+1
+  FFF4841F  2C 30                                 bo.b    loc_FFF4844F
+  FFF48421  00                                    brk
+  FFF48422  24 50                                 bgtu.b  unk_FFF48472
+  FFF48424  4D 54 4B                              mul     4Bh[r5], r4
+  FFF48427  32                                    .byte  32h ; 2
+  FFF48428  32                                    .byte  32h ; 2
+  FFF48429  35                                    .byte  35h ; 5
+  FFF4842A  2C 30                                 bo.b    loc_FFF4845A
+  FFF4842C  00                                    brk
+  FFF4842D  24 50                                 bgtu.b  unk_FFF4847D
+  FFF4842F  4D 54 4B                              mul     4Bh[r5], r4
+  FFF48432  32                                    .byte  32h ; 2
+  FFF48433  38 36 2C                 [sub_FFF48433] bra.w   loc_FFF4B069
+  FFF48436  31                                    .byte  31h ; 1
+  FFF48437  00                                    brk
+  FFF48438  00                                    brk
+  FFF48439  24 50                                 bgtu.b  sub_FFF48487+2
+  FFF4843B  4D 54 4B                              mul     4Bh[r5], r4
+  FFF4843E  33                                    .byte  33h ; 3
+  FFF4843F  33                                    .byte  33h ; 3
+  FFF48440  30                                    .byte  30h ; 0
+  FFF48441  2C 30                                 bo.b    unk_FFF48471
+  FFF48443  00                                    brk
+  FFF48444  24 50                                 bgtu.b  unk_FFF48494
+  FFF48446  4D 54 4B                              mul     4Bh[r5], r4
+

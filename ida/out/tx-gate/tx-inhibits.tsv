@@ -1,0 +1,28 @@
+stage	addr	function	condition (bytes / test)	effect	label	evidence
+key	0x00FC90	sub_FC90	PTT FSM state 0 waits for 0xFFFF4E.b7=1	PTT held at power-on or after FSM reset is ignored until released	stuck-PTT guard	Confirmed
+key	0x00FAF6	sub_FAF6	mov.b @FF8004; cmp #2; bcc 0x00FAE6	FF8004>=2: PTT/side/aux key FSMs reset every pass, no 0x17	clone / remote-command mode	Confirmed (FF8004 meaning per docs 17/24)
+key	0x00FB0C	sub_FAF6	FF89BB!=0 && !FF8920.b0 && (0xFFFF50.b6 || BB93!=0) -> A9EA=0	PTT key FSM held reset while the 0xFFFF4E.b0 keyer is armed/active	alternate keyer (VOX, Inferred)	Confirmed bytes
+key	0x00FCF4	sub_FCF4	FF953D (=0/2/5/10/20 x10 ms from FF89B0) must expire with key still down	press shorter than PTT DELAY produces no TX	PTT DELAY	Confirmed bytes; label Inferred
+dispatch	0x0117C8	table mode 7	ev14 = 0x03FFA0	PTT does nothing on screen mode 7 (mode 6 -> sub_236F2, mode 9 -> sub_6D01C)	screen routing	Confirmed
+request	0x022482	sub_2244C	digital mode && !B0A4.b2 -> 0x022554	no TX; error tone 0x1D (AAE0)	DSP not initialised	Confirmed (B0A4.b2 per doc 52)
+request	0x022492	sub_2244C/sub_22562	FF89C1.b3 && FF89AB>=3	no TX, silent	PTT LOCK (lock types PTT/KEY&PTT/DIAL&PTT/ALL)	Confirmed; list mapping per doc 64
+request	0x02249A	sub_2244C	FF89BF.b4 && band field 0x90!=2	no TX; tone 0x1D	busy-channel lockout (BCLO, Inferred: 0x90==2 = squelch closed)	Confirmed bytes
+request	0x0224AC	sub_2244C	FF8EA6 !=0, >=0: b1 -> sub_2EAF2 memory check; b1 clear and band A operating -> 0x02254E	FF94C0=2 (refused) + tone 0x1D	operating-slot consistency (FF8EA6.b0 = slot B, doc 35)	Confirmed bytes; meaning Inferred
+request	0x022504	sub_2244C -> sub_34DC2 -> sub_34E42	TX frequency vs FF92CE/FF92D6	FF94C0=2 + tone 0x1D	TX frequency-range gate	NOT DECODED (out of scope by rule)
+request	0x0224E6	sub_2244C	FF8992==0x0A -> sub_34DC2 / sub_32FF4 / sub_33136	alternate request path	unknown mode (F328)	Confirmed bytes; meaning Unknown
+request	0x02267E	sub_22676	same PTT-lock / BCLO / range gates	event-14 handler of another screen (table slot 0x0146B8)	same gates	Confirmed
+fsm	0x03497C	sub_34966	FF956D!=0 -> return	TX held off 10-20 ms after the TX retune (sub_34838)	settle	Confirmed
+fsm	0x034984	sub_34966	0xFFFF4D.b3=1 and FF9568 (30-40 ms) expired -> sub_34FF4	TX aborted before keying	RF status line (lock-detect, Inferred)	Confirmed bytes
+fsm	0x03496A	sub_34966	FF8DDE<0 && (FF8DE0.b7 || B3D9.b2) -> skip settle and 0x4D.b3	host-keyed node TX bypasses the line check	node mode bypass	Confirmed
+fsm	0x034CCE	sub_34CCE	0xFFFF4D.b3=1 -> FF9568=4, state 3	TX hold condition lost	RF status line	Confirmed
+fsm	0x034D50	sub_34D42	b3 still 1 and FF9568==0 -> sub_34FF4	TX ended 30-40 ms after line loss	RF status line	Confirmed
+fsm	0x034D7E	sub_34D70	TX states 4/5: A9EA!=2 -> sub_227BC	TX ended when PTT key FSM not pressed	PTT level	Confirmed
+release	0x01199C	TX key table	ev15 = sub_22718 (also 0x011AF0/0x011B34/0x011B78)	PTT release ends TX (B0BB.b0 clear / AACF 7/8)	PTT release	Confirmed
+release	0x022AB4	sub_22AA4	FF89C0.b0 && A9EA!=2 -> sub_227BC	T-CALL side-key release ends TX unless PTT held	T-CALL	Confirmed bytes; label Inferred
+tot	0x034F24	sub_34F24	on AA30.b2 (TX start 0x034A08 analog / 0x03599A digital): FF89BA!=0 && !AA33.b0 -> FF95EA = FF89BA*30 (+10 if FF8DDE!=0)	TOT armed, 1 s tier	TOT (F393, default 6 = 180 s)	Confirmed
+tot	0x034F50	sub_34F50	FF95EA==10 and FF8DDE==0 -> AAE0=0x1B	warning tone 10 s before cut-off	TOT pre-alert	Confirmed
+tot	0x034F6E	sub_34F6E	FF95EA==0 -> analog: sub_34FF4; digital: sub_22718 + B3D9/AA01/8EB6 cleanup	TX forced off	TOT expiry	Confirmed
+tot	0x073B34	sub_73AFE	remote command '0' writes FF89BA=0	TOT disabled (persisted byte overwritten) in remote mode	TOT override	Confirmed
+tot	0x0102EC	sub_102A6	AA33.b0 set by power-on chord 0x7B handler (screen 0xDC)	TOT not armed	special/test screen	Confirmed bytes; screen meaning Unknown
+dsp	0x05A31E	sub_5A2F8	B0A4.b7 clear or B0A4.b3 set -> session not queued (nonzero return; caller failure path 0x0359E2, twin sets AAD5=0x14 at 0x035F62)	0x15 session refused while DSP link busy	DSP link ready	Confirmed for sub_5A2F8; sub_5A1BE/sub_5A28A not re-checked here
+battery	-	-	read sub_2244C, sub_22562, sub_22676, sub_34538 body, TX states 0-5 and 0x10 (0x0346FA/0x034966/0x034CCE/0x034D42/0x034D5C/0x034D66/0x035A04), sub_35872, sub_34EEE TOT FSM; other off_34674 states not read	no battery/ADC/temperature test on the PTT->TX path	-	Not found (scope: listed routines only)

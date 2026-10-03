@@ -1,0 +1,12 @@
+addr	band	family	installed_by	prescaler	compare_constants	notes
+0x00171C	A	tone period (fixed window)	sub_2FAEC@0x2FB4E state6	phi/1 (TCR0=0x00)	window [0x398C,0x3D84]; integ 150/300	latches 8F88=1,8F87=2 on 150 in-window periods
+0x001784	A	tone period (fixed window)	sub_2FAEC@0x2FB0A state7	phi/1 (TCR0=0x00)	window [0x1882,0x1F90]; integ 122/200	sets 8F88=2 in-window, 8F88=1 on timeout
+0x00181A	A	tone period (programmable window)	sub_2FAEC@0x2FB26 state8	phi/4 (TCR0=0x01)	window 8F8C..8F8A from tbl 0x1880 via sub_17DA	per-mode window, optional /2 on FFFF89BE.4
+0x001F54	B	tone period (fixed window)	sub_31594@0x315B2 state7	phi/1	[0x1882,0x1F90]; 122/200	twin of 0x1784; RAM block +0x100 (908F/9090/9084/9086)
+0x001FEA	B	tone period	sub_31594@0x315CE state8	phi/4	via sub_1FAA/tbl	twin of 0x181A
+0x001EEC	B	tone period (fixed window)	sub_31594@0x315F6 state6	phi/1	[0x398C,0x3D84]; 150/300	twin of 0x171C
+0x001114	A	DCS Golay decoder (normal)	sub_10C0 via ptrtbl 0x1108[0]	TGIA-sampled 537.6Hz (TGRA0=0x7440, phi/1)	24-pos frame; validity tbl 0x128C	24-bit shift reg @FF8FDC; sets lock 8F86.0, reload 8F98<-8F80
+0x0012AC	A	DCS Golay decoder (bit4/alt)	ptrtbl 0x1108[1]	as above	validity tbl 0x128C	variant using recovered-data bit 4
+0x001424	A	DCS Golay decoder (variant3)	ptrtbl 0x1108[2]	as above	-	third polarity/band variant
+0x0004AA	A	idle stub	sub_DBD8@0xDC12	-	-	andc #0x7F,ccr; no decode (decoder off)
+0x000E5E	B	idle stub	sub_DBD8@0xDC1E	-	-	band-B idle

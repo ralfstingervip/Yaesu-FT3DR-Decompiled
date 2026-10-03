@@ -1,0 +1,53 @@
+
+;---- func 0x5ed18..0x5edb4
+05ed18  6a 0c b2 58              mov.b   @0xFFFFB258:16, r4l                  <- 2c1c
+05ed1c  47 36                    beq     loc_5ED54:8                          
+05ed1e  ac 02                    cmp.b   #2, r4l                              
+05ed20  47 1a                    beq     loc_5ED3C:8                          
+05ed22  6a 0b b2 5f              mov.b   @0xFFFFB25F:16, r3l                  
+05ed26  7a 63 00 00 00 ff        and.l   #0xFF, er3                           
+05ed2c  10 73                    shll.l  #2, er3                              
+05ed2e  78 b0 6b 26 00 05 ed b4  mov.l   @(off_5EDB4:32,er3), er6             
+05ed36  5d 60                    jsr     @er6                                 
+05ed38  58 00 00 76              bra     locret_5EDB2:16                      
+05ed3c  6a 0b b2 63              mov.b   @0xFFFFB263:16, r3l                  <- 5ed20
+05ed40  7a 63 00 00 00 ff        and.l   #0xFF, er3                           
+05ed46  10 73                    shll.l  #2, er3                              
+05ed48  78 b0 6b 26 00 05 ed e4  mov.l   @(off_5EDE4:32,er3), er6             
+05ed50  5d 60                    jsr     @er6                                 
+05ed52  40 5e                    bra     locret_5EDB2:8                       
+05ed54  6a 0b b2 5f              mov.b   @0xFFFFB25F:16, r3l                  <- 5ed1c
+05ed58  7a 63 00 00 00 ff        and.l   #0xFF, er3                           
+05ed5e  10 73                    shll.l  #2, er3                              
+05ed60  78 b0 6b 26 00 05 ed b4  mov.l   @(off_5EDB4:32,er3), er6             
+05ed68  5d 60                    jsr     @er6                                 
+05ed6a  6a 0c b2 58              mov.b   @0xFFFFB258:16, r4l                  
+05ed6e  ac 01                    cmp.b   #1, r4l                              
+05ed70  47 40                    beq     locret_5EDB2:8                       
+05ed72  6a 0b b2 63              mov.b   @0xFFFFB263:16, r3l                  
+05ed76  7a 63 00 00 00 ff        and.l   #0xFF, er3                           
+05ed7c  10 73                    shll.l  #2, er3                              
+05ed7e  78 b0 6b 26 00 05 ed e4  mov.l   @(off_5EDE4:32,er3), er6             
+05ed86  5d 60                    jsr     @er6                                 
+05ed88  6a 0c b2 58              mov.b   @0xFFFFB258:16, r4l                  
+05ed8c  ac 02                    cmp.b   #2, r4l                              
+05ed8e  47 22                    beq     locret_5EDB2:8                       
+05ed90  6a 0c b2 a5              mov.b   @0xFFFFB2A5:16, r4l                  
+05ed94  46 1c                    bne     locret_5EDB2:8                       
+05ed96  6a 0c 94 c0              mov.b   @0xFFFF94C0:16, r4l                  
+05ed9a  ac 01                    cmp.b   #1, r4l                              
+05ed9c  47 14                    beq     locret_5EDB2:8                       
+05ed9e  6a 0c b3 fa              mov.b   @0xFFFFB3FA:16, r4l                  
+05eda2  47 0a                    beq     loc_5EDAE:8                          
+05eda4  f4 00                    mov.b   #0, r4h                              
+05eda6  6a 84 b3 fa              mov.b   r4h, @0xFFFFB3FA:16                  
+05edaa  5e 06 83 04              jsr     sub_68304:24                         
+05edae  5e 06 82 42              jsr     sub_68242:24                         <- 5eda2
+05edb2  54 70                    rts                                          <- 5ed38,5ed52,5ed70,5ed8e,5ed94,5ed9c
+05edb4  00 05 ef 00              .long sub_5EF00                              <- 5ed2e,5ed60
+05edb8  00 05 ef 2c              .long sub_5EF2C                              
+05edbc  00 05 ef 74              .long sub_5EF74                              
+05edc0  00 05 ef f4              .long sub_5EFF4                              
+05edc4  00 05 f0 36              .long sub_5F036                              
+05edc8  00 05 f0 dc              .long sub_5F0DC                              
+05edcc  00 05 f1 2a              .long sub_5F12A                              

@@ -1,0 +1,55 @@
+metric	value	source	note
+A_fnindex_validated_iscode	249098	ida/out/fnindex/l1_counts.txt + w2_1_counts.txt + w2_2_counts.txt	100,766 + 80,850 + 67,482 (published)
+A_check_items_before_mask	249070	fnindex/*.tsv validated=yes x h8s-decode/work/items_before.tsv is_code	re-sum -28 vs published (MAIN_FULL dump differs from the fnindex DB by 44 B is_code)
+B_typed_runs	222192	ida/out/wave2/main-raw-types.tsv type!=other	
+C_doublecount_published	-28	doc 33 (sub_1A25A 6, sub_1A432 4, sub_63C04 18)	mask check A_mask & B_mask = 0: those 28 B are not is_code in MAIN_FULL, so A_mask = published A - 28
+D_F1_proved_extents	19848	ida/out/main-indirect/proved.tsv sum(end-start)	
+E_F2_newly_typed	983	ida/out/main-raw-other/split.tsv old=other -> code / parameter table*	
+F_G1_new_uncredited	794	h8s-decode/work/items_{before,after}.tsv + absorb_plan.json (cov.py rules)	doc 36: 794
+G_SUB_window_validated_iscode	438300	ida/out/sub-window/coverage.txt (297,232 + 141,068)	unchanged by G/H
+headline_numerator_published	931187	A+B+C+D+E+F+G	931,187 = 90.41%
+MAIN_union_bytes_precorrection	492887	union A|B|D|E|F masks	additive MAIN (A..F) = 492887; difference = overlaps + A re-sum delta
+overlap_A_x_B	0	byte intersection	
+overlap_A_x_D	0	byte intersection	
+overlap_A_x_E	0	byte intersection	
+overlap_A_x_F	0	byte intersection	
+overlap_B_x_D	0	byte intersection	
+overlap_B_x_E	0	byte intersection	
+overlap_B_x_F	0	byte intersection	
+overlap_D_x_E	0	byte intersection	
+overlap_D_x_F	0	byte intersection	
+overlap_E_x_F	0	byte intersection	
+H1_A_removed_fnindex_spans	-470	recount/fnindex-corrections.tsv is_code_in_A	30 spans
+H1_retyped_credited_fnindex_spans	408	recount/fnindex-corrections.tsv credited_bytes	string / parameter table, bytes not already credited
+H1_removed_not_credited	62	recount/fnindex-corrections.tsv new_type=data	type not established
+H1_D_removed_F1_text	-114	recount/proved-corrected.tsv text_bytes	G1 76 + H1 38
+H1_retyped_F1_text_as_string	114	recount/proved-corrected.tsv text_bytes	credited as typed string
+H1_odd_heads_in_recovered_code_ascii	120	recount/odd-heads.tsv	retyped string; stays in numerator
+H1_odd_heads_in_recovered_code_untyped	-117	recount/odd-heads.tsv	data, type not established; leaves numerator
+headline_numerator_H1	931008	published + H1 rows	
+headline_denominator	1029972	505,684 MAIN content + 524,288 SUB window	unchanged
+headline_pct_H1	90.3916		published 90.4090
+MAIN_named_or_typed_published	492887	A+B+C+D+E+F	97.47% of 505,684
+MAIN_named_or_typed_H1	492708		97.43% of 505,684
+MAIN_proven_published	376290	249,098 A + 100,125 recovered-code runs + 19,848 D + 7,219 G1 tier A	doc 36
+MAIN_proven_check_RC_bytes	100125	main-raw-types.tsv type=recovered code	
+MAIN_proven_check_G1_tierA	7219	replicated tier-A new bytes outside D	doc 36: 7,219
+MAIN_proven_H1	375469	minus fnindex spans, F1 text, odd-head data in recovered-code runs	-821
+DEC_MAIN_FULL_published	380782	ida/out/main-raw/l5_counts.txt instruction_bytes_content	items_before dump = 380738
+DEC_odd_heads_MAIN_FULL	1501 heads / 3102 B	recount/odd-heads.tsv	581 B sit on real even code, 2521 B are data
+DEC_fnindex_spans_iscode_MAIN_FULL	470	recount/fnindex-corrections.tsv x items_before	
+DEC_F1_text_iscode_MAIN_FULL	114	proved-delta.tsv text x items_before	
+DEC_MAIN_FULL_corrected	377677	380,782 - odd data - fnindex spans - F1 text	pre-G1 basis
+DEC_G1_published	391458	ida/out/h8s-decode/coverage.txt (380,782 + 10,701 - 25)	items_after dump = 391452
+DEC_odd_heads_G1_H8S	1466 heads / 3032 B	recount/odd-heads.tsv still_in_G1_H8S=yes	529 B on real even code, 2503 B data
+DEC_fnindex_spans_iscode_G1_H8S	470	fnindex-corrections.tsv x items_after	
+DEC_F1_text_iscode_G1_H8S	108	proved-delta.tsv text x items_after	G1 left all but 6 B of this text as IDA code (items_after: data only at 0x04DE6C, 0x04DF70)
+DEC_G1_corrected	388377	391,458 - odd data - fnindex spans - F1 text	current basis
+DEC_IDA_H1_RECOUNT_is_code	388484	recount/work/items_h1.tsv (H1_RECOUNT after edits; h1_ida.txt)	G1_H8S dump 391,452
+DEC_IDA_true_even_insn_bytes_on_old_odd_heads	527	items_h1 code x items_after odd heads	arithmetic estimate 529
+DEC_IDA_true_even_insn_bytes_not_code_before	115	items_h1 code minus items_after code	real instruction bytes IDA had left undecoded between odd heads
+DEC_corrected_final	388490	391,458 - 3032 odd-head B + 527 + 115 - 578 H1 data spans	= IDA 388484 + 6 (published 391,458 vs dump 391,452)
+MAIN_proven_pct_of_decodable_published	96.13	376,290 / 391,458	
+MAIN_proven_pct_of_decodable_H1	96.65	375469 / 388490	
+MAIN_proven_pct_of_content_H1	74.25	375469 / 505,684	published 74.41
+D_H1_proved_corrected_sum	19734	recount/proved-corrected.tsv sum(bytes)	

@@ -1,0 +1,28 @@
+
+;---- func 0x56c68..0x56cb4
+056c68  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  <- 2f308
+056c6c  47 02                    beq     loc_56C70:8                          
+056c6e  4a 08                    bpl     loc_56C78:8                          
+056c70  6a 0c b2 a5              mov.b   @0xFFFFB2A5:16, r4l                  <- 56c6c
+056c74  ac 02                    cmp.b   #2, r4l                              
+056c76  46 1c                    bne     loc_56C94:8                          
+056c78  6a 0c b1 2f              mov.b   @0xFFFFB12F:16, r4l                  <- 56c6e
+056c7c  46 0c                    bne     loc_56C8A:8                          
+056c7e  fc 00                    mov.b   #0, r4l                              
+056c80  6a 04 8d 24              mov.b   @0xFFFF8D24:16, r4h                  
+056c84  47 0c                    beq     loc_56C92:8                          
+056c86  fc 01                    mov.b   #1, r4l                              
+056c88  40 08                    bra     loc_56C92:8                          
+056c8a  6a 0c b1 30              mov.b   @0xFFFFB130:16, r4l                  <- 56c7c
+056c8e  6a 04 b1 31              mov.b   @0xFFFFB131:16, r4h                  
+056c92  40 1e                    bra     locret_56CB2:8                       <- 56c84,56c88
+056c94  6a 18 b0 d6 72 00        bclr    #0, @0xFFFFB0D6:16                   <- 56c76
+056c9a  fc 00                    mov.b   #0, r4l                              
+056c9c  6a 10 b0 d6 73 00        btst    #0, @0xFFFFB0D6:16                   
+056ca2  47 06                    beq     loc_56CAA:8                          
+056ca4  6a 04 8e d8              mov.b   @0xFFFF8ED8:16, r4h                  
+056ca8  40 04                    bra     loc_56CAE:8                          
+056caa  6a 04 8e d6              mov.b   @0xFFFF8ED6:16, r4h                  <- 56ca2
+056cae  47 02                    beq     locret_56CB2:8                       <- 56ca8
+056cb0  fc 01                    mov.b   #1, r4l                              
+056cb2  54 70                    rts                                          <- 56c92,56cae

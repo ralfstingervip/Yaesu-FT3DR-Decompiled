@@ -1,0 +1,54 @@
+# M11. Every path that can write FF910A-FF910D (= record FF90F0 +0x1A..+0x1D, the BCD frequency dword, 10 Hz units).
+# Scope: IDA code heads 0..0x80000 (window 0x078106-0x07B753 skipped) in M11_SMALL (copy of L1_MAIN_FINAL5) + raw byte scan of MAIN 0..0x80000.
+kind	addr	function	instruction	targets_FF910A_when	status
+abs16/abs32	-	-	none: raw '91 0a' only at 0x014982/0x01499E (the two guard reads); '91 0d' 0; '00 ff 91 0a' 0	never	Confirmed (Not found, scope above)
+base+disp	0x03FBBA	sub_3FB0C (unpack)	mov.l er4,@(8:16,er6)	er6=0xFF9102 (0x03FB32), i.e. packed +0x1F b7 set (record belongs to FF90F0)	Confirmed
+base+disp	0x00EB04	sub_EAD2 (default builder)	mov.l er1,@(0x1A:16,er0)	er0=0xFF90F0 via sub_E99E (0x00DFF8/0x00E030); values 0x00054000, F042[mkt]=0x09575000, F022[mkt]=0x07600000/0x08800000	Confirmed
+block	0x039888	sub_3983E (EEPROM restore)	sub_3AB80 EEPROM 0x980 len 0x80 -> FF90F0	EEPROM 0x99A-0x99D -> FF910A-FF910D	Confirmed
+block	0x0398D2	sub_3983E (EEPROM restore, mismatch path)	sub_3AB80 EEPROM 0x980 len 0x80 -> FF90F0	same	Confirmed
+record+0x1A	0x01DC34	sub_1DBC8@1DBC8	mov.b r4l, @(0x1C:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01DCF2	sub_1DCA6@1DCA6	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01DD2E	sub_1DCA6@1DCA6	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01DD78	sub_1DCA6@1DCA6	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01DEBE	sub_1DE50@1DE50	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01E01A	sub_1DF7A@1DF7A	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01E04E	sub_1DF7A@1DF7A	mov.l er6, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01E0B8	sub_1E094@1E094	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01E18E	sub_1E110@1E110	mov.w r4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01E1D4	-	mov.l er6, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01E2B8	sub_1E260@1E260	mov.l er5, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01E2FC	sub_1E260@1E260	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01E37A	sub_1E30A@1E30A	mov.w r4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x01E4F6	sub_1E4EC@1E4EC	mov.w r5, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x023276	sub_231F2@231F2	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x025134	sub_2511E@2511E	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x025154	sub_2511E@2511E	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x02516E	sub_2511E@2511E	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x025180	sub_2511E@2511E	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x025A14	sub_259B2@259B2	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x025A4C	sub_259B2@259B2	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x025E14	sub_25D72@25D72	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x025E5C	sub_25D72@25D72	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x02EA54	sub_2EA3E@2EA3E	mov.l er4, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x03D248	sub_3D022@3D022	mov.l er4, @(0x1A:16,er1)	er1 record pointer (sub_3D022 loads er0=FF90F0 at 0x03D30E); target depends on er1	Inferred
+record+0x1A	0x03FC06	sub_3FB0C@3FB0C	mov.l er4, @(0x1A:16,er6)	er6+0x1A = FF911C when er6=FF9102 (+0x2C of FF90F0), not FF910A	Confirmed (not a writer)
+record+0x1A	0x03FDFE	sub_3FD48@3FD48	mov.b r4h, @(0x1A:16,er5)	writes packed buffer FFAC76 (er5/er2), not FF90F0	Confirmed (not a writer)
+record+0x1A	0x03FE06	sub_3FD48@3FD48	mov.b r4l, @(0x1B:16,er5)	writes packed buffer FFAC76 (er5/er2), not FF90F0	Confirmed (not a writer)
+record+0x1A	0x03FE0E	sub_3FD48@3FD48	mov.b r4l, @(0x1C:16,er5)	writes packed buffer FFAC76 (er5/er2), not FF90F0	Confirmed (not a writer)
+record+0x1A	0x03FE24	sub_3FD48@3FD48	mov.b r4l, @(0x1D:16,er5)	writes packed buffer FFAC76 (er5/er2), not FF90F0	Confirmed (not a writer)
+record+0x1A	0x04A502	sub_4A4D0@4A4D0	mov.b r4l, @(0x1B:16,er5)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x04A62A	sub_4A5C8@4A5C8	mov.b r4l, @(0x1A:16,er3)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x0506C8	sub_5066E@5066E	mov.b r6l, @(0x1A:16,er3)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x050770	sub_50748@50748	mov.b r4l, @(0x1B:16,er3)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x054774	sub_5469C@5469C	mov.b r4l, @(0x1B:16,er3)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x0547A0	sub_5469C@5469C	mov.b r4l, @(0x1B:16,er3)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x05498C	sub_548BE@548BE	mov.b r4l, @(0x1A:16,er3)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x054A0A	sub_548BE@548BE	mov.b r4l, @(0x1A:16,er3)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x054B7E	sub_54AE2@54AE2	mov.b r4l, @(0x1A:16,er3)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x054BC6	sub_54AE2@54AE2	mov.b r4l, @(0x1A:16,er3)	er3/er5-based buffer (non-record structure)	Inferred (not a writer)
+record+0x1A	0x07511E	sub_75114@75114	mov.l er1, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x0751F4	sub_75160@75160	mov.l er1, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x075296	sub_75160@75160	mov.l er1, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x075338	sub_75160@75160	mov.l er1, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x0753DA	sub_753D4@753D4	mov.l er1, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred
+record+0x1A	0x07547C	sub_753D4@753D4	mov.l er1, @(0x1A:16,er0)	er0 = record pointer; FF90F0 when it is the active (broadcast) record ([FF812A] or FF90F0 per 8EA6.b0, 0x03A622)	Inferred

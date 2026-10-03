@@ -1,0 +1,41 @@
+# H1: fnindex-validated MAIN functions whose span [span_start,span_end) is not code. Applied to the recount (A addend).
+# Bytes read from decrypted/FT3D_MAIN_ver102_EXP.bin (base 0, file offset = address). credited_bytes = bytes re-credited under new_type (0 when the type is not established).
+span_start	span_end	fn_start	fn_end	bytes	is_code_in_A	new_type	credited_bytes	found_by	evidence	first_bytes
+00C448	00C456	00C448	00C456	14	14	parameter table	14	task	junk sub_C448: 02 02 02 02 02 22 74 00 6c 69 5a 49 5c 62 fills the hole between lane5 byte-table runs 0x00C06A-0x00C448 and 0x00C456-0x00C636 (same alphabet); its 'jmp @0x495C62' leaves the 16 MB space; only xref from 0x00C3F8 inside that table	02020202022274006c695a495c62
+00C636	00C63A	00C636	00C63A	4	4	parameter table	4	H1	5a de 01 01 between lane5 byte-table runs ending 0x00C636 and starting 0x00C63A	5ade0101
+004C14	004C2A	004C14	004C2A	22	22	string	22	H1	20 spaces + FF 00 after rts at 0x004C12	20202020202020202020202020202020
+011038	011050	011038	011050	24	24	data, type not established (not credited)	0	H1	24 B of byte pairs 72 06 26 07 25 07 42 07 ... e7 08 after rts at 0x011036	720626072507420745077007dd08e108
+0232C6	0232EA	0232C6	0232EA	36	36	data, type not established (not credited)	0	H1	nine 4-byte records 44 00 00 00 / 05 21 00 00 / 14 51 00 00 ... after rts at 0x0232C4	44000000052100001451000022210000
+0261F0	0261FA	0261F0	0262E0	10	10	string	10	H1	'0000.00000' after rts at 0x0261EE; code resumes at 0x0261FA	303030302e3030303030
+037A00	037A02	037A00	037A02	2	2	data, type not established (not credited)	0	H1	44 71 inside a big-endian float32 table (43 89 00 00, 43 95 00 00, 44 58 00 00, 44 71 00 00, 45 34 00 00 ...)	4471
+048B80	048B84	048B80	048B86	4	4	string	4	H1	'LON ' continues w2-8 string 0x048B7B '.LAT '; 54 70 (rts) at 0x048B84 left as is	4c4f4e20
+04CAB6	04CAB8	04CAB6	04CAB8	2	2	string	2	H1	'[ ' opening '[ STATUS TEXT ]'	5b20
+04D9D4	04D9D6	04D9D4	04D9D6	2	2	string	2	H1	'[ ' opening '[ COMMENT TEXT ]'	5b20
+04F054	04F056	04F054	04F056	2	2	string	2	H1	'[ ' opening '[ DATA TEXT ]'	5b20
+04F96A	04F9A4	04F96A	04F9A4	58	58	string	58	H1	dot/space display masks with FF 00 terminators	2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e
+04FDEE	04FDF2	04FDEE	04FDF2	4	4	string	4	H1	': [3' inside '[1: [2: [3: ... [8: '	3a205b33
+04FDF4	04FDF6	04FDF4	04FDF6	2	2	string	2	H1	'[4' same string	5b34
+04FDF8	04FDFA	04FDF8	04FDFA	2	2	string	2	H1	'[5' same string	5b35
+04FE00	04FE02	04FE00	04FE02	2	2	string	2	H1	'[7' same string	5b37
+051054	051094	051054	051094	64	64	string	64	H1	'    -1  -2 ... -15 ' 4-char field table	202020202d3120202d3220202d332020
+0510DA	0510E2	0510DA	0510E2	8	8	string	8	H1	':ack:rej'	3a61636b3a72656a
+0511D2	05120E	0511D2	05120E	60	60	string	60	H1	NUL-terminated 3-char strings 'PPP','PP0',...,'AAA',...,'000'	50505000505030005030500050303000
+0516C6	0516C8	0516C6	0516C8	2	2	string	2	H1	'[ ' opening '[   RAW DATA  ]'	5b20
+0526FC	052704	0526FC	052704	8	8	string	8	H1	'....    '	2e2e2e2e20202020
+052704	05270A	052704	05270A	6	6	string	6	H1	'    ' + FF 00 (same string)	20202020ff00
+059C14	059C28	059C14	059C28	20	20	string	20	H1	20 spaces	20202020202020202020202020202020
+05E08A	05E0C0	05E08A	05E0C0	54	54	string	54	H1	'000102...26' two-digit table	30303031303230333034303530363037
+066AF6	066B06	066AF6	066B2C	16	16	string	16	H1	16 x '-'; code resumes at 0x066B06 (entry of table 0x0669E0)	2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d
+06A976	06A97A	06A976	06A9E6	4	4	string	4	H1	'.jpg'; code resumes at 0x06A97A	2e6a7067
+06AB5C	06AB68	06AB5C	06AB68	12	12	string	12	H1	'NEW       ' + FF 00	4e455720202020202020ff00
+06BE28	06BE34	06BE28	06BE34	12	12	string	12	H1	'USA JPN EXP ' (its 'bsr .+83' at 0x06BE28 targets odd 0x06BE7D)	555341204a504e2045585020
+06E05E	06E062	06E05E	06E0D8	4	4	string	4	H1	'****'; code resumes at 0x06E062	2a2a2a2a
+073B62	073B6C	073B62	073BB4	10	10	string	10	H1	10 spaces; code resumes at 0x073B6C	20202020202020202020
+# NOT applied (Unknown), listed for a later pass:
+# 022E3A	022E62	fnindex	40 B	decodes as code (bsr/bne/mov.b/jsr @0x3FFA0/rts); no proven flow reaches it; ASCII-looking start is coincidence	553a46226a1089be7300470e6a0cac24
+# 02D704	02D708	fnindex	4 B	27 29 2a 29 = mov.b @0x29:8,r7h / mov.b @0x29:8,r2l before table entry 0x02D708; may be fall-through	27292a29
+# 02D7FE	02D802	fnindex	4 B	20 22 23 22, same shape	20222322
+# 02E2D8	02E2DC	fnindex	4 B	27 29 2a 29, same shape	27292a29
+# 02E3D2	02E3D6	fnindex	4 B	20 22 23 22, same shape	20222322
+# 03400E	034012	fnindex	4 B	27 29 2a 29, same shape	27292a29
+# 034F22	034F24	F1	2 B	4f 6e (ble) 2 B before table entry 0x034F24	4f6e

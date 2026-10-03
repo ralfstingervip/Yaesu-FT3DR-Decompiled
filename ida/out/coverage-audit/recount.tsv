@@ -1,0 +1,31 @@
+metric	claimed	recomputed	delta	source_file
+denom_main_content_bytes	505684	505684	0	ida/out/main-raw/l5_counts.txt (content_bytes); = 0x7B754, reconciles l1+w2_1+w2_2 content ranges
+denom_sub_window_bytes	524288	524288	0	ida/out/sub-window/coverage.txt (FFF50000-FFED0000 = 0x80000)
+denom_total_bytes	1029972	1029972	0	505684 + 524288
+main_fn_count	3264	3264	0	fnindex main-low.tsv(1547)+main-high-a.tsv(899)+main-high-b.tsv(818) validated=yes
+main_fn_bytes_iscode	249098	249098	0	fnindex l1_counts(100766)+w2_1_counts(80850)+w2_2_counts(67482)
+main_fn_bytes_extent	249098	249840	742	fnindex *.tsv sum(end-start); +742 B = embedded non-code inside fn extents (is_code excludes)
+main_typed_runs_bytes	222192	222192	0	wave2/main-raw-types.tsv sum(size) where type!=other
+main_runs_other_bytes	4020	4020	0	wave2/main-raw-types.tsv sum(size) where type==other
+main_runs_total_bytes	226212	226212	0	wave2/main-raw-types.tsv sum(size) all rows
+main_numerator_bytes	471290	471290	0	249098 + 222192 (is_code basis)
+main_doublecount_fn_vs_runs_bytes	0	28	28	fnindex ranges INTERSECT main-raw-types typed runs (sub_1A25A 6 + sub_1A432 4 + sub_63C04 18)
+sub_fn_count	3850	3850	0	sub-window/functions.tsv validated in {xref(1602),body(2248)}
+sub_fn_bytes_iscode	438300	438300	0	sub-window/coverage.txt (xref 297232 + body 141068)
+sub_fn_bytes_extent	438300	438439	139	sub-window/functions.tsv sum(end-start); +139 B embedded non-code inside fn extents
+sub_fn_outside_window_count	0	0	0	sub-window/functions.tsv: 0 validated funcs touch bytes outside FFED0000-FFF50000
+sub_layout_bytes	41263	41263	0	sub-layout/segments.tsv sum(len), 193 segments
+sub_layout_in_window_bytes	41263	0	-41263	sub-layout/segments.tsv: 0 of 41263 B at/above FFED0000
+sub_layout_below_window_bytes	0	41263	41263	sub-layout/segments.tsv: all 193 segs in FFEB74D8-FFECE51C (below window)
+sub_doublecount_fn_vs_layout_bytes	0	0	0	sub-window/functions.tsv INTERSECT sub-layout/segments.tsv = 0 (disjoint regions)
+sub_numerator_bytes	479563	479563	0	438300 + 41263
+grand_numerator_bytes	950853	950853	0	471290 + 479563
+headline_pct	92.3	92.32	0.0	950853 / 1029972
+headline_pct_corrected_drop_oow_layout	92.3	88.31	-4.0	(950853-41263) / 1029972 = 909590/1029972
+companion_main_instr_pct	75.3	75.3	0.0	380782 / 505684 (380782 from l5_counts.txt is_code recount; not independently re-run in IDA)
+companion_sub_window_pct	83.6	83.6	0.0	438300 / 524288
+companion_sub_proveddata_excl_pct	93.0	93.0	0.0	438300 / 471440
+sub_proved_data_bytes	52848	52848	0	coverage.txt: 16236+6292+12912+1024+16384
+sub_denom_excl_bytes	471440	471440	0	524288 - 52848
+sub_head_only_bytes	154162	154162	0	sub-window/coverage.txt (prior head-only count)
+head_vs_item_correction_bytes	284138	284138	0	438300 - 154162 (internally consistent with RESUME-FULL caveat)

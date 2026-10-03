@@ -1,0 +1,203 @@
+Routines in the SUB image that touch MSTPCRA-D (00080010-0008001F) and PRCR (000803FE).
+r14/r1 is loaded with 00080010, so 4[r14] = MSTPCRB, 8[r14] = MSTPCRC, 0Ch[r14] = MSTPCRD, 3EEh[r14] = PRCR.
+Handed to SUB-USB: the USB0 module-stop bit lives in MSTPCRB.
+
+=== FFEE1393 ===
+FFEE1393  fbee100008       mov.l   #80010h, r14
+FFEE1398  fae9f70102a5     mov.w   #-5AFEh, 3EEh[r14]
+FFEE139E  fbee100008       mov.l   #80010h, r14
+FFEE13A3  ecef             mov.l   [r14], r15
+FFEE13A5  7b0f             bclr    #10h, r15
+FFEE13A7  e3ef             mov.l   r15, [r14]
+FFEE13A9  fbee100008       mov.l   #80010h, r14
+FFEE13AE  fae9f70100a5     mov.w   #-5B00h, 3EEh[r14]
+FFEE13B4  fbee60c008       mov.l   #8C060h, r14
+FFEE13B9  f0e8             bclr    #0, [r14].b
+FFEE13BB  fbee60c008       mov.l   #8C060h, r14
+FFEE13C0  f0e9             bclr    #1, [r14].b
+FFEE13C2  fbee1fc108       mov.l   #8C11Fh, r14
+FFEE13C7  f0ef             bclr    #7, [r14].b
+FFEE13C9  fbee1fc108       mov.l   #8C11Fh, r14
+FFEE13CE  f0e6             bset    #6, [r14].b
+FFEE13D0  fbee1fc108       mov.l   #8C11Fh, r14
+FFEE13D5  f1e721           bset    #7, 21h[r14].b
+FFEE13D8  fbee1fc108       mov.l   #8C11Fh, r14
+FFEE13DD  f1e722           bset    #7, 22h[r14].b
+FFEE13E0  fbee1fc108       mov.l   #8C11Fh, r14
+FFEE13E5  f0ee             bclr    #6, [r14].b
+FFEE13E7  fbee1fc108       mov.l   #8C11Fh, r14
+FFEE13EC  f0e7             bset    #7, [r14].b
+FFEE13EE  fbee009108       mov.l   #89100h, r14
+FFEE13F3  f8e500           mov.w   #0, [r14]
+FFEE13F6  fb1e009108       mov.l   #89100h, r1
+FFEE13FB  3d1200           mov.w   #0, 4[r1]
+FFEE13FE  fb1e009108       mov.l   #89100h, r1
+
+=== FFF15055 ===
+FFF15055  fbee100008       mov.l   #80010h, r14
+FFF1505A  ecef             mov.l   [r14], r15
+FFF1505C  7b3f             bclr    #13h, r15
+FFF1505E  e3ef             mov.l   r15, [r14]
+FFF15060  fbee458008       mov.l   #88045h, r14
+FFF15065  f8e400           mov.b   #0, [r14]
+FFF15068  fb1e458008       mov.l   #88045h, r1
+FFF1506D  3c1100           mov.b   #0, 1[r1]
+FFF15070  fbee00c008       mov.l   #8C000h, r14
+FFF15075  f1eb60           bclr    #3, 60h[r14].b
+FFF15078  fbee00c008       mov.l   #8C000h, r14
+FFF1507D  f0eb             bclr    #3, [r14].b
+FFF1507F  fbee43c108       mov.l   #8C143h, r14
+FFF15084  f0e7             bset    #7, [r14].b
+FFF15086  02               rts
+FFF15087  fbee867008       mov.l   #87086h, r14
+FFF1508C  f2e29401         bset    #2, 194h[r14].b
+FFF15090  fbee801a0c       mov.l   #0C1A80h, r14
+FFF15095  f0e6             bset    #6, [r14].b
+FFF15097  fbee009008       mov.l   #89000h, r14
+FFF1509C  5cef             movu.w  [r14], r15
+FFF1509E  762fff7f         and     #7FFFh, r15
+
+=== FFF36CCA ===
+FFF36CCA  6040             sub     #4, sp
+FFF36CCC  fbee100008       mov.l   #80010h, r14
+FFF36CD1  fae9f7010ba5     mov.w   #-5AF5h, 3EEh[r14]
+FFF36CD7  fbee100008       mov.l   #80010h, r14
+FFF36CDC  ecef             mov.l   [r14], r15
+FFF36CDE  7adf             bclr    #0Dh, r15
+FFF36CE0  e3ef             mov.l   r15, [r14]
+FFF36CE2  fbee100008       mov.l   #80010h, r14
+FFF36CE7  ecef             mov.l   [r14], r15
+FFF36CE9  7adf             bclr    #0Dh, r15
+FFF36CEB  e3ef             mov.l   r15, [r14]
+FFF36CED  fbee100008       mov.l   #80010h, r14
+FFF36CF2  ecef             mov.l   [r14], r15
+FFF36CF4  7adf             bclr    #0Dh, r15
+FFF36CF6  e3ef             mov.l   r15, [r14]
+FFF36CF8  fbee100008       mov.l   #80010h, r14
+FFF36CFD  ecef             mov.l   [r14], r15
+FFF36CFF  7b3f             bclr    #13h, r15
+FFF36D01  e3ef             mov.l   r15, [r14]
+FFF36D03  fbee100008       mov.l   #80010h, r14
+FFF36D08  ecef             mov.l   [r14], r15
+FFF36D0A  7b1f             bclr    #11h, r15
+FFF36D0C  e3ef             mov.l   r15, [r14]
+FFF36D0E  fbee100008       mov.l   #80010h, r14
+FFF36D13  ecef             mov.l   [r14], r15
+FFF36D15  7b0f             bclr    #10h, r15
+FFF36D17  e3ef             mov.l   r15, [r14]
+FFF36D19  fb1e100008       mov.l   #80010h, r1
+FFF36D1E  a81a             mov.l   4[r1], r2
+FFF36D20  7bf2             bclr    #1Fh, r2
+FFF36D22  a01a             mov.l   r2, 4[r1]
+FFF36D24  fb1e100008       mov.l   #80010h, r1
+FFF36D29  a81a             mov.l   4[r1], r2
+FFF36D2B  7bd2             bclr    #1Dh, r2
+FFF36D2D  a01a             mov.l   r2, 4[r1]
+FFF36D2F  fb1e100008       mov.l   #80010h, r1
+FFF36D34  a89a             mov.l   0Ch[r1], r2
+FFF36D36  7b32             bclr    #13h, r2
+FFF36D38  a09a             mov.l   r2, 0Ch[r1]
+FFF36D3A  fbee100008       mov.l   #80010h, r14
+FFF36D3F  ecef             mov.l   [r14], r15
+FFF36D41  7bcf             bclr    #1Ch, r15
+FFF36D43  e3ef             mov.l   r15, [r14]
+FFF36D45  fbee100008       mov.l   #80010h, r14
+FFF36D4A  ecef             mov.l   [r14], r15
+FFF36D4C  7a9f             bclr    #9, r15
+FFF36D4E  e3ef             mov.l   r15, [r14]
+FFF36D50  fbee100008       mov.l   #80010h, r14
+FFF36D55  ecef             mov.l   [r14], r15
+FFF36D57  7adf             bclr    #0Dh, r15
+FFF36D59  e3ef             mov.l   r15, [r14]
+FFF36D5B  fbee100008       mov.l   #80010h, r14
+FFF36D60  ecef             mov.l   [r14], r15
+FFF36D62  7aff             bclr    #0Fh, r15
+FFF36D64  e3ef             mov.l   r15, [r14]
+FFF36D66  fbee100008       mov.l   #80010h, r14
+FFF36D6B  ecef             mov.l   [r14], r15
+FFF36D6D  7aff             bclr    #0Fh, r15
+FFF36D6F  e3ef             mov.l   r15, [r14]
+FFF36D71  fb1e100008       mov.l   #80010h, r1
+FFF36D76  a81a             mov.l   4[r1], r2
+FFF36D78  7bc2             bclr    #1Ch, r2
+FFF36D7A  a01a             mov.l   r2, 4[r1]
+FFF36D7C  fbee100008       mov.l   #80010h, r14
+FFF36D81  ecef             mov.l   [r14], r15
+FFF36D83  7aef             bclr    #0Eh, r15
+FFF36D85  e3ef             mov.l   r15, [r14]
+FFF36D87  fbee100008       mov.l   #80010h, r14
+FFF36D8C  fae9f70103a5     mov.w   #-5AFDh, 3EEh[r14]
+FFF36D92  fbee100008       mov.l   #80010h, r14
+FFF36D97  fae484c201       mov.b   #1, 0C284h[r14]
+FFF36D9C  fbee26c408       mov.l   #8C426h, r14
+FFF36DA1  f1e802           bclr    #0, 2[r14].b
+FFF36DA4  3c0300           mov.b   #0, 4+var_1[sp]
+FFF36DA7  2e11             bra.b   loc_FFF36DB8
+FFF36DA9  fbee26c408       mov.l   #8C426h, r14
+FFF36DAE  c5e00202         mov.b   2[r14], 4+var_2[sp]
+FFF36DB2  b089             movu.b  4+var_1[sp], r1
+FFF36DB4  6211             add     #1, r1
+FFF36DB6  8089             mov.b   r1, 4+var_1[sp]
+FFF36DB8  b089             movu.b  4+var_1[sp], r1
+FFF36DBA  6141             cmp     #4, r1
+FFF36DBC  29ed             blt.b   loc_FFF36DA9
+FFF36DBE  fbee26c408       mov.l   #8C426h, r14
+FFF36DC3  f0e8             bclr    #0, [r14].b
+FFF36DC5  3c0300           mov.b   #0, 4+var_1[sp]
+FFF36DC8  2e13             bra.b   loc_FFF36DDB
+FFF36DCA  fbee26c408       mov.l   #8C426h, r14
+FFF36DCF  58e1             movu.b  [r14], r1
+FFF36DD1  6411             and     #1, r1
+FFF36DD3  8081             mov.b   r1, 4+var_2[sp]
+FFF36DD5  b089             movu.b  4+var_1[sp], r1
+FFF36DD7  6211             add     #1, r1
+FFF36DD9  8089             mov.b   r1, 4+var_1[sp]
+FFF36DDB  b089             movu.b  4+var_1[sp], r1
+FFF36DDD  6141             cmp     #4, r1
+FFF36DDF  29eb             blt.b   loc_FFF36DCA
+FFF36DE1  fbee26c408       mov.l   #8C426h, r14
+FFF36DE6  f4e0             btst    #0, [r14].b
+FFF36DE8  21f9             bne.b   loc_FFF36DE1
+FFF36DEA  fbee100008       mov.l   #80010h, r14
+FFF36DEF  f9e42301         mov.b   #1, 23h[r14]
+FFF36DF3  fbee100008       mov.l   #80010h, r14
+FFF36DF8  59ee23           movu.b  23h[r14], r14
+FFF36DFB  611e             cmp     #1, r14
+FFF36DFD  21f6             bne.b   loc_FFF36DF3
+FFF36DFF  fbee100008       mov.l   #80010h, r14
+FFF36E04  f5e12c           btst    #1, 2Ch[r14].b
+FFF36E07  21f8             bne.b   loc_FFF36DFF
+FFF36E09  fbee100008       mov.l   #80010h, r14
+FFF36E0E  fae483c200       mov.b   #0, 0C283h[r14]
+FFF36E13  fbee100008       mov.l   #80010h, r14
+FFF36E18  f9e49253         mov.b   #53h, 92h[r14] ; 'S'
+FFF36E1C  fbee100008       mov.l   #80010h, r14
+
+=== FFF37424 PRCR ===
+FFF37400  62c0             add     #0Ch, sp
+FFF37402  08               bra.s   loc_FFF3740A
+FFF37403  f0e0             bset    #0, [r14].b
+FFF37405  fbee62c008       mov.l   #8C062h, r14
+FFF3740A  f0e1             bset    #1, [r14].b
+FFF3740C  fbee04c008       mov.l   #8C004h, r14
+FFF37411  f1e860           bclr    #0, 60h[r14].b
+FFF37414  fbee00c008       mov.l   #8C000h, r14
+FFF37419  f1e860           bclr    #0, 60h[r14].b
+FFF3741C  fbee00c008       mov.l   #8C000h, r14
+FFF37421  f1e960           bclr    #1, 60h[r14].b
+FFF37424  fbeefe0308       mov.l   #803FEh, r14
+FFF37429  f8e90ba5         mov.w   #-5AF5h, [r14]
+FFF3742D  fbeefe0308       mov.l   #803FEh, r14
+FFF37432  f2ee82be         bclr    #6, -417Eh[r14].b
+FFF37436  fbeefe0308       mov.l   #803FEh, r14
+FFF3743B  f8e900a5         mov.w   #-5B00h, [r14]
+FFF3743F  7fa8             setpsw  i
+FFF37441  02               rts
+FFF37442  02               rts
+FFF37443  6040             sub     #4, sp
+FFF37445  fbee060008       mov.l   #80006h, r14
+FFF3744A  fae9fc0103a5     mov.w   #-5AFDh, 3F8h[r14]
+FFF37450  fbee060008       mov.l   #80006h, r14
+FFF37455  f8e9035a         mov.w   #5A03h, [r14]
+FFF37459  fbee060008       mov.l   #80006h, r14
+FFF3745E  dcee             mov.w   [r14], r14

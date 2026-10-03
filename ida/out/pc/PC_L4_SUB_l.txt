@@ -1,0 +1,38 @@
+job PC_L4_SUB l
+; ==== sub_FFF0CDFC FFF0CDFC-FFF0CE26 ====
+FFF0CDFC  mov.l   #8C4Ch, r14
+FFF0CE02  movu.b  [r14], r14
+FFF0CE04  cmp     #3, r14
+FFF0CE06  bgt.b   loc_FFF0CE1C
+FFF0CE08  mov.l   #8C4Ch, r14
+FFF0CE0E  movu.b  [r14], r14
+FFF0CE10  mov.l   #off_FFED77C4, r15
+FFF0CE16  mov.l   [r14, r15], r14
+FFF0CE19  jsr     r14
+FFF0CE1B  rts
+FFF0CE1C  mov.l   #8C4Ch, r14
+FFF0CE22  mov.b   #3, [r14]
+FFF0CE25  rts
+
+; ==== sub_FFF0CF4F FFF0CF4F-FFF0CF7A ====
+FFF0CF4F  sub     #4, sp
+FFF0CF51  mov.w   #-10h, [sp]
+FFF0CF54  mov.l   #140h, r4
+FFF0CF58  mov.l   #0, r2
+FFF0CF5A  mov.l   #1D3B8h, r1
+FFF0CF60  mov.l   r2, r3
+FFF0CF62  bsr.a   sub_FFEEF9BB
+FFF0CF66  add     #4, sp
+FFF0CF68  mov.b   r1, 3[sp]
+FFF0CF6A  movu.b  3[sp], r1
+FFF0CF6C  cmp     #1, r1
+FFF0CF6E  bne.s   loc_FFF0CF78
+FFF0CF6F  bsr.w   sub_FFF0D6D9
+FFF0CF72  bsr.a   sub_FFEF036F
+FFF0CF76  rtsd    #1
+FFF0CF78  rtsd    #1
+
+; ==== xrefs TO FFF0CF4F ====
+  FFF0CF4D sub_FFF0CF4D           sub     #4, sp
+; (1)
+

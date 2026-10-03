@@ -1,0 +1,34 @@
+# Every writer of B0B9 (GM/WIRES-X air-message type byte, @FFB0B9). 19 immediate stores.
+# Whole-image scan "6a 8c b0 b9"; matches ida\out\dsp-autoreply\b0b9-census.tsv. Focus: 0x1E (was "not traced") and keypress reachability.
+# cols: B0B9 imm_store_addr sender air_letter root_caller trigger keyless_TX?
+0x09	05F7E2	sub_5F78C	N c/d picture start	N-TX state1 sub_5EF2C <- UI picture send	key	no
+0x0A	05F98A	sub_5F8F4	N b block	N-TX state3 sub_5EFF4	key/flow	no
+0x0B	05FABE	sub_5FA66	N e end	N-TX state5 sub_5F0DC	key/flow	no
+0x0C	05F752	sub_5F712	N r retry	N-TX state7 sub_5F1A4	auto-retry(within a user picture TX)	no
+0x0D	062B06	sub_62ACA	] c	touch tables sub_60554/6073C/60BBA/645A4	key	no
+0x0E	062BAC	sub_62B7A	] l	touch tables sub_65854/65974/65BA6	key	no
+0x0F	062D1E	sub_62C32	] r	touch tables sub_65AF0/65D1C/65EC2	key	no
+0x12	062DE6	sub_62DA4	] q (WIRES-X search)	X key sub_5FC0E; deferred sub_63216(T6); PDN host sub_6D0F6	key/host	no(local)/host
+0x13	062E72,062F0C	sub_62E14,sub_62EAC	] # (connect by ID)	WIRES-X UI sub_60354/6087E/60CFC,sub_61B4C	key	no
+0x14	063006	sub_62FC6	] f (list)	WIRES-X UI sub_60656/60936/60AF0/60FE0	key	no
+0x15	06307C	sub_63040	] g (category list)	WIRES-X UI sub_60656	key	no
+0x16	067B48	sub_67AB0	G c/d (+position) beacon	GM engine sub_6802A @068208 periodic	AUTOMATIC (timer, GM active)	YES
+0x17	067B9C	sub_67B6A	G e/f message	UI sub_65410/654F8	key	no
+0x18	067E70	sub_67E38	G g/h picture header	UI sub_5EE1A <- sub_655B0/65F5C	key	no
+0x19	067F38	sub_67F18	G 0 delivery ACK	sub_68242 <- B40D (RX addressed-msg)	AUTOMATIC (RX-triggered)	YES
+0x1D	062F98	sub_62F64	] *	touch table sub_663CA <- sub_2B092	key	no
+0x1E	067FEE	sub_67FCE	G j (all/'*' group)	sub_67FB6 <- sub_664C2 <- KEY DISPATCHER sub_1079E (key-table slot 0x0113E4)	KEY (gated B3EA==7 WIRES-X state, A9EE.b7, FF8DD7!=0)	no
+0x20	06CAF8	sub_6CA6E	node reply	node command handler	host (SCI-A frame)	host
+#
+# ---- 0x1E resolution (the open item from doc 86) ----
+# sub_67FCE  (0x067FCE): bclr AAD4.b0; if FF94C0==1 skip; sub_22F78 precheck; sub_22FEE -> sub_2244C (software TX req);
+#            set AAD4.b0; B0B9=0x1E (067FEE fc 1e / 067FF0 store); copy 15 B from unk_59B3F to FF1489; FF1498="00"; FF149A=0xFF; jsr sub_67F6E.
+#   unk_59B3F = 20 20 20 20 20 2a 2a 2a 2a 2a 2a 2a 2a 2a 2a  = "     **********" (blank call + 10-'*' ALL/group target).
+# sub_67FB6  (0x067FB6): btst #7,@A9EE; beq beep; mov @FF8DD7; beq beep; bsr sub_67FCE; else jsr sub_3FFA0 (error beep).
+#   gate A9EE.b7 (key/sub-screen active) AND FF8DD7 != 0 (GM/WIRES-X context).
+# sub_664C2  (0x0664C2): btst #0,@B420 (if set, skip); if B3EA==7 -> jsr sub_67FB6. B3EA is the WIRES-X operation state.
+#   ONLY caller: jsr @er6 at 0x010982 in sub_1079E (the key-event dispatcher); key-table slot .long sub_664C2 at 0x0113E4.
+# CONCLUSION: B0B9=0x1E (G 'j') is KEY-triggered (a WIRES-X screen key when state==7). It keys TX via sub_22FEE->sub_2244C
+#   (the same software-TX request the beacon/ACK use), but the ROOT is a keypress, not a timer or RX event. NOT a keyless auto-TX.
+#
+# Keyless-TX B0B9 writers (transmit with no keypress): 0x16 (GM beacon, timer), 0x19 (delivery ACK, RX-triggered). 0x20 is host-commanded (SCI-A). Everything else is user/key or flow-internal. (Matches doc 86 T1/T2/T3.)

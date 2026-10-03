@@ -1,0 +1,57 @@
+#	HOST-USB: the RES_UPDATE_INFO trailer -- the update descriptor the earlier
+#	decryption pass discarded.  This is the block that tells the updater what to
+#	write, where, and over which transport.  BOOT-IPC and SUB-USB should line their
+#	flash findings up against these address ranges.
+#
+#	Resource: type 23 (0x17), name RES_UPDATE_INFO, language 1024.
+#	Layout in the EXE and in memory (the loader does one flat qmemcpy of the whole
+#	resource at UPD_MAIN 0x4068D0 / UPD_SUB 0x4982):
+#	    [0 .. 3]                    Unix timestamp, the cipher seed
+#	    [4 .. 4+imagesize-1]        ciphertext -> the firmware image
+#	    [4+imagesize .. end]        THIS DESCRIPTOR, plaintext
+#	MAIN copy length = 0x100060 = 1,048,672 bytes; descriptor = 92 bytes at file 0x13D2A4.
+#	SUB  copy length = 0x400074 = 4,194,424 bytes; descriptor = 116 bytes at file 0x43E2A4.
+#	"off" below is the offset the code uses, relative to the start of the buffer
+#	(so 0x100004 for MAIN = descriptor byte 0; 0x400004 for SUB = descriptor byte 0).
+#	Both resources are followed by the literal ASCII padding "PADDINGX".
+image	off	size	name	value	evidence
+MAIN	0x100004	4	image size	0x00100000 (1,048,576)	file 0x13D2A4; used as the download completion test at UPD_MAIN 401597 etc.
+MAIN	0x100008	4	transport selector	0x00000001 = USB	file 0x13D2A8; UPD_MAIN 4048A0 branches on it: 1 -> LoadLibrary RFP_USB_VB.dll, 0 -> open \\.\COMn
+MAIN	0x10000C	25	model string	"FT3DR/E(MAIN)"	file 0x13D2AC; shown in dialog item 1003 ("Model:")
+MAIN	0x100025	11	destination string	"EXP"	file 0x13D2C5
+MAIN	0x100030	12	version string	"1.02"	file 0x13D2D0; shown in dialog item 1005 ("Version:")
+MAIN	0x10003C	4	runtime flag	0 (written by the dialog: "communication configured")	file 0x13D2DC
+MAIN	0x100040	2	protocol / CPU id	6 = H8S/2370 boot mode	file 0x13D2E0
+MAIN	0x100042	2	input clock, x0.01 MHz, LE stored / BE on the wire	0x0640 = 1600 = 16.00 MHz	file 0x13D2E2; sent in command 0x3F at UPD_MAIN 403DA0
+MAIN	0x100044	4	multiplication ratio	1	file 0x13D2E4
+MAIN	0x100048	16	ID code for command 0x60	all 00	file 0x13D2E8; no protection key is set
+MAIN	0x100058	4	RES_START_DLG size	0x0000020A	file 0x13D2F8
+MAIN	0x10005C	4	RES_END_DLG size	0x000001AC	file 0x13D2FC
+SUB	0x400004	4	image size	0x00400000 (4,194,304)	file 0x43E2A4
+SUB	0x400008	4	START ADDRESS (low 32)	0xFFC00000	file 0x43E2A8; sent as the start of command 0x13 at UPD_SUB 403E50
+SUB	0x40000C	4	start address (high 32)	0x00000000	file 0x43E2AC
+SUB	0x400010	4	END ADDRESS (low 32)	0xFFFFFFFF	file 0x43E2B0; sent as the end of command 0x13
+SUB	0x400014	4	end address (high 32)	0x00000000	file 0x43E2B4
+SUB	0x400018	4	transport selector	0x00000001 = USB	file 0x43E2B8; UPD_SUB 403AF0 / 403F50 branch on it
+SUB	0x40001C	25	model string	"FT3DR/E(SUB)"	file 0x43E2BC
+SUB	0x400035	11	destination string	"ALL"	file 0x43E2D5
+SUB	0x400040	12	version string	"1.02"	file 0x43E2E0
+SUB	0x40004C	4	runtime flag	0	file 0x43E2EC
+SUB	0x400050	2	protocol / CPU id	7 = RX64M boot mode	file 0x43E2F0
+SUB	0x400052	2	input clock	0 (unused on the RX path)	file 0x43E2F2
+SUB	0x400054	4	multiplication ratio	0 (unused)	file 0x43E2F4
+SUB	0x400058	16	ID code	all 00	file 0x43E2F8
+SUB	0x400068	4	RES_START_DLG size	0x0000020B	file 0x43E308
+SUB	0x40006C	4	RES_END_DLG size	0x000001AC	file 0x43E30C
+SUB	0x400070	4	command 0x36 parameter	0x00000001	file 0x43E310; UPD_SUB 4068D0 -> 403C50
+#
+#	Derived write geometry (for cross-checking against the radio-side flash code):
+#	MAIN  H8S path: 0x100000 bytes from address 0, in 0x2000-byte (8192) blocks,
+#	                128 blocks, 24-bit big-endian address in each command 0x50.
+#	                Progress init: sub_4033A0(1, 0, 0x100000, 0x2000) at UPD_MAIN 404F20.
+#	SUB   RX path : 0x400000 bytes covering 0xFFC00000..0xFFFFFFFF, in 1024-byte
+#	                blocks, 4096 blocks, address range declared once via command 0x13.
+#	Manual page 15: "about Main Firmware: 20 seconds or Sub Firmware: 90 seconds".
+#	  1 MiB / 20 s  = ~52 KiB/s ;  4 MiB / 90 s = ~47 KiB/s  (~0.4 Mbit/s effective,
+#	  i.e. the link is nowhere near USB full-speed saturation -- flash programming
+#	  time, not the USB pipe, sets the rate).

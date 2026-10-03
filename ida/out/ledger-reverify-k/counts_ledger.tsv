@@ -1,0 +1,153 @@
+group	item	got	expected	verdict	note
+image	MAIN sha256 prefix	8e3ecd05409b2c31	8e3ecd05409b2c31	PASS	
+image	SUB sha256 prefix	b93570b3c2f69ccb	b93570b3c2f69ccb	PASS	
+image	MAIN size	1048576	1048576	PASS	
+image	SUB size	4194304	4194304	PASS	
+image	MAIN content end 0x7B754 (= 505,684); bytes above are all 0xFF or 0x00	True	True	PASS	content length used as denominator
+mask	final4_proven length	1048576	1048576	PASS	
+mask	final4_proven values are 0/1 only	True	True	PASS	
+mask	final4_proven zero above 0x7B754	0	0	PASS	
+mask	final4_named length	1048576	1048576	PASS	
+mask	final4_named values are 0/1 only	True	True	PASS	
+mask	final4_named zero above 0x7B754	0	0	PASS	
+mask	final3_proven length	505684	505684	PASS	final3 masks are content-length (505,684 B); doc 83 Findings 4 says final4 uses "the same format as main-final3: 1,048,576 bytes" -- wording only
+mask	final3_proven values are 0/1 only	True	True	PASS	
+mask	final3_proven zero above 0x7B754	0	0	PASS	
+mask	final3_named length	505684	505684	PASS	final3 masks are content-length (505,684 B); doc 83 Findings 4 says final4 uses "the same format as main-final3: 1,048,576 bytes" -- wording only
+mask	final3_named values are 0/1 only	True	True	PASS	
+mask	final3_named zero above 0x7B754	0	0	PASS	
+mask	final4_proven popcount	368624	368624	PASS	
+mask	final4_named popcount	497451	497451	PASS	
+mask	final3_proven popcount	368366	368366	PASS	
+mask	final3_named popcount	497314	497314	PASS	
+mask	final4_proven sha256 prefix	3a45f1f46b36a47f	3a45f1f46b36a47f	PASS	
+mask	final4_named sha256 prefix	2b8255b683ca474a	2b8255b683ca474a	PASS	
+mask	final3_proven \ final4_proven (lost)	0	0	PASS	
+mask	final3_named \ final4_named (lost)	0	0	PASS	
+mask	final4_proven \ final4_named (proven not named)	0	0	PASS	
+mask	final4_proven \ final3_proven bytes	258	258	PASS	
+mask	final4_named \ final3_named bytes	137	137	PASS	
+mask	new proven = exactly the 12 listed runs (RESUME K ledger / doc 83 table)	[(96730, 8), (168308, 6), (176166, 10), (177002, 18), (177074, 14), (177738, 64), (178364, 10), (180830, 10), (320214, 72), (412646, 16), (417530, 16), (431804, 14)]	[(96730, 8), (168308, 6), (176166, 10), (177002, 18), (177074, 14), (177738, 64), (178364, 10), (180830, 10), (320214, 72), (412646, 16), (417530, 16), (431804, 14)]	PASS	
+mask	sum of 12 listed runs	258	258	PASS	
+mask	K1b runs (12 minus 0x04E2D6) sum	186	186	PASS	
+mask	J4's 0x065EFA/F00/F06 = 16 B	16	16	PASS	
+mask	named delta that is new proven code	95	95	PASS	
+mask	named delta: Baro header 0x04E31E-0x04E31F	2	2	PASS	
+mask	named delta remainder (helper-table tails)	40	40	PASS	
+mask	named delta runs not proven and not Baro (count of runs)	15	15	PASS	
+mask	named 497,314 + 95 + 2 + 40	497451	497451	PASS	
+mask	final4_proven set bytes inside window 0x078106-0x07B753	220	220	PASS	
+mask	final3_proven set bytes inside window	220	220	PASS	
+mask	final4_proven inside window all inside code 0x078106-0x078545	0	0	PASS	
+mask	I12 blocks 0x054D22-4B + 0x054F3A-87 (120 B) set in final4_proven	0	0	PASS	len 120
+mask	new proven bytes inside I12 blocks	0	0	PASS	
+mask	new proven bytes inside the window	0	0	PASS	
+ledger	J-wave 368,438 = 368,366 + 72	368438	368438	PASS	
+ledger	368,624 - 368,438 = 186 (K1b)	186	186	PASS	
+demotion	range length 0x054AE2-0x054BF7	278	278	PASS	
+demotion	range fully set in final4_proven	278	278	PASS	
+demotion	range fully set in final4_named	278	278	PASS	
+demotion	head 0x054AC0-0x054AE1 in final4_proven	0	0	PASS	
+demotion	0x054BF8-0x054C11 in final4_proven (stays)	26	26	PASS	
+demotion	368,624 - 278	368346	368346	PASS	
+demotion	bytes 0x054ADE	6a 0a a5 1a	6a 0a a5 1a	PASS	
+demotion	bytes 0x054AE2	4b 0c	4b 0c	PASS	
+demotion	bytes 0x054BF6 (rts)	54 70	54 70	PASS	
+demotion	bytes 0x002214	5e 05 4b f8	5e 05 4b f8	PASS	
+demotion	bytes 0x054AC0	5e 05 45 68	5e 05 45 68	PASS	
+demotion	BE32 values in [0x054AC0,0x054BF8) at even offsets in content	0	0	PASS	
+demotion	BE32 values in [0x054AC0,0x054BF8) at odd offsets (not pointers on H8SX)	['04E9FB=00054B00']	['04E9FB=00054B00']	PASS	byte table 00 04 6a 00 00 05 4b 00 00 06 59 00; not one of doc 83 values 054AC0/054AE2/054AE4/054AF0
+demotion	BE32 exactly 054AC0/054AE2/054AE4/054AF0 any alignment	0	0	PASS	
+demotion	jmp/jsr abs24 (5a/5e) into [0x054AC0,0x054BF8) anywhere in content	0	0	PASS	
+demotion	mov.l #imm (7a 0x) into range anywhere	0	0	PASS	
+demotion	relative branches (bXX/bsr) decoded at any final4-proven offset outside range, targeting range	0	0	PASS	
+fnindex	fnindex-only-runs.tsv runs	94	94	PASS	
+fnindex	fnindex-only-runs.tsv sum	4850	4850	PASS	
+fnindex	minus 0x054AE2 (93 runs / 4,572 B)	(93, 4572)	(93, 4572)	PASS	
+fnindex	five largest	[('03C668', 820), ('046210', 472), ('054AE2', 278), ('077CC2', 206), ('01C4D2', 194)]	[('03C668', 820), ('046210', 472), ('054AE2', 278), ('077CC2', 206), ('01C4D2', 194)]	PASS	
+fnindex	every fnindex-only run fully final4-proven	True	True	PASS	
+doc95	range 07810C-07815B length	80	80	PASS	
+doc95	range 0781A4-0781A9 length	6	6	PASS	
+doc95	range 0781C4-078221 length	94	94	PASS	
+doc95	range 07823C-07825F length	36	36	PASS	
+doc95	range 078268-078279 length	18	18	PASS	
+doc95	range 07827C-078333 length	184	184	PASS	
+doc95	range 07833C-07837B length	64	64	PASS	
+doc95	range 078384-0783D9 length	86	86	PASS	
+doc95	range 0783EE-07842D length	64	64	PASS	
+doc95	range 078440-078441 length	2	2	PASS	
+doc95	range 078448-078459 length	18	18	PASS	
+doc95	range 078462-078507 length	166	166	PASS	
+doc95	range 078514-078545 length	50	50	PASS	
+doc95	13 ranges sum	868	868	PASS	
+doc95	13 ranges: final4_proven set bytes	0	0	PASS	
+doc95	13 ranges: final4_named set bytes	0	0	PASS	
+doc95	unset proven bytes in 0x078106-0x078545	868	868	PASS	
+doc95	unset proven runs in code part == the 13 ranges	[(6, 85), (158, 163), (190, 283), (310, 345), (354, 371), (374, 557), (566, 629), (638, 723), (744, 807), (826, 827), (834, 851), (860, 1025), (1038, 1087)]	[(6, 85), (158, 163), (190, 283), (310, 345), (354, 371), (374, 557), (566, 629), (638, 723), (744, 807), (826, 827), (834, 851), (860, 1025), (1038, 1087)]	PASS	
+doc95	unset named bytes in 0x078106-0x078545	868	868	PASS	
+doc95	span 0x078106-0x07B753 inclusive	13902	13902	PASS	
+doc95	data part 13902-1088	12814	12814	PASS	
+doc95	code-heads.tsv rows	336	336	PASS	
+doc95	heads contiguous from 0x078106 (gaps)	0	0	PASS	
+doc95	heads end at 0x078546	492870	492870	PASS	
+doc95	heads byte total	1088	1088	PASS	
+doc95	heads whose hex != image	0	0	PASS	
+doc95	heads whose length != bu_all.tsv oracle length	0	0	PASS	
+doc95	heads whose mnemonic != bu_all.tsv mnemonic	0	0	PASS	
+doc95	868 clear bytes all inside the 336 heads	True	True	PASS	
+doc95	heads partly set/partly clear in proven (should be 0: ranges on head boundaries)	0	0	PASS	
+ledger	MAIN proven follow-up 368,346 + 868	369214	369214	PASS	
+ledger	MAIN named follow-up 497,451 + 868	498319	498319	PASS	
+ledger	K-wave headline 497,451 + 464,263	961714	961714	PASS	
+ledger	follow-up headline 498,319 + 464,263	962582	962582	PASS	
+ledger	denominator 505,684 + 524,288	1029972	1029972	PASS	
+ledger	headline % 962,582/1,029,972	93.46	93.46	PASS	
+ledger	K-wave headline % 961,714/1,029,972	93.37	93.37	PASS	
+ledger	doc 83 headline % (3 dp)	93.373	93.373	PASS	
+ledger	MAIN named % 498,319/505,684	98.54	98.54	PASS	
+ledger	MAIN named % 497,451/505,684	98.37	98.37	PASS	
+ledger	proven % 369,214/505,684	73.01	73.01	PASS	
+ledger	proven % 368,346/505,684	72.84	72.84	PASS	
+ledger	proven % 368,346/388,490	94.81	94.81	PASS	
+ledger	doc 83 proven % 368,624/505,684 (3 dp)	72.896	72.896	PASS	
+ledger	doc 83 proven % 368,624/388,490 (3 dp)	94.886	94.886	PASS	
+ledger	doc 83 alt proven % 368,346 (3 dp)	72.841	72.841	PASS	
+ledger	doc 83 K1b-J4-only: 368,366+72+16 / named 497,314+70+2+... 	368454	368454	PASS	
+ledger	K1b-J4-only after demotion	368176	368176	PASS	
+ledger	doc 83 J4-only headline 497,387 + 464,263	961650	961650	PASS	
+ledger	doc 83 J4-only headline % (3 dp)	93.367	93.367	PASS	
+ledger	doc 83 alt named-removed 497,451-278 / headline	(497173, 961436, 93.346)	(497173, 961436, 93.346)	PASS	
+ledger	K wave +67 B on J (961,714-961,647)	67	67	PASS	
+ledger	follow-up +868 on K (962,582-961,714)	868	868	PASS	
+ledger	SUB window % 464,263/524,288	88.55	88.55	PASS	
+ledger	SUB code+typed % 520,552/524,288	99.29	99.29	PASS	
+ledger	strict companion 497,451 + 457,462	954913	954913	PASS	
+ledger	strict companion %	92.71	92.71	PASS	
+final5-info	final5_proven popcount = follow-up proven	369214	369214	PASS	
+final5-info	final5_named popcount = follow-up named	498319	498319	PASS	
+final5-info	final5 minus final4 proven = exactly the 868 window bytes	True	True	PASS	
+final5-info	final4 minus final5 proven = exactly 0x054AE2-0x054BF7	True	True	PASS	
+final5-info	final5 named = final4 named + the 868 window bytes	True	True	PASS	
+sub	K7 mask_final3_after_headline == I17 mask_final2_headline (byte-identical)	True	True	PASS	len 524288/524288
+sub	popcount mask_final3_after_headline	464165	464165	PASS	
+sub	popcount mask_final2_headline	464165	464165	PASS	
+sub	K7 mask_final3_before_headline == after	True	True	PASS	
+sub	K7 mask_final3_after_headline_w2 == I17 mask_final2_headline_w2 (byte-identical)	True	True	PASS	len 524288/524288
+sub	popcount mask_final3_after_headline_w2	464263	464263	PASS	
+sub	popcount mask_final2_headline_w2	464263	464263	PASS	
+sub	K7 mask_final3_before_headline_w2 == after	True	True	PASS	
+sub	K7 mask_final3_after_reach == I17 mask_final2_reach (byte-identical)	True	True	PASS	len 524288/524288
+sub	popcount mask_final3_after_reach	454692	454692	PASS	
+sub	popcount mask_final2_reach	454692	454692	PASS	
+sub	K7 mask_final3_before_reach == after	True	True	PASS	
+sub	K7 mask_final3_after_reach_w2 == I17 mask_final2_reach_w2 (byte-identical)	True	True	PASS	len 524288/524288
+sub	popcount mask_final3_after_reach_w2	457462	457462	PASS	
+sub	popcount mask_final2_reach_w2	457462	457462	PASS	
+sub	K7 mask_final3_before_reach_w2 == after	True	True	PASS	
+sub	K7 mask_final3_after_allwf == I17 mask_final2_allwf (byte-identical)	True	True	PASS	len 524288/524288
+sub	popcount mask_final3_after_allwf	467999	467999	PASS	
+sub	popcount mask_final2_allwf	467999	467999	PASS	
+sub	K7 mask_final3_before_allwf == after	True	True	PASS	
+sub	sub-final3/counts.txt typed data mask	56289	56289	PASS	
+sub	sub-final3/counts.txt code+typed (headline+w2)	520552	520552	PASS	
+sub	sub-final3/counts.txt functions in DB	2395	2395	PASS	

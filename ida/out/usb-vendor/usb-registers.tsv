@@ -1,0 +1,25 @@
+reg	name_inferred	vendor_stack_sites (0x054BF8-0x0557FF)	other_sites_outside_window	use_in_vendor_stack	status
+FFEE00	IFR0 (b7 bus reset, b6 EP1 full, b3 SETUP received, b2 EP0 OUT received, b1 EP0 IN request, b0 EP0 IN sent)	29	0x0768A8 (CDC helper)	ISR 0x054D50 tests b7,b3,b2,b1,b0; poll tests b6 (0x055552, 0x0556C8); flags cleared by read-modify-write	usage Confirmed, names Inferred
+FFEE01	IFR1 (b3 VBUS level, b1 EP3 sent, b0 VBUS change)	8	-	ISR 0x054EC2	usage Confirmed, names Inferred
+FFEE02	IFR2 (b5 suspend state, b4 suspend/resume change, b3 configuration done)	9	-	ISR 0x054EC2 and 0x054CFA	usage Confirmed, names Inferred
+FFEE04	IER0	7	0x0027B8, 0x03EC5A (power-down clears), CDC helpers 0x0767FA..0x0770E8	0x8D normally, 0x8F while a status ZLP is pending	Confirmed
+FFEE05	IER1	1	0x0027BC, 0x03EC5E, CDC helpers	0x03	Confirmed
+FFEE06	IER2	1	0x0027C0, 0x03EC62, CDC helpers	0x18	Confirmed
+FFEE08/09/0A	interrupt select / control (written 0x00, 0x07, 0x1F at init)	1 each	-	init only 0x054C7E..0x054C8A	Unknown function
+FFEE0C	EPDR0i (EP0 IN data)	2	-	0x054E86 (ISR), 0x055180 (sub_55144); source pointer FFB09E only	Confirmed
+FFEE0D	EPDR0o (EP0 OUT data)	1	-	0x054DFE into 0xFF3C6A (no consumer reads that buffer in the vendor stack)	Confirmed
+FFEE0E	EPDR0s (SETUP data)	1	-	0x054DB4, 8 bytes into ring 0xFF3CEA-0xFF3D69	Confirmed
+FFEE10	EPDR1 (EP1 bulk OUT data)	2	-	0x055684 copy, 0x0556B8 discard	Confirmed
+FFEE14	EPDR2 (EP2 bulk IN data)	0	only reference in the image is the 32-bit word at 0x07B5CE, inside the closed window (CDC table)	not used by the vendor personality	Confirmed (scope: @aa:16 forms and 32-bit immediates, whole image)
+FFEE18	EPDR3 (EP3 interrupt IN data)	12	-	9 live writes (3 x 3 sites) + 3 in dead block 0x054F3A	Confirmed
+FFEE24	EPSZ0o (EP0 OUT byte count)	1	-	0x054DF2	Confirmed
+FFEE25	EPSZ1 (EP1 OUT byte count)	1	-	0x055652	Confirmed
+FFEE27	DASTS (b5 = EP3 data still in FIFO)	3	-	EP3 report skipped while b5 set	usage Confirmed, name Inferred
+FFEE28	FCLR0 (FIFO clear)	2	CDC 0x0768EE	0x73 at init and bus reset	Confirmed
+FFEE2A	EP stall control	1	CDC 0x07696A/0x076974	written 0 at init only; the vendor stack never stalls	Confirmed
+FFEE2C	TRG (0x01 EP0i packet enable, 0x02 EP0o read done, 0x04 SETUP read done, 0x20 EP1 read done, 0x40 EP3 packet enable)	10 (1 in dead block 0x054F3A)	CDC helpers 0x076A26..0x076B88	values written: 01, 02, 04, 20, 40; never 0x10 (EP2 packet enable)	Confirmed (bit names Inferred)
+FFEE2D	control (b2 = module enable)	2	0x0027B0, 0x03EC52 (clear b2 on power-down)	bset #2 at 0x054CA6	Confirmed
+FFEE2E/2F	control (written 0; EE2F pulsed 8->0 only in dead block 0x054D22)	3	-	init	Unknown function
+FFEE32	EPIR (endpoint information, auto-increment)	1	-	50 bytes from 0x054C12 at cold boot (0x002214, only when entry flag r1l==0)	Confirmed
+FFEE44	(written 0 at init)	1	-	init	Unknown
+FFEE50/51/53	adjacent control (not USB data path)	0	0x0022BA/0x0022C0 boot, 0x002748/0x0027FC port block, 0x0446C4 bset #1 next to SCI-D init	-	Unknown function

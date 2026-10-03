@@ -1,0 +1,25 @@
+id	role	trigger/condition	action	site	bytes	status	note
+arm_entry	arm sub_1494C	btst #3,@FF89C1 (LOCK set) AND btst #7,@FFBC8A clear AND screen byte @(1,er0)==0x0C	clear FFBC8A, read sel=[FF8F2E]	0x01494C	6a1089c17330	C	LOCK on, not already armed, screen id 0x0C = setup-menu group list (notifier 0x4E24 sends F300). Not the operating screen
+arm_sel5	arm which	[FF8F2E]==5 (0-based; 1-based group 6)	bset #3 FFBC8A (completion->FFB0C8)	0x0149BE	6a18bc8a7030	C	row table 0x151A0 via 0x14D6A[5]. No FF910A test
+arm_sel0	arm which	[FF8F2E]==0 (0-based; 1-based group 1, DISPLAY)	bset #4 FFBC8A (completion->ext version)	0x0149B6	6a18bc8a7040	C	row table 0x1515C. No FF910A test
+arm_sel8	arm which	[FF8F2E]==8 (0-based; 1-based group 9, APRS) AND [FF910A]==0x66600	FFAAE0=0x16; bset #5 FFBC8A (completion->sub_1645E)	0x0149AE	6a18bc8a7050	C	cmp.l #0x66600 at 0x01499A (bne 0x149D0 if not equal); bset #5 at 0x0149AE. Row table 0x151BE
+arm_sel10	arm which	[FF8F2E]==0x0A (0-based; 1-based group 11, OPTION) AND [FF910A]==0x66600	FFAAE0=0x16; bset #6 FFBC8A (completion->sub_16456)	0x014992	6a18bc8a7060	C	cmp.l #0x66600 at 0x01497E (bne 0x149D0 if not equal); bset #6 at 0x014992. Row table 0x151DE
+arm_set	arm finish	any armed	bset #7 FFBC8A (active); FFBC8B=8 (step counter)	0x0149C4	6a18bc8a7070	C	counter counts DOWN 8..1
+step8	step n=8 (first)	FFBC8B==8; key in {8,3,2}	fall to next step	0x014A02	6a10bc8a7370	C	screen 0xC0 key table base 0x13F54: slot1 0x13F58, slot5 0x13F68, slot6 0x13F6C, slot8 0x13F74
+step7	step n=7	FFBC8B==7; key in {7,4,1}	fall to next step	0x014A1E	6a10bc8a7370	C	last step: if key==1 go to completion dispatch
+step6	step n=6	FFBC8B==6; key==6	fall to next step	0x0149D2	6a10bc8a7370	C	
+step5	step n=5	FFBC8B==5; key==5	fall to next step	0x0149EA	6a10bc8a7370	C	
+wrong_key	reset	key does not match expected for current FFBC8B	bclr #0 FFBC8A; FFBC8B=0xFF; jsr sub_14BBA (redraw)	0x014A96	6a18bc8a7200	C	clears bit 0 only. Bit 7 (active) is left set. No other abs16 site clears bit 7
+advance	step ok	key matched	FFBC8B-- ; jsr sub_3FFA0 (consume key)	0x014A8A	1a0c6a8cbc8b5e03ffa0	C	decrement step counter
+done_b4	completion bit4	FFBC8B reached, FFBC8A b4 set	bset #0 FFBC8A; FFAAE0=0x16	0x014A62	6a18bc8a7000	C	sets extended-version-digit flag FFBC8A b0 (doc 44 F7)
+done_b3	completion bit3	FFBC8A b3 set	FFB0C8=1; FFAAE0=0x16	0x014A70	fc016a8cb0c8	C	FFB0C8=1 enables RADIO ID edit (screen 0x8D)
+done_b5	completion bit5	FFBC8A b5 set	jsr sub_1645E (toggle FF89C4 b3)	0x014A5C	5e01645e	C	sub_1645E = bnot #3 FF89C4 -> enable group 13 (doc 32/23)
+done_b6	completion bit6	FFBC8A b6 set	jsr sub_16456 (toggle FF89C4 b4)	0x014A56	5e016456	C	sub_16456 = bnot #4 FF89C4 -> RAM DISPLAY enable (doc 32/23)
+ticker	where run	sub_32AC calls sub_1CF0A when [FF9536]<0x46; sub_32AC is the [FFA9E0]==2 slot	sub_1CF0A toggles FF89C1 b3 then jsr sub_1494C	0x01CF3A	5e01494c	C	only jsr of sub_1494C is 0x01CF3A; only jsr of sub_1CF0A is 0x0032B4. Pointers at 0x3272 are 0x327E/0x328A/0x329C
+code4_buf	entry-code buffer	screen 0x2C/0x32 collects up to 4 key codes into FFAD8E..FFAD91	compare 32-bit buffer to constants	0x016420	01006b04ad8e	C	ADJ/other screens; menu group index in [FF8F2E] gates which screen
+code4_c1	code 01020402	buffer==0x01020402	sub_1645E: bnot #3 FF89C4 (group 13)	0x016426	7a2401020402	C	
+code4_c2	code 03090309	buffer==0x03090309	sub_16456: bnot #4 FF89C4 (RAM DISPLAY)	0x01642E	7a2403090309	C	
+code4_c3	code 07070603	buffer==0x07070603	bnot #2 FF89C4	0x016436	7a2407070603	C	FF89C4 b2 default-set, no reader found (doc 32)
+code4_c4	code 02060804	buffer==0x02060804	bnot #1 FF89C4	0x01643E	7a2402060804	C	FF89C4 b1 = feature flag (doc 32)
+code4_b0c8	code 04030708	buffer==0x04030708 on a 2,2,5,0xC,5,1,4,0x15,0x1B,3,0,0 sequence screen	FFB0C8=1	0x016528	01006b04ad8e	C	second FFB0C8=1 writer (alt entry to RADIO ID edit)
+code4_v2	code 08030706	buffer==0x08030706 on 0x10-check screen	FFAAE0=0x16 (UI jump)	0x01913E	7a2408030706	C	screen whose UI word [FF8F2C]==0x10

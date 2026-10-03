@@ -1,0 +1,29 @@
+opcode	arg	length	builder	payload_source	vendor_trace	sent_by	trigger	status	evid_addr	evid_hex
+11	[1]=[FF8E2A]|0x80, |0x02 if FF8DDE!=0	32	05905E	settings FF8E20-FF8E36 and 12 ROM bytes at 0x00F9A8	formatter 05A6C6	init step 0 (05AFCA); dead table 05B39E	power-on, after the DSP's 9F	live	05909A	f3 11 6a 0b 8e 2a 70 7b 6a 0c 8d de 47 02 70 1b
+12	[1]=([FF8D85]&0xFC)|(B11E&3), b7 = NOT B0AA.b0; [2]=[FF8D86] with B0AC b1/b0 in b6/b5 and r2l (0, 2 or 3)	32	059240 (r2l=0), 05923C (2), 059238 (2), 059234 (3)	settings FF8D85/FF8D86, DT B11E, request flags B0AA/B0AC, host-link bits B3D6	formatter 05A6CC	init step 2; step 0 of every TX session; 05B210 (B0AA.b7 or BBF9.b7); 05B254 (B0AC.b7); 059D8E/059E10 when [FF8DD5]!=0; 05ECCE	power-on; settings or mode change (B0AA.b7 is set by about 20 UI routines); TX start and end	live	059286	f3 12 6a 0b 8d 85 eb fc 6a 0c b1 1e ec 03 14 cb
+31	constant 31 00 30 44 40 A0 A0, rest 0	32	05EAEE	immediates only	formatter 05A6C6	init step 4 (05B158)	power-on	live	05EB2A	f3 31 fb 00 6b 83 b1 3e f3 30 fb 44 6b 83 b1 40 f3 40 fb a0 6b 83 b1 42 fc a0 6a 8c b1 44
+32	[0..1]=32,(F8AA0!=0)<<7|F8AA0<<2|F8AA0; [2]=((F8ABD<9?F8ABD:0)+3)<<4; [3]=AA35.b7	32	05EB4E	settings FF8AA0, FF8ABD, FFAA35.b7	formatter 05A6CC	init step 6 (05B16E); 05B2D8 (B0CE.b3)	power-on; B0CE.b3 set at 01782E (only when FF8DDE==0), 017990, 049376	live	05EB8A	f3 32 fb 00 6a 0c 8a a0 47 02 70 7b
+15	01: 18 records of 5 B	96	05A0B4	FF4576 stride 16 (0xFF record -> ROM 0x4C14)	05ACDE	init step 8 (only if B0DC>=0x041E); 05B1F8 script	power-on; ID list edited (05B208 from 056D44, 06973A)	live	05A0B4	f2 01 fa 12 7a 01 00 ff 45 76
+15	11: 6 records of 5 B	96	05A0C0	FF4696 stride 16	05ACDE	init step 10; 05B1F8 script	as above	live	05A0C0	f2 11 fa 06 7a 01 00 ff 46 96
+16	header: [1]=0x20|mode|blk, [3]=DT, [4..6]; host link: [1] from FF0BF6, [3] FF0BF8, [4] FF0BF9	96	059A1E, 0599BE, 0599FA (all r1l=0x16 into 0594FA)	own callsign FFA8DA and ID text (059A1E); 60-B host block FF0BFC (0599BE)	05A9FC	init step 12 (05B03A); TX step 4 (05B566/05B5D0/05B6F6); 05B078	power-on; each TX start when the block changed; B0C9.b7 (019962)	live	059A1E	f9 16 5e 05 94 fa
+07	20-B CSD sub-block	32	059BBA	callsign/ID text	05A8CE	TX step 6 (05B6A0) - never reached: step 5 (05B3F6) adds 5 on both arms and nothing stores 6..9 to B0BF	none in ver 1.02	dead: steps 6-9 unreachable	059BBA	f9 07 5e 05 94 fa
+08	20-B CSD sub-block	32	059BDE	callsign/ID text	05A948	TX step 8 (05B6DC) - never reached: step 5 (05B3F6) adds 5 on both arms and nothing stores 6..9 to B0BF	none in ver 1.02	dead: steps 6-9 unreachable	059BDE	f9 08 5e 05 94 fa
+06	header variant	32	059A6E	-	05A8CE	only from dead table 05A3CE	none	dead	059A6E	f9 06 5e 05 94 fa
+09	next 20 B of the block at *B128 (B126 left)	32	059CD6; 059C28 for short message types	data block prepared by 05C50C at session start	05A5C4	TX steps 10-12, 17-19; data session steps 10-19	TX with text or data	live	059CE0	f9 09 5e 05 96 80
+19	next up to 80 B of *B128 (20 when B122==0x0D)	96	059C28, 059D2E	data block FF0206.. or host block	05AAD6	data session 05BDA8 steps 10-19; 05BFBC steps 10-19; 05C06A; 05C200	data FR message TX	live	059D38	f9 19 5e 05 96 80 fc 50
+1A	00	32	059D94 (via 059D8E)	-	RX ENABLE (05AED6)	end of every TX session (05B83C); 05B28C when B0CE.b6==0	TX end; B0CE.b7 request (0492EC, 04930A, 049412)	live	059DD4	79 04 1a 00 6b 84 b1 3e
+1A	01	32	059E16 (via 059E10)	-	RX DISABLE (05AEC0)	TX step 2 (05B54C); 05B28C when B0CE.b6	TX start; B0CE.b7 request	live	059E52	79 04 1a 01 6b 84 b1 3e
+1D	01	32	059E66	-	MUTE ON (05AEEA)	TX loop on B0C0==0xFD (05B9D2)	UI mute during TX	live	059EA2	79 04 1d 01 6b 84 b1 3e
+1D	00	32	059EB6	-	MUTE OFF (05AEFC)	TX loop on B0C0==0xFF (05B9F8)	UI mute during TX	live	059EF2	79 04 1d 00 6b 84 b1 3e
+0B	00 then 0x80|(B0C0-1)	32	059F40	key digit B0C0	DTMF (05A762, 'O' arm)	TX loop on B0C0 1..0x7F (05B98C)	DTMF key during TX	live	059F8E	79 0a 0b 00 fa 00 01 00 6b 82 b1 3e
+0B	01 then 0x80|(B0C1-1)	32	059FE0	key digit B0C1	DTMF (05A762, 'S' arm)	TX loop on key release (05B9AC)	DTMF key during TX	live	05A02E	79 0a 0b 01 fa 00 01 00 6b 82 b1 3e
+18	canned 18 00x30 18	32	058F94 -> ROM 05903E	ROM	STOP ENCODE (05AF10)	TX stop (05BC1A) in 05B458, 05BFBC, 05EBD2	PTT release	live	05903E	18 00 00 00
+1C	[1]=B0B8; [2]=(F8E2B<<5)|(F8E2C&0x1F) if B0B8==9, F8E2D if B0B8==0x0D	32	05A040	settings FF8E2B..FF8E2D	default arm 05AD8C	05C436 (B0B8=3); 05A38C only when B0B5>=2 (never)	B0BE=0x15 session (B0CC.b0)	live	05A07C	f3 1c 6a 0b b0 b8 6b 83 b1 3e
+1F	02 (VER?)	32	058F86 -> ROM 05901E	ROM	VER? (05AF26)	05A3CE table only	none	dead	05901E	1f 02 00 00
+1F	01	32	ROM 058FFE	ROM	VER? arm	no reference	none	dead	058FFE	1f 01 00 00
+0C	[1]=FEEAB4[s], [2]=FEEAB0[s], 45 B codec bits	96	05BA22	host 'E' ring FEE944+s*45	default arm 05AD8C	05B856, 05B90C, 05EC0A in host link	DSP 9A request (B3D5.b0)	live	05BB2A	78 20 6a 2d 00 fe ea b4 0d 5d 78 20 6a 25 00 fe ea b0
+0D	as 0C, 65 B	96	05BA22	FEE944+s*65	default arm 05AD8C	as 0C	as 0C	live	05BBD2	0c 00 0d 0e 2d 00 41 5a
+0E	as 0C, 90 B	96	05BA22	FEE944+s*90	default arm 05AD8C	as 0C	as 0C	live	05BBD6	2d 00 41 5a
+0C-0E	filler: op, 01, 1F, 00, then zeros	96	05BA22 (ring empty)	DT index B0C7	default arm 05AD8C	as 0C	ring empty when the DSP asks	live	05BBA0	fd 01 0d 5d f5 1f fd 00 01 00 6b 85 b1 3e
+20	ACK: 20, rx[0], zeros, sum	32	058F2A	-	CPU>DSP: ACK	link state 6	every non-streamed DSP frame	live	058F2A	-
+10	NAK: 10, rx[0], zeros, sum	32	058EE6	-	CPU>DSP: NAK	link state 6	bad checksum, version word 0	live	058EE6	-

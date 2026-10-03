@@ -1,0 +1,70 @@
+K9 — Serial CLONE format over the DATA jack (MAIN, H8SX). Owner-side static.
+Evidence from K9_CAT (seed J1_MAIN_FINAL3). No device touched.
+
+WHAT IT IS
+  A front-panel-initiated radio-to-radio (or radio-to-tool) EEPROM image copy
+  over SCI-A (the DATA jack, 0xFFFE90), 38400 8N1. It is SEPARATE from the
+  0x6B700 framed command engine (V/M/B/C/E/F/S/N/W) and from the SD BACKUP.dat
+  path. It has no host-chosen addresses: the EEPROM ranges are hardcoded.
+
+REACHABILITY (confirmed)
+  Dispatch sub_2AD0A:
+     mov.w @0xFFFFBBC2, r3 ; dec #1 ; bne 0x2AD18
+     0x2AD12  jsr sub_7358E   ; 0xBBC2 == 1  -> RECEIVE (write EEPROM)
+     0x2AD18  jsr sub_737FC   ; else         -> SEND    (read EEPROM)
+  sub_2AD0A is referenced only from the key/screen pointer table at 0x0146EC
+  (`.long sub_2AD0A`) => it is a front-panel menu soft-key handler. 0xFFBBC2 is
+  the touch hit-test button index (J3). The adjacent clone-menu entries
+  (sub_2AC1A/0x2AC4C) reject to sub_3FFA0 when 0xFF8DDE != 0, i.e. clone and
+  node/PDN mode are mutually exclusive front-panel states. The clone cannot be
+  started by any received byte.  => NOT remotely triggerable.
+
+PORT SETUP (sub_734C2, called by the SEND path)
+  SCR 0xFFFE92 = 0 then 0x30; SMR 0xFFFE90 = 0; BRR 0xFFFE91 = 0x0C (=38400 @16MHz);
+  SEMR bit set at 0xFFFB95. Same SCI-A/DATA jack as the framed protocol.
+
+ADDRESS SPACE COVERED (hardcoded immediates — identical to BACKUP.dat, pc-02)
+  Device A (I2C A0/A1, driver sub_3AB80 read / sub_3B770 write):
+     start EEPROM 0x00140, 0x3FB blocks x 0x40 bytes = 0x140 .. 0x0FFFF   (65216 B)
+  Device B (I2C A2/A3, driver sub_3BDAC read / sub_3C99C write):
+     start EEPROM 0x10100, 0x3FC blocks x 0x40 bytes = 0x10100 .. 0x1FFFF (65280 B)
+  Immediates (SEND, sub_737FC):
+     0x73820  mov.l #0x140,er0 ; 0x73826 mov.w #0x3FB,r1 ; 0x7382E mov.w #0x40,r6
+     0x73850  mov.l #0x10100,er0 ; 0x73856 mov.w #0x3FC,r1
+  Same in RECEIVE (sub_7358E) at 0x735D4 / 0x73610. These ranges exactly match
+  BACKUP.dat's EEPROM coverage; a clone image and a BACKUP.dat carry the same
+  EEPROM bytes.
+
+BLOCK SIZE
+  0x40 (64) bytes per read/transmit and per receive/write unit (r6/r3 = 0x40).
+  The whole stream is the concatenation of those 64-byte EEPROM reads.
+
+CHECKSUM  (8-bit additive — differs from BACKUP.dat's 32-bit sum)
+  SEND: sub_738CC accumulates each transmitted data byte into r6h (held in
+  0xFFFF812E) while the phase byte 0xFFFF8131 == 3. Trailing checksum byte sent
+  after the stream.
+  RECEIVE (sub_7358E): accumulates into 0xFFFF812E as bytes arrive, then reads
+  one trailing byte into 0xFFFF812F (0x73652 `mov.l #0xFF812F`; sub_7374A reads 1
+  byte) and compares:
+     0x7365E mov.b @0xFFFF812E ; 0x73662 mov.b @0xFFFF812F ; 0x73666 cmp ; bne fail
+  => a single 8-bit additive checksum byte terminates the clone stream.
+
+ID / REGION GATE on RECEIVE (sub_737C8, before any EEPROM write)
+  0x737C8  compare 5 bytes "AH72M" (ROM 0x738A2) against received 0xFF96F8
+  0x737E2  compare byte 0xFF96FD against sub_734BE() (returns 2 = version/type)
+  0x737EE  compare 4 bytes 0xFF96FE against sub_7357A() (the radio's region code)
+  Any mismatch -> rts non-zero -> 0x735AA `bne loc_73678` -> 0xFF8131=4 (error),
+  set 0xFF817E.1, NOTHING written. Same gate as BACKUP.dat (pc-02 sub_737C8).
+
+RECEIVE FINISH
+  On full success the receiver writes markers (sub_75EB6, sub_39504 writes
+  "TAIS"), `orc #0x80,ccr ; jmp 0x2050` -> software reset to apply. On any
+  failure it sets error state and returns without reset. Like BACKUP.dat, data
+  is streamed straight into EEPROM and the checksum is compared only at the end;
+  a bad clone ends in error/reset, not a clean reject before writing.
+
+SECURITY NOTE
+  The clone exposes only the two fixed EEPROM images; addresses and lengths are
+  compile-time immediates, the start requires physical front-panel action, and
+  the receive side refuses a foreign model/region before writing. It does NOT
+  provide an arbitrary memory read or write of the radio.

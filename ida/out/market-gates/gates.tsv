@@ -1,0 +1,73 @@
+# Lane I7: every FF800F/FF8010/FF8011 gate site with predicate, both-side behaviour and feature area. Byte-verified; see readers.tsv/market-tables.tsv/segment-ranges.tsv.
+# predicate 'sub_3ECB8 Z iff FF800F==0' = Japanese-default market. No-op rows are conditional branches to the next instruction.
+# This documents WHAT each gate does. It does not describe how a destination is set or changed (lane boundary).
+site	ida_fn	predicate	behaviour_if_predicate_true	behaviour_else	feature_area	status
+00E7F8	00DEFA-00E85C	btst FF800F,@0xF6C2 (=0x3F): dest 0..5 true	bset FF89C0.7 (SAVE RX on), FF89BE.3 (RPT ARS on)	leave clear (dest 6,7)	power-on defaults / RPT ARS	C
+00E80E	00DEFA-00E85C	sub_3ECB8 Z iff FF800F==0	(dest 0 = JP) skip the English block	(dest!=0) FF8BC9=0x1A TIME ZONE UTC00:00; FF89BA(F393 TOT)=6; bset FF89BE.7 (SCAN WIDTH default BAND); bset FF89C0.2/.1; bset FF89C2.1 LANGUAGE=English; bclr FF89C2.5; FF8D8E=1	display/language + power-on defaults	C
+00E844	00DEFA-00E85C	sub_3ECD4 then 2<=FF800F<5	(2..4) bset FF89C0.0	(else) nothing	power-on defaults (FF89C0.0)	C
+00E440	00DEFA-00E85C	index FF800F (table F958/F978/F980/F9A0)	FF8D96/FF8D92/FF8D9A/FF8D93 = WIRES-X preset freq+attr per dest (145.78/438.98 for 0/6, else 145.375/433.45)	-	WIRES-X RPT/WIRES preset default (F371)	C
+00E8EA	00E8AE-00E934	sub_3ECB8 Z iff FF800F==0	band records +0x11 (FF8EF1/8FF9/9101) = 6	(dest!=0) = 3	power-on band record field +0x11	C
+00E9E0	00E9CC-00EA92	sub_3ECB8 Z iff FF800F==0	band 2 (6 m) edge start 51.0 MHz	(dest!=0) 50.0 MHz	RX/TX coverage: 6 m band edge	C
+00EA14	00E9CC-00EA92	sub_3ECB8 Z iff FF800F==0	band 8 edge start 380.0 MHz	(dest!=0) 222.0 MHz	RX/TX coverage: band 8 start	C
+00EA92	00EA92-00EAA8	index FF800F into [er6]	returns per-dest BCD edge from the table in er6 (F022/F042/F062/F082)	-	RX coverage per-band edge tables	C
+00EAD2	00EAD2-00EBE0	index FF800F into [er5]	per-dest RPT offset from F682/F6A2 into band record +0x18	-	RPT offset default per band (F682/F6A2)	C
+00EAA8	00EAA8-00EAB0	sub_3ECB8 Z iff FF800F==0	beq to next insn (0xEAAE) -> NO EFFECT	-	no-op	C
+00EAB8	00EAB0-00EACA	sub_3ECD4 Z iff FF800F==1	(dest!=1, and 817E.0 clear) add extra segment via sub_EAD2+sub_3A390	(dest==1) skip	band-plan extra segment	C
+00EBC0	00EAD2-00EBE0	FF800F==1 and band 6/9	(dest 1 & band 6/9) skip sub_3A390 segment add	else add	band-plan segment (dest 1)	C
+00EBE2	00EBE0-00EBEC	sub_3ECB8 Z iff FF800F==0	(dest 0) r3l=8	(dest!=0) r3l=0x0C -> band record +0x1B	power-on band record +0x1B	C
+010288	010276-0102A6	none (writer; boot-hold index-7 editor entry)	copies FF800F/FF8010 to edit vars AD95/AD96; screen 0xE8	-	destination editor entry - boundary, not traced	C
+010D66	010CC4-010EA0	sub_3ECB8 Z iff FF800F==0	(dest 0) skip extra sub_328DA check -> table 0x110E0	(dest!=0) sub_328DA gate then table select	menu/VFO list variant	C
+014F96	014F8E-014FA6	sub_3ECB8 Z iff FF800F==0	(dest 0) accept value 0x8F (re-cycle)	(dest!=0) skip value 0x8F	menu cycle exception (F350/mode list; value 0x8F)	C
+016FAC	016F82-016FFE	sub_3ECB8 Z iff FF800F==0	(dest 0) record +0x16 may take value 5	(dest!=0) skip value 5	menu cycle of band record +0x16	C
+01A370	01A340-01A3B0 (loose)	sub_3ECB8 Z iff FF800F==0	(dest 0) AD97<2 path	(dest!=0) branch 0x1A3FA	menu/editor path (AD97)	C
+01C2BA	01C2BA-01C348	sub_3F386 index then F1FA[idx]	F1FA[idx]==0 vs !=0 selects band record +0x3/+0x4 handling and PMS slot FF90F0	-	band availability (merge flag F1FA)	C
+01C360	01C360-01C394	sub_3F386 index, F1FA[idx]	loop up/down over available bands (skip merged)	-	band step (up)	C
+01C394	01C394-01C3BE	sub_3F386 index, F1FA[idx]	band step over AD94	-	band step (down)	C
+01D24C	01D220-01D2BA	sub_3ECB8 Z iff FF800F==0	(dest 0) cycle table incl 3/5/8; sub_3F386+F1FA check	(dest!=0) alt cycle table 0x1D2BA	menu/band cycle variant	C
+01D268	01D220-01D2BA	sub_3F386 index, F1FA[idx]	skip merged bands in cycle	-	band cycle (dest 0 branch)	C
+01D2C0	01D2C0-01D2EE	sub_3ECB8 Z iff FF800F==0	(dest 0) if band +0x11==6 remap 90FE/8A58	(dest!=0) skip	band remap (dest 0)	C
+01D40E	01D40E-01D4DA	FF800F==6 OR FF8010!=0	(6/variant) feature path sub_1C82E etc	(else) 0x1D51C reject	feature path (dest 6/variant)	C
+01D618	01D5E2-01D64C	FF800F==6 OR FF8010!=0	(6/variant) sub_33DC8 path	(else) 0x1D646 reject	feature path (dest 6/variant)	C
+01E524	01E506-01E59E	sub_3ECD4 Z iff FF800F==1	bne 0x1E52A = next insn -> NO EFFECT (table F682 used either way)	-	no-op	C
+01E556	01E506-01E59E	index FF800F into F6A2/F682	per-dest RPT offset edge for the ARS add-segment path	-	RPT offset / ARS segment	C
+01E59E	01E59E-01E5EE	sub_3ECB8 Z iff FF800F==0	(dest 0) band 8 via sub_32650==2 then AIR-band fixed-mode set +0x15=1	(dest!=0) nothing	AIR-band fixed-mode (dest 0)	C
+01E5F6	01E5F6-01E620	sub_3ECB8 Z iff FF800F==0 AND er6==0x20D50	(dest 0, 430 band) record +0x16=1 +0x17=8	else only store +0x1E	430-band step/mode default (dest 0)	C
+01E620	01E620-01E63E	sub_3ECB8 Z iff FF800F==0 AND er6==0x20D50	(dest 0) record +0x16=0	-	430-band default (dest 0)	C
+01E652	01E646-01E6BE	sub_3ECB8 Z iff FF800F==0 (+ cmp 6/1/5)	select fixed-MODE seg table 20BB4 (0/6) / 20BE0 (1/5) / 20BFC (other)	-	fixed RX MODE segments (F400) per dest group	C
+01E67C	01E646-01E6BE	sub_3ECB8 + cmp 6/1/5/2-4	select seg table 20C18/20C24/20C30/20C3C	-	fixed RX MODE segments (2nd set)	C
+01E6EE	01E6E2-01E73C	sub_3ECB8 + cmp 6/1/5/2-4	select fixed-STEP seg table 40D2C/40F92/4116C/41346/41480	-	fixed STEP segments (F391) per dest group	C
+02136A	021348-0213BE	FF800F==6 OR FF8010!=0	(6/variant) sub_213BE feature path	(else) 0x213B8 reject	feature path (dest 6/variant)	C
+022230	022212-02225C	sub_3ECDE Z iff 2<=FF800F<=4	(US group) table 0x22172 (76MHz)	(else) 0x221C0 (88MHz) -> freq clamp	RX coverage clamp (US cellular region)	C
+02225C	02225C-022276	sub_3ECDE Z iff 2<=FF800F<=4	table 22172 vs 221C0 (freq window test)	-	RX coverage window test	C
+022294	022276-0222C0	sub_3ECDE Z iff 2<=FF800F<=4	table 22172 vs 221C0	-	RX coverage window test	C
+02CE8A	02CE6A-02CEB0	sub_3ECD4 Z iff FF800F==1	bne 0x2CE90 = next insn -> NO EFFECT	-	no-op	C
+02F782	02F718-02F83A	sub_3ECDE Z iff 2<=FF800F<=4	select PLL/offset byte from 0x2F854/0x2F858 vs direct	-	PLL/offset table (region)	C
+02F95C	02F93A-02FA34	sub_3ECDE Z iff 2<=FF800F<=4	PLL band map table 0x30B00 (76) vs 0x30BA4 (merged 76/88)	-	PLL band map (region)	C
+02F99E	02F93A-02FA34	sub_3ECDE Z iff 2<=FF800F<=4	freq compare vs 0x22204 limit (76 vs 88 top)	-	PLL band map clamp	C
+02FB00	02FAEC-02FB94	sub_3ECB8 Z iff FF800F==0	(dest 0, mode 5) FF811A=0x1784, record +0x93=7	(dest!=0) sub_328A6 path	PLL constants / scan-skip (dest 0)	C
+0315A8	031594-03163C	sub_3ECB8 Z iff FF800F==0	(dest 0, mode 5) FF811E=0x1F54, record +0x93=7	(dest!=0) sub_328A6 path	PLL constants / scan-skip (dest 0)	C
+031252	0311E8-0312E2	sub_3ECDE Z iff 2<=FF800F<=4	PLL byte from 0x312FC/0x31300 vs direct	-	PLL/offset table (region)	C
+031404	0313E2-0314DC	sub_3ECDE Z iff 2<=FF800F<=4	PLL band map 0x32442 (76) vs 0x324E6 (merged)	-	PLL band map (region)	C
+031446	0313E2-0314DC	sub_3ECDE Z iff 2<=FF800F<=4	freq compare vs 0x22204 limit	-	PLL band map clamp	C
+0328A6	0328A6-0328DA	sub_3ECB8 Z iff FF800F==0	(dest 0) FALSE (returns 0)	(dest!=0, 817E.0 clear) band-2 check sub_2EAEE: record +5==2, DTMF FF89C2.4, FF8F89==1 -> 1	AIR/band-2 enable (dest!=0)	C
+032650	032650-03266E	FF800F!=0 first; then r3l in {8,0xB} and FF8011==0	(dest!=0) returns 0; (dest 0, band 8/B, strap 0) returns 2 else 0	-	band 8/11 classify (dest 0 + strap)	C
+032BDC	032BDC-032BFA	index FF800F into ptr table 0x32BFA	FF92C8 = per-dest band-classify table (032C1A/96/D12)	-	band-classify table select	C
+035776	035746-0357B6	index FF800F into byte table 0x357C4	byte from 357C4[dest]	-	UNREACHED: containing code has no static ref	C
+033250	0331DC-0332BA	sub_3ECD4 Z iff FF800F==1	(dest 1) FFBC6C=1 (JP-band recording/VW variant)	(else) 0	DIGITAL VW / recording path (dest 1)	C
+03D2CC	03D022-03D36E	sub_3ECDE Z iff 2<=FF800F<=4	string/list select 0x221A8 vs 0x221F6 (coverage list display)	-	coverage display list (region)	C
+03F3C8	03F3B4-03F47E	F1FA[sub_3F386 idx] (band available?)	record +0x46 bit7 set/clear (band-enable flag); then band-plan record 0xF23A[F21A]	-	band availability flag + band-plan record	C
+03F47E	03F47E-03F48E	index FF800F	er6 += 0x24*FF800F (addresses F0A2 ham-window record)	-	ham-window record select (helper)	C
+03F4A2	03F4A2-03F4EA	FF800F in {0,6} OR FF8011==0	(JP/ham/strap) copy F0AE/F0BE windows to FF92CE/FF92D6	(else) copy F672 windows	RX coverage windows FF92CE/FF92D6	C
+03F4EC	03F4EA-03F522	sub_3F386 index	band-plan freq+flag merge into FFB38A (edit retune)	-	retune band-plan apply	C
+03F546	03F522-03F52A	sub_3F386 index, F5B2[idx]	F5B2[idx]!=0 -> loc_3F554 (F0A2 window) else next	-	freq validity window select	C
+03F554	03F522-03F52A	index FF800F	er6 = F0A2 + 0x24*FF800F (ham window record)	-	ham-window record select	C
+03F56E	03F522-03F52A	sub_3ECD4 Z iff FF800F==1	bne 0x3F574 = next insn -> NO EFFECT; then F5D2[] blocked-range ptr used either way	-	no-op (blocked-range table used regardless)	C
+03FE68	03FE60-03FEDC	sub_3ECDE Z iff 2<=FF800F<=4	freq window test 22172 vs 221C0; sets record +0x27 band-edge flag and dest-slot FF9102/+0x12	-	RX coverage window + dest-slot flag	C
+063C7A	063C16-063C8E	sub_3ECB8 Z iff FF800F==0	(dest 0) nothing	(dest!=0) bset FFB963.0, FFB421=4 (WIRES-X/news-station region flag)	WIRES-X / news-station region feature	C
+074ABE	07481A-074B08	sub_3F386 index, F1FA[idx]	clone-load (card restore): per-band availability test when converting a restored record	-	clone/BACKUP conversion (band availability)	C
+075096	074E38-0750C2	sub_3F386 index, F1FA[idx]	clone-load: band availability test	-	clone/BACKUP conversion (band availability)	C
+07516A	075160-0753D4	switch FF800F 1/2/3/4/5/7	per-dest record-conversion branch on clone/restore (coverage-list F4AA/F50A/F32A etc per dest)	-	clone/BACKUP conversion (RX coverage lists)	C
+075554	075554-075EB4	switch FF800F 1/2/3/4/5/7	per-dest record-conversion branch (second clone pass)	-	clone/BACKUP conversion (second pass)	C
+07357A	07357A-07358E	none (reads all three)	returns FF800F/FF8010/FF8011 for clone header + BACKUP.dat ID bytes (sub_737C8 compares)	-	clone/BACKUP ID check	C
+006864	006864-0068A8	index FF800F(+8/16)	3-char code from 0x68A8 into V-record identity FEE019	-	display/identification (clone header)	C
+073B82	073B62-073BB4	none (block copy of FF800E..11)	copies dest block into clone header FF96FC; then writes FF8010/11=1 (variant)	-	clone header build - writer, boundary not traced	C

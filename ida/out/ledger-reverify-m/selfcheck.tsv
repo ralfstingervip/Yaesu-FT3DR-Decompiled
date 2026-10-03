@@ -1,0 +1,46 @@
+address	cited	actual	result	note
+6ADE2	58 60 00 2e	58 60 00 2e	PASS	4-B bcc before the arm (seed head 06ADE2, size 4)
+6ADE4	00 2e 0c cb	00 2e 0c cb	PASS	image at the cited 0x06ADE4
+6ADE6	0c cb 58 70 00 28 eb 07 5e 06 ac d6 58 00 00 1e	0c cb 58 70 00 28 eb 07 5e 06 ac d6 58 00 00 1e	PASS	arm run the README/RESUME cite
+6ACD6	0f 95 7a 15	0f 95 7a 15	PASS	ordinary routine
+FFF394CC	75 41 e5	75 41 e5	PASS	mov #0xE5 (first)
+FFF394CF	05 59 40 fa	05 59 40 fa	PASS	bsr.a at the cited address
+FFF39513	75 41 e5	75 41 e5	PASS	mov #0xE5 (second)
+FFF39516	05 12 40 fa	05 12 40 fa	PASS	bsr.a at the cited address
+FFF3906C	75 41 e6 05 b9 44 fa	75 41 e6 05 b9 44 fa	PASS	E6 sender, bsr.a at FFF3906F
+62806	40 16 5e 06 6f b4 40 10 5e 06 72 50	40 16 5e 06 6f b4 40 10 5e 06 72 50	PASS	doc 116:85 run
+62808	5e 06 6f b4	5e 06 6f b4	PASS	jsr 0x066FB4
+63C04	fc 00 6a 8c b2 a3	fc 00 6a 8c b2 a3	PASS	image at doc 122's address
+63C10	fc 0a 6a 8c a9 f9	fc 0a 6a 8c a9 f9	PASS	mode-10 store
+3600E	6a 10 b0 bb 73 70 46 08	6a 10 b0 bb 73 70 46 08	PASS	sub_3600E: btst #7,@B0BB ; bne
+36016	fc 01 6a 8c aa d7	fc 01 6a 8c aa d7	PASS	sixth AAD7=1 store
+35D24	00 03 60 0e	00 03 60 0e	PASS	BE32 slot -> sub_3600E
+34D2C	fc 01 6a 8c aa d7	fc 01 6a 8c aa d7	PASS	listed site
+35A18	fc 01 6a 8c aa d7	fc 01 6a 8c aa d7	PASS	listed site
+35A62	fc 01 6a 8c aa d7	fc 01 6a 8c aa d7	PASS	listed site
+35A9A	fc 01 6a 8c aa d7	fc 01 6a 8c aa d7	PASS	listed site
+35B52	fc 01 6a 8c aa d7	fc 01 6a 8c aa d7	PASS	listed site
+67748	6a 8e bb e1	6a 8e bb e1	PASS	the one BBE1 store from r6l
+77140	01 5d 40 70 fd 62	01 5d 40 70 fd 62	PASS	6-B head; 40 70 at +2 is not a branch
+77156	01 5d 40 60 fd 62	01 5d 40 60 fd 62	PASS	6-B head; 40 60 at +2
+771AE	01 00 6d f2 0c 9a	01 00 6d f2 0c 9a	PASS	first bytes of the unreached 52 B
+7B4BA	00 07 84 be	00 07 84 be	PASS	CDC record 0
+7B4C4	00 07 69 aa	00 07 69 aa	PASS	CDC record 1
+7B4CE	00 07 68 c8	00 07 68 c8	PASS	CDC record 2
+7B4D8	00 07 69 aa	00 07 69 aa	PASS	CDC record 3
+7B4E2	00 07 67 be	00 07 67 be	PASS	CDC record 4
+7B4EC	00 07 68 a8	00 07 68 a8	PASS	CDC record 5
+34A52	6a 18 aa 30 70 40	6a 18 aa 30 70 40	PASS	bset #4,@AA30
+4B812	7a 03 00 00 00 00 f4 03	7a 03 00 00 00 00 f4 03	PASS	3-digit entry
+482C8	6a 8c bb 92	6a 8c bb 92	PASS	store to BB92
+351E2	79 04 09 89	79 04 09 89	PASS	TGRA1 = 0x989
+476	79 04 0b a0	79 04 0b a0	PASS	TGRA0 = 0xBA0
+350C0	79 04 00 47	79 04 00 47	PASS	TCORA 0x47
+69964	6a 0c b3 f5	6a 0c b3 f5	PASS	live routine
+69A7F	6a 0c b3 f5	6a 0c b3 f5	PASS	stale copy
+15288	10 72 0a a5 01 00 69 56 47 08 5d 60	10 72 0a a5 01 00 69 56 47 08 5d 60	PASS	sub_15260 record call
+14986	00 06 66 00	00 06 66 00	PASS	666.00 kHz BCD
+149A2	00 06 66 00	00 06 66 00	PASS	666.00 kHz BCD
+2200	2c 4c ec 7f ac 7d	2c 4c ec 7f ac 7d	PASS	strap key test
+76F04	a8 20	a8 20	PASS	first class-request compare
+069A7F	first 37 B == 0x069964	True	PASS	stale copy

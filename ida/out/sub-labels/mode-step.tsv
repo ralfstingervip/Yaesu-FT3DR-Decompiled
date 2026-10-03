@@ -1,0 +1,46 @@
+# Lane G3 mode/step tables. status C = bytes read.
+table	index	addr	bytes	text_or_value	selector_site	status
+SUB RX MODE (code 0x22, frame+0x20)	0	FFF48834	46 4d 00 41 4d	FM	FFF011CE cmp #2 / FFF011D2 cmp #1 / FFF011D6 cmp #0 (value-draw FFF011C5)	C
+SUB RX MODE (code 0x22, frame+0x20)	1	FFF48837	41 4d 00 41 55	AM	FFF011CE cmp #2 / FFF011D2 cmp #1 / FFF011D6 cmp #0 (value-draw FFF011C5)	C
+SUB RX MODE (code 0x22, frame+0x20)	2	FFF4883A	41 55 54 4f 00	AUTO	FFF011CE cmp #2 / FFF011D2 cmp #1 / FFF011D6 cmp #0 (value-draw FFF011C5)	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x00	FFF4908C	35 2e 30 20 4b 48 7a 00 00 00	5.0 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x01	FFF49096	36 2e 32 35 20 4b 48 7a 00 00	6.25 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x02	FFF490A0	38 2e 33 33 20 4b 48 7a 00 00	8.33 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x03	FFF490AA	31 30 2e 30 20 4b 48 7a 00 00	10.0 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x04	FFF490B4	31 32 2e 35 20 4b 48 7a 00 00	12.5 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x05	FFF490BE	31 35 2e 30 20 4b 48 7a 00 00	15.0 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x06	FFF490C8	32 30 2e 30 20 4b 48 7a 00 00	20.0 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x07	FFF490D2	32 35 2e 30 20 4b 48 7a 00 00	25.0 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x08	FFF490DC	35 30 2e 30 20 4b 48 7a 00 00	50.0 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x09	FFF490E6	31 30 30 2e 30 20 4b 48 7a 00	100.0 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x0A	FFF490F0	39 2e 30 20 4b 48 7a 00 00 00	9.0 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x0B	FFF490FA	32 30 30 2e 30 20 4b 48 7a 00	200.0 KHz	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+SUB STEP strings (code 0x91, 13x10 B, copied by smovf #0x82 @FFF04CBA)	0x0C	FFF49104	41 55 54 4f 00 00 00 00 00 00	AUTO	FFF04CCC cmp #0Dh; clamp to 0x0C; FFF04CDF mul #0Ah	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x00	0x1E07C	01 f4	500 (= 5.00 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x01	0x1E07E	02 71	625 (= 6.25 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x02	0x1E080	09 c4	2500 (= 25.00 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x03	0x1E082	03 e8	1000 (= 10.00 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x04	0x1E084	04 e2	1250 (= 12.50 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x05	0x1E086	05 dc	1500 (= 15.00 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x06	0x1E088	07 d0	2000 (= 20.00 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x07	0x1E08A	09 c4	2500 (= 25.00 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x08	0x1E08C	13 88	5000 (= 50.00 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x09	0x1E08E	27 10	10000 (= 100.00 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x0A	0x1E090	03 84	900 (= 9.00 kHz)	read by sub_1DF7A (doc 35)	C
+MAIN step table unk_1E07C (BE u16, x10 Hz)	0x0B	0x1E092	4e 20	20000 (= 200.00 kHz)	read by sub_1DF7A (doc 35)	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x00	FFF48AF4/FFF48BB4	4f 46 46 00 00 00 00 00 00 00 00 00 00 00 00 00	OFF / 	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x01	FFF48B04/FFF48BC4	54 4f 4e 45 00 00 00 00 00 00 00 00 00 00 00 00	TONE / TN	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x02	FFF48B14/FFF48BD4	54 4f 4e 45 20 53 51 4c 00 00 00 00 00 00 00 00	TONE SQL / TSQ	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x03	FFF48B24/FFF48BE4	44 43 53 00 00 00 00 00 00 00 00 00 00 00 00 00	DCS / DCS	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x04	FFF48B34/FFF48BF4	52 45 56 20 54 4f 4e 45 00 00 00 00 00 00 00 00	REV TONE / RTN	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x05	FFF48B44/FFF48C04	4a 52 20 46 52 45 51 00 00 00 00 00 00 00 00 00	JR FREQ / JR	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x06	FFF48B54/FFF48C14	50 52 20 46 52 45 51 00 00 00 00 00 00 00 00 00	PR FREQ / PR	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x07	FFF48B64/FFF48C24	50 41 47 45 52 00 00 00 00 00 00 00 00 00 00 00	PAGER / PAG	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x08	FFF48B74/FFF48C34	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00	 / 	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x09	FFF48B84/FFF48C44	44 20 43 44 00 00 00 00 00 00 00 00 00 00 00 00	D CD / DC	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x0A	FFF48B94/FFF48C54	54 4f 4e 45 2d 44 43 53 00 00 00 00 00 00 00 00	TONE-DCS / T-D	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB SQL TYPE strings (code 0x4A; long/short)	0x0B	FFF48BA4/FFF48C64	44 20 43 44 2d 54 4f 4e 45 20 53 51 4c 00 00 00	D CD-TONE SQL / D-T	FFF02DAA cmp #0Ch; clamp 0x0B; shll #4	C
+SUB TX POWER strings (F400, frame+0x20)	0	FFF4A51F	4c 4f 57 31 00 00 00 00 00 00 00 00 00 00 00 00	LOW1	FFF087F0 cmp #4; clamp 3; shll #4	C
+SUB TX POWER strings (F400, frame+0x20)	1	FFF4A52F	4c 4f 57 32 00 00 00 00 00 00 00 00 00 00 00 00	LOW2	FFF087F0 cmp #4; clamp 3; shll #4	C
+SUB TX POWER strings (F400, frame+0x20)	2	FFF4A53F	4c 4f 57 33 00 00 00 00 00 00 00 00 00 00 00 00	LOW3	FFF087F0 cmp #4; clamp 3; shll #4	C
+SUB TX POWER strings (F400, frame+0x20)	3	FFF4A54F	48 49 47 48 00 00 00 00 00 00 00 00 00 00 00 00	HIGH	FFF087F0 cmp #4; clamp 3; shll #4	C

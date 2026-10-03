@@ -1,0 +1,34 @@
+#	HOST-USB: complete USB device-identity list bound by the shipped driver package.
+#	Source: HMSEUSBDRIVER.exe (3,405,000 bytes, SHA-256 d936e1715610d150fa32cecbb96fced4942319d9fb395dafe5a9244794b5c262),
+#	an InstallShield 12 self-extractor.  Four plain-text INF files are stored
+#	uncompressed inside it; extracted copies are in ida\out\host-usb\inf\.
+#	inf0 = HmseUsb.inf 1.1.8.0 (32-bit, 0x30F37E)
+#	inf1 = HmseUsb.inf 1.1.8.1 (32-bit, 0x31246E)
+#	inf2 = HmseUsb.inf 1.1.8.2 (32-bit, 0x3155FB)
+#	inf3 = hmseusb.inf 1.1.9.0 (NTamd64,  0x3163B2)
+#	Setup class: RenesasUSB, ClassGUID {4E95F166-78F1-4c09-A93C-0EF5ACB45B4A},
+#	class name "Renesas USB Development Tools", driver HmseUsb.sys,
+#	ServiceType 1 (SERVICE_KERNEL_DRIVER), StartType 3 (SERVICE_DEMAND_START).
+vid	pid	hardware_id	device_desc	inf0_x86	inf1_x86	inf2_x86	inf3_amd64	relevance
+045B	000A	USB\VID_045B&PID_000A	FDM	yes	yes	yes	yes	Renesas Flash Development Toolkit adapter
+045B	000B	USB\VID_045B&PID_000B	CE 2148	yes	yes	yes	yes	Renesas eval board
+045B	000C	USB\VID_045B&PID_000C	CE 3664	yes	yes	yes	yes	Renesas eval board
+045B	000D	USB\VID_045B&PID_000D	USB Direct	yes	yes	yes	yes
+045B	823F	USB\VID_045B&PID_823F	E8Direct	yes	yes	yes	yes	E8 emulator
+045B	0025	USB\VID_045B&PID_0025	Generic Boot USB Direct	yes	yes	yes	yes	THIS IS THE FT3DR/DE. Manual page 11 names exactly this string.
+045B	8236	USB\VID_045B&PID_8236	E8a	no	no	no	yes	amd64 INF only, and listed in [ControlFlags] ExcludeFromSelect
+#
+#	Additional PIDs that RComms.dll knows about but that NO shipped INF binds:
+045B	8233	(none)	n/a	-	-	-	-	_VPIPE record 0 at RComms.dll 0x1001DE8C; pipes 0x81/0x02/0x83
+045B	8236	(none on x86)	n/a	-	-	-	inf3 only	_VPIPE record 1 at RComms.dll 0x1001DE92; pipes 0x81/0x02/0x84
+045B	8236	hardcoded default	n/a	-	-	-	-	E8A_USB::ScanPorts writes VID 1115 (0x045B) / PID 33334 (0x8236) for every registry-enumerated port (RComms 0x1000A660)
+#
+#	NOT PRESENT ANYWHERE IN THIS PACKAGE:
+#	"USB1653" / "Renesas USB1653 USB Boot Mode Device" -- the string the manual
+#	(page 11) warns about.  Searched all five binaries (HMSEUSBDRIVER.exe,
+#	both updater EXEs, RComms.dll, RFP_USB_VB.dll) as ASCII and as UTF-16LE: 0 hits.
+#	That name therefore comes from a DIFFERENT driver package (a Renesas
+#	"USB Boot Mode" driver that also claims VID_045B&PID_0025 and installs under
+#	the in-box "Universal Serial Bus controllers" class).  If that driver wins the
+#	binding, no \\.\HmseUsb<n> device node is created and RComms cannot open the
+#	radio at all -- which is exactly the failure the manual describes.

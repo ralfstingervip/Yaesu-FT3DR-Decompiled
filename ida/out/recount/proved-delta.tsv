@@ -1,0 +1,10 @@
+orig_start	orig_end	orig_bytes	corrected_start	corrected_bytes	delta_code_bytes	text_bytes	action	found_by	bytes_at_orig_start	bytes_at_corrected	evidence
+034644	034674	48	034644	48	0	0	reattributed	G1	6b 26 00 03 46 74 5d 60	78 b0 6b 26 00 03 46 74	tail of the routine entered at 0x034538 (jsr @0x34538:24 at 0x002CA8 = 5e 03 45 38); 0x034642 = 78 b0 6b 26 00 03 46 74 mov.l @(0x34674:32,er3),er6; the BE32 00034644 at 0x004AA6 sits in the code table 'FC',0,2,'FT',0,3,'FDG' (coincidence)
+038104	038160	92	038104	92	0	0	reattributed	G1	6b 26 00 03 81 8e 5d 60	78 b0 6b 26 00 03 81 8e	body of sub_0380EA (jsr @0x380ea:24 at 0x030D90 = 5e 03 80 ea; 0x030D68 is an entry of table 0x030DA8); 0x038102 = 78 b0 6b 26 00 03 81 8e
+04F3A4	04F3DE	58	04F3A4	58	0	0	reattributed	G1	6b 26 00 04 f3 e4 5d 60	78 b0 6b 26 00 04 f3 e4	body of sub_04F390 (jsr @0x4f390:24 at 0x04F340 = 5e 04 f3 90, inside validated sub_4F30A); 0x04F3A2 = 78 b0 6b 26 00 04 f3 e4
+06AC14	06AC3A	38	06AC14	38	0	0	reattributed	G1	6b 24 00 04 36 a6 01 00	78 c0 6b 24 00 04 36 a6	case code of jump table 0x06AC3A (entry 0x06ABF2 -> 0x06AC0C -> 0x06AC12; also bra .+118 at 0x06AB94); 0x06AC12 = 78 c0 6b 24 00 04 36 a6
+04DE6E	04DEE2	116	04DE94	78	-38	38	text-trimmed	G1	31 30 20 20 32 30 20 20	7a 05 00 04 de e2 6a 0c	0x04DE6E-0x04DE93 = ASCII tail of the 80 B string at 0x04DE44; true entry 0x04DE94 = BE32 at 0x04AD6C in table 0x04AB70
+04DF72	04E010	158	04DF98	120	-38	38	text-trimmed	G1	6e 69 20 20 34 35 20 20	7a 05 00 04 e0 10 6a 0c	0x04DF72-0x04DF97 = ASCII 'ni  45  90 ... 360   -'; true entry 0x04DF98 = BE32 at 0x04AD74 in table 0x04AB70
+04E320	04E392	114	04E32E	100	-14	14	text-trimmed	H1	42 61 72 6f 20 20 20 20	7a 05 00 04 e3 92 6a 0c	'Baro     -hPa' + FF; true entry 0x04E32E is an entry of tables 0x04AB70/0x04ABE4
+04E538	04E584	76	04E546	62	-14	14	text-trimmed	H1	47 75 73 74 20 20 20 20	fb 00 6a 10 8a ac 77 40	'Gust     -mph' + FF; true entry 0x04E546 is an entry of tables 0x04AB70/0x04ABE4
+051694	0516C6	50	05169E	40	-10	10	text-trimmed	H1	2d 2d 2d 2d 2d 2d 2d 2d	6a 0c bb e9 8c 02 7a 64	'---------' + FF; true entry 0x05169E is an entry of table 0x051548

@@ -1,0 +1,83 @@
+#	HOST-USB: every protocol command byte recovered from the FT3DR/DE ver 1.02 host tooling.
+#	Three distinct protocols live in these binaries.  Sections are separated by "##" rows.
+#	Columns: proto | cmd_hex | on_the_wire | direction | meaning | evidence | reachable
+#
+#	proto = H8S      Hitachi/Renesas H8S boot-mode command set. Selected when the
+#	                 update descriptor word at image_end+0x3C ... +0x40 == 6.
+#	                 FT3D_MAIN_ver102(EXP).exe carries 6 -> this is the MAIN path.
+#	proto = RX       Renesas RX (RX64M) boot-mode command set, SOD/LNH/LNL/CMD/SUM/ETX framing.
+#	                 Descriptor word == 7. FT3D_SUB_ver102(ALL).exe carries 7 -> the SUB path.
+#	proto = GEN      A third "generic writer download" state machine (descriptor word == 5).
+#	                 Present in BOTH EXEs, selected by NEITHER.  Unreachable as shipped.
+#	proto = E8A      RComms.dll's own E8a/E10A-USB on-chip-debug protocol (64-byte frames,
+#	                 A5F05A0F magic).  Reached only through the ULE_* / HUDI_* / E7_* exports,
+#	                 which neither updater EXE calls.  Unreachable from the shipped UI.
+#
+#	Addresses with no module prefix are in the named EXE at image base 0x400000.
+#	RComms.dll is at image base 0x10000000.
+proto	cmd_hex	on_the_wire	direction	meaning	evidence	reachable
+##	== H8S / 2370 boot mode: framing = CMD [SIZE] [data...] [SUM], SUM = -(sum of all preceding bytes) & 0xFF	==
+H8S	00	00	host->dev	bit-rate adjust / sync byte	UPD_MAIN 403900 (1 byte)	yes
+H8S	06	06	dev->host	ACK (also sent by host in one place)	UPD_MAIN 403920; checked as *a2==6 in 404F20/404F90/4054D0	yes
+H8S	55	55	host->dev	boot handshake byte	UPD_MAIN 403A00 (1 byte)	yes
+H8S	20	20	host->dev	Supported Device Inquiry	UPD_MAIN 403C00 (1 byte)	yes
+H8S	10	10 LEN <device-code ASCII> SUM	host->dev	Device Selection, device code as an ASCII string	UPD_MAIN 403C20	yes
+H8S	21	21	host->dev	Clock Mode Inquiry	UPD_MAIN 403D30 (1 byte)	yes
+H8S	11	11 01 <clkmode> SUM	host->dev	Clock Mode Selection	UPD_MAIN 403D50 (4 bytes)	yes
+H8S	27	27	host->dev	Programming Unit Inquiry	UPD_MAIN 403D80 (1 byte)	yes
+H8S	3F	3F <br_hi> <br_lo>	host->dev	New Bit Rate Selection, short form (bitrate/100, BE)	UPD_MAIN 403AB0 (3 bytes)	yes
+H8S	3F	3F 07 <br_hi> <br_lo> <clk_hi> <clk_lo> 02 <ratio1> <ratio2> SUM	host->dev	New Bit Rate Selection, full form. clk = descriptor+0x42 BE = 06 40 = 16.00 MHz; ratio = descriptor+0x44 = 1	UPD_MAIN 403DA0 (10 bytes)	yes
+H8S	40	40	host->dev	Programming / Erasing State Transition	UPD_MAIN 403E80 (1 byte)	yes
+H8S	60	60 10 <16 ID bytes> SUM	host->dev	ID Code Check. The 16 ID bytes come from descriptor+0x48 and are ALL ZERO in ver 1.02	UPD_MAIN 403EC0 (19 bytes)	yes
+H8S	48	48	host->dev	Erasure Selection (enter erase mode)	UPD_MAIN 403FD0 (1 byte)	yes
+H8S	58	58 01 <block#> SUM	host->dev	Block Erase, one 8-bit block number	UPD_MAIN 403FF0 (4 bytes)	yes
+H8S	43	43	host->dev	User MAT Programming Selection	UPD_MAIN 404020 (1 byte)	yes
+H8S	4B	4B	host->dev	Sum / checksum request (state "H8S/2370 wait check sum")	UPD_MAIN 404060 (1 byte)	yes
+H8S	50	50 <A2> <A1> <A0> <8192 data bytes> SUM	host->dev	PROGRAM 8192 BYTES at 24-bit big-endian address. Total 8197 = 0x2005 bytes on the wire.	UPD_MAIN 403AF0, sent via 4037F0(this, buf, 0x2005)	yes
+H8S	50	50 FF FF FF FF B4	host->dev	END OF PROGRAMMING marker	UPD_MAIN 403BB0 (6 bytes, literal)	yes
+H8S	D0	D0 11	dev->host	error/continue reply to 0x50 (0x50|0x80); sub-code 0x11 is tolerated and the block is re-sent	UPD_MAIN 404F90	yes
+##	== RX / RX64M boot mode: framing = SOD LNH LNL CMD [data...] SUM ETX ==
+##	   SOD = 0x01 for a command packet, 0x81 for a data packet.  LNH/LNL = big-endian byte count of CMD+data.
+##	   SUM = -(LNH+LNL+CMD+data) & 0xFF.  ETX = 0x03 (last) or 0x17 ETB (more data follows).
+##	   Error reply = CMD|0x80 with a 1-byte error code in data[0].
+RX	C1	C1	dev->host	initial "boot mode entered" reply that starts the sequence	UPD_SUB 406870 (*a2 == 0xC1)	yes
+RX	38	01 00 01 38 C7 03	host->dev	inquiry; the reply carries four big-endian 32-bit values at data[8..23] (area/block information) which the host stores	UPD_SUB 403C00, reply parsed in 4068D0	yes
+RX	36	01 00 02 36 01 C7 03	host->dev	selection with one parameter. Parameter = descriptor+0x70 = 0x00000001 (state name "RX64M wait endian")	UPD_SUB 403C50, param from 4068D0	yes
+RX	32	(reply 32 / error B2)	dev->host	reply handled, then 0x00 is sent	UPD_SUB 406AF0	yes
+RX	00	01 00 01 00 FF 03	host->dev	inquiry / sync	UPD_SUB 403D70	yes
+RX	50	01 00 02 50 00 AE 03	host->dev	selection with one parameter (0). Error reply 0xD0.	UPD_SUB 403DC0, reply in 406C70	yes
+RX	13	01 00 09 13 <start31..24 23..16 15..8 7..0> <end31..24 .. 7..0> SUM 03	host->dev	SPECIFY ADDRESS RANGE. start = descriptor+0x08 = 0xFFC00000, end = descriptor+0x10 = 0xFFFFFFFF. After the reply the host sets the write block size to 1024.	UPD_SUB 403E50, args from 406C70, block size set at 406C70	yes
+RX	13	81 <LNH> <LNL> 13 <up to 1024 data bytes> SUM <17 or 03>	host->dev	PROGRAMMING DATA PACKET. LN = datalen+1. Trailer 0x17 (ETB) while bytes remain, 0x03 (ETX) on the final packet.	UPD_SUB 403F50 (Buffer[2048])	yes
+RX	4D	01 00 02 4D 00 B1 03	host->dev	final command after the last data packet (state "RX64M wait sum")	UPD_SUB 4040A0, called from 406D40 when the last-block flag is set	yes
+RX	93	93 <err>	dev->host	error reply to 0x13 (0x13|0x80)	UPD_SUB 406D40 (v5 == -109)	yes
+RX	B8	B8 <err>	dev->host	error reply to 0x38	UPD_SUB 4068D0	yes
+RX	block	1024	-	RX write block size, set unconditionally after the reply to 0x50	UPD_SUB 406C70 *(v4+4194432) = 1024	yes
+##	== GEN: the third state machine, selected by descriptor word == 5, present but never selected ==
+GEN	50	50 <A3> <A2> <A1> <A0> <N data bytes> SUM	host->dev	program N bytes at a 32-bit big-endian address; N comes from the device's own programming-unit reply	UPD_MAIN 403940 (buffer 5+2047), N from a2[2..3] BE at 403560	no
+GEN	-	<device-reported>	-	block size learned at runtime from a 2-byte big-endian reply field	UPD_MAIN 403560 / UPD_SUB 3857	no
+##	== E8A: RComms.dll on-chip-debug protocol.  64-byte frames on the bulk pipes. ==
+##	   Frame:  [0..1] seq u16 LE (1..200, rolling) | [2..3] len u16 LE = 64 |
+##	           [4..7] A5 F0 5A 0F | [8..11] payload length BE | [12..15] command BE |
+##	           [16..] parameters BE | F0 A5 0F 5A | zero pad to 64 bytes
+E8A	80000000	len 0x20	host->dev	CONNECT / version check ("USB START BY E10", "USB CONNECTION OK")	RComms 1000BAD0, 100101C0 Version_Check	no
+E8A	80010000	len 0x18	host->dev	DISCONNECT ("USB END")	RComms 1000C100	no
+E8A	80020000	len 0x18	host->dev	FPGA_Download	RComms 10012500	no
+E8A	80030000	len 0x10	host->dev	AUD_TraceRead	RComms 10012E60	no
+E8A	80040000	len 0x10	host->dev	CPU_StatusRead	RComms 1000FCC0	no
+E8A	80050000	len 0x18	host->dev	E7_ReadMemory	RComms 1000DB60	no
+E8A	80060000	-	host->dev	E7_WriteMemory (also 80060001)	RComms 1000E520	no
+E8A	80070000	len 0x18: addr u32, count u16, width u16	host->dev	**ULE_ReadMemory - reads arbitrary target memory**	RComms 1000C5F0	no
+E8A	80080000	-	host->dev	**ULE_WriteMemory - writes arbitrary target memory**	RComms 1000D030	no
+E8A	80090000	len 0x10 / len 0x14	host->dev	SumCheck (0x10) and FIRM_Download (0x14)	RComms 10010770 / 10013700	no
+E8A	800A0000	len 0x10	host->dev	MonpOpen	RComms 10010C40	no
+E8A	80110000	-	host->dev	HUDI_SINGLEREAD	RComms 10014110	no
+E8A	80120000	-	host->dev	HUDI_SINGLEWRITE	RComms 10014BC0	no
+E8A	80130000	-	host->dev	HUDI_SERIALREAD	RComms 100154E0	no
+E8A	80140000	-	host->dev	HUDI_SERIALWRITE	RComms 10015FB0	no
+E8A	80200000	-	host->dev	AUD_EventSetCh	RComms 100168F0	no
+E8A	80230000	len 0x1E	host->dev	ULE_FillMemory	RComms 10017370	no
+E8A	4800	48 00 + 56 zero bytes inside the 64-byte frame	host->dev	PreEraseWrite_Erase, mode arg true -> H8S erase-selection byte 0x48	RComms 100118A0	no
+E8A	5800	58 00 + 56 zero bytes	host->dev	PreEraseWrite_Erase, mode arg false -> H8S block-erase byte 0x58	RComms 100118A0	no
+E8A	-	ProgDownload writes N x 64-byte frames then reads 64-byte replies	both	RComms 10011130; write ack 3000 ms, read 60000 ms	no
+E8A	-	E8A_USB::SendCommand always returns -1 (stub)	-	RComms 1000A8E0, 6 bytes	n/a
+E8A	-	E8A_USB::GetStatus always returns 0 (stub)	-	RComms 1000AAF0, 5 bytes	n/a

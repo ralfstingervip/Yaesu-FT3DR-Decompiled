@@ -1,0 +1,30 @@
+claim	item	addr	bytes	decode	verdict
+1	I2C clock/data drive reg	03BDB4	6a 18 fb a4 70 00	bset #0,@0xFFFBA4:16 (SDA drive bit0)	Confirmed
+1	I2C clock line	03BDCE	-	bset #1,@0xFFFBA4 (SCL bit1)	Confirmed
+1	I2C SDA input read	03BE4E	6a 10 fb a0	bld #0,@0xFFFBA0:16 (SDA sense)	Confirmed
+1	I2C output latch write	03BE84	6a 8a fb a8	mov.b r2l,@0xFFFBA8:16	Confirmed
+1	device byte write (bank1)	03C3AC	fd a2	mov.b #0xA2,r5l (A16=1 write addr)	Confirmed
+1	device byte read (bank1)	03BE1C	fd a3	mov.b #0xA3,r5l (A16=1 read addr)	Confirmed
+1	START helper drives SDA/SCL low	03C378	6a 18 fb a4 72 00	bclr #0,@0xFFFBA4	Confirmed
+1	byte shift-out onto SDA	03C3E2	6a 18 fb a4 67 00	bst #0,@0xFFFBA4 (shift C->SDA)	Confirmed
+1	17-bit addressing	03C3AC/03C3B4/03C3BC	fd a2 / r0h / r0l	block-select bit in 0xA2 + 2 addr bytes = 17 bits	Confirmed
+1	port letter "H" name	-	-	registers 0xFFFBA0/A4/A8 confirmed; H8S port letter not pinned from this package	Inferred
+2	sub_33532 chip-select	033536	7f 5c 72 70	bclr #7,@0xFF5C:8 (assert); bset #7 @0335BC	Confirmed
+2	3-wire clock line	03355E/033568	7f 5a 70 10 / 7f 5a 72 10	bset/bclr #1,@0xFF5A:8 (SK clock)	Confirmed
+2	3-wire data-out line	033554	7f 5a 67 00	bst #0,@0xFF5A:8 (DO)	Confirmed
+2	3-wire data-in line	0335A4	7e 4a 77 00	bld #0,@0xFF4A:8 (DI) -> rotxl.w r3	Confirmed
+2	data-dir pin via shadow	033580/0335D0	6a 8c fb 8a	mov.b r4l,@0xFFFB8A:16 from shadow 0xFF816D	Confirmed
+2	SEPARATE device from sub_3BDAC	-	-	uses 0xFF4A/5A/5C + 0xFFFB8A; disjoint from I2C 0xFFFBA0/A4/A8	Confirmed
+2	ports named B/D	-	-	separate port registers confirmed; B/D letters not pinned	Inferred
+2	caller 0x77DB2 unreached	077DB2	5e 03 35 32	jsr sub_33532:24; NOT inside any function (orphan)	Confirmed
+2	caller 0x77DF6 live	077DF6	5e 03 35 32	jsr sub_33532:24; inside sub_77DB8 (9 code xrefs)	Confirmed
+3	read 0x8DD8/D9 high word	05E96A	6a 04 8d d8 / 6a 0c 8d d9	r4h=@0xFF8DD8,r4l=@0xFF8DD9 -> mov.w r4,e4	Confirmed
+3	RX/TX selector	05E974	6a 10 8e a0 73 60	btst #6,@0xFF8EA0 (bit6 picks TX vs RX word)	Confirmed
+3	TX DG-ID working word	05E97C	6a 04 8e d8 / 6a 0c 8e d9	r4h=@0xFF8ED8,r4l=@0xFF8ED9	Confirmed
+3	RX DG-ID working word	05E986	6a 04 8e d6 / 6a 0c 8e d7	r4h=@0xFF8ED6,r4l=@0xFF8ED7	Confirmed
+3	packed 32-bit store	05E98E	01 00 6b 84 b0 5a	mov.l er4,@0xFFB05A:16 (hi=0x8DD8/D9, lo=DGID word)	Confirmed
+3	0x1A080 cache linkage	-	-	0x8ED6/D7 & 0x8ED8/D9 are the cache working words loaded by sub_3DF1C (I9); not read direct	Confirmed (one hop)
+4	sub_3C668 is I2C page writer	03C668	01 00 6d f0 / 79 06 00 40	push.l er0; mov.w #0x40,r6; 64-byte page write via sub_3C378 + bst #0,@0xFFFBA4	Confirmed
+4	whole-image XrefsTo(0x3C668)	03C996	fl_JN bne sub_3C668:16	only xref is the routine's own retry self-loop	Confirmed
+4	absolute ptr/jsr/jmp byte scan	-	00 03 c6 68 / 5e 03 c6 68 / 5a 03 c6 68	0 hits across the whole 1 MB image	Confirmed
+4	no caller	03C668	-	no external call, no data pointer, no fall-through	Confirmed

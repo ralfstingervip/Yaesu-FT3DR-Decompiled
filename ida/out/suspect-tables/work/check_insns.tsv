@@ -1,0 +1,1107 @@
+addr	oracle_len	oracle_text
+000400	4	mov.b @(0x18:16,er0),r4l
+000404	6	mov.l #0x4aa,er5
+00040A	2	bsr .+32 (0x42c)
+00040C	6	mov.l #0xff8f9a,er3
+000412	2	mov.b #0xb,r4l
+000414	2	shal.b r5h
+000416	2	rotxl.w e5
+000418	2	bst #0x1,r5h
+00041A	2	shal.b r5h
+00041C	2	rotxl.w e5
+00041E	2	bst #0x1,r5h
+000420	4	mov.l er5,@er3
+000424	2	adds #4,er3
+000426	2	dec.b r4l
+000428	2	bne .-22 (0x414)
+00042A	2	rts 
+00042C	6	mov.l er5,@0x811a:16
+000432	6	and.l #0xff,er4
+000438	2	shll.l #2,er4
+00043A	6	mov.l @(0xb8c:16,er4),er5
+000440	4	mov.w #0x7440,r4
+000444	4	mov.w r4,@0x8f96:16
+000448	6	bclr #0x0,@0x8f86:16
+00044E	2	rts 
+000450	4	mov.b @(0x18:16,er0),r4l
+000454	6	mov.l #0x706,er5
+00045A	2	bsr .-48 (0x42c)
+00045C	6	btst #0x2,@0x8f85:16
+000462	2	bne .+6 (0x46a)
+000464	6	xor.l #0xffffff00,er5
+00046A	6	mov.l er5,@0xaac2:16
+000470	6	mov.l er5,@0xaac6:16
+000476	4	mov.w #0xba0,r4
+00047A	4	mov.w r4,@0x8f96:16
+00047E	2	mov.b #0x1,r4l
+000706	6	mov.l #0x0,er6
+00070C	4	mov.b @0xaadc:16,r5l
+000710	2	mov.b r5l,r6l
+000712	2	shll.l #2,er6
+000714	6	btst #0x0,@0xaacd:16
+00071A	4	bne .+466 (0x8f0)
+00071E	6	btst #0x1,@0xaacd:16
+000724	4	bne .+480 (0x908)
+000728	4	mov.b @0xaadb:16,r4l
+00072C	4	bne .+224 (0x810)
+000730	4	mov.b @0xaacb:16,r4l
+000734	2	cmp.b #0x8,r4l
+000736	4	bcs .+134 (0x7c0)
+00073A	4	beq .+130 (0x7c0)
+00073E	2	cmp.b #0x21,r4l
+000740	2	bcs .+70 (0x788)
+000742	2	beq .+6 (0x74a)
+000744	2	cmp.b #0x28,r4l
+000746	2	bcs .+104 (0x7b0)
+000748	2	bra .+74 (0x794)
+00074A	4	mov.b @0xaaca:16,r4h
+00074E	2	dec.b r4h
+000750	4	mov.b r4h,@0xaaca:16
+000754	2	bne .+20 (0x76a)
+000756	6	mov.l @0xaac6:16,er5
+00075C	6	mov.l er5,@0xaac2:16
+000762	2	mov.b #0x17,r4h
+000764	4	mov.b r4h,@0xaaca:16
+000768	2	bra .+14 (0x778)
+00076A	6	mov.l @0xaac2:16,er5
+000770	2	shal.l er5
+000772	6	mov.l er5,@0xaac2:16
+000778	2	mov.b #0x0,r4h
+00077A	2	shal.l er5
+00077C	2	bst #0x0,r4h
+00077E	4	mov.b r4h,@0xaadd:16
+000782	2	mov.b #0x1,r4h
+000784	4	mov.b r4h,@0xaadc:16
+000788	2	inc r4l
+00078A	4	mov.b r4l,@0xaacb:16
+00078E	4	ldm.l @sp+,er4-er6
+000792	2	rte 
+000794	2	mov.b #0x1,r4l
+000796	4	mov.b r4l,@0xaacb:16
+00079A	4	mov.b @0xaadd:16,r4h
+00079E	2	bne .-18 (0x78e)
+0007A0	2	mov.b #0x1,r4l
+0007A2	4	mov.b r4l,@0xaadb:16
+0007A6	8	mov.l @(0xd72:32,er6),er6
+0007AE	2	bra .+42 (0x7da)
+0007B0	4	mov.b @0xaadd:16,r4h
+0007B4	2	bne .-46 (0x788)
+0007B6	8	mov.l @(0xd72:32,er6),er6
+0007BE	2	bra .+14 (0x7ce)
+0007C0	4	mov.b @0xaadd:16,r4h
+0007C4	2	bne .-62 (0x788)
+0007C6	8	mov.l @(0xd32:32,er6),er6
+0007CE	2	inc r4l
+0007D0	4	mov.b r4l,@0xaacb:16
+0007D4	2	inc r5l
+0007D6	4	mov.b r5l,@0xaadc:16
+0007DA	2	mov.l er6,er6
+0007DC	2	bmi .+22 (0x7f4)
+0007DE	4	and.w #0xff,e6
+0007E2	4	mov.b @0xaade:16,r4l
+0007E6	2	mulxu.b r4l,e6
+0007E8	2	sub.w e6,r6
+0007EA	2	mov.b #0x64,r4l
+0007EC	2	divxu.b r4l,r6
+0007EE	2	mov.b #0x7f,r4l
+0007F0	2	sub.b r6l,r4l
+0007F2	2	bra .+20 (0x808)
+0007F4	4	and.w #0xff,e6
+0007F8	4	mov.b @0xaade:16,r4l
+0007FC	2	mulxu.b r4l,e6
+0007FE	2	sub.w e6,r6
+000800	2	mov.b #0x64,r4l
+000802	2	divxu.b r4l,r6
+000804	2	mov.b #0x7f,r4l
+000806	2	add.b r6l,r4l
+000808	2	mov.b r4l,@0x69:8
+00080A	4	ldm.l @sp+,er4-er6
+00080E	2	rte 
+000810	4	mov.b @0xaacb:16,r4l
+000814	2	cmp.b #0x8,r4l
+000816	4	bcs .+134 (0x8a0)
+00081A	4	beq .+130 (0x8a0)
+00081E	2	cmp.b #0x21,r4l
+000820	2	bcs .+70 (0x868)
+000822	2	beq .+6 (0x82a)
+000824	2	cmp.b #0x28,r4l
+000826	2	bcs .+104 (0x890)
+000828	2	bra .+74 (0x874)
+00082A	4	mov.b @0xaaca:16,r4h
+00082E	2	dec.b r4h
+000830	4	mov.b r4h,@0xaaca:16
+000834	2	bne .+20 (0x84a)
+000836	6	mov.l @0xaac6:16,er5
+00083C	6	mov.l er5,@0xaac2:16
+000842	2	mov.b #0x17,r4h
+000844	4	mov.b r4h,@0xaaca:16
+000848	2	bra .+14 (0x858)
+00084A	6	mov.l @0xaac2:16,er5
+000850	2	shal.l er5
+000852	6	mov.l er5,@0xaac2:16
+000858	2	mov.b #0x0,r4h
+00085A	2	shal.l er5
+00085C	2	bist #0x0,r4h
+00085E	4	mov.b r4h,@0xaadd:16
+000862	2	mov.b #0x1,r4h
+000864	4	mov.b r4h,@0xaadc:16
+000868	2	inc r4l
+00086A	4	mov.b r4l,@0xaacb:16
+00086E	4	ldm.l @sp+,er4-er6
+000872	2	rte 
+000874	2	mov.b #0x1,r4l
+000876	4	mov.b r4l,@0xaacb:16
+00087A	4	mov.b @0xaadd:16,r4h
+00087E	2	bne .-18 (0x86e)
+000880	2	mov.b #0x0,r4l
+000882	4	mov.b r4l,@0xaadb:16
+000886	8	mov.l @(0xd32:32,er6),er6
+00088E	2	bra .+42 (0x8ba)
+000890	4	mov.b @0xaadd:16,r4h
+000894	2	bne .-46 (0x868)
+000896	8	mov.l @(0xd32:32,er6),er6
+00089E	2	bra .+14 (0x8ae)
+0008A0	4	mov.b @0xaadd:16,r4h
+0008A4	2	bne .-62 (0x868)
+0008A6	8	mov.l @(0xd72:32,er6),er6
+0008AE	2	inc r4l
+0008B0	4	mov.b r4l,@0xaacb:16
+0008B4	2	inc r5l
+0008B6	4	mov.b r5l,@0xaadc:16
+0008BA	2	mov.l er6,er6
+0008BC	2	bmi .+22 (0x8d4)
+0008BE	4	and.w #0xff,e6
+0008C2	4	mov.b @0xaade:16,r4l
+0008C6	2	mulxu.b r4l,e6
+0008C8	2	sub.w e6,r6
+0008CA	2	mov.b #0x64,r4l
+0008CC	2	divxu.b r4l,r6
+0008CE	2	mov.b #0x7f,r4l
+0008D0	2	sub.b r6l,r4l
+0008D2	2	bra .+20 (0x8e8)
+0008D4	4	and.w #0xff,e6
+0008D8	4	mov.b @0xaade:16,r4l
+0008DC	2	mulxu.b r4l,e6
+0008DE	2	sub.w e6,r6
+0008E0	2	mov.b #0x64,r4l
+0008E2	2	divxu.b r4l,r6
+0008E4	2	mov.b #0x7f,r4l
+0008E6	2	add.b r6l,r4l
+0008E8	2	mov.b r4l,@0x69:8
+0008EA	4	ldm.l @sp+,er4-er6
+0008EE	2	rte 
+0008F0	2	mov.b #0x2,r4l
+0008F2	4	mov.b r4l,@0xaacd:16
+0008F6	2	mov.b #0x1e,r4l
+0008F8	4	mov.b r4l,@0xaacc:16
+0008FC	2	mov.b #0x7,r4l
+0008FE	4	mov.b r4l,@0xaacb:16
+000902	2	mov.b #0x1,r4h
+000904	4	mov.b r4h,@0xaadc:16
+000908	4	mov.b @0xaadb:16,r4l
+00090C	4	bne .+160 (0x9b0)
+000910	4	mov.b @0xaacb:16,r4l
+000914	2	cmp.b #0x7,r4l
+000916	2	bcs .+78 (0x966)
+000918	2	beq .+76 (0x966)
+00091A	2	cmp.b #0xe,r4l
+00091C	2	bcs .+14 (0x92c)
+00091E	2	beq .+6 (0x926)
+000920	2	cmp.b #0x14,r4l
+000922	2	bcs .+56 (0x95c)
+000924	2	bra .+18 (0x938)
+000926	2	mov.b #0x1,r4h
+000928	4	mov.b r4h,@0xaadc:16
+00092C	2	inc r4l
+00092E	4	mov.b r4l,@0xaacb:16
+000932	4	ldm.l @sp+,er4-er6
+000936	2	rte 
+000938	8	mov.l @(0xdea:32,er6),er6
+000940	2	mov.b #0x1,r4l
+000942	4	mov.b r4l,@0xaacb:16
+000946	2	mov.b #0x1,r4l
+000948	4	mov.b r4l,@0xaadb:16
+00094C	4	mov.b @0xaacc:16,r4l
+000950	2	dec.b r4l
+000952	4	mov.b r4l,@0xaacc:16
+000956	4	beq .+244 (0xa4e)
+00095A	2	bra .+30 (0x97a)
+00095C	8	mov.l @(0xdea:32,er6),er6
+000964	2	bra .+8 (0x96e)
+000966	8	mov.l @(0xdb2:32,er6),er6
+00096E	2	inc r4l
+000970	4	mov.b r4l,@0xaacb:16
+000974	2	inc r5l
+000976	4	mov.b r5l,@0xaadc:16
+00097A	2	mov.l er6,er6
+00097C	2	bmi .+22 (0x994)
+00097E	4	and.w #0xff,e6
+000982	4	mov.b @0xaade:16,r4l
+000986	2	mulxu.b r4l,e6
+000988	2	sub.w e6,r6
+00098A	2	mov.b #0x64,r4l
+00098C	2	divxu.b r4l,r6
+00098E	2	mov.b #0x7f,r4l
+000990	2	sub.b r6l,r4l
+000992	2	bra .+20 (0x9a8)
+000994	4	and.w #0xff,e6
+000998	4	mov.b @0xaade:16,r4l
+00099C	2	mulxu.b r4l,e6
+00099E	2	sub.w e6,r6
+0009A0	2	mov.b #0x64,r4l
+0009A2	2	divxu.b r4l,r6
+0009A4	2	mov.b #0x7f,r4l
+0009A6	2	add.b r6l,r4l
+0009A8	2	mov.b r4l,@0x69:8
+0009AA	4	ldm.l @sp+,er4-er6
+0009AE	2	rte 
+0009B0	4	mov.b @0xaacb:16,r4l
+0009B4	2	cmp.b #0x7,r4l
+0009B6	2	bcs .+76 (0xa04)
+0009B8	2	beq .+74 (0xa04)
+0009BA	2	cmp.b #0xe,r4l
+0009BC	2	bcs .+14 (0x9cc)
+0009BE	2	beq .+6 (0x9c6)
+0009C0	2	cmp.b #0x14,r4l
+0009C2	2	bcs .+54 (0x9fa)
+0009C4	2	bra .+18 (0x9d8)
+0009C6	2	mov.b #0x1,r4h
+0009C8	4	mov.b r4h,@0xaadc:16
+0009CC	2	inc r4l
+0009CE	4	mov.b r4l,@0xaacb:16
+0009D2	4	ldm.l @sp+,er4-er6
+0009D6	2	rte 
+0009D8	8	mov.l @(0xdb2:32,er6),er6
+0009E0	2	mov.b #0x1,r4l
+0009E2	4	mov.b r4l,@0xaacb:16
+0009E6	2	mov.b #0x0,r4l
+0009E8	4	mov.b r4l,@0xaadb:16
+0009EC	4	mov.b @0xaacc:16,r4l
+0009F0	2	dec.b r4l
+0009F2	4	mov.b r4l,@0xaacc:16
+0009F6	2	beq .+86 (0xa4e)
+0009F8	2	bra .+30 (0xa18)
+0009FA	8	mov.l @(0xdb2:32,er6),er6
+000A02	2	bra .+8 (0xa0c)
+000A04	8	mov.l @(0xdea:32,er6),er6
+000A0C	2	inc r4l
+000A0E	4	mov.b r4l,@0xaacb:16
+000A12	2	inc r5l
+000A14	4	mov.b r5l,@0xaadc:16
+000A18	2	mov.l er6,er6
+000A1A	2	bmi .+22 (0xa32)
+000A1C	4	and.w #0xff,e6
+000A20	4	mov.b @0xaade:16,r4l
+000A24	2	mulxu.b r4l,e6
+000A26	2	sub.w e6,r6
+000A28	2	mov.b #0x64,r4l
+000A2A	2	divxu.b r4l,r6
+000A2C	2	mov.b #0x7f,r4l
+000A2E	2	sub.b r6l,r4l
+000A30	2	bra .+20 (0xa46)
+000A32	4	and.w #0xff,e6
+000A36	4	mov.b @0xaade:16,r4l
+000A3A	2	mulxu.b r4l,e6
+000A3C	2	sub.w e6,r6
+000A3E	2	mov.b #0x64,r4l
+000A40	2	divxu.b r4l,r6
+000A42	2	mov.b #0x7f,r4l
+000A44	2	add.b r6l,r4l
+000A46	2	mov.b r4l,@0x69:8
+000A48	4	ldm.l @sp+,er4-er6
+000A4C	2	rte 
+000A4E	2	mov.l er6,er6
+000A50	2	bmi .+22 (0xa68)
+000A52	4	and.w #0xff,e6
+000A56	4	mov.b @0xaade:16,r4l
+000A5A	2	mulxu.b r4l,e6
+000A5C	2	sub.w e6,r6
+000A5E	2	mov.b #0x64,r4l
+000A60	2	divxu.b r4l,r6
+000A62	2	mov.b #0x7f,r4l
+000A64	2	sub.b r6l,r4l
+000A66	2	bra .+20 (0xa7c)
+000A68	4	and.w #0xff,e6
+000A6C	4	mov.b @0xaade:16,r4l
+000A70	2	mulxu.b r4l,e6
+000A72	2	sub.w e6,r6
+000A74	2	mov.b #0x64,r4l
+000A76	2	divxu.b r4l,r6
+000A78	2	mov.b #0x7f,r4l
+000A7A	2	add.b r6l,r4l
+000A7C	2	mov.b r4l,@0x69:8
+000A7E	4	jsr @0x2f550:24
+000A82	2	mov.b #0x7f,r4l
+000A84	2	mov.b r4l,@0x69:8
+000A86	4	ldm.l @sp+,er4-er6
+000A8A	2	rte 
+0028D0	4	stm.l er4-er6,@-sp
+0028D4	4	bclr #0x0,@0xc5:8
+0028D8	2	mov.b @0x40:8,r4l
+0028DA	6	mov.l @0x811a:16,er6
+0028E0	2	jmp @er6
+0028E2	4	stm.l er4-er6,@-sp
+0028E6	4	bclr #0x0,@0xe5:8
+0028EA	2	mov.b @0x40:8,r4l
+0028EC	6	mov.l @0x811e:16,er6
+0028F2	2	jmp @er6
+01A084	6	mov.l #0x1a1f8,er2
+01A08A	2	bra .+94 (0x1a0ea)
+01A094	6	mov.l #0x1a1ec,er2
+01A09A	2	bra .+78 (0x1a0ea)
+01A0A4	6	mov.l #0x1a1e0,er2
+01A0AA	2	bra .+62 (0x1a0ea)
+01A0AC	6	mov.l #0x1a1a4,er2
+01A0B2	2	bra .+54 (0x1a0ea)
+01A0B4	6	mov.l #0x1a1aa,er2
+01A0BA	2	bra .+46 (0x1a0ea)
+01A0DC	6	mov.l #0x1a1d4,er2
+01A0E2	2	bra .+6 (0x1a0ea)
+01A0EA	4	mov.b @0xad68:16,r4l
+01BEF2	4	mov.b @0xbc34:16,r4l
+01BEF6	2	beq .+20 (0x1bf0c)
+01BEF8	2	cmp.b #0x1,r4l
+01BEFA	2	beq .+8 (0x1bf04)
+01BEFC	6	mov.l #0x1b352,er4
+01BF02	2	bra .+14 (0x1bf12)
+01BF04	6	mov.l #0x1bcfe,er4
+01BF0A	2	bra .+6 (0x1bf12)
+01BF0C	6	mov.l #0x1b1d0,er4
+01BF12	4	mov.b r2l,@0xad80:16
+01BF16	4	jsr @0x1a9ec:24
+01BF1A	2	beq .+10 (0x1bf26)
+01BF1C	4	mov.b @0xb9ed:16,r4l
+01BF20	2	inc r4l
+01BF22	4	mov.b r4l,@0xb9ed:16
+01BF26	2	rts 
+01BF28	6	bset #0x7,@0xaa30:16
+01BF2E	4	jsr @0x19fae:24
+01BF32	4	mov.b @0xb9ed:16,r4l
+01BF36	2	rts 
+028682	4	mov.w @0xbbc2:16,r4
+028686	4	cmp.w #0x13,r4
+02868A	2	bcc .+20 (0x286a0)
+02868C	2	dec.w #1,r4
+02868E	2	bmi .+16 (0x286a0)
+028690	4	mov.w #0x0,e4
+028694	2	shll.l #2,er4
+028696	2	add.l er4,er6
+028698	4	mov.l @er6,er6
+02869C	2	jsr @er6
+02869E	2	bra .+4 (0x286a4)
+0286A0	4	jsr @0x3ffa0:24
+0286A4	2	rts 
+028CBC	4	mov.w @0xbbc2:16,r4
+028CC0	4	cmp.w #0x7,r4
+028CC4	4	beq .+200 (0x28d90)
+028CC8	4	cmp.w #0x6,r4
+028CCC	4	beq .+176 (0x28d80)
+028CD0	4	cmp.w #0x1,r4
+028CD4	4	beq .+154 (0x28d72)
+028CD8	4	cmp.w #0x2,r4
+028CDC	2	beq .+118 (0x28d54)
+028CDE	4	cmp.w #0x3,r4
+028CE2	2	beq .+102 (0x28d4a)
+028CE4	4	cmp.w #0x4,r4
+028CE8	2	beq .+80 (0x28d3a)
+028CEA	4	cmp.w #0x5,r4
+028CEE	2	beq .+66 (0x28d32)
+028CF0	4	cmp.w #0xa,r4
+028CF4	4	bcs .+162 (0x28d9a)
+028CF8	4	cmp.w #0x14,r4
+028CFC	2	beq .+26 (0x28d18)
+028CFE	4	sub.w #0xa,r4
+028D02	4	mov.b r4l,@0xa9f0:16
+028D06	2	mov.b #0x0,r4l
+028D08	4	mov.b r4l,@0xa9ed:16
+028D0C	6	mov.l @(0x0:16,er1),er6
+028D12	2	jsr @er6
+028D14	4	bra .+134 (0x28d9e)
+028D18	4	mov.b @0xbc34:16,r5l
+028D1C	2	beq .+18 (0x28d30)
+028D1E	2	cmp.b #0x3,r5l
+028D20	2	beq .+2 (0x28d24)
+028D22	2	bra .-38 (0x28cfe)
+028D24	6	mov.l @(0x4:16,er1),er6
+028D2A	2	beq .+110 (0x28d9a)
+028D2C	2	jsr @er6
+028D2E	2	bra .+110 (0x28d9e)
+028D30	2	bra .+110 (0x28da0)
+028D32	2	mov.b #0x6,r4l
+028D34	4	mov.b r4l,@0xa9ed:16
+028D38	2	bra .+6 (0x28d40)
+028D3A	2	mov.b #0x4,r4l
+028D3C	4	mov.b r4l,@0xa9ed:16
+028D40	6	mov.l @(0x8:16,er1),er6
+028D46	2	jsr @er6
+028D48	2	bra .+84 (0x28d9e)
+028D4A	6	mov.l @(0xc:16,er1),er6
+028D50	2	jsr @er6
+028D52	2	bra .+74 (0x28d9e)
+028D54	6	bclr #0x3,@0xbbf1:16
+028D5A	4	mov.b @0xbc34:16,r4l
+028D5E	2	cmp.b #0x1,r4l
+028D60	2	beq .+8 (0x28d6a)
+028D62	2	mov.b #0x1,r4l
+028D64	4	mov.b r4l,@0xbc34:16
+028D68	2	bra .+52 (0x28d9e)
+028D6A	2	mov.b #0x2,r4l
+028D6C	4	mov.b r4l,@0xbc34:16
+028D70	2	bra .+44 (0x28d9e)
+028D72	6	bclr #0x3,@0xbbf1:16
+028D78	2	mov.b #0x0,r4l
+028D7A	4	mov.b r4l,@0xbc34:16
+028D7E	2	bra .+30 (0x28d9e)
+028D80	6	bset #0x7,@0xaa30:16
+028D86	6	mov.l @(0x14:16,er1),er6
+028D8C	2	jsr @er6
+028D8E	2	bra .+14 (0x28d9e)
+028D90	6	mov.l @(0x18:16,er1),er6
+028D96	2	jsr @er6
+028D98	2	bra .+4 (0x28d9e)
+028D9A	4	jsr @0x3ffa0:24
+028D9E	2	rts 
+02943C	6	mov.l #0x297a0,er6
+029442	4	jmp @0x28682:24
+029446	4	jsr @0x245f8:24
+02944A	2	mov.b #0x0,r4l
+02944C	4	mov.b r4l,@0xb9ee:16
+029450	4	mov.b @0xb9eb:16,r4l
+029454	4	mov.b r4l,@0xb3f4:16
+029458	4	mov.b r4l,@0xb3f5:16
+02945C	2	mov.b #0x1,r4l
+02945E	4	mov.b r4l,@0xb9e4:16
+029462	2	rts 
+029464	4	mov.w #0x3,e4
+029468	2	bra .+22 (0x29480)
+02946A	4	mov.w #0x4,e4
+02946E	2	bra .+16 (0x29480)
+029470	4	mov.w #0x6,e4
+029474	2	bra .+10 (0x29480)
+029476	4	mov.w #0x9,e4
+02947A	2	bra .+4 (0x29480)
+02947C	4	mov.w #0xd,e4
+029480	4	mov.w @0xbbc2:16,r4
+029484	2	sub.w e4,r4
+029486	4	mov.b @0xb9ee:16,r4h
+02948A	2	mov.b #0x0,r3l
+02948C	2	cmp.b r4h,r4l
+02948E	2	beq .+36 (0x294b4)
+029490	2	mov.b r4l,r3l
+029492	4	mov.b r3l,@0xb9ee:16
+029496	4	mov.b @0xb9ee:16,r6l
+02949A	6	mov.l #0xffba12,er5
+0294A0	2	mov.w @er5,r3
+0294A2	2	bmi .+4 (0x294a8)
+0294A4	2	dec.b r6l
+0294A6	2	beq .+8 (0x294b0)
+0294A8	6	add.l #0x6,er5
+0294AE	2	bra .-16 (0x294a0)
+0294B0	4	jsr @0x2486a:24
+0294B4	2	rts 
+0294B6	4	jsr @0x2472a:24
+0294BA	2	rts 
+0294BC	6	mov.l #0x297e8,er6
+0294C2	4	jmp @0x28562:24
+0294C6	2	mov.b #0x0,r4l
+0294C8	4	mov.b r4l,@0xb3f4:16
+0294CC	4	mov.b r4l,@0xb3f5:16
+0294D0	4	mov.b @0xb9eb:16,r1l
+0294D4	2	mov.b #0x0,r1h
+0294D6	4	jsr @0x3dab2:24
+0294DA	2	mov.b #0x0,r4l
+0294DC	4	mov.b r4l,@0xb9ec:16
+0294E0	2	mov.b #0x2,r4l
+0294E2	4	mov.b r4l,@0xb9e4:16
+0294E6	2	rts 
+0294E8	2	mov.b #0x1,r4l
+0294EA	4	mov.b r4l,@0xb9ef:16
+0294EE	2	mov.b #0x6,r4l
+0294F0	4	mov.b r4l,@0xb9e4:16
+0294F4	2	rts 
+0294F6	4	mov.b @0xb9eb:16,r5l
+0294FA	2	mov.b #0x0,r5h
+0294FC	4	mov.w #0x1e,r4
+029500	2	mulxu.w r4,er5
+029502	6	add.l #0xf9ba,er5
+029508	6	mov.l #0xffba12,er6
+02950E	4	eepmov.w 
+029512	2	mov.w r4,r4
+029514	2	bne .-8 (0x2950e)
+029516	4	mov.b @0xb9eb:16,r1l
+02951A	2	mov.b #0x0,r1h
+02951C	4	jsr @0x3db18:24
+029520	4	jsr @0x293ea:24
+029524	4	mov.b r3l,@0xb9ea:16
+029528	2	rts 
+02952A	2	mov.b #0x0,r4l
+02952C	4	mov.b r4l,@0xb9ed:16
+029530	6	bset #0x7,@0xaa30:16
+029536	4	mov.b @0xb9eb:16,r1l
+02953A	2	mov.b #0x0,r1h
+02953C	4	jsr @0x3dab2:24
+029540	4	mov.w #0x10,r4
+029544	6	mov.l #0xffb9f2,er5
+02954A	6	mov.l #0xffba02,er6
+029550	4	eepmov.w 
+029554	2	mov.w r4,r4
+029556	2	bne .-8 (0x29550)
+029558	2	mov.b #0x4,r4l
+02955A	4	mov.b r4l,@0xb9e4:16
+02955E	2	rts 
+029560	6	mov.l #0x297f4,er6
+029566	4	jmp @0x28562:24
+02956A	4	mov.b @0xb9ec:16,r5l
+02956E	2	mov.b #0x0,r5h
+029570	4	mov.w #0x6,r4
+029574	2	mulxu.w r4,er5
+029576	6	add.l #0xffba12,er5
+02957C	2	mov.w @er5,r4
+02957E	2	bpl .+8 (0x29588)
+029580	2	mov.b #0x3,r4l
+029582	4	mov.b r4l,@0xb9e4:16
+029586	2	bra .+4 (0x2958c)
+029588	4	jsr @0x3ff9c:24
+02958C	2	rts 
+02958E	2	mov.b #0x1,r4l
+029590	4	mov.b r4l,@0xb9ef:16
+029594	2	mov.b #0x7,r4l
+029596	4	mov.b r4l,@0xb9e4:16
+02959A	2	rts 
+02959C	4	mov.b @0xb9ec:16,r5l
+0295A0	2	mov.b #0x0,r5h
+0295A2	4	mov.w #0x6,r4
+0295A6	2	mulxu.w r4,er5
+0295A8	6	add.l #0xffba12,er5
+0295AE	4	mov.w #0xffff,r3
+0295B2	2	mov.w r3,@er5
+0295B4	4	mov.b @0xb9eb:16,r1l
+0295B8	2	mov.b #0x0,r1h
+0295BA	4	jsr @0x3db18:24
+0295BE	4	jsr @0x293ea:24
+0295C2	4	mov.b r3l,@0xb9ea:16
+0295C6	2	bra .+4 (0x295cc)
+0295CC	2	rts 
+0295CE	2	mov.b #0x0,r4l
+0295D0	4	mov.b r4l,@0xb9ed:16
+0295D4	6	bset #0x7,@0xaa30:16
+0295DA	4	mov.b @0xb9ec:16,r5l
+0295DE	2	mov.b #0x0,r5h
+0295E0	4	mov.w #0x6,r4
+0295E4	2	mulxu.w r4,er5
+0295E6	6	add.l #0xffba14,er5
+0295EC	6	mov.l #0xffba02,er6
+0295F2	4	mov.w #0x4,r4
+0295F6	4	eepmov.w 
+0295FA	2	mov.w r4,r4
+0295FC	2	bne .-8 (0x295f6)
+0295FE	2	mov.b #0x5,r4l
+029600	4	mov.b r4l,@0xb9e4:16
+029604	2	rts 
+029606	6	mov.l #0x29800,er6
+02960C	4	jmp @0x28562:24
+029610	2	bsr .+82 (0x29664)
+029612	2	bne .+78 (0x29662)
+029614	2	mov.b #0x5,r6l
+029616	6	mov.l #0xffba12,er5
+02961C	2	mov.w @er5,r4
+02961E	2	cmp.w r3,r4
+029620	2	beq .+60 (0x2965e)
+029622	6	add.l #0x6,er5
+029628	2	dec.b r6l
+02962A	2	bne .-16 (0x2961c)
+02962C	4	mov.b @0xb9ec:16,r5l
+029630	2	mov.b #0x0,r5h
+029632	4	mov.w #0x6,r4
+029636	2	mulxu.w r4,er5
+029638	6	add.l #0xffba12,er5
+02963E	2	mov.w @er5,r4
+029640	2	bpl .+28 (0x2965e)
+029642	2	mov.w r3,@er5
+029644	4	mov.b @0xb9eb:16,r1l
+029648	2	mov.b #0x0,r1h
+02964A	4	jsr @0x3db18:24
+02964E	4	jsr @0x293ea:24
+029652	4	mov.b r3l,@0xb9ea:16
+029656	2	mov.b #0x2,r4l
+029658	4	mov.b r4l,@0xb9e4:16
+02965C	2	bra .+4 (0x29662)
+02965E	4	jsr @0x3ff9c:24
+029662	2	rts 
+029664	4	mov.w @0xad64:16,r3
+029668	4	cmp.w #0x3e7,r3
+02966C	2	bcs .+2 (0x29670)
+02966E	2	inc.w #1,r3
+029670	4	jsr @0x3f172:24
+029674	2	bne .+8 (0x2967e)
+029676	2	btst #0x7,r4l
+029678	2	bne .+4 (0x2967e)
+02967A	2	mov.b #0x0,r4l
+02967C	2	bra .+6 (0x29684)
+02967E	4	jsr @0x3ff9c:24
+029682	2	mov.b #0x1,r4l
+029684	2	rts 
+029686	2	mov.b #0x1,r4l
+029688	4	mov.b r4l,@0xb9e4:16
+02968C	2	bsr .+14 (0x2969c)
+02968E	4	beq .-412 (0x294f6)
+029692	2	bmi .+6 (0x2969a)
+029694	2	mov.b #0x6,r4l
+029696	4	mov.b r4l,@0xb9e4:16
+02969A	2	rts 
+02969C	4	mov.b @0xb9ef:16,r4l
+0296A0	2	bne .+14 (0x296b0)
+0296A2	4	mov.w @0xbbc2:16,r4
+0296A6	4	cmp.w #0x1,r4
+0296AA	2	beq .+26 (0x296c6)
+0296AC	2	mov.b #0x1,r4l
+0296AE	2	bra .+12 (0x296bc)
+0296B0	4	mov.w @0xbbc2:16,r4
+0296B4	4	cmp.w #0x2,r4
+0296B8	2	beq .+10 (0x296c4)
+0296BA	2	mov.b #0x0,r4l
+0296BC	4	mov.b r4l,@0xb9ef:16
+0296C0	2	mov.b #0x1,r4l
+0296C2	2	bra .+2 (0x296c6)
+0296C4	2	mov.b #0xff,r4l
+0296C6	2	rts 
+0296C8	2	mov.b #0x2,r4l
+0296CA	4	mov.b r4l,@0xb9e4:16
+0296CE	2	bsr .-52 (0x2969c)
+0296D0	4	beq .-312 (0x2959c)
+0296D4	2	bmi .+6 (0x296dc)
+0296D6	2	mov.b #0x7,r4l
+0296D8	4	mov.b r4l,@0xb9e4:16
+0296DC	2	rts 
+0296DE	6	mov.l #0x296e8,er1
+0296E4	4	bra .-2604 (0x28cbc)
+029708	6	mov.l #0x29712,er1
+02970E	4	bra .-2646 (0x28cbc)
+029732	6	mov.l #0xffba02,er1
+029738	6	mov.l #0x0,er2
+02973E	4	mov.b @0xb9ed:16,r2l
+029742	4	mov.b @0xb9e4:16,r4l
+029746	2	cmp.b #0x4,r4l
+029748	2	beq .+4 (0x2974e)
+02974A	2	mov.b #0x4,r5l
+02974C	2	bra .+2 (0x29750)
+02974E	2	mov.b #0x10,r5l
+029750	4	jsr @0x1bef2:24
+029754	2	rts 
+029756	2	bsr .+28 (0x29774)
+029758	2	mov.l er5,er1
+02975A	4	mov.b @0xbc82:16,r2l
+02975E	4	jsr @0x1a58c:24
+029762	2	rts 
+029764	2	bsr .+14 (0x29774)
+029766	4	jsr @0x29c46:24
+02976A	2	rts 
+02976C	2	bsr .+6 (0x29774)
+02976E	4	jsr @0x29c5c:24
+029772	2	rts 
+029774	4	mov.b @0xb9ed:16,r4l
+029778	4	mov.b r4l,@0xbc82:16
+02977C	6	mov.l #0xffba02,er5
+029782	6	mov.l er5,@0xbc7c:16
+029788	4	mov.b @0xb9e4:16,r4l
+02978C	2	cmp.b #0x4,r4l
+02978E	2	beq .+8 (0x29798)
+029790	2	mov.b #0x4,r4l
+029792	4	mov.b r4l,@0xbc83:16
+029796	2	bra .+6 (0x2979e)
+029798	2	mov.b #0x10,r4l
+02979A	4	mov.b r4l,@0xbc83:16
+02979E	2	rts 
+03571A	4	mov.b @0x8042:16,r5l
+03571E	4	mov.b @0x8070:16,r6l
+035722	2	bra .+22 (0x3573a)
+035724	4	mov.b @0x8052:16,r5l
+035728	4	mov.b @0x8073:16,r6l
+03572C	2	bra .+12 (0x3573a)
+03572E	2	bsr .+26 (0x3574a)
+035730	2	bra .+8 (0x3573a)
+035732	4	mov.b @0x8022:16,r5l
+035736	4	mov.b @0x806a:16,r6l
+03573A	6	btst #0x0,@0xaadf:16
+035740	2	bne .+2 (0x35744)
+035742	2	mov.b r5l,r6l
+035744	4	mov.b r6l,@0xa998:16
+035748	2	rts 
+03574A	4	mov.b @0x8032:16,r5l
+03574E	4	mov.b @0x806d:16,r6l
+035752	2	rts 
+03DE20	4	stm.l er0-er3,@-sp
+03DE24	4	mov.w #0x48,r6
+03DE28	6	mov.l #0x1a000,er0
+03DE2E	6	mov.l #0xff4726,er1
+03DE34	4	jsr @0x3bdac:24
+03DE38	4	mov.w #0x898,r6
+03DE3C	6	mov.l #0x1a080,er0
+03DE42	6	mov.l #0xff476e,er1
+03DE48	4	jsr @0x3bdac:24
+03DE4C	4	ldm.l @sp+,er0-er3
+03DE50	2	rts 
+03DE52	4	stm.l er0-er3,@-sp
+03DE56	4	mov.w #0x48,r6
+03DE5A	6	mov.l #0x1a000,er0
+03DE60	6	mov.l #0xff4726,er1
+03DE66	4	jsr @0x3bf4c:24
+03DE6A	4	mov.w #0x898,r6
+03DE6E	6	mov.l #0x1a080,er0
+03DE74	6	mov.l #0xff476e,er1
+03DE7A	4	jsr @0x3bf4c:24
+03DE7E	4	ldm.l @sp+,er0-er3
+03DE82	2	rts 
+03DE84	4	stm.l er0-er3,@-sp
+03DE88	6	mov.l #0x1a000,er0
+03DE8E	6	mov.l #0xff4726,er1
+03DE94	2	bra .+58 (0x3ded0)
+03DE96	4	stm.l er0-er3,@-sp
+03DE9A	6	mov.l #0x1a080,er0
+03DEA0	6	mov.l #0xff476e,er1
+03DEA6	2	bra .+42 (0x3ded2)
+03DEA8	4	stm.l er0-er3,@-sp
+03DEAC	4	mov.b @(0x3:16,er0),r3l
+03DEB0	6	mov.l #0x1a018,er0
+03DEB6	6	mov.l #0xff473e,er1
+03DEBC	6	btst #0x0,@0x817e:16
+03DEC2	2	beq .+12 (0x3ded0)
+03DEC4	6	mov.l #0x1a030,er0
+03DECA	6	mov.l #0xff4756,er1
+03DED0	2	mov.b #0x0,r3h
+03DED2	4	mov.w #0x2,r6
+03DED6	2	mov.w r3,r4
+03DED8	2	mulxu.w r6,er4
+03DEDA	2	add.l er4,er0
+03DEDC	2	add.l er4,er1
+03DEDE	2	mov.w @er1,e4
+03DEE0	6	btst #0x0,@0x817e:16
+03DEE6	2	beq .+10 (0x3def2)
+03DEE8	4	mov.b @0x8ed8:16,r4h
+03DEEC	4	mov.b @0x8ed9:16,r4l
+03DEF0	2	bra .+8 (0x3defa)
+03DEF2	4	mov.b @0x8ed6:16,r4h
+03DEF6	4	mov.b @0x8ed7:16,r4l
+03DEFA	2	cmp.w e4,r4
+03DEFC	2	beq .+6 (0x3df04)
+03DEFE	2	mov.w r4,@er1
+03DF00	4	jsr @0x3bf4c:24
+03DF04	4	ldm.l @sp+,er0-er3
+03DF08	2	rts 
+03DF0A	4	stm.l er0-er3,@-sp
+03DF0E	6	mov.l #0x1a000,er0
+03DF14	6	mov.l #0xff4726,er1
+03DF1A	2	bra .+58 (0x3df56)
+03DF1C	4	stm.l er0-er3,@-sp
+03DF20	6	mov.l #0x1a080,er0
+03DF26	6	mov.l #0xff476e,er1
+03DF2C	2	bra .+42 (0x3df58)
+03DF2E	4	stm.l er0-er3,@-sp
+03DF32	4	mov.b @(0x3:16,er0),r3l
+03DF36	6	mov.l #0x1a018,er0
+03DF3C	6	mov.l #0xff473e,er1
+03DF42	6	btst #0x0,@0x817e:16
+03DF48	2	beq .+12 (0x3df56)
+03DF4A	6	mov.l #0x1a030,er0
+03DF50	6	mov.l #0xff4756,er1
+03DF56	2	mov.b #0x0,r3h
+03DF58	4	mov.w #0x2,r6
+03DF5C	2	mov.w r3,r4
+03DF5E	2	mulxu.w r6,er4
+03DF60	2	add.l er4,er0
+03DF62	2	add.l er4,er1
+03DF64	2	mov.w @er1,r4
+03DF66	6	btst #0x0,@0x817e:16
+03DF6C	2	beq .+10 (0x3df78)
+03DF6E	4	mov.b r4h,@0x8ed8:16
+03DF72	4	mov.b r4l,@0x8ed9:16
+03DF76	2	bra .+8 (0x3df80)
+03DF78	4	mov.b r4h,@0x8ed6:16
+03DF7C	4	mov.b r4l,@0x8ed7:16
+03DF80	4	ldm.l @sp+,er0-er3
+03DF84	2	rts 
+05E33E	6	mov.l #0xffba02,er1
+05E344	2	mov.b #0x0,r2l
+05E346	2	mov.l er1,er5
+05E348	6	mov.l #0x5e376,er6
+05E34E	4	mov.b @(0x1:16,er6),r4h
+05E352	2	inc r4h
+05E354	2	mov.b @er5+,r4l
+05E356	2	cmp.b #0xff,r4l
+05E358	2	beq .+6 (0x5e360)
+05E35A	2	inc r2l
+05E35C	2	dec.b r4h
+05E35E	2	bne .-12 (0x5e354)
+05E360	2	mov.b r2l,r4l
+05E362	2	beq .+16 (0x5e374)
+05E364	2	inc r2l
+05E366	6	mov.l #0x5e376,er6
+05E36C	4	jsr @0x1bf28:24
+05E370	2	cmp.b r2l,r3l
+05E372	2	bcc .-14 (0x5e366)
+05E374	2	rts 
+05E37C	6	mov.l #0xffba02,er1
+05E382	2	mov.b #0x0,r2l
+05E384	2	mov.l er1,er5
+05E386	6	mov.l #0x5e3b4,er6
+05E38C	4	mov.b @(0x1:16,er6),r4h
+05E390	2	inc r4h
+05E392	2	mov.b @er5+,r4l
+05E394	2	cmp.b #0xff,r4l
+05E396	2	beq .+6 (0x5e39e)
+05E398	2	inc r2l
+05E39A	2	dec.b r4h
+05E39C	2	bne .-12 (0x5e392)
+05E39E	2	mov.b r2l,r4l
+05E3A0	2	beq .+16 (0x5e3b2)
+05E3A2	2	inc r2l
+05E3A4	6	mov.l #0x5e3b4,er6
+05E3AA	4	jsr @0x1bf28:24
+05E3AE	2	cmp.b r2l,r3l
+05E3B0	2	bcc .-14 (0x5e3a4)
+05E3B2	2	rts 
+07309C	6	btst #0x0,@0x8920:16
+0730A2	2	beq .+44 (0x730d0)
+0730A4	4	mov.b @0x8eaf:16,r4l
+0730A8	2	cmp.b #0x1,r4l
+0730AA	2	beq .+18 (0x730be)
+0730AC	2	mov.b #0x2,r4l
+0730AE	4	mov.b r4l,@0x8eaf:16
+0730B2	4	mov.b r4l,@0xbb70:16
+0730B6	2	mov.b #0x1,r4l
+0730B8	4	mov.b r4l,@0xbb90:16
+0730BC	2	bra .+40 (0x730e6)
+0730BE	4	mov.b r4l,@0xbb70:16
+0730C2	2	mov.b #0x0,r4l
+0730C4	4	mov.b r4l,@0xbb8e:16
+0730C8	2	mov.b #0x3,r4l
+0730CA	4	mov.b r4l,@0xbb90:16
+0730CE	2	bra .+22 (0x730e6)
+0730D0	2	mov.b #0x1,r4l
+0730D2	4	mov.b r4l,@0x8eaf:16
+0730D6	4	mov.b r4l,@0xbb70:16
+0730DA	2	mov.b #0x0,r4l
+0730DC	4	mov.b r4l,@0xbb8e:16
+0730E0	2	mov.b #0x3,r4l
+0730E2	4	mov.b r4l,@0xbb90:16
+0730E6	2	rts 
+0730E8	4	mov.b @0x813e:16,r4l
+0730EC	2	beq .+28 (0x7310a)
+0730EE	6	btst #0x2,@0xba92:16
+0730F4	2	beq .+20 (0x7310a)
+0730F6	6	bclr #0x2,@0xba92:16
+0730FC	4	mov.b @0xbb71:16,r4l
+073100	2	cmp.b #0x1,r4l
+073102	2	bne .+6 (0x7310a)
+073104	2	mov.b #0x2,r4l
+073106	4	mov.b r4l,@0xbb90:16
+07310A	2	rts 
+07310C	4	mov.b @0x9561:16,r4l
+073110	2	bne .+22 (0x73128)
+073112	4	mov.b @0xbbe4:16,r4l
+073116	2	bne .+16 (0x73128)
+073118	4	jsr @0xd2b2:24
+07311C	2	mov.b #0x2,r4l
+07311E	4	mov.b r4l,@0xbb8e:16
+073122	2	mov.b #0x3,r4l
+073124	4	mov.b r4l,@0xbb90:16
+073128	2	rts 
+07312A	6	btst #0x1,@0xbb8f:16
+073130	2	bne .+42 (0x7315c)
+073132	4	mov.b @0xbb70:16,r4l
+073136	2	cmp.b #0x0,r4l
+073138	2	beq .+28 (0x73156)
+07313A	4	mov.b @0xbb8e:16,r4l
+07313E	2	beq .+32 (0x73160)
+073140	4	mov.b @0xbb8e:16,r3l
+073144	6	and.l #0xff,er3
+07314A	2	shll.l #2,er3
+07314C	8	mov.l @(0x73162:32,er3),er6
+073154	2	jmp @er6
+073156	4	jsr @0x73310:24
+07315A	2	bra .+4 (0x73160)
+07315C	4	jsr @0x73358:24
+073160	2	rts 
+073172	6	btst #0x2,@0xba92:16
+073178	2	beq .+68 (0x731be)
+07317A	6	bclr #0x2,@0xba92:16
+073180	4	mov.b @0xbb71:16,r4l
+073184	2	cmp.b #0x10,r4l
+073186	2	beq .+54 (0x731be)
+073188	2	cmp.b #0x11,r4l
+07318A	2	beq .+26 (0x731a6)
+07318C	2	cmp.b #0x12,r4l
+07318E	2	bne .+46 (0x731be)
+073190	4	mov.b r4l,@0xbb70:16
+073194	2	bsr .+42 (0x731c0)
+073196	6	bset #0x1,@0x817e:16
+07319C	2	bra .+32 (0x731be)
+0731A6	4	mov.b r4l,@0xbb70:16
+0731AA	2	mov.b #0x1d,r4l
+0731AC	4	mov.b r4l,@0xaae0:16
+0731B0	6	bset #0x1,@0x817e:16
+0731B6	2	mov.b #0x0,r4l
+0731B8	4	mov.b r4l,@0xbb8e:16
+0731BC	2	bra .0 (0x731be)
+0731BE	2	rts 
+0731C0	6	mov.l #0xffaaec,er2
+0731C6	2	mov.b #0x5,r6h
+0731C8	4	mov.w #0x0,e6
+0731CC	2	mov.l er2,er3
+0731CE	6	mov.l #0xffbb72,er5
+0731D4	2	mov.b #0x1c,r6l
+0731D6	2	mov.b @er3+,r4h
+0731D8	2	mov.b @er5+,r4l
+0731DA	2	cmp.b r4h,r4l
+0731DC	2	bne .+20 (0x731f2)
+0731DE	2	dec.b r6l
+0731E0	2	bne .-12 (0x731d6)
+0731E2	2	mov.w e6,r4
+0731E4	4	mov.b r4l,@0x8eb0:16
+0731E8	6	bclr r4l,@0xaaeb:16
+0731EE	2	mov.b #0x0,r4l
+0731F0	2	bra .+116 (0x73266)
+0731F2	2	inc.w #1,e6
+0731F4	6	add.l #0x1c,er2
+0731FA	2	dec.b r6h
+0731FC	2	bne .-50 (0x731cc)
+0731FE	4	mov.b @0xaaea:16,r4l
+073202	2	cmp.b #0x5,r4l
+073204	2	bcc .+88 (0x7325e)
+073206	6	mov.l #0xffaaec,er2
+07320C	2	mov.b #0x5,r6h
+07320E	4	mov.w #0x0,e6
+073212	2	mov.b @er2,r4l
+073214	2	bmi .+14 (0x73224)
+073216	2	inc.w #1,e6
+073218	6	add.l #0x1c,er2
+07321E	2	dec.b r6h
+073220	2	bne .-16 (0x73212)
+073222	2	bra .+58 (0x7325e)
+073224	2	mov.w e6,r4
+073226	4	mov.b r4l,@0x8eb0:16
+07322A	6	bclr r4l,@0xaaeb:16
+073230	4	mov.b @0xaaea:16,r4l
+073234	2	inc r4l
+073236	4	mov.b r4l,@0xaaea:16
+07323A	4	mov.w #0x1c,r4
+07323E	6	mov.l #0xffbb72,er5
+073244	2	mov.l er2,er6
+073246	4	eepmov.w 
+07324A	2	mov.w r4,r4
+07324C	2	bne .-8 (0x73246)
+07324E	4	jsr @0x3cda0:24
+073252	6	bset #0x1,@0x817e:16
+073258	2	bsr .+14 (0x73268)
+07325A	2	mov.b #0x1,r4l
+07325C	2	bra .+8 (0x73266)
+07325E	2	mov.b #0x5,r4l
+073260	4	mov.b r4l,@0xaaea:16
+073264	2	mov.b #0xff,r4l
+073266	2	rts 
+073268	4	mov.b @0x8eb0:16,r4l
+07326C	2	inc r4l
+07326E	4	mov.b r4l,@0xad68:16
+073272	2	rts 
+073274	4	mov.b @0xad68:16,r4l
+073278	2	dec.b r4l
+07327A	4	mov.b r4l,@0x8eb0:16
+07327E	2	rts 
+073280	6	btst #0x2,@0xba92:16
+073286	2	beq .+62 (0x732c6)
+073288	6	bclr #0x2,@0xba92:16
+07328E	4	mov.b @0xbb71:16,r4l
+073292	2	cmp.b #0x3,r4l
+073294	2	bne .+48 (0x732c6)
+073296	4	mov.b r4l,@0xbb70:16
+07329A	4	mov.b r4l,@0x8eaf:16
+07329E	2	mov.b #0x3,r4l
+0732A0	4	mov.b r4l,@0xbb8e:16
+0732A4	4	mov.l er0,@-er7
+0732A8	4	jsr @0x10748:24
+0732AC	2	mov.l er0,er5
+0732AE	4	mov.l @er7+,er0
+0732B2	4	mov.b @(0x1:16,er5),r4l
+0732B6	2	cmp.b #0x1e,r4l
+0732B8	2	bne .+8 (0x732c2)
+0732BA	6	bset #0x1,@0x817e:16
+0732C0	2	bra .+4 (0x732c6)
+0732C2	4	jsr @0xd2b2:24
+0732C6	2	rts 
+0732C8	6	btst #0x2,@0xba92:16
+0732CE	2	beq .+62 (0x7330e)
+0732D0	6	bclr #0x2,@0xba92:16
+0732D6	4	mov.b @0xbb71:16,r4l
+0732DA	2	cmp.b #0x5,r4l
+0732DC	2	beq .+26 (0x732f8)
+0732DE	2	cmp.b #0x0,r4l
+0732E0	2	bne .+44 (0x7330e)
+0732E2	4	mov.b r4l,@0xbb70:16
+0732E6	4	mov.b r4l,@0x8eaf:16
+0732EA	6	bset #0x1,@0x817e:16
+0732F0	2	mov.b #0x0,r4l
+0732F2	4	mov.b r4l,@0xbb8e:16
+0732F6	2	bra .+22 (0x7330e)
+0732F8	4	jsr @0x730d0:24
+0732FC	2	mov.b #0x6,r4l
+0732FE	4	mov.b r4l,@0xbbe1:16
+073302	6	bset #0x1,@0x817e:16
+073308	2	mov.b #0x0,r4l
+07330A	4	mov.b r4l,@0xbb8e:16
+07330E	2	rts 
+073310	6	btst #0x2,@0xba92:16
+073316	2	beq .+62 (0x73356)
+073318	6	bclr #0x2,@0xba92:16
+07331E	4	mov.b @0xbb71:16,r4l
+073322	2	cmp.b #0x2,r4l
+073324	2	bne .+48 (0x73356)
+073326	4	mov.b r4l,@0xbb70:16
+07332A	4	mov.b r4l,@0x8eaf:16
+07332E	2	mov.b #0x2,r4l
+073330	4	mov.b r4l,@0xbb8e:16
+073334	6	bset #0x1,@0x817e:16
+07333A	4	mov.l er0,@-er7
+07333E	4	jsr @0x10748:24
+073342	2	mov.l er0,er5
+073344	4	mov.l @er7+,er0
+073348	4	mov.b @(0x1:16,er5),r4l
+07334C	2	cmp.b #0x1e,r4l
+07334E	2	beq .+6 (0x73356)
+073350	2	mov.b #0x2,r4l
+073352	4	mov.b r4l,@0xbb90:16
+073356	2	rts 
+073358	6	btst #0x2,@0xba92:16
+07335E	4	beq .+124 (0x733de)
+073362	6	bclr #0x2,@0xba92:16
+073368	4	mov.b @0xbb71:16,r4l
+07336C	2	cmp.b #0x9,r4l
+07336E	2	bne .+110 (0x733de)
+073370	6	bclr #0x1,@0xbb8f:16
+073376	4	mov.b @0xaaea:16,r4l
+07337A	2	beq .+92 (0x733d8)
+07337C	2	dec.b r4l
+07337E	4	mov.b r4l,@0xaaea:16
+073382	4	mov.b @0xad68:16,r2l
+073386	2	dec.b r2l
+073388	2	mov.b #0x0,r2h
+07338A	4	mov.w #0xa,r4
+07338E	2	mulxu.w r4,er2
+073390	8	mov.w @(0x733e0:32,er2),r4
+073398	2	beq .+24 (0x733b2)
+07339A	8	mov.l @(0x733e2:32,er2),er5
+0733A2	8	mov.l @(0x733e6:32,er2),er6
+0733AA	4	eepmov.w 
+0733AE	2	mov.w r4,r4
+0733B0	2	bne .-8 (0x733aa)
+0733B2	4	mov.w #0x1c,r4
+0733B6	6	mov.l #0xf6d6,er5
+0733BC	6	mov.l #0xffab5c,er6
+0733C2	4	eepmov.w 
+0733C6	2	mov.w r4,r4
+0733C8	2	bne .-8 (0x733c2)
+0733CA	4	jsr @0x3cda0:24
+0733CE	2	mov.b #0x0,r4l
+0733D0	4	mov.b r4l,@0x8eb0:16
+0733D4	4	jsr @0x73268:24
+0733D8	6	bset #0x1,@0x817e:16
+0733DE	2	rts 

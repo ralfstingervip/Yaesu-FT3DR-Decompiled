@@ -1,0 +1,20 @@
+
+;---- func 0x5fa26..0x5fa66
+05fa26  01 00 6b 06 ba be        mov.l   @0xFFFFBABE:16, er6                  <- 5f962
+05fa2c  6b 05 ba 74              mov.w   @0xFFFFBA74:16, r5                   
+05fa30  7a 02 00 ff 54 06        mov.l   #0xFF5406, er2                       
+05fa36  7a 04 00 00 00 00        mov.l   #0, er4                              
+05fa3c  01 00 6b 03 b1 d4        mov.l   @0xFFFFB1D4:16, er3                  
+05fa42  6c 2c                    mov.b   @er2+, r4l                           <- 5fa4c
+05fa44  68 ec                    mov.b   r4l, @er6                            
+05fa46  0b 06                    adds    #1, er6                              
+05fa48  0a c3                    add.l   er4, er3                             
+05fa4a  1b 55                    dec.w   #1, r5                               
+05fa4c  46 f4                    bne     loc_5FA42:8                          
+05fa4e  01 00 6b 83 b1 d4        mov.l   er3, @0xFFFFB1D4:16                  <- 5fa06
+05fa54  0f e5                    mov.l   er6, er5                             
+05fa56  7a 35 00 ff 07 ed        sub.l   #0xFF07ED, er5                       
+05fa5c  6b 85 b2 54              mov.w   r5, @0xFFFFB254:16                   
+05fa60  fc ff                    mov.b   #0xFF, r4l                           
+05fa62  68 ec                    mov.b   r4l, @er6                            
+05fa64  54 70                    rts                                          

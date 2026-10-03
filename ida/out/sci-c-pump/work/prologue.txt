@@ -1,0 +1,28 @@
+--- 076FC8..077018 ---
+076FC8  01 30 6D F2                  stm.l   er2-er5, @-sp
+076FCC  01 00 6D F6                  push.l  er6
+076FD0  0F 83                        mov.l   er0, er3
+076FD2  7A 06 00 FF 62 88            mov.l   #0xFF6288, er6
+076FD8  01 00 6F 60 00 50            mov.l   @(0x50:16,er6), er0
+076FDE  01 00 6F 62 00 54            mov.l   @(0x54:16,er6), er2
+076FE4  1F A0                        cmp.l   er2, er0
+076FE6  45 08                        bcs     loc_76FF0:8
+076FE8  0D 21                        mov.w   r2, r1
+076FEA  0D 0A                        mov.w   r0, e2
+076FEC  40 1B                        bra/s   loc_77008:8
+076FEE  19 1A                        sub.w   r1, e2
+076FF0  01 00 6F 61 00 5C            mov.l   @(0x5C:16,er6), er1
+076FF6  0B 71                        inc.l   #1, er1
+076FF8  0D 14                        mov.w   r1, r4
+076FFA  6F 61 00 5A                  mov.w   @(0x5A:16,er6), r1
+076FFE  19 14                        sub.w   r1, r4
+077000  0D 21                        mov.w   r2, r1
+077002  19 01                        sub.w   r0, r1
+077004  19 14                        sub.w   r1, r4
+077006  0D 4A                        mov.w   r4, e2
+077008  79 2A 00 40                  cmp.w   #0x40, e2 ; '@'
+07700C  43 04                        bls     loc_77012:8
+07700E  79 0A 00 40                  mov.w   #0x40, e2 ; '@'
+077012  18 AA                        sub.b   r2l, r2l
+077014  0D AA                        mov.w   e2, e2
+077016  47 34                        beq     loc_7704C:8

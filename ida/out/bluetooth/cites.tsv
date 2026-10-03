@@ -1,0 +1,343 @@
+image	addr	expected_hex	insn	note
+SUB	FFF3B652	6621	mov.l   #2, r1	sender: channel 2
+SUB	FFF3B654	05d9f8f9	bsr.a   sub_FFEDAF2D	sender: ring writer sub_FFEDAF2D
+SUB	FFF36CB7	05e44900	bsr.a   sub_FFF3B69B	tick fan-out calls BT pump sub_FFF3B69B
+SUB	FFF3B6CF	fbee28c008	mov.l   #8C028h, r14	pump: power-up countdown end -> P87
+SUB	FFF3B6D4	f0e7	bset    #7, [r14].b	pump: bset #7 P8.PODR
+SUB	FFF3B71C	3929e1	bsr.w   sub_FFF39845	pump: deferred LINK via sub_FFF39845
+SUB	FFF3B74C	39c9f9	bsr.w   sub_FFF3B115	pump: level detector sub_FFF3B115 every 2nd pass
+SUB	FFF3B74F	39d0e9	bsr.w   sub_FFF3A11F	pump: line reader sub_FFF3A11F
+SUB	FFF3B760	39f9ea	bsr.w   sub_FFF3A259	pump: classifier B dispatch sub_FFF3A259
+SUB	FFF3B770	3994ea	bsr.w   sub_FFF3A204	pump: classifier A dispatch sub_FFF3A204
+SUB	FFF3B784	390af3	bsr.w   sub_FFF3AA8E	pump: ack-timeout retry sub_FFF3AA8E (timer 3)
+SUB	FFF3B798	39cce8	bsr.w   sub_FFF3A064	pump: HELLO timeout sub_FFF3A064 (timer 1)
+SUB	FFF3B7AC	39dee8	bsr.w   sub_FFF3A08A	pump: operation timeout sub_FFF3A08A (timer 2)
+SUB	FFF3B7AF	056fddff	bsr.a   sub_FFF3951E	pump: SCO idle manager sub_FFF3951E
+SUB	FFF3A1D4	057c10fa	bsr.a   sub_FFEDB250	line reader: get 1 byte from channel 2
+SUB	FFF3A189	755eff	cmp     #-1, r14	line reader: 256-byte cap (cmp #0FFh, IDA prints #-1)
+SUB	FFF3A1AE	61a1	cmp     #0Ah, r1	line reader: LF ends line
+SUB	FFF3A3F6	6161	cmp     #6, r1	classifier A: indices 1..5
+SUB	FFF3A404	392c12	bsr.w   sub_FFF3B630	classifier A: unmatched line answered ERROR\r\n
+SUB	FFF3A398	6181	cmp     #8, r1	classifier B: indices 1..7
+SUB	FFF3A2FF	fbe278050100	mov.l   #10578h, r14	classifier B: RXAT gated on [10578]
+SUB	FFF3A31D	fbe278050100	mov.l   #10578h, r14	classifier B: ERAT gated on [10578]
+SUB	FFF3A41A	75514f	cmp     #4Fh, r1 ; 'O'	HELL: 'O'
+SUB	FFF3A468	39c811	bsr.w   sub_FFF3B630	HELL: echo HELL%c
+SUB	FFF3A473	f8e402	mov.b   #2, [r14]	HELL: 122AD=2
+SUB	FFF3A4AB	618e	cmp     #8, r14	FIND: list full at 8
+SUB	FFF3A4B9	397711	bsr.w   sub_FFF3B630	FIND: FIND=OVER reply
+SUB	FFF3A50B	61c1	cmp     #0Ch, r1	FIND: 12 address chars
+SUB	FFF3A57F	61f1	cmp     #0Fh, r1	FIND: name loop bound j<=15
+SUB	FFF3A599	3c1c00	mov.b   #0, 0Ch[r1]	FIND: terminator at entry+0x0C+j (j=16 -> +0x1C)
+SUB	FFF3A622	390e10	bsr.w   sub_FFF3B630	FIND: FIND=<sum4> reply
+SUB	FFF3A2DF	7f8f	smovf	FIND: list copied to [683B0] (smovf)
+SUB	FFF3A2FB	7f1e	jsr     r14	FIND: scan callback(1)
+SUB	FFF3A654	755130	cmp     #30h, r1 ; '0'	PAIR: '0'
+SUB	FFF3A678	39b80f	bsr.w   sub_FFF3B630	PAIR: PAIR=0 echo
+SUB	FFF3A6AD	6631	mov.l   #3, r1	PAIR=0: link cb(3) after own LINK=0
+SUB	FFF3A6BE	6691	mov.l   #9, r1	PAIR=0: link cb(9) remote drop
+SUB	FFF3A75F	39d10e	bsr.w   sub_FFF3B630	PAIR: PAIR=<sum4> reply
+SUB	FFF3A77B	f8e405	mov.b   #5, [r14]	PAIR=<addr>: 122AE=5 linked
+SUB	FFF3A786	6611	mov.l   #1, r1	PAIR=<addr>: link cb(1)
+SUB	FFF3A7B7	39790e	bsr.w   sub_FFF3B630	SCOI: echo SCOI=%c
+SUB	FFF3A7C0	755130	cmp     #30h, r1 ; '0'	SCOI: '0'
+SUB	FFF3A7ED	6631	mov.l   #3, r1	SCOI=0: cb(3) if 12CC2==1
+SUB	FFF3A7F2	6651	mov.l   #5, r1	SCOI=0: cb(5) otherwise
+SUB	FFF3A805	755131	cmp     #31h, r1 ; '1'	SCOI: '1'
+SUB	FFF3A820	6611	mov.l   #1, r1	SCOI=1: cb(1)
+SUB	FFF3A849	39e70d	bsr.w   sub_FFF3B630	ERAT: echo ERAT=
+SUB	FFF3A893	6161	cmp     #6, r1	ERAT: up to 6 chars
+SUB	FFF3A8B4	6651	mov.l   #5, r1	ERAT: TXAT cb(5)
+SUB	FFF3A8CF	75512b	cmp     #2Bh, r1 ; '+'	ERRO: '+'
+SUB	FFF3A927	39090d	bsr.w   sub_FFF3B630	ERRO: ERROR+SCOI echo
+SUB	FFF3A946	6621	mov.l   #2, r1	ERRO: SCOL cb(2)
+SUB	FFF3A972	39be0c	bsr.w   sub_FFF3B630	RXAT: echo RXAT=
+SUB	FFF3A9BC	61c1	cmp     #0Ch, r1	RXAT: up to 12 chars
+SUB	FFF3AA79	6661	mov.l   #6, r1	RXAT CKPD=200: TXAT cb(6)
+SUB	FFF3AA96	601e	sub     #1, r14	retry: index = [1054A]-1
+SUB	FFF3AA9A	2505	bleu.b  loc_FFF3AA9F	retry: 11 cases
+SUB	FFF3AC7B	39b509	bsr.w   sub_FFF3B630	retry: ACK ERROR\r\n
+SUB	FFF3AD5E	755130	cmp     #30h, r1 ; '0'	SCAN=: '0'
+SUB	FFF3ADA9	6631	mov.l   #3, r1	SCAN=0: scan cb(3)
+SUB	FFF3ADE4	6651	mov.l   #5, r1	SCAN=1: scan cb(5)
+SUB	FFF3AE11	451e05	cmp     5[r1], r14	LINK=: checksum compare
+SUB	FFF3AE6E	6651	mov.l   #5, r1	LINK=: cb(5) match
+SUB	FFF3AE74	6661	mov.l   #6, r1	LINK=: cb(6) mismatch
+SUB	FFF3AE86	f8e400	mov.b   #0, [r14]	SCOL=: ack only (clear pending)
+SUB	FFF3AEB4	fbe278050100	mov.l   #10578h, r14	TXAT=1: 10578=1
+SUB	FFF3AECB	6611	mov.l   #1, r1	TXAT=1: cb(1)
+SUB	FFF3AEDA	fbe278050100	mov.l   #10578h, r14	TXAT=0: 10578=0
+SUB	FFF3AF7B	6611	mov.l   #1, r1	PINF=: cb(1) match
+SUB	FFF3AF81	6621	mov.l   #2, r1	PINF=: cb(2) mismatch
+SUB	FFF39771	3c0501	mov.b   #1, 10h+var_B[sp]	SCAN sender: arg 1
+SUB	FFF397C5	396b1e	bsr.w   sub_FFF3B630	SCAN=1 send
+SUB	FFF397EC	fb2ab80b	mov.l   #0BB8h, r2	SCAN: timer 2 = 3000
+SUB	FFF39802	3c0500	mov.b   #0, 8+var_3[sp]	SCAN stop: arg 0
+SUB	FFF39825	390b1e	bsr.w   sub_FFF3B630	SCAN=0 send
+SUB	FFF3989D	397117	bsr.w   sub_FFF3B00E	LINK mode 0 -> LINK=1
+SUB	FFF398FC	398d16	bsr.w   sub_FFF3AF89	LINK mode 1 -> LINK=<addr>
+SUB	FFF3991A	fb2ad007	mov.l   #7D0h, r2	LINK: timer 2 = 2000
+SUB	FFF399C0	f8eae803	mov.l   #3E8h, [r14]	deferred LINK: 683A8=1000
+SUB	FFF39A23	390d1c	bsr.w   sub_FFF3B630	LINK=0 send (sub_FFF399F9)
+SUB	FFF39A5D	39d31b	bsr.w   sub_FFF3B630	LINK=0 send (sub_FFF39A53)
+SUB	FFF39ADB	39551b	bsr.w   sub_FFF3B630	SCOL=1 send
+SUB	FFF39B14	fb2ae803	mov.l   #3E8h, r2	SCOL=1: timer 2 = 1000
+SUB	FFF39B5D	39d31a	bsr.w   sub_FFF3B630	SCOL=0 send (sub_FFF39B27)
+SUB	FFF39B68	f8e501	mov.w   #1, [r14]	SCOL=0: 12CC2=1
+SUB	FFF39B90	39a01a	bsr.w   sub_FFF3B630	SCOL=0 send (sub_FFF39B86)
+SUB	FFF39BB3	3c0501	mov.b   #1, 0Ch+var_7[sp]	TXAT arg 1
+SUB	FFF39BE8	39481a	bsr.w   sub_FFF3B630	TXAT=1 send
+SUB	FFF39BF6	fbe2c4830600	mov.l   #683C4h, r14	TXAT cb slot 683C4
+SUB	FFF39C13	3c0500	mov.b   #0, 8+var_3[sp]	TXAT arg 0 (sub_FFF39C11)
+SUB	FFF39C48	39e819	bsr.w   sub_FFF3B630	TXAT=0 send
+SUB	FFF3AFD4	395c06	bsr.w   sub_FFF3B630	LINK=<12 hex> send
+SUB	FFF3B01A	391606	bsr.w   sub_FFF3B630	LINK=1 send
+SUB	FFF3B05B	39d505	bsr.w   sub_FFF3B630	PINF=0 send
+SUB	FFF3B0DB	395505	bsr.w   sub_FFF3B630	PINF=0,<12 hex> send
+SUB	FFF397E5	6652	mov.l   #5, r2	ack timer 3 = 5
+SUB	FFF396D2	fb2af401	mov.l   #1F4h, r2	HELLO wait timer 1 = 500
+SUB	FFF396B9	fbee22c008	mov.l   #8C022h, r14	power-on: P22 set
+SUB	FFF396BE	f0e2	bset    #2, [r14].b	power-on: bset #2
+SUB	FFF396F8	fbee22c008	mov.l   #8C022h, r14	power-off: P22 clear
+SUB	FFF39E43	3d10c0	mov.w   #-40h, [r1]	CMT3 CMCR=0FFC0h
+SUB	FFF39E4B	f9e9025fea	mov.w   #-15A1h, 4[r14]	CMT3 CMCOR=0EA5Fh
+SUB	FFF3B12E	fbee22c008	mov.l   #8C022h, r14	level >= threshold: P24 set
+SUB	FFF3B133	f0e4	bset    #4, [r14].b	bset #4 P2.PODR
+SUB	FFF3B136	fbee22c008	mov.l   #8C022h, r14	level < threshold: P24 clear
+SUB	FFF3B178	7f1e	jsr     r14	level cb(1)
+SUB	FFF3B1F1	7f1e	jsr     r14	level cb(2)
+SUB	FFF3B11A	05c5a8fd	bsr.a   sub_FFF159DF	level read sub_FFF159DF
+SUB	FFF15A09	fbe210250100	mov.l   #12510h, r14	ADC result 12510
+SUB	FFEDCE2A	7551d5	cmp     #-2Bh, r1	dispatcher: F3D5 compare
+SUB	FFEDCE43	05f5b405	bsr.a   sub_FFF38338	dispatcher: F3D5 -> sub_FFF38338
+SUB	FFEDCFB6	f5e71d	btst    #7, 1Dh[r14].b	dispatcher: frame+0x18 bit 7 (BT on)
+SUB	FFEDCFBA	053aad05	bsr.a   sub_FFF37CF4	dispatcher: BT off -> sub_FFF37CF4
+SUB	FFEDCFBF	05faac05	bsr.a   sub_FFF37CB9	dispatcher: BT on -> sub_FFF37CB9
+SUB	FFEDCFD8	7551d6	cmp     #-2Ah, r1	dispatcher: F3D6 compare
+SUB	FFEDCFDD	7551d3	cmp     #-2Dh, r1	dispatcher: F3D3 compare
+SUB	FFEDCFE2	7551d2	cmp     #-2Eh, r1	dispatcher: F3D2 compare
+SUB	FFEDCFF1	0597ad05	bsr.a   sub_FFF37D88	dispatcher: F3D2 -> sub_FFF37D88
+SUB	FFEDCFFF	0593b205	bsr.a   sub_FFF38292	dispatcher: F3D3 -> sub_FFF38292
+SUB	FFEDD00D	05fab005	bsr.a   sub_FFF38107	dispatcher: F3D6 -> sub_FFF38107
+SUB	FFEDD019	05f2b405	bsr.a   sub_FFF3850B	dispatcher: every frame -> sub_FFF3850B
+SUB	FFEDD025	05ddb305	bsr.a   sub_FFF38402	dispatcher: every frame -> sub_FFF38402
+SUB	FFF37CC6	755e15	cmp     #15h, r14	BT on: only when 122A6==15h
+SUB	FFF37CD7	05c41900	bsr.a   sub_FFF3969B	BT on: sub_FFF3969B (power-up)
+SUB	FFF37D0C	05d91900	bsr.a   sub_FFF396E5	BT off: sub_FFF396E5
+SUB	FFF37DB5	591e21	movu.b  21h[r1], r14	F3D2: sub-op = frame+0x21
+SUB	FFF37E40	057c1c00	bsr.a   sub_FFF39ABC	F3D2/0: SCOL=1
+SUB	FFF37ECB	05bb1c00	bsr.a   sub_FFF39B86	F3D2/1: SCOL=0 then deferred LINK=0
+SUB	FFF37ED1	05281b00	bsr.a   sub_FFF399F9	F3D2/1: LINK=0
+SUB	FFF37EF0	fbe2bc2c0100	mov.l   #12CBCh, r14	F3D2/1: 12CBC=3 (no E6)
+SUB	FFF37FB0	057855fa	bsr.a   sub_FFEDD528	F3D2/2: E6(0)
+SUB	FFF37FEC	053c55fa	bsr.a   sub_FFEDD528	F3D2/2: E5(0)
+SUB	FFF38007	05271900	bsr.a   sub_FFF3992E	F3D2/2: deferred re-link
+SUB	FFF380E1	05641700	bsr.a   sub_FFF39845	F3D2/3: LINK=<addr>
+SUB	FFF380F9	f8e403	mov.b   #3, [r14]	F3D2/3: 122A7=3
+SUB	FFF382B2	511e21	and     21h[r1], r14	F3D3: frame+0x21 bit 7
+SUB	FFF382EC	057e1400	bsr.a   sub_FFF3976A	F3D3: start scan
+SUB	FFF3831C	05e41400	bsr.a   sub_FFF39800	F3D3: stop scan
+SUB	FFF38359	6191	cmp     #9, r1	F3D5: frame+8 == 9
+SUB	FFF383DE	058a1800	bsr.a   sub_FFF39C68	F3D5: PINF=0,<addr>
+SUB	FFF381A8	059d1600	bsr.a   sub_FFF39845	F3D6: LINK=<addr> when 122A7==1
+SUB	FFF38215	051353fa	bsr.a   sub_FFEDD528	F3D6: E6(0)
+SUB	FFF38251	05d752fa	bsr.a   sub_FFEDD528	F3D6: E5(0)
+SUB	FFF3826C	05c21600	bsr.a   sub_FFF3992E	F3D6: deferred re-link
+SUB	FFF38422	b219	movu.b  9[r1], r1	every frame: frame+9 & 20h
+SUB	FFF38467	397b00	bsr.w   sub_FFF384E2	every frame: TXAT=1 once per link
+SUB	FFF384AE	050e1600	bsr.a   sub_FFF39ABC	every frame: SCOL=1
+SUB	FFF384E9	fb121692f3ff	mov.l   #sub_FFF39216, r1	TXAT callback = sub_FFF39216
+SUB	FFF3851F	752120	and     #20h, r1 ; ' '	header: frame+0x18 & 20h -> 1229D
+SUB	FFF3852E	752140	and     #40h, r1 ; '@'	header: frame+0x18 & 40h -> 1229E
+SUB	FFF3853D	6431	and     #3, r1	header: frame+0x18 & 3 -> VOX mode
+SUB	FFF38627	fbe2b82c0100	mov.l   #12CB8h, r14	header: 12CB8=2 (BT off edge)
+SUB	FFF3865A	fbe2b82c0100	mov.l   #12CB8h, r14	header: 12CB8=2 (BT on edge)
+SUB	FFF3873B	05301600	bsr.a   sub_FFF39D6B	detector start sub_FFF39D6B(1)
+SUB	FFF38759	fbe2b82c0100	mov.l   #12CB8h, r14	detector running: 12CB8=1
+SUB	FFF387B0	05bb1500	bsr.a   sub_FFF39D6B	detector stop sub_FFF39D6B(2)
+SUB	FFF387B6	fbe2b82c0100	mov.l   #12CB8h, r14	detector stopped: 12CB8=2
+SUB	FFF38AEA	053e4afa	bsr.a   sub_FFEDD528	E4 builder send
+SUB	FFF38C9E	058a48fa	bsr.a   sub_FFEDD528	E4 code 3 direct send
+SUB	FFF38B2F	754112	mov.l   #12h, r1	E4 code 12h (scan result)
+SUB	FFF38B4A	754111	mov.l   #11h, r1	E4 code 11h (scan timeout)
+SUB	FFF38B5E	754113	mov.l   #13h, r1	E4 code 13h
+SUB	FFF38B91	6691	mov.l   #9, r1	E4 code 9 (PINF result)
+SUB	FFF38CCF	6601	mov.l   #0, r1	E4 code 0 (connected)
+SUB	FFF38D63	6651	mov.l   #5, r1	E4 code 5 (connect failed)
+SUB	FFF38EAB	6621	mov.l   #2, r1	E4 code 2 (link lost)
+SUB	FFF38EF2	6611	mov.l   #1, r1	E4 code 1 (disconnected)
+SUB	FFF3920F	f8e415	mov.b   #15h, [r14]	module absent: 122A6=15h
+SUB	FFF38FD2	055645fa	bsr.a   sub_FFEDD528	E6 site: SCO up with 122A0==3
+SUB	FFF3906F	05b944fa	bsr.a   sub_FFEDD528	E6 site: SCO closed by radio
+SUB	FFF39284	05a442fa	bsr.a   sub_FFEDD528	E6 site: CKPD key (save mode)
+SUB	FFF39312	051642fa	bsr.a   sub_FFEDD528	E6 site: CKPD key (12CB8==2)
+SUB	FFF393B6	057241fa	bsr.a   sub_FFEDD528	E6 site: CKPD unkey (save mode)
+SUB	FFF393F4	053441fa	bsr.a   sub_FFEDD528	E6 site: CKPD unkey (12CB8==2)
+SUB	FFF38FA0	058845fa	bsr.a   sub_FFEDD528	E5 site: SCO up with 122A0==4
+SUB	FFF3903D	05eb44fa	bsr.a   sub_FFEDD528	E5 site: SCO closed, 122A0==1
+SUB	FFF39095	059344fa	bsr.a   sub_FFEDD528	E5 site: SCO closed, 122A0==4
+SUB	FFF394CF	055940fa	bsr.a   sub_FFEDD528	E5 site: level cb(1) -> E5(1)
+SUB	FFF39516	051240fa	bsr.a   sub_FFEDD528	E5 site: level cb(2) -> E5(0)
+SUB	FFF39225	6161	cmp     #6, r1	CKPD cb: code 6 only
+SUB	FFF39232	755e20	cmp     #20h, r14 ; ' '	CKPD cb: 1229D == 20h
+SUB	FFF39240	612f	cmp     #2, r15	CKPD cb: 12CBC == 2 -> unkey branch
+SUB	FFF392DF	612e	cmp     #2, r14	CKPD cb: 12CB8 == 2
+SUB	FFF39482	053a0600	bsr.a   sub_FFF39ABC	VOX level: SCOL=1 (1251E==2)
+SUB	FFF3959C	760ee803	cmp     #3E8h, r14	SCO idle close after 1000 passes
+SUB	FFF3953A	05ed0500	bsr.a   sub_FFF39B27	SCO close request 1229C
+MAIN	00007C92	6a1089207300	btst    #0, @0xFFFF8920:16	FF3D7D: BT on test
+MAIN	00007C9A	f420	mov.b   #0x20, r4h ; ' '	FF3D7D: b5 = BT on
+MAIN	00007C9C	6a0cbb70	mov.b   @0xFFFFBB70:16, r4l	FF3D7D: BB70 link state
+MAIN	00007CA4	f440	mov.b   #0x40, r4h ; '@'	FF3D7D: b6 when BB70!=0
+MAIN	00007CB0	6aab00ff3d7d	mov.b   r3l, @0xFF3D7D:32	store FF3D7D
+MAIN	00007DC8	6a1089207700	bld     #0, @0xFFFF8920:16	FF3D8C b7 <- FF8920.b0
+MAIN	00007DCE	677b	bst     #7, r3l	bst #7
+MAIN	00007DD8	5558	bsr     sub_7E32:8	bsr sub_7E32 when BT on
+MAIN	00007DDA	6a0d89bb	mov.b   @0xFFFF89BB:16, r5l	VOX level FF89BB
+MAIN	00007DE0	f501	mov.b   #1, r5h	mode 1 (VOX on)
+MAIN	00007DEE	f502	mov.b   #2, r5h	mode 2 (VOX on, BT on)
+MAIN	00007DF0	8d02	add.b   #2, r5l	index +2 when BT on
+MAIN	00007DF4	6a0c89bc	mov.b   @0xFFFF89BC:16, r4l	VOX delay FF89BC
+MAIN	00007DF8	ec07	and.b   #7, r4l	and #7
+MAIN	00007DFE	6aab00ff3d8c	mov.b   r3l, @0xFF3D8C:32	store FF3D8C
+MAIN	00007E0A	78506a2b00007e2c	mov.b   @(0x7E2C:32,er5), r3l	table 0x7E2C[index]
+MAIN	00007E12	6aab00ff3d8d	mov.b   r3l, @0xFF3D8D:32	store FF3D8D
+MAIN	00007E32	6a0c89bb	mov.b   @0xFFFF89BB:16, r4l	sub_7E32: VOX
+MAIN	00007E38	6a1089207370	btst    #7, @0xFFFF8920:16	FF8920.b7
+MAIN	00007E40	6a0cbb70	mov.b   @0xFFFFBB70:16, r4l	BB70
+MAIN	00007E48	706b	bset    #6, r3l	b6 (SCO wanted, always-on mode)
+MAIN	00007E4C	705b	bset    #5, r3l	b5 (save mode)
+MAIN	00007E4E	6a10bb8f7770	bld     #7, @0xFFFFBB8F:16	BB8F.b7
+MAIN	00007E54	67eb	bist    #6, r3l	bist #6
+MAIN	0000D2B2	fc01	mov.b   #1, r4l	F3D6: BBE5=1
+MAIN	0000D2C2	7904f3d6	mov.w   #0xF3D6, r4	opcode F3D6
+MAIN	0000D2D6	5524	bsr     sub_D2FC:8	shared payload sub_D2FC
+MAIN	0000D2D8	5e00b6b6	jsr     sub_B6B6:24	send now sub_B6B6
+MAIN	0000D2E8	7904f3d2	mov.w   #0xF3D2, r4	opcode F3D2
+MAIN	0000D318	6a1089207700	bld     #0, @0xFFFF8920:16	FF3D94 <- FF8920.b0
+MAIN	0000D32E	6a0c8eaf	mov.b   @0xFFFF8EAF:16, r4l	sub-op FF8EAF
+MAIN	0000D332	68ec	mov.b   r4l, @er6	-> FF3D95 (frame+0x21)
+MAIN	0000D334	6a0c8eb0	mov.b   @0xFFFF8EB0:16, r4l	selected record FF8EB0
+MAIN	0000D340	7a1500ffaaec	add.l   #0xFFAAEC, er5	record base FFAAEC
+MAIN	0000D34A	7a0600ff3d96	mov.l   #0xFF3D96, er6	-> FF3D96 (frame+0x22)
+MAIN	0000D38C	6a10bb8f7300	btst    #0, @0xFFFFBB8F:16	F3D3: BB8F.b0 pending delete
+MAIN	0000D392	5860011e	bne     loc_D4B4:16	-> F3D5 path
+MAIN	0000D3C0	7904f3d3	mov.w   #0xF3D3, r4	opcode F3D3
+MAIN	0000D3F6	ac01	cmp.b   #1, r4l	BB8E==1 (search)
+MAIN	0000D3FA	707b	bset    #7, r3l	bit 7 = search
+MAIN	0000D402	68eb	mov.b   r3l, @er6	-> FF3D95
+MAIN	0000D4B4	6a18bb8f7200	bclr    #0, @0xFFFFBB8F:16	clear BB8F.b0
+MAIN	0000D4BA	6a18bb8f7010	bset    #1, @0xFFFFBB8F:16	set BB8F.b1
+MAIN	0000D4CA	7904f3d5	mov.w   #0xF3D5, r4	opcode F3D5
+MAIN	0000D4FA	fc09	mov.b   #9, r4l	frame+8 = 9
+MAIN	0000D50C	7a1500ffaaec	add.l   #0xFFAAEC, er5	record base FFAAEC
+MAIN	0000D516	7a0600ff3d7d	mov.l   #0xFF3D7D, er6	-> FF3D7D (frame+9)
+MAIN	0000D52C	790bf3d4	mov.w   #0xF3D4, e3	F3D4 (setup item)
+MAIN	0000D526	6a1089207770	bld     #7, @0xFFFF8920:16	F3D4 bit = FF8920.b7
+MAIN	000482BE	6a18ba927040	bset    #4, @0xFFFFBA92:16	E5: set BA92.b4
+MAIN	000482C8	6a8cbb92	mov.b   r4l, @0xFFFFBB92:16	E5: FFBB92 (only reference)
+MAIN	000480FE	7a0600ffbb71	mov.l   #0xFFBB71, er6	E4: 29 B -> FFBB71
+MAIN	000481E8	6a8cbb91	mov.b   r4l, @0xFFFFBB91:16	E6: FFBB91
+MAIN	0000FD30	6a0cbb91	mov.b   @0xFFFFBB91:16, r4l	E6 consumer reads FFBB91
+MAIN	00073082	78b06b260007308c	mov.l   @(off_7308C:32,er3), er6	BB90 state table
+MAIN	000730A2	472c	beq     sub_730D0:8	state 0: BT off
+MAIN	000730AE	6a8c8eaf	mov.b   r4l, @0xFFFF8EAF:16	8EAF=2 (BT on, not linked)
+MAIN	000730FC	6a0cbb71	mov.b   @0xFFFFBB71:16, r4l	state 1: E4 code
+MAIN	00073100	ac01	cmp.b   #1, r4l	code 1 (module ready)
+MAIN	00073118	5e00d2b2	jsr     sub_D2B2:24	state 2: send F3D6
+MAIN	0007312A	6a10bb8f7310	btst    #1, @0xFFFFBB8F:16	state 3: BB8F.b1 (delete pending)
+MAIN	0007314C	78b06b2600073162	mov.l   @(off_73162:32,er3), er6	BB8E jump table
+MAIN	00073184	ac10	cmp.b   #0x10, r4l	scan: code 10h ignored
+MAIN	00073188	ac11	cmp.b   #0x11, r4l	scan: code 11h
+MAIN	000731AA	fc1d	mov.b   #0x1D, r4l	alert tone AAE0=1Dh
+MAIN	0007318C	ac12	cmp.b   #0x12, r4l	scan: code 12h
+MAIN	00073194	552a	bsr     sub_731C0:8	add found device sub_731C0
+MAIN	000731D4	fe1c	mov.b   #0x1C, r6l	compare 1Ch bytes
+MAIN	00073202	ac05	cmp.b   #5, r4l	list full at 5
+MAIN	00073246	7bd4598f	eepmov.w	copy record into list
+MAIN	0007324E	5e03cda0	jsr     sub_3CDA0:24	save list sub_3CDA0
+MAIN	00073292	ac03	cmp.b   #3, r4l	connecting: code 3
+MAIN	000732C2	5e00d2b2	jsr     sub_D2B2:24	send F3D6
+MAIN	000732DA	ac05	cmp.b   #5, r4l	linking: code 5
+MAIN	000732FC	fc06	mov.b   #6, r4l	popup BBE1=6
+MAIN	00073322	ac02	cmp.b   #2, r4l	linked: code 2 (lost)
+MAIN	0007336C	ac09	cmp.b   #9, r4l	delete: code 9
+MAIN	0007337C	1a0c	dec.b   r4l	delete: count--
+MAIN	0003CDA4	7906008e	mov.w   #0x8E, r6	len 8Eh
+MAIN	0003CDA8	7a000001ea00	mov.l   #loc_1EA00, er0	EEPROM address 1EA00h
+MAIN	0003CDAE	7a0100ffaaea	mov.l   #0xFFAAEA, er1	src FFAAEA
+MAIN	0003CDB4	5e03bf4c	jsr     sub_3BF4C:24	EEPROM writer sub_3BF4C
+MAIN	00073424	6a1089207370	btst    #7, @0xFFFF8920:16	save mode only
+MAIN	0007342C	6a0c94c0	mov.b   @0xFFFF94C0:16, r4l	TX active FF94C0==1
+MAIN	00073484	6a18bb8f7070	bset    #7, @0xFFFFBB8F:16	BB8F.b7 = SCO not needed
+MAIN	0007348C	fc64	mov.b   #0x64, r4l ; 'd'	hold timer 100
+MAIN	000734A0	6a18bb8f7270	bclr    #7, @0xFFFFBB8F:16	clear BB8F.b7
+MAIN	0002C0A8	6a8cbb8e	mov.b   r4l, @0xFFFFBB8E:16	menu: connect BB8E=2
+MAIN	0002C0AE	6a8c8eaf	mov.b   r4l, @0xFFFF8EAF:16	8EAF=3
+MAIN	0002C0E2	6a8cbb8e	mov.b   r4l, @0xFFFFBB8E:16	menu: search start BB8E=1
+MAIN	0002C0EE	6a8cbb8e	mov.b   r4l, @0xFFFFBB8E:16	menu: search stop BB8E=0
+MAIN	0002C0FA	6a18bb8f7000	bset    #0, @0xFFFFBB8F:16	menu: delete BB8F.b0
+MAIN	0002C19E	6a8cbb8e	mov.b   r4l, @0xFFFFBB8E:16	menu: connect BB8E=2
+MAIN	000078A0	0000d38c	.long sub_D38C	sender table: sub_D38C
+MAIN	000078A4	0000d2de	.long sub_D2DE	sender table: sub_D2DE
+MAIN	000078A8	0000d526	.long sub_D526	sender table: sub_D526
+SUB	FFEE11D9	05d25a05	bsr.a sub_FFF36CAB (callers listing)	TPU0 vector-135 ISR vec_intb_135 calls the tick fan-out
+SUB	FFF391F9	6611	mov.l #1, r1	HELLO cb(0): E4 code 1 (module ready)
+SUB	FFF39209	fbe2a6220100	mov.l #122A6h, r14	HELLO cb(-1): module absent
+SUB	FFF15839	fbee009008	mov.l #89000h, r14	ADC S12AD0 ADCSR
+MAIN	000732DE	ac00	cmp.b #0, r4l	linking: code 0 = connected
+MAIN	00010690	6a1089207300	btst #0, @0xFFFF8920:16	VOX keyer: Bluetooth on?
+MAIN	0001069E	7f507060	bset #6, @0x50:8	VOX keyer: BT off -> set 0xFFFF50.b6
+MAIN	000106AA	7f507260	bclr #6, @0x50:8	VOX keyer: BT on -> clear 0xFFFF50.b6
+MAIN	0003914C	6a0cbb70	mov.b @0xFFFFBB70:16, r4l	audio path: BT link state
+MAIN	00039162	7f597220	bclr #2, @0x59:8	audio path: BT linked -> clear 0xFFFF59.b2
+MAIN	000391AC	7f597220	bclr #2, @0x59:8	audio path (2nd copy): BT linked -> clear 0xFFFF59.b2
+MAIN	0002C0C8	6a1889207000	bset #0, @0xFFFF8920:16	DEVICE LIST connect/search forces Bluetooth ON
+MAIN	00007E2C	0028142d1800	table	VOX threshold table -> FF3D8D
+SUB	FFECE2CC	0000f4010100e8030200dc050300d0070400c4090500b80b	table	VOX hang table {u16 idx,u16 ticks}x6: 500..3000 (/10 per detector step)
+SUB	FFEDA7A0	70aef4ff75aef4ff7aaef4ff7faef4ff84aef4ff89aef4ff8eaef4ff92aef4ff97aef4ff9caef4ffa1aef4ffa6aef4ffabaef4ffb0aef4ff00000000	table	14 token pointers + terminator (copied to RAM 69550/69568)
+MAIN	0002C12C	0002c0d40002c0a00002c0fa	table	DEVICE LIST key actions: search / connect / delete
+SUB	FFF4AE75	5343414e00	string	'SCAN\x00'
+SUB	FFF4AE7A	4c494e4b00	string	'LINK\x00'
+SUB	FFF4AE7F	53434f4c00	string	'SCOL\x00'
+SUB	FFF4AE84	5458415400	string	'TXAT\x00'
+SUB	FFF4AE89	50494e4600	string	'PINF\x00'
+SUB	FFF4AE92	48454c4c00	string	'HELL\x00'
+SUB	FFF4AE97	5041495200	string	'PAIR\x00'
+SUB	FFF4AE9C	46494e4400	string	'FIND\x00'
+SUB	FFF4AEA1	4552415400	string	'ERAT\x00'
+SUB	FFF4AEA6	5258415400	string	'RXAT\x00'
+SUB	FFF4AEAB	53434f4900	string	'SCOI\x00'
+SUB	FFF4AEB0	4552524f00	string	'ERRO\x00'
+SUB	FFF4AEB5	5343414e3d25640d0a00	string	'SCAN=%d\r\n\x00'
+SUB	FFF4AEBF	4c494e4b3d300d0a00	string	'LINK=0\r\n\x00'
+SUB	FFF4AEC8	53434f4c3d310d0a00	string	'SCOL=1\r\n\x00'
+SUB	FFF4AED1	53434f4c3d300d0a00	string	'SCOL=0\r\n\x00'
+SUB	FFF4AEDA	545841543d25640d0a00	string	'TXAT=%d\r\n\x00'
+SUB	FFF4AEE4	4552524f520d0a00	string	'ERROR\r\n\x00'
+SUB	FFF4AEEC	48454c4c25630d0a00	string	'HELL%c\r\n\x00'
+SUB	FFF4AEF5	46494e443d4f5645520d0a00	string	'FIND=OVER\r\n\x00'
+SUB	FFF4AF01	46494e443d25632563256325630d0a00	string	'FIND=%c%c%c%c\r\n\x00'
+SUB	FFF4AF11	504149523d300d0a00	string	'PAIR=0\r\n\x00'
+SUB	FFF4AF1A	504149523d25632563256325630d0a00	string	'PAIR=%c%c%c%c\r\n\x00'
+SUB	FFF4AF2A	53434f493d25630d0a00	string	'SCOI=%c\r\n\x00'
+SUB	FFF4AF34	455241543d00	string	'ERAT=\x00'
+SUB	FFF4AF3A	256300	string	'%c\x00'
+SUB	FFF4AF3D	0d0a00	string	'\r\n\x00'
+SUB	FFF4AF40	4552524f522b53434f4900	string	'ERROR+SCOI\x00'
+SUB	FFF4AF4B	525841543d00	string	'RXAT=\x00'
+SUB	FFF4AF51	41434b204552524f520d0a00	string	'ACK ERROR\r\n\x00'
+SUB	FFF4AF5D	4c494e4b3d2563256325632563256325632563256325632563256325630d0a00	string	'LINK=%c%c%c%c%c%c%c%c%c%c%c%c\r\n\x00'
+SUB	FFF4AF7D	4c494e4b3d310d0a00	string	'LINK=1\r\n\x00'
+SUB	FFF4AF86	50494e463d300d0a00	string	'PINF=0\r\n\x00'
+SUB	FFF4AF8F	50494e463d302c2563256325632563256325632563256325632563256325630d0a00	string	'PINF=0,%c%c%c%c%c%c%c%c%c%c%c%c\r\n\x00'
+SUB	FFF3A7C5	fbe2af220100	mov.l   #122AFh, r14	SCOI=0: 122AF test
+SUB	FFF38059	755e24	cmp     #24h, r14 ; '$'	F3D2/3: 122A8=='$' required
+SUB	FFF37E15	755e19	cmp     #19h, r14	122AB==19h (SCO open) test
+SUB	FFF38F0D	fbe2be2c0100	mov.l   #12CBEh, r14	SCOL cb(1): 12CBE=2
+SUB	FFF38D10	755e22	cmp     #22h, r14 ; '"'	link retry bound 22h
+SUB	FFF38D00	3aa700	beq.w   loc_FFF38DA7; I17: was sub_FFF38DA7 (lane-4 start)	link cb(2): 122A7==3 branch
+SUB	FFF38DAF	612e	cmp     #2, r14	link retry bound 2
+SUB	FFF38CB1	fbe2a5220100	mov.l   #122A5h, r14	connect cb(1): clear TXAT latch 122A5
+SUB	FFF38FF2	05070a00	bsr.a   sub_FFF399F9	SCO closed by radio: deferred LINK=0
+SUB	FFF39486	fbe2a0220100	mov.l   #122A0h, r14	122A0=4 (only writer)

@@ -1,0 +1,87 @@
+048300  7a 04 00 20 00 00        mov.l   #0x200000, er4                       
+048306  01 00 6b 84 fc 18        mov.l   er4, @0xFFFFFC18:16                  
+04830c  fc e1                    mov.b   #0xE1, r4l                           
+04830e  6a 8c fd 20              mov.b   r4l, @0xFFFFFD20:16                  
+048312  7a 04 80 00 01 a0        mov.l   #0x800001A0, er4                     
+048318  01 00 6b 84 fc 14        mov.l   er4, @0xFFFFFC14:16                  
+04831e  6a 18 f6 12 70 70        bset    #7, @0xFFFFF612:16                   
+048324  54 70                    rts                                          
+
+;---- func 0x48326..0x48328
+048326  56 70                    rte                                          <- 384
+
+;---- func 0x48328..0x4834e
+048328  01 00 6d f4              push.l  er4                                  <- 200
+04832c  6a 18 f6 12 72 70        bclr    #7, @0xFFFFF612:16                   
+048332  01 00 6b 04 fc 14        mov.l   @0xFFFFFC14:16, er4                  
+048338  79 6c ff fe              and.w   #0xFFFE, e4                          
+04833c  01 00 6b 84 fc 14        mov.l   er4, @0xFFFFFC14:16                  
+048342  fc 00                    mov.b   #0, r4l                              
+048344  6a 8c bb e4              mov.b   r4l, @0xFFFFBBE4:16                  
+048348  01 00 6d 74              pop.l   er4                                  
+04834c  56 70                    rte                                          
+
+;---- func 0x4834e..0x483d0
+04834e  2c 8c                    mov.b   @0x8C:8, r4l                         <- 48352,56714,567be
+048350  ec 80                    and.b   #0x80, r4l                           
+048352  47 fa                    beq     sub_4834E:8                          
+048354  7a 04 00 00 01 a0        mov.l   #0x1A0, er4                          
+04835a  01 00 6b 84 fc 34        mov.l   er4, @0xFFFFFC34:16                  
+048360  01 00 6b 85 fc 20        mov.l   er5, @0xFFFFFC20:16                  
+048366  7a 04 00 ff ff 8b        mov.l   #0xFFFF8B, er4                       
+04836c  01 00 6b 84 fc 24        mov.l   er4, @0xFFFFFC24:16                  
+048372  68 5c                    mov.b   @er5, r4l                            
+048374  ac 19                    cmp.b   #0x19, r4l                           
+048376  47 24                    beq     loc_4839C:8                          
+048378  ac 16                    cmp.b   #0x16, r4l                           
+04837a  47 20                    beq     loc_4839C:8                          
+04837c  ac 15                    cmp.b   #0x15, r4l                           
+04837e  47 1c                    beq     loc_4839C:8                          
+048380  6a 04 8d de              mov.b   @0xFFFF8DDE:16, r4h                  
+048384  47 08                    beq     loc_4838E:8                          
+048386  ac 0c                    cmp.b   #0xC, r4l                            
+048388  45 04                    bcs     loc_4838E:8                          
+04838a  ac 0f                    cmp.b   #0xF, r4l                            
+04838c  45 0e                    bcs     loc_4839C:8                          
+04838e  7a 04 00 00 00 20        mov.l   #0x20, er4 ; ' '                     <- 48384,48388
+048394  01 00 6b 84 fc 2c        mov.l   er4, @0xFFFFFC2C:16                  
+04839a  40 0c                    bra     loc_483A8:8                          
+04839c  7a 04 00 00 00 60        mov.l   #0x60, er4 ; '`'                     <- 48376,4837a,4837e,4838c
+0483a2  01 00 6b 84 fc 2c        mov.l   er4, @0xFFFFFC2C:16                  
+0483a8  7a 04 00 20 00 00        mov.l   #0x200000, er4                       <- 4839a
+0483ae  01 00 6b 84 fc 38        mov.l   er4, @0xFFFFFC38:16                  
+0483b4  fc 96                    mov.b   #0x96, r4l                           
+0483b6  6a 8c fd 21              mov.b   r4l, @0xFFFFFD21:16                  
+0483ba  7a 04 80 00 01 a0        mov.l   #0x800001A0, er4                     
+0483c0  01 00 6b 84 fc 34        mov.l   er4, @0xFFFFFC34:16                  
+0483c6  7f 52 72 10              bclr    #1, @0x52:8                          
+0483ca  7f 8a 70 70              bset    #7, @0x8A:8                          
+0483ce  54 70                    rts                                          
+
+;---- func 0x483d0..0x483d2
+0483d0  56 70                    rte                                          <- 258
+
+;---- func 0x483d2..0x483f6
+0483d2  01 00 6d f4              push.l  er4                                  <- 204
+0483d6  7f 8a 72 70              bclr    #7, @0x8A:8                          
+0483da  01 00 6b 04 fc 34        mov.l   @0xFFFFFC34:16, er4                  
+0483e0  79 6c ff fe              and.w   #0xFFFE, e4                          
+0483e4  01 00 6b 84 fc 34        mov.l   er4, @0xFFFFFC34:16                  
+0483ea  fc 00                    mov.b   #0, r4l                              
+0483ec  6a 8c bc 8c              mov.b   r4l, @0xFFFFBC8C:16                  
+0483f0  01 00 6d 74              pop.l   er4                                  
+0483f4  56 70                    rte                                          
+
+;---- func 0x483f6..0x48448
+0483f6  fc 00                    mov.b   #0, r4l                              <- 9256
+0483f8  6a 8c a9 19              mov.b   r4l, @0xFFFFA919:16                  
+0483fc  6a 8c a9 18              mov.b   r4l, @0xFFFFA918:16                  
+048400  6a 8c a9 17              mov.b   r4l, @0xFFFFA917:16                  
+048404  6a 10 8a ac 77 10        bld     #1, @0xFFFF8AAC:16                   
+04840a  67 0c                    bst     #0, r4l                              
+04840c  6a 8c a9 1a              mov.b   r4l, @0xFFFFA91A:16                  
+048410  fb 00                    mov.b   #0, r3l                              
+048412  6a 10 8a be 77 00        bld     #0, @0xFFFF8ABE:16                   
+048418  67 0b                    bst     #0, r3l                              
+04841a  6a 8b a9 19              mov.b   r3l, @0xFFFFA919:16                  
+04841e  fc 00                    mov.b   #0, r4l                              

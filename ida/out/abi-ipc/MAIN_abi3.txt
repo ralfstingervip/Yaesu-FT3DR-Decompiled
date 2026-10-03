@@ -1,0 +1,193 @@
+job ABI_IPC_MAIN  MAIN representative funcs + return consumption
+
+=== examples: prologue stm.l er4-er5 (callee-saved save) ===
+; ---- sub_28F4 000028F4-00002922 ----
+  000028F4  stm.l   er4-er5, @-sp
+  000028F8  mov.w   @0xFFFFFFC6:16, e5
+  000028FC  mov.w   #0, r4
+  00002900  mov.w   r4, @0xFFFFFFC6:16
+  00002904  mov.w   @0xFFFFFF36:16, r4
+  00002908  bclr    #4, r4l
+  0000290A  mov.w   r4, @0xFFFFFF36:16
+  0000290E  mov.b   @0xFFFFFFC5:8, r5h
+  00002910  btst    #4, r5h
+  00002912  beq     loc_291A:8
+  00002914  mov.b   r5h, r5l
+  00002916  bclr    #4, r5l
+  00002918  mov.b   r5l, @0xFFFFFFC5:8
+  0000291A  mov.l   @0xFFFF811A:16, er4
+  00002920  jmp     @er4
+
+; ---- sub_2922 00002922-00002950 ----
+  00002922  stm.l   er4-er5, @-sp
+  00002926  mov.w   @0xFFFFFFE6:16, e5
+  0000292A  mov.w   #0, r4
+  0000292E  mov.w   r4, @0xFFFFFFE6:16
+  00002932  mov.w   @0xFFFFFF36:16, r4
+  00002936  bclr    #5, r4l
+  00002938  mov.w   r4, @0xFFFFFF36:16
+  0000293C  mov.b   @0xFFFFFFE5:8, r5h
+  0000293E  btst    #4, r5h
+  00002940  beq     loc_2948:8
+  00002942  mov.b   r5h, r5l
+  00002944  bclr    #4, r5l
+  00002946  mov.b   r5l, @0xFFFFFFE5:8
+  00002948  mov.l   @0xFFFF811E:16, er4
+  0000294E  jmp     @er4
+
+; ---- sub_2950 00002950-000029CA ----
+  00002950  stm.l   er4-er5, @-sp
+  00002954  bclr    #0, @0xFFFFFFD5:8
+  00002958  btst    #7, @0xFFFFAAD2:16
+  0000295E  beq     loc_297C:8
+  00002960  mov.l   #0, er5
+  00002966  mov.w   @0xFFFFAAB2:16, r4
+  0000296A  mov.b   r4h, r5l
+  0000296C  mov.b   @(0x3656:16,er5), r5l
+  00002970  mov.b   r5l, @0xFFFFFF69:8
+  00002972  mov.w   @0xFFFFAAB4:16, r5
+  00002976  add.w   r4, r5
+  00002978  mov.w   r5, @0xFFFFAAB2:16
+  0000297C  btst    #2, @0xFFFFAAD2:16
+  00002982  beq     loc_29C4:8
+  00002984  push.l  er6
+  00002988  mov.l   #0, er5
+  0000298E  mov.w   @0xFFFFAABA:16, r6
+  00002992  mov.b   r6h, r5l
+  00002994  mov.b   @(0x3656:16,er5), r6l
+  00002998  shlr.b  r6l
+  0000299A  mov.w   @0xFFFFAABC:16, r4
+  0000299E  mov.b   r4h, r5l
+  000029A0  mov.b   @(0x3656:16,er5), r6h
+  000029A4  shlr.b  r6h
+  000029A6  add.b   r6h, r6l
+  000029A8  mov.b   r6l, @0xFFFFFF68:8
+  000029AA  mov.l   @0xFFFFAABA:16, er5
+  000029B0  mov.l   @0xFFFFAABE:16, er6
+  000029B6  add.w   e6, e5
+  000029B8  add.w   r6, r5
+  000029BA  mov.l   er5, @0xFFFFAABA:16
+  000029C0  pop.l   er6
+  000029C4  ldm.l   @sp+, er4-er5
+  000029C8  rte
+
+=== examples: prologue stm.l er4-er6 (callee-saved save) ===
+; ---- sub_28D0 000028D0-000028E2 ----
+  000028D0  stm.l   er4-er6, @-sp
+  000028D4  bclr    #0, @0xFFFFFFC5:8
+  000028D8  mov.b   @0xFFFFFF40:8, r4l
+  000028DA  mov.l   @0xFFFF811A:16, er6
+  000028E0  jmp     @er6
+
+; ---- sub_28E2 000028E2-000028F4 ----
+  000028E2  stm.l   er4-er6, @-sp
+  000028E6  bclr    #0, @0xFFFFFFE5:8
+  000028EA  mov.b   @0xFFFFFF40:8, r4l
+  000028EC  mov.l   @0xFFFF811E:16, er6
+  000028F2  jmp     @er6
+
+; ---- sub_3347E 0003347E-00033494 ----
+  0003347E  stm.l   er4-er6, @-sp
+  00033482  bset    #4, @0xFFFFFBA5:16
+  00033488  bsr     sub_3349A:8
+  0003348A  bset    #7, @0xFFFFFF5C:8
+  0003348E  ldm.l   @sp+, er4-er6
+  00033492  rts
+
+=== examples: prologue stm.l er0-er3 (arg preservation) ===
+; ---- sub_1CCD6 0001CCD6-0001CCF4 ----
+  0001CCD6  stm.l   er0-er3, @-sp
+  0001CCDA  mov.b   #0, r4l
+  0001CCDC  mov.b   r4l, @0xFFFF8D20:16
+  0001CCE0  mov.b   #0, r4l
+  0001CCE2  mov.b   r4l, @0xFFFF8EB3:16
+  0001CCE6  jsr     sub_5E5BE:24
+  0001CCEA  jsr     sub_198DC:24
+  0001CCEE  ldm.l   @sp+, er0-er3
+  0001CCF2  rts
+
+; ---- sub_1CD26 0001CD26-0001CD38 ----
+  0001CD26  stm.l   er0-er3, @-sp
+  0001CD2A  jsr     sub_5E5BE:24
+  0001CD2E  jsr     sub_198DC:24
+  0001CD32  ldm.l   @sp+, er0-er3
+  0001CD36  rts
+
+; ---- sub_1CD5E 0001CD5E-0001CD7C ----
+  0001CD5E  stm.l   er0-er3, @-sp
+  0001CD62  mov.b   #0, r4l
+  0001CD64  mov.b   r4l, @0xFFFF8D20:16
+  0001CD68  mov.b   #0, r4l
+  0001CD6A  mov.b   r4l, @0xFFFF8EB3:16
+  0001CD6E  jsr     sub_5E5BE:24
+  0001CD72  jsr     sub_198DC:24
+  0001CD76  ldm.l   @sp+, er0-er3
+  0001CD7A  rts
+
+; ---- sub_20AF6 00020AF6-00020BB4 ----
+  00020AF6  stm.l   er0-er3, @-sp
+  00020AFA  mov.w   @(0xA:16,er0), r1
+  00020AFE  bmi     loc_20BAE:16
+  00020B02  mov.w   @0xFFFFAC34:16, r3
+  00020B06  shll.b  #2, r4l
+  00020B08  shll.b  r4l
+  00020B0A  or.b    r4l, r3h
+  00020B0C  mov.w   r3, e3
+  00020B0E  mov.w   #0, r1
+  00020B12  mov.w   r1, r4
+  00020B14  mov.w   #0, e4
+  00020B18  add.l   er4, er4
+  00020B1A  mov.w   @(-0x75E0:16,er4), r2
+  00020B1E  btst    #0, @0xFFFF817E:16
+  00020B24  beq     loc_20B2A:8
+  00020B26  mov.w   @(-0x7598:16,er4), r2
+  00020B2A  exts.l  er2
+  00020B2C  bmi     loc_20B78:8
+  00020B2E  jsr     sub_3A152:24
+  00020B32  mov.l   #0, er2
+  00020B38  mov.l   #0xFF86C8, er5
+  00020B3E  btst    #0, @0xFFFF817E:16
+  00020B44  beq     loc_20B4C:8
+  00020B46  mov.l   #0xFF8790, er5
+  00020B4C  mov.w   @er5, r4
+  00020B4E  cmp.w   e3, r4
+  00020B50  bne     loc_20B66:8
+  00020B52  push.l  er5
+  00020B56  mov.w   #0xFFFF, r3
+  00020B5A  jsr     sub_3A1BC:24
+  00020B5E  pop.l   er5
+  00020B62  mov.w   #1, e2
+  00020B66  adds    #2, er5
+  00020B68  inc.w   #2, r2
+  00020B6A  cmp.w   #0xC8, r2
+  00020B6E  bcs     loc_20B4C:8
+  00020B70  mov.w   e2, e2
+  00020B72  beq     loc_20B78:8
+  00020B74  jsr     sub_20392:24
+  00020B78  inc.w   #1, r1
+  00020B7A  cmp.w   #0x18, r1
+  00020B7E  bcs     loc_20B12:8
+  00020B80  mov.w   @(0xA:16,er0), r1
+  00020B84  mov.w   r1, r4
+  00020B86  mov.w   #0, e4
+  00020B8A  add.l   er4, er4
+  00020B8C  mov.w   @(-0x75E0:16,er4), r2
+  00020B90  btst    #0, @0xFFFF817E:16
+  00020B96  beq     loc_20B9C:8
+  00020B98  mov.w   @(-0x7598:16,er4), r2
+  00020B9C  exts.l  er2
+  00020B9E  bpl     loc_20BA6:8
+  00020BA0  jsr     sub_2043C:24
+  00020BA4  bra     loc_20BAE:8
+  00020BA6  mov.w   r2, @(0xC:16,er0)
+  00020BAA  jsr     sub_3A152:24
+  00020BAE  ldm.l   @sp+, er0-er3
+  00020BB2  rts
+
+=== return consumption: single next-instruction class over ALL call sites ===
+  branch-on-flags (CCR return or none)            2915  (44.2%)
+  other                                           2219  (33.7%)
+  touches R4 next                                 1072  (16.3%)
+  overwrites R0/ER0 (return discarded/void)        236  (3.6%)
+  reads R0/ER0 (return in ER0)                     148  (2.2%)
+  total call sites: 6590

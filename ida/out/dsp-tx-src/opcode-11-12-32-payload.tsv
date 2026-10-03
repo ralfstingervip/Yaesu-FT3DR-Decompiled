@@ -1,0 +1,21 @@
+opcode	frame_byte	builder_ea	source_addr	packing	region_n	eeprom	menu_item	default	meaning
+0x11	[0]	05909A	const 0x11	opcode	-	-	-	-	DSP audio/config opcode (power-on init step 0)
+0x11	[1]	05909C	FF8E2A	val, b7 force-set, b1 set if FF8DDE!=0	R3 0x10A	0xD10A	-	0x08	digital config base byte + host-link flag
+0x11	[2]	0590AE	FF8E20<<4 | (FF8E21&0x0F)	two 4-bit	R3 0x100/0x101	0xD100/01	-	0x04/0x07	two packed nibble params
+0x11	[3]	0590BE	(FF8E22<<6)|((FF8E23&3)<<4)|((FF8E24&3)<<2)|(FF8E25&3)	four 2-bit	R3 0x102-0x105	0xD102-05	-	0x02/0x03	four packed 2-bit params
+0x11	[4..7]	0590EA	FF8E26..FF8E29	mov.l raw	R3 0x106-0x109	0xD106-09	-	06/06/FC/0C	4 raw bytes
+0x11	[8]	0590F6	FF8E2E	raw	R3 0x10E	0xD10E	-	0x02	raw byte
+0x11	[9]	0590FE	FF8E2F	raw	R3 0x10F	0xD10F	-	0x23	raw byte
+0x11	[10]	059106	FF8E30<<4 | (FF8E31&0x0F)	two 4-bit	R3 0x110/0x111	0xD110/11	-	0x02/0x0D	packed nibbles
+0x11	[11]	05911A	FF8E32<<4 | (FF8E33&0x0F)	two 4-bit	R3 0x112/0x113	0xD112/13	-	0x06/0x08	packed nibbles
+0x11	[12..13]	05912E	FF8E34 (word)	mov.w raw	R3 0x114/0x115	0xD114/15	-	-	word param
+0x11	[14]	059136	FF8E36	raw	R3 0x116	0xD116	-	-	raw byte
+0x11	[15..26]	059142	ROM 0x00F9A8	eepmov 12 B const	-	-	-	39 2a 2a 00 28 04 30 60 3f 6f 19 19	constant ROM tail
+0x12	[0]	059286	const 0x12	opcode	-	-	-	-	mode / data-type frame (TX session opener, mode change)
+0x12	[1]	059288	FF8D85 & 0xFC, low2=B11E(DT), b7=NOT B0AA.b0	pack	R3 0x65	0xD065	-	0x3C	FF8D85 bits2-7 = digital audio mode; bits0-1 = DT (0 V/D-1,1 data-FR,2 V/D-2,3 voice-FR); b7 settings-dirty flag
+0x12	[2]	0592A8	FF8D86, b6=B0AC.b1, b5=B0AC.b0, low |= r2l	pack	R3 0x66	0xD066	-	-	FF8D86 base; b5/b6 request bits; low bits = RX/mode state (0/2/3 from sub_593C8)
+0x32	[0]	05EB8A	const 0x32	opcode	-	-	-	-	AMS / mode config frame (power-on init step 6; resend on B0CE.b3)
+0x32	[1]	05EB8C	(FF8AA0!=0)<<7 | (FF8AA0<<2) | FF8AA0	pack	R2 0x00	0xC000	F3A3	0x00	FF8AA0 primary mode/AMS selector packed into b7 + b0..b3 (label not decoded; SUB F3A3)
+0x32	[2]	05EBA8	((FF8ABD<9?FF8ABD:0)+3)<<4	clamp<9,+3,<<4	R2 0x1D	0xC01D	F3AB	0x04	FF8ABD setting clamped to 0..8 then +3, in high nibble (SUB F3AB)
+0x32	[3]	05EBBC	FFAA35.b7 -> b0	bit	runtime	-	-	-	runtime DG-ID/monitor flag bit (FFAA35 not persisted)
+0x31	[0..6]	05EB2A	const	31 00 30 44 40 A0 A0	-	-	-	-	fully constant frame (power-on init step 4)

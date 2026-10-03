@@ -1,0 +1,51 @@
+path_or_fragment	str_ea	str_file_off	kind	owner_feature	access	owning_func	ref_ea	status	notes
+local tree, not in this repo	FFF4AFF3	34AFF3	drive root	all card features	r/w	21 sites, see notes	FFF3B93C	confirmed	referenced by sub_FFF3B8DE, FFF3BB0C, FFF3C765, FFF3C911, FFF3CAD0, FFF3CE12, FFF3CFD8, FFF3D0D9, FFF3D209, FFF3D2FD, FFF3D3C7, FFF3D48F, FFF3D680, FFF3D887, FFF3DE6A, FFF3DF66, FFF3E398, FFF3E98C, FFF3EB8C, FFF3EE00, FFF3EECA
+local tree, not in this repo	FFF4AD58	34AD58	directory	root of the radio's own tree	created + r/w	pathtab_drive[0]	FFED7E90	confirmed	pointer table slot; bare form "FT3D" at pathtab_bare[0]
+local tree, not in this repo	FFF4AD60	34AD60	directory	settings / clone backup	created + r/w	pathtab_drive[1]	FFED7E94	confirmed	"BACKUP" is also a menu-record string at 0xFFC3E6B9 (slot at 0xFFED753C)
+local tree, not in this repo	FFF4AD6F	34AD6F	directory	GPS track log	created + w	pathtab_drive[2]	FFED7E98	confirmed	the original seed for this assignment
+local tree, not in this repo	FFF4AD7E	34AD7E	directory	memory-channel export/import	created + r/w	pathtab_drive[3]	FFED7E9C	confirmed	note the underscore, not a backslash: a top-level directory
+local tree, not in this repo	FFF4AD90	34AD90	directory	Fusion/APRS QSO data store	created + r/w	pathtab_drive[4]	FFED7EA0	confirmed	MAIN holds the matching container names QSOMSG.dat / QSOMSGDIR.dat / QSOMSGFAT.dat / QSOMNG.dat
+local tree, not in this repo	FFF4AD9A	34AD9A	directory	received / captured images	created + r/w	pathtab_drive[5]	FFED7EA4	confirmed	MAIN holds QSOPCTDIR.dat / QSOPCTFAT.dat (PCT = picture)
+local tree, not in this repo	FFF4ADA3	34ADA3	directory	voice recordings	created + r/w	pathtab_drive[6]	FFED7EA8	confirmed	MAIN holds QSOWAVDIR.dat / QSOWAVFAT.dat / WAVMNG.dat
+local tree, not in this repo	FFF4AFF7	34AFF7	directory	repair / recovery data	r (and w via sub_FFF25DDF)	sub_FFF3BA24	FFF3BA30	confirmed	NOT in pathtab, so not auto-created; reached from sub_FFF3FE06
+:\LMREPAIR	FFF4AE38	34AE38	directory fragment	repair / recovery data	r	sub_FFF25B0B (724 bytes)	FFF25BE9	confirmed	opened with mode "r" at FFF25BF9; written with mode "w" by sub_FFF25DDF at FFF25E1F
+local tree, not in this repo	FFF4B00A	34B00A	directory	voice-recording backup	r/w	sub_FFF3EB8C, sub_FFF3EF94, sub_FFF3F8A5, sub_FFF3F9E6	FFF3EC47	confirmed	opened "r+" at FFF3FAAD; 8 reference sites
+FT3D	FFF4AFB4	34AFB4	dir name	directory creator	mkdir	pathtab_bare[0]	FFED8318	confirmed	NULL-terminated table, 7 entries, terminator verified at 0xFFED8334
+FT3D\BACKUP	FFF4AFB9	34AFB9	dir name	directory creator	mkdir	pathtab_bare[1]	FFED831C	confirmed	-
+FT3D\GPSLOG	FFF4AFC5	34AFC5	dir name	directory creator	mkdir	pathtab_bare[2]	FFED8320	confirmed	-
+FT3D_MEMORY-CH	FFF4AFD1	34AFD1	dir name	directory creator	mkdir	pathtab_bare[3]	FFED8324	confirmed	-
+QSOLOG	FFF4AFE0	34AFE0	dir name	directory creator	mkdir	pathtab_bare[4]	FFED8328	confirmed	-
+PHOTO	FFF4AFE7	34AFE7	dir name	directory creator	mkdir	pathtab_bare[5]	FFED832C	confirmed	-
+VOICE	FFF4AFED	34AFED	dir name	directory creator	mkdir	pathtab_bare[6]	FFED8330	confirmed	-
+\	FFF4B003	34B003	separator	path assembly	-	15 sites	FFF3C7BA	confirmed	appended between directory and filename by every path builder
+\Backup.bin	FFF4ADC1	34ADC1	filename	settings / clone export-import	r/w (r+)	sub_FFF140C7 (205 bytes)	FFF14178	confirmed	caller FFF13207; lives under local tree, not in this repo
+.wav	FFF4ADBC	34ADBC	extension	voice recorder, file naming	w	sub_FFF13DDA (468 bytes)	FFF13F33	confirmed	name built with sprintf "0%d" (0xFFF4ADB5) or "%d" (0xFFF4ADB9) then ".wav"
+.wav	FFF4AE67	34AE67	extension	VOICE PLAY browser	r	sub_FFF379BC (207 bytes)	FFF37A36	confirmed	caller FFF3774C; "VOICE PLAY" title string at 0xFFF4AE5C used by sub_FFF376C7
+.wav	FFF4B005	34B005	extension	RECBACKUP writer	w	sub_FFF3E98C (342 bytes)	FFF3EAAA	confirmed	caller FFEDD08D; builds "local tree, not in this repo" + dir + "\" + name + ".wav"
+0%d	FFF4ADB5	34ADB5	format	voice filename (zero-padded)	w	sub_FFF13DDA	FFF13EEC	confirmed	so recordings are numbered, e.g. 01.wav .. 09.wav then 10.wav
+%d	FFF4ADB9	34ADB9	format	voice filename	w	sub_FFF13DDA	FFF13F03	confirmed	-
+mode "w"	FFF4ADAC	34ADAC	fopen mode	feature group A	w	sub_FFF12C25, sub_FFF12D95, sub_FFF13DDA	FFF12C5B	confirmed	sub_FFF12C25 callers: FFF3C811, FFF3C81E, FFF3C82B, FFF3CA56, FFF3ECC7, FFF3FC1F
+mode "a"	FFF4ADAE	34ADAE	fopen mode	feature group A (append - log writer)	w	sub_FFF12C25, sub_FFF131AA	FFF12CA3	confirmed	sub_FFF131AA callers FFF3D7CA, FFF3DA8C - append is what a GPS/QSO log needs
+mode "r+"	FFF4ADB0	34ADB0	fopen mode	feature group A	r/w	sub_FFF12C25, sub_FFF13A00	FFF12CEA	confirmed	sub_FFF13A00 callers FFF142D7, FFF145CE, FFF3F6AE
+mode "r"	FFF4ADB3	34ADB3	fopen mode	feature group A	r	sub_FFF12E8B, sub_FFF12F9B, sub_FFF130F3, sub_FFF131AA, sub_FFF138AB	FFF12EB9	confirmed	sub_FFF130F3 is the most-used opener: 8 callers
+mode "r"	FFF4ADD0	34ADD0	fopen mode	feature group B	r	sub_FFF1427F, sub_FFF14576	FFF1430E	confirmed	callers FFF3F19D, FFF3F285, FFF3F71E, FFF3F37D
+mode "w"	FFF4ADD3	34ADD3	fopen mode	feature group B	w	sub_FFF149AB, sub_FFF14E1F	FFF149F8	confirmed	callers FFF3EE61, FFF3DEEF, FFF3DFEB
+mode "r+"	FFF4ADD5	34ADD5	fopen mode	feature group B	r/w	sub_FFF14BFA	FFF14C62	confirmed	caller FFF3EF2B
+mode "a"	FFF4ADD8	34ADD8	fopen mode	feature group B (append)	w	sub_FFF14E1F	FFF14EA2	confirmed	callers FFF3DEEF, FFF3DFEB
+mode "r"	FFF4AE43	34AE43	fopen mode	LMREPAIR reader	r	sub_FFF25B0B	FFF25BF9	confirmed	-
+mode "w"	FFF4AE45	34AE45	fopen mode	LMREPAIR writer	w	sub_FFF25DDF	FFF25E1F	confirmed	callers FFF25CA0, FFF25D15, FFF25D5B, FFF25D8D, FFF25DA8
+mode "r+"	FFF4B017	34B017	fopen mode	RECBACKUP	r/w	sub_FFF3F9E6	FFF3FAAD	confirmed	caller FFF3BA1D
+local tree, not in this repo	FFF484D1	3484D1	stdio name	CC-RX standard library	r	sub_FFEE1780	FFEE17B6	confirmed	explains why the card is drive I: - C: is reserved by the Renesas lowsrc.c sample
+local tree, not in this repo	FFF484DC	3484DC	stdio name	CC-RX standard library	w	sub_FFEE1780	FFEE17FB	confirmed	-
+local tree, not in this repo	FFF484E8	3484E8	stdio name	CC-RX standard library	w	sub_FFEE1780	FFEE1837	confirmed	-
+QSOMSG.dat	-	MAIN 071412	filename (MAIN image)	Fusion/APRS message store	r/w	MAIN	MAIN 06FF68 area	confirmed	MAIN-side container; no drive letter, so the path is supplied by SUB
+QSOMSGDIR.dat	-	MAIN 071492	filename (MAIN image)	message store directory	r/w	MAIN	-	confirmed	-
+QSOMSGFAT.dat	-	MAIN 071528	filename (MAIN image)	message store allocation table	r/w	MAIN	-	confirmed	a FAT-inside-a-file: the container is preallocated and managed internally
+QSOPCTDIR.dat	-	MAIN 0715A8	filename (MAIN image)	picture store directory	r/w	MAIN	-	confirmed	PCT = picture; pairs with local tree, not in this repo
+QSOPCTFAT.dat	-	MAIN 07163E	filename (MAIN image)	picture store allocation table	r/w	MAIN	-	confirmed	-
+QSOWAVDIR.dat	-	MAIN 071754	filename (MAIN image)	voice store directory	r/w	MAIN	-	confirmed	pairs with local tree, not in this repo
+QSOWAVFAT.dat	-	MAIN 0716D4	filename (MAIN image)	voice store allocation table	r/w	MAIN	-	confirmed	-
+QSOMNG.dat	-	MAIN 0720B4	filename (MAIN image)	QSO store management header	r/w	MAIN	MAIN 07085C, 071072	confirmed	referenced by a 32-bit BE pointer, so used directly
+WAVMNG.dat	-	MAIN 0725FA	filename (MAIN image)	voice store management header	r/w	MAIN	MAIN 071052	confirmed	-
+BACKUP.dat	-	MAIN 0717EA	filename (MAIN image)	settings / clone backup	r/w	MAIN	MAIN 06FF68	confirmed	9 occurrences in a descriptor array
+MEMORY.dat	-	MAIN 071D30	filename (MAIN image)	memory-channel backup	r/w	MAIN	MAIN 0708A2	confirmed	6 occurrences; pairs with local tree, not in this repo

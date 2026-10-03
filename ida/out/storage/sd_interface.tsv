@@ -1,0 +1,59 @@
+item	value	status	mapped_ea	file_off	evidence
+controller_type	Renesas RX64M on-chip SDHI (dedicated SD host controller, not SPI mode)	confirmed	0x0008AC00	-	19 distinct SDHI registers addressed, offsets match the RX64M SDHI register map exactly
+sdhi_base	0x0008AC00	confirmed	-	-	base of every register below
+reg_SDCMD	0x0008AC00 (command, 32-bit write)	confirmed	FFF334D1	3334D1	mov.l r14, [r15] with r15=#8AC00h; also FFF334DE / FFF334F2 / FFF33504
+reg_SDARG	0x0008AC08 (argument)	confirmed	FFF33496	333496	mov.l 1Ch+var_8[sp], [r14]; base #8AC08h at FFF33491
+reg_SDSTOP	0x0008AC10	confirmed	FFF33218	333218	sub_FFF3320D: SDSTOP = r1
+reg_SDBLKCNT	0x0008AC14 (block count)	confirmed	FFF33209	333209	sub_FFF33200: SDBLKCNT = r1
+reg_SDRSP10	0x0008AC18 (response 31:0)	confirmed	FFF3359E	33359E	sub_FFF3355A
+reg_SDRSP32	0x0008AC20 (response 63:32)	confirmed	FFF33615	333615	sub_FFF3355A
+reg_SDRSP54	0x0008AC28 (response 95:64)	confirmed	FFF335EA	3335EA	sub_FFF3355A - full 136-bit R2 read, i.e. CID/CSD
+reg_SDRSP76	0x0008AC30 (response 127:96)	confirmed	FFF3361A	33361A	sub_FFF3355A
+reg_SDSTS1	0x0008AC38	confirmed	FFF3321E	33321E	sub_FFF3321C
+reg_SDSTS2	0x0008AC3C	confirmed	FFF33AB0	333AB0	sub_FFF33AA7
+reg_SDIMSK1	0x0008AC40	confirmed	FFF33433	333433	sub_FFF33421 saves/sets/restores
+reg_SDIMSK2	0x0008AC44	confirmed	FFF3343B	33343B	sub_FFF33421
+reg_SDCLKCR	0x0008AC48 (clock control)	confirmed	FFF331EE	3331EE	mov.l #200h, [r14]
+reg_SDSIZE	0x0008AC4C (transfer block size)	confirmed	FFF331FC	3331FC	sub_FFF331F3: SDSIZE = r1
+reg_SDOPT	0x0008AC50 (bus width / timeout)	confirmed	FFF332A0	3332A0	sub_FFF33293
+reg_SDBUFR	0x0008AC60 (PIO data buffer)	confirmed	FFF3308F	33308F	sub_FFF3306E (read) / sub_FFF330C8 (write) / sub_FFF338D7
+reg_SDDMAEN	0x0008ADB0 (DMA enable)	confirmed	FFF33089	333089	sub_FFF3306E, sub_FFF330C8, sub_FFF337D7, sub_FFF33961
+reg_SDRST	0x0008ADC0 (software reset)	confirmed	FFF3326F	33326F	sub_FFF3326B writes 0 then 1
+reg_SDERSTS1/2	0x0008AC58 / 0x0008AC5C	not found	-	-	never addressed by any MOV.L #imm base load in the 4 MB image
+reg_SDVER/SDSWAP	0x0008AC1C4 / 0x0008ADE0	not found	-	-	never addressed
+module_stop_bit	MSTPCRD.MSTPD19 cleared (0x0008001C bit 19)	inferred	FFF36D36	336D36	bclr #13h, r2 on MSTPCRA+0Ch; the only MSTPCRD bit cleared in the whole image, and SDHI is demonstrably in use
+module_stop_func	sub_FFF36CCA (peripheral release, PRCR-guarded)	confirmed	FFF36CCA	336CCA	PRCR 0x000803FE written 0xA50B / 0xA500 around the block
+interrupt_vector	ICU vector 44 = SDHI SBFAI (SD buffer access)	confirmed	FFED8B20	2D8B20	INTB slot 44 -> FFF32CA7; only slot in the whole 256-entry table pointing into the SD driver
+interrupt_handler	sub_FFF32CA7: pushm r14-r15 / pushm r1-r5 / bsr sub_FFF33AA7 / rte	confirmed	FFF32CA7	332CA7	sub_FFF33AA7 clears SDSTS2 BRE (and 0xFFFFFEFF) and BWE (and 0xFFFFFDFF)
+interrupt_enable	ICU.IER[0x05] bit 4 set = vector 44	confirmed	FFF32E86	332E86	bset #4, [0x87205].b
+interrupt_priority	ICU.IPR[44] = level 5	confirmed	FFF32E40	332E40	or #5 then and #0F5h on 0x0008732C
+dma_channel	DMAC channel 3, base 0x000820C0	confirmed	FFF32E16	332E16	DMCNT/DMTMD/DMAMD/DMINT written via base 0x000820D0
+dma_trigger	DMRSR3 = 0x2C (44) = SDHI SBFAI	confirmed	FFF32E32	332E32	mov.b #2Ch, 207h[r14] with r14=0x00087205
+dma_mode	DMTMD = 0x9201 - block transfer, 32-bit units, activated by interrupt	confirmed	FFF32E6A	332E6A	mov.w #-6DFFh, [0x000820D0]
+dma_addr_mode	DMAMD = 0xFF80	confirmed	FFF32E62	332E62	mov.w #-80h, 4[0x000820D0]
+dma_int_enable	DMINT = 0x10 (DTIE, transfer-end interrupt)	confirmed	FFF32E83	332E83	mov.b #10h, 3[0x000820D0]
+dma_master_enable	DMAST (0x00082200) = 1	confirmed	FFF32E9A	332E9A	mov.b #1, [0x00082200]
+dma_int_vector	ICU vector 123 = DMAC3I, IER[0x0F] bit 3, IPR level 4	confirmed	FFF32E92	332E92	bset #3, 0Ah[0x87205].b ; IPR at 0x0008737B set to 4
+bus_width	4-bit when argument==2 (SDOPT=0x40EE, bit15 WIDTH=0), else 1-bit (SDOPT=0xC0EE)	confirmed	FFF3329B	33329B	sub_FFF33293; low byte 0xEE = maximum CTOP/TOP timeout counts
+clock_control	SDCLKCR = 0x0200 (CLKCTRLEN=1 automatic clock control, CLKSEL=0)	confirmed	FFF331EE	3331EE	sub_FFF331E9; a second parameterised write exists at sub_FFF331D8/DD (value from stack)
+clock_rate	not determined - only the fixed 0x200 write and one parameterised write were recovered; no explicit 400 kHz / 25 MHz divider constant found	unknown	-	-	SDCLKCR CLKSEL is 0 in the one literal write; the identification-phase divider was not located
+block_size	512 bytes	confirmed	FFF35A26	335A26	mov.l #200h, r3 into memset before a one-sector write; SDSIZE is set from a parameter
+card_detect	SDSTS1 bit 5 (SDCDMON); returns 0 if set else -6	confirmed	FFF33228	333228	sub_FFF3321C: btst #5, r1
+write_protect	SDSTS1 bit 7 (SDWPMON) - not seen read by immediate; "W PROTECT" message id 0xA0 exists	inferred	FFF4AAD9	34AAD9	string "W PROTECT" at 0xFFF4AAD9, popup id 0xA0
+pin_config_func	sub_FFF32CBF sets PMR for P75,P76,P77,P80,P81,PC2,PC3,PC4 (8 pins = CLK,CMD,D0-D3,CD,WP)	confirmed	FFF32CBF	332CBF	bset on 0x0008C067 bits 5/6/7, 0x0008C068 bits 0/1, 0x0008C06C bits 2/3/4
+pin_gpio	PORT7.PODR bit 7 set (0x0008C027) - card power/enable GPIO	confirmed	FFF32CCB	332CCB	bset #7, [0x0008C027].b
+pin_drive	PORTC.DSCR bit 2 and 0x0008C107 bit 7 set (high drive on the clock pin)	confirmed	FFF32D0A	332D0A	bset #2, [0x0008C0EC].b
+cmd_word_table	uint16[64] at 0xFFECE1E4 (normal commands)	confirmed	FFECE1E4	2CE1E4	indexed by command number in sub_FFF33421
+acmd_word_table	uint16[52] at 0xFFECE264 (application commands)	confirmed	FFECE264	2CE264	indexed by command number when the ACMD flag is set
+cmd_issue_func	sub_FFF33421(byte cmd, byte is_acmd, long arg, ...)	confirmed	FFF33421	333421	masks SDIMSK1=0x31D / SDIMSK2=0x8B7F, clears SDSTS1[2:0] and SDSTS2 bit 11, writes SDARG then SDCMD
+cmd_busy_check	SDSTS2 bit 14 (CBSY) tested; returns -9 if busy	confirmed	FFF334A3	3334A3	btst #0Eh, r1
+cmd7_special	CMD7 with arg==0 -> SDCMD |= 0x300 (no response); arg!=0 -> |= 0x500 (R1b)	confirmed	FFF334C8	3334C8	or #300h / or #500h - correct SD behaviour for deselect vs select
+read_path	sub_FFF337D7 (DMA read), sub_FFF3306E (PIO read via SDBUFR)	confirmed	FFF337D7	3337D7	clears SDSTS2 bit 8 (BRE) before/after
+write_path	sub_FFF33961 (DMA write), sub_FFF330C8 (PIO write via SDBUFR)	confirmed	FFF33961	333961	clears SDSTS2 bit 9 (BWE)
+retry_policy	up to 3 attempts per command inside the transfer functions	confirmed	FFF3383F	33383F	cmp #3, r1 / blt loop around the sd_send_cmd call
+stub_layer	sub_FFF33238/33241/3324B/33255/33260/33286/332B2/332B8/332BE/332BF/332C5 are one-line stubs returning fixed codes (0, -9, -10, 4, 5)	confirmed	FFF33238	333238	characteristic of the Renesas SD driver "sddev_*" target-porting layer
+rspi_present	no	not found	-	-	0x000D0000-0x000D02FF never appears as a MOV.L immediate in the 4 MB image (independent of SUB-USB's identical result)
+qspi_present	no	not found	-	-	0x00089E00-0x00089EFF never addressed
+mmcif_present	no	not found	-	-	0x00088500-0x000885FF never addressed
+pdc_present	no	not found	-	-	0x000A0500-0x000A05FF (parallel data capture / camera input) never addressed
+main_side_storage	MAIN (H8S) has no card interface and no drive-letter paths	confirmed	-	-	whole-image string scan of FT3D_MAIN_ver102_EXP.bin: no "I:", no FAT strings, no RIFF

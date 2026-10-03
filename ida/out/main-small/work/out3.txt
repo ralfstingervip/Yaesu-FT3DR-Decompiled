@@ -1,0 +1,527 @@
+### func sub_3ECDE@3ECDE 3ECDE-3ECF4 
+03ECDE  6a 0c 80 0f                           mov.b   @0xFFFF800F:16, r4l
+03ECE2  f4 01                                 mov.b   #1, r4h
+03ECE4  ac 02                                 cmp.b   #2, r4l
+03ECE6  45 08                                 bcs     loc_3ECF0:8
+03ECE8  ac 05                                 cmp.b   #5, r4l
+03ECEA  44 04                                 bcc     loc_3ECF0:8
+03ECEC  fc 00                                 mov.b   #0, r4l
+03ECEE  40 02                                 bra     locret_3ECF2:8
+03ECF0  fc 01                                 mov.b   #1, r4l
+03ECF2  54 70                                 rts
+
+### func sub_3F5B2@3F5B2 3F5B2-3F5EE 
+03F5B2  01 00 6d f2                           push.l  er2
+03F5B6  6d 62                                 mov.w   @er6+, r2
+03F5B8  79 0a 00 00                           mov.w   #0, e2
+03F5BC  6d 63                                 mov.w   @er6+, r3
+03F5BE  01 00 69 64                           mov.l   @er6, er4
+03F5C2  1f c5                                 cmp.l   er4, er5
+03F5C4  45 0a                                 bcs     loc_3F5D0:8
+03F5C6  01 00 6f 64 00 04                     mov.l   @(4:16,er6), er4
+03F5CC  1f d4                                 cmp.l   er5, er4
+03F5CE  44 12                                 bcc     loc_3F5E2:8
+03F5D0  0a a6                                 add.l   er2, er6
+03F5D2  1b 53                                 dec.w   #1, r3
+03F5D4  46 e8                                 bne     loc_3F5BE:8
+03F5D6  6f 63 00 08                           mov.w   @(8:16,er6), r3
+03F5DA  01 00 6d 72                           pop.l   er2
+03F5DE  fc 01                                 mov.b   #1, r4l
+03F5E0  40 0a                                 bra     locret_3F5EC:8
+03F5E2  6f 63 00 08                           mov.w   @(8:16,er6), r3
+03F5E6  01 00 6d 72                           pop.l   er2
+03F5EA  fc 00                                 mov.b   #0, r4l
+03F5EC  54 70                                 rts
+
+### dis 22160-22220 
+022160  01 30 6d 73                           ldm.l   @sp+, er0-er3
+022164  54 70                                 rts
+022166  fb 03                                 mov.b   #3, r3l
+022168  68 9b                                 mov.b   r3l, @er1
+02216A  0b 01                                 adds    #1, er1
+02216C  1b 52                                 dec.w   #1, r2
+02216E  46 f8                                 bne     loc_22168:8
+022170  54 70                                 rts
+022204  08 80 00 00                           .long 0x8800000
+02220E  07 60 00 00                           .long 0x7600000
+022212  01 00 6d f3                           push.l  er3
+022216  01 00 6d f5                           push.l  er5
+02221A  01 00 6d f6                           push.l  er6
+02221E  79 04 00 16                           mov.w   #0x16, r4
+
+### refrange FF8122-FF812D
+002170  01 00 6b 84 81 22                     mov.l   er4, @0xFFFF8122:16  | sub_20FA@20FA            ref=FF8122
+002178  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_20FA@20FA            ref=FF812A
+002184  01 00 6b 84 81 26                     mov.l   er4, @0xFFFF8126:16  | sub_20FA@20FA            ref=FF8126
+002B24  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2070@2070            ref=FF812A
+002B72  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2070@2070            ref=FF8122
+002B78  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2070@2070            ref=FF812A
+002B88  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_2070@2070            ref=FF8126
+002B8E  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2070@2070            ref=FF812A
+002C2C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2070@2070            ref=FF812A
+002D9E  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2D7C@2D7C            ref=FF8122
+002DA4  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2D7C@2D7C            ref=FF812A
+002DB4  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_2D7C@2D7C            ref=FF8126
+002DBA  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2D7C@2D7C            ref=FF812A
+002EA8  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2E60@2E60            ref=FF8122
+002EAE  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2E60@2E60            ref=FF812A
+002EE8  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2E60@2E60            ref=FF8122
+002EEE  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2E60@2E60            ref=FF812A
+002FC6  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2F7E@2F7E            ref=FF8122
+002FCC  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2F7E@2F7E            ref=FF812A
+002FFC  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2F7E@2F7E            ref=FF8122
+003002  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2F7E@2F7E            ref=FF812A
+00308C  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2F7E@2F7E            ref=FF8122
+003092  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2F7E@2F7E            ref=FF812A
+0030A8  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_30A2@30A2            ref=FF8126
+0030AE  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_30A2@30A2            ref=FF812A
+003148  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_30E0@30E0            ref=FF812A
+00381A  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2070@2070            ref=FF812A
+00387E  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2070@2070            ref=FF8122
+003884  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2070@2070            ref=FF812A
+00395E  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2070@2070            ref=FF812A
+0039AC  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2070@2070            ref=FF8122
+0039B2  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2070@2070            ref=FF812A
+00458C  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_4586@4586            ref=FF8122
+004592  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_4586@4586            ref=FF812A
+0045A8  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_4586@4586            ref=FF812A
+0045E8  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_4586@4586            ref=FF8126
+0045EE  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_4586@4586            ref=FF812A
+0069B0  01 00 6b 05 81 26                     mov.l   @0xFFFF8126:16, er5  | sub_69B0@69B0            ref=FF8126
+0069DA  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_69CA@69CA            ref=FF8122
+006B16  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_6A7C@6A7C            ref=FF8126
+006B1C  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_6A7C@6A7C            ref=FF812A
+006D44  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_6D0A@6D0A            ref=FF8126
+006D4A  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_6D0A@6D0A            ref=FF812A
+006DEC  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_6D0A@6D0A            ref=FF8122
+006DF2  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_6D0A@6D0A            ref=FF812A
+006ED4  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_6EAC@6EAC            ref=FF8122
+0070A0  01 00 6b 05 81 26                     mov.l   @0xFFFF8126:16, er5  | sub_7078@7078            ref=FF8126
+0070EE  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_7078@7078            ref=FF8126
+0070F4  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_7078@7078            ref=FF812A
+00884C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_8846@8846            ref=FF812A
+00DE82  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_DE7C@DE7C            ref=FF8122
+00DE88  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_DE7C@DE7C            ref=FF812A
+00DEAE  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_DE7C@DE7C            ref=FF8126
+00DEB4  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_DE7C@DE7C            ref=FF812A
+00DFEC  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_DEFA@DEFA            ref=FF8126
+00DFF2  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_DEFA@DEFA            ref=FF812A
+00E008  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_DEFA@DEFA            ref=FF8126
+00E00E  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_DEFA@DEFA            ref=FF812A
+00E024  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_DEFA@DEFA            ref=FF8122
+00E02A  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_DEFA@DEFA            ref=FF812A
+00E040  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_DEFA@DEFA            ref=FF8122
+00E046  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_DEFA@DEFA            ref=FF812A
+00ED22  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_ED16@ED16            ref=FF8122
+00ED28  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_ED16@ED16            ref=FF812A
+00EEF0  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_ED16@ED16            ref=FF8122
+00EEF6  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_ED16@ED16            ref=FF812A
+00EF06  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_ED16@ED16            ref=FF8126
+00EF0C  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_ED16@ED16            ref=FF812A
+01020A  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_10204@10204          ref=FF812A
+010374  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_1036E@1036E          ref=FF8122
+01037A  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_1036E@1036E          ref=FF812A
+010388  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_1036E@1036E          ref=FF8126
+01038E  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_1036E@1036E          ref=FF812A
+010486  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_10444@10444          ref=FF8122
+01048C  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_10444@10444          ref=FF812A
+01049C  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_10444@10444          ref=FF8126
+0104A2  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_10444@10444          ref=FF812A
+0104BA  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_10444@10444          ref=FF8122
+0104C0  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_10444@10444          ref=FF812A
+0104D0  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_10444@10444          ref=FF8126
+0104D6  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_10444@10444          ref=FF812A
+01076E  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_10760@10760          ref=FF8122
+010774  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_10760@10760          ref=FF812A
+010782  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_10760@10760          ref=FF8126
+010788  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_10760@10760          ref=FF812A
+0109B0  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1079E@1079E          ref=FF812A
+01BFFA  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1BFEC@1BFEC          ref=FF812A
+01C01C  01 00 6b 05 81 2a                     mov.l   @0xFFFF812A:16, er5  | sub_1BFEC@1BFEC          ref=FF812A
+01C436  01 00 6b 05 81 2a                     mov.l   @0xFFFF812A:16, er5  | sub_1C408@1C408          ref=FF812A
+01C444  01 00 6b 05 81 2a                     mov.l   @0xFFFF812A:16, er5  | sub_1C408@1C408          ref=FF812A
+01C7C4  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1C7B2@1C7B2          ref=FF812A
+01C95A  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_1C940@1C940          ref=FF8122
+01C960  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_1C940@1C940          ref=FF812A
+01C978  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_1C940@1C940          ref=FF8126
+01C97E  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_1C940@1C940          ref=FF812A
+01C992  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_1C940@1C940          ref=FF8126
+01C998  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_1C940@1C940          ref=FF812A
+01D1D8  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D1CA@1D1CA          ref=FF812A
+01D1F4  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D1EE@1D1EE          ref=FF812A
+01D220  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D220@1D220          ref=FF812A
+01D2C6  01 00 6b 06 81 22                     mov.l   @0xFFFF8122:16, er6  | sub_1D2C0@1D2C0          ref=FF8122
+01D338  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D332@1D332          ref=FF812A
+01D428  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D40E@1D40E          ref=FF812A
+01D612  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D5E2@1D5E2          ref=FF812A
+01D744  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D744@1D744          ref=FF812A
+01D774  01 00 6b 02 81 2a                     mov.l   @0xFFFF812A:16, er2  | sub_1D774@1D774          ref=FF812A
+01D7A6  01 00 6b 02 81 2a                     mov.l   @0xFFFF812A:16, er2  | sub_1D786@1D786          ref=FF812A
+01D8A4  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D89C@1D89C          ref=FF812A
+01D90C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D906@1D906          ref=FF812A
+01D9C2  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D99A@1D99A          ref=FF812A
+01D9D6  01 00 6b 06 81 2a                     mov.l   @0xFFFF812A:16, er6  | sub_1D99A@1D99A          ref=FF812A
+01DA08  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1D99A@1D99A          ref=FF812A
+01DA6A  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1DA5E@1DA5E          ref=FF812A
+01E8D0  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1E892@1E892          ref=FF812A
+01EA14  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1EA10@1EA10          ref=FF812A
+01ED00  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1ECFA@1ECFA          ref=FF812A
+01ED64  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1ED5E@1ED5E          ref=FF812A
+01EE7A  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1EE7A@1EE7A          ref=FF812A
+01EEF6  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1EEBA@1EEBA          ref=FF812A
+01EF22  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1EF12@1EF12          ref=FF812A
+01F026  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1F026@1F026          ref=FF812A
+01F05A  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1F05A@1F05A          ref=FF812A
+01F0A6  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1F0A6@1F0A6          ref=FF812A
+01F108  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1F108@1F108          ref=FF812A
+01F164  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1F12A@1F12A          ref=FF812A
+01F788  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1F782@1F782          ref=FF812A
+01F7F6  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1F7F0@1F7F0          ref=FF812A
+01FE5C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1FE3A@1FE3A          ref=FF812A
+01FEB8  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1FEAE@1FEAE          ref=FF812A
+01FF26  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_1FF1C@1FF1C          ref=FF812A
+02022E  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_201C2@201C2          ref=FF812A
+020252  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2024E@2024E          ref=FF812A
+020288  01 00 6b 06 81 22                     mov.l   @0xFFFF8122:16, er6  | sub_2027A@2027A          ref=FF8122
+0202B2  01 00 6b 06 81 26                     mov.l   @0xFFFF8126:16, er6  | sub_20290@20290          ref=FF8126
+02054C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2053E@2053E          ref=FF812A
+0207A0  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_20792@20792          ref=FF812A
+020988  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_20982@20982          ref=FF812A
+020F04  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_20EC4@20EC4          ref=FF812A
+021364  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_21348@21348          ref=FF812A
+021494  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_21484@21484          ref=FF8122
+021900  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_218F0@218F0          ref=FF812A
+021B06  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_21AEA@21AEA          ref=FF8122
+021B0E  01 00 6b 05 81 26                     mov.l   @0xFFFF8126:16, er5  | sub_21AEA@21AEA          ref=FF8126
+0224C6  01 00 6b 05 81 2a                     mov.l   @0xFFFF812A:16, er5  | sub_2244C@2244C          ref=FF812A
+0224DC  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2244C@2244C          ref=FF812A
+022A00  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | -                        ref=FF8122
+022A0A  01 00 6b 05 81 26                     mov.l   @0xFFFF8126:16, er5  | -                        ref=FF8126
+0237BA  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_237A8@237A8          ref=FF812A
+023938  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_23914@23914          ref=FF812A
+0239BE  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_239AA@239AA          ref=FF812A
+023A0C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_239AA@239AA          ref=FF812A
+023A7C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_239AA@239AA          ref=FF812A
+023AA8  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_239AA@239AA          ref=FF812A
+023DD2  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_23DC6@23DC6          ref=FF812A
+023E4C  01 00 6b 05 81 2a                     mov.l   @0xFFFF812A:16, er5  | sub_23E44@23E44          ref=FF812A
+023EA4  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_23E72@23E72          ref=FF812A
+023F7E  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_23F6A@23F6A          ref=FF812A
+024160  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2415A@2415A          ref=FF812A
+0241C4  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_241BE@241BE          ref=FF812A
+024228  01 00 6b 80 81 26                     mov.l   er0, @0xFFFF8126:16  | sub_241BE@241BE          ref=FF8126
+02422E  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_241BE@241BE          ref=FF812A
+02426C  01 00 6b 80 81 22                     mov.l   er0, @0xFFFF8122:16  | sub_241BE@241BE          ref=FF8122
+024272  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_241BE@241BE          ref=FF812A
+024488  01 00 6b 05 81 26                     mov.l   @0xFFFF8126:16, er5  | sub_2446E@2446E          ref=FF8126
+024570  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_244F8@244F8          ref=FF8122
+024598  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_2458A@2458A          ref=FF8122
+0245BC  01 00 6b 85 81 22                     mov.l   er5, @0xFFFF8122:16  | sub_2458A@2458A          ref=FF8122
+0245C2  01 00 6b 85 81 2a                     mov.l   er5, @0xFFFF812A:16  | sub_2458A@2458A          ref=FF812A
+0245CA  01 00 6b 05 81 26                     mov.l   @0xFFFF8126:16, er5  | sub_2458A@2458A          ref=FF8126
+024600  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_245F8@245F8          ref=FF8122
+024608  01 00 6b 05 81 26                     mov.l   @0xFFFF8126:16, er5  | sub_245F8@245F8          ref=FF8126
+02495C  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2486A@2486A          ref=FF8122
+024962  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2486A@2486A          ref=FF812A
+024AB0  01 00 6b 84 81 2a                     mov.l   er4, @0xFFFF812A:16  | sub_24A8A@24A8A          ref=FF812A
+024AC8  01 00 6b 84 81 2a                     mov.l   er4, @0xFFFF812A:16  | sub_24A8A@24A8A          ref=FF812A
+024B2E  01 00 6b 84 81 2a                     mov.l   er4, @0xFFFF812A:16  | sub_24A8A@24A8A          ref=FF812A
+024B46  01 00 6b 84 81 2a                     mov.l   er4, @0xFFFF812A:16  | sub_24A8A@24A8A          ref=FF812A
+024D74  01 00 6b 80 81 22                     mov.l   er0, @0xFFFF8122:16  | sub_24D42@24D42          ref=FF8122
+024D7A  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_24D42@24D42          ref=FF812A
+024DA4  01 00 6b 80 81 26                     mov.l   er0, @0xFFFF8126:16  | sub_24D42@24D42          ref=FF8126
+024DAA  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_24D42@24D42          ref=FF812A
+024DC4  01 00 6b 80 81 26                     mov.l   er0, @0xFFFF8126:16  | sub_24D42@24D42          ref=FF8126
+024DCA  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_24D42@24D42          ref=FF812A
+024DF4  01 00 6b 80 81 22                     mov.l   er0, @0xFFFF8122:16  | sub_24D42@24D42          ref=FF8122
+024DFA  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_24D42@24D42          ref=FF812A
+024E5A  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_24E30@24E30          ref=FF8122
+0250E8  01 00 6b 05 81 2a                     mov.l   @0xFFFF812A:16, er5  | sub_25086@25086          ref=FF812A
+02589E  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2588E@2588E          ref=FF812A
+02CA36  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2C9EA@2C9EA          ref=FF812A
+02CA44  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2C9EA@2C9EA          ref=FF812A
+02CF4E  01 00 6b 80 81 22                     mov.l   er0, @0xFFFF8122:16  | -                        ref=FF8122
+02CF54  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | -                        ref=FF812A
+02D01C  01 00 6b 80 81 22                     mov.l   er0, @0xFFFF8122:16  | sub_2D016@2D016          ref=FF8122
+02D022  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2D016@2D016          ref=FF812A
+02D1D2  01 00 6b 80 81 22                     mov.l   er0, @0xFFFF8122:16  | sub_2D1CC@2D1CC          ref=FF8122
+02D1D8  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2D1CC@2D1CC          ref=FF812A
+02D230  01 00 6b 80 81 22                     mov.l   er0, @0xFFFF8122:16  | sub_2D22A@2D22A          ref=FF8122
+02D236  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2D22A@2D22A          ref=FF812A
+02D630  01 00 6b 80 81 22                     mov.l   er0, @0xFFFF8122:16  | sub_2D5BA@2D5BA          ref=FF8122
+02D636  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2D5BA@2D5BA          ref=FF812A
+02D918  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2D8CC@2D8CC          ref=FF812A
+02D926  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_2D8CC@2D8CC          ref=FF812A
+02DE0C  01 00 6b 80 81 26                     mov.l   er0, @0xFFFF8126:16  | sub_2DE06@2DE06          ref=FF8126
+02DE12  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2DE06@2DE06          ref=FF812A
+02DE6A  01 00 6b 80 81 26                     mov.l   er0, @0xFFFF8126:16  | sub_2DE64@2DE64          ref=FF8126
+02DE70  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2DE64@2DE64          ref=FF812A
+02E20A  01 00 6b 80 81 26                     mov.l   er0, @0xFFFF8126:16  | sub_2E1AC@2E1AC          ref=FF8126
+02E210  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2E1AC@2E1AC          ref=FF812A
+02E744  01 00 6b 06 81 22                     mov.l   @0xFFFF8122:16, er6  | sub_2E72A@2E72A          ref=FF8122
+02F3EA  01 00 6b 05 81 26                     mov.l   @0xFFFF8126:16, er5  | sub_2F35E@2F35E          ref=FF8126
+02F414  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_2F400@2F400          ref=FF8122
+02F41A  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_2F400@2F400          ref=FF812A
+030EEA  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_30E62@30E62          ref=FF8122
+030F14  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_30F00@30F00          ref=FF8126
+030F1A  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_30F00@30F00          ref=FF812A
+0328EC  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_328DA@328DA          ref=FF8122
+032FCC  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_32FA2@32FA2          ref=FF812A
+033C54  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_33C54@33C54          ref=FF8122
+033C98  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_33C98@33C98          ref=FF8122
+033CA4  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_33C98@33C98          ref=FF8122
+033CCA  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_33CCA@33CCA          ref=FF8122
+033CD6  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_33CCA@33CCA          ref=FF8122
+033D02  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_33CFC@33CFC          ref=FF8122
+0341FA  01 00 6b 04 81 22                     mov.l   @0xFFFF8122:16, er4  | sub_341C6@341C6          ref=FF8122
+03421E  01 00 6b 04 81 26                     mov.l   @0xFFFF8126:16, er4  | sub_341C6@341C6          ref=FF8126
+034262  01 00 6b 04 81 26                     mov.l   @0xFFFF8126:16, er4  | sub_341C6@341C6          ref=FF8126
+03429E  01 00 6b 04 81 22                     mov.l   @0xFFFF8122:16, er4  | sub_341C6@341C6          ref=FF8122
+03431A  01 00 6b 04 81 22                     mov.l   @0xFFFF8122:16, er4  | sub_34300@34300          ref=FF8122
+03435A  01 00 6b 04 81 26                     mov.l   @0xFFFF8126:16, er4  | sub_34340@34340          ref=FF8126
+03A3F6  01 00 6b 06 81 2a                     mov.l   @0xFFFF812A:16, er6  | sub_3A3D8@3A3D8          ref=FF812A
+03A40C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_3A40C@3A40C          ref=FF812A
+03A498  01 00 6b 06 81 2a                     mov.l   @0xFFFF812A:16, er6  | sub_3A480@3A480          ref=FF812A
+03A542  01 00 6b 01 81 2a                     mov.l   @0xFFFF812A:16, er1  | sub_3A538@3A538          ref=FF812A
+03A56E  01 00 6b 01 81 2a                     mov.l   @0xFFFF812A:16, er1  | sub_3A562@3A562          ref=FF812A
+03A580  01 00 6b 01 81 2a                     mov.l   @0xFFFF812A:16, er1  | sub_3A562@3A562          ref=FF812A
+03A5DA  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_3A5B6@3A5B6          ref=FF812A
+03A61C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_3A5F8@3A5F8          ref=FF812A
+03D2F8  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_3D022@3D022          ref=FF812A
+03EA08  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_3E9FC@3E9FC          ref=FF8122
+03EA0E  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_3E9FC@3E9FC          ref=FF812A
+03FAFC  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_3FAE8@3FAE8          ref=FF812A
+03FB14  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_3FB0C@3FB0C          ref=FF812A
+03FE58  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0  | sub_3FD48@3FD48          ref=FF812A
+03FF7A  01 00 6b 05 81 2a                     mov.l   @0xFFFF812A:16, er5  | sub_3FF7A@3FF7A          ref=FF812A
+074400  01 00 6b 05 81 22                     mov.l   @0xFFFF8122:16, er5  | sub_743E0@743E0          ref=FF8122
+07442A  01 00 6b 05 81 26                     mov.l   @0xFFFF8126:16, er5  | sub_743E0@743E0          ref=FF8126
+0750EC  01 00 6b 84 81 22                     mov.l   er4, @0xFFFF8122:16  | sub_750C2@750C2          ref=FF8122
+0750F4  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_750C2@750C2          ref=FF812A
+075100  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_750C2@750C2          ref=FF8122
+075106  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_750C2@750C2          ref=FF812A
+0754F2  01 00 6b 84 81 22                     mov.l   er4, @0xFFFF8122:16  | sub_754BC@754BC          ref=FF8122
+0754FA  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_754BC@754BC          ref=FF812A
+075506  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_754BC@754BC          ref=FF8122
+07550C  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_754BC@754BC          ref=FF812A
+075520  01 00 6b 84 81 26                     mov.l   er4, @0xFFFF8126:16  | sub_754BC@754BC          ref=FF8126
+075528  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_754BC@754BC          ref=FF812A
+075534  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_754BC@754BC          ref=FF8126
+07553A  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_754BC@754BC          ref=FF812A
+075ED0  01 00 6b 84 81 22                     mov.l   er4, @0xFFFF8122:16  | sub_75EB6@75EB6          ref=FF8122
+075ED8  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_75EB6@75EB6          ref=FF812A
+075EE4  01 00 6b 00 81 22                     mov.l   @0xFFFF8122:16, er0  | sub_75EB6@75EB6          ref=FF8122
+075EEA  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_75EB6@75EB6          ref=FF812A
+075F00  01 00 6b 84 81 26                     mov.l   er4, @0xFFFF8126:16  | sub_75EB6@75EB6          ref=FF8126
+075F08  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_75EB6@75EB6          ref=FF812A
+075F14  01 00 6b 00 81 26                     mov.l   @0xFFFF8126:16, er0  | sub_75EB6@75EB6          ref=FF8126
+075F1A  01 00 6b 80 81 2a                     mov.l   er0, @0xFFFF812A:16  | sub_75EB6@75EB6          ref=FF812A
+
+### func sub_EAD2@EAD2 EAD2-EBE0 
+00EAD2  6a 0c 80 0f                           mov.b   @0xFFFF800F:16, r4l
+00EAD6  f4 01                                 mov.b   #1, r4h
+00EAD8  7a 64 00 00 00 ff                     and.l   #0xFF, er4
+00EADE  10 74                                 shll.l  #2, er4
+00EAE0  0a c5                                 add.l   er4, er5
+00EAE2  01 00 69 54                           mov.l   @er5, er4
+00EAE6  6e 8a 00 04                           mov.b   r2l, @(4:16,er0)
+00EAEA  6e 8a 00 03                           mov.b   r2l, @(3:16,er0)
+00EAEE  7a 02 00 ff ac 76                     mov.l   #0xFFAC76, er2
+00EAF4  6f ac 00 18                           mov.w   e4, @(0x18:16,er2)
+00EAF8  6e a4 00 1a                           mov.b   r4h, @(0x1A:16,er2)
+00EAFC  6f a9 00 02                           mov.w   e1, @(2:16,er2)
+00EB00  6e a1 00 04                           mov.b   r1h, @(4:16,er2)
+00EB04  01 00 6f 81 00 1a                     mov.l   er1, @(0x1A:16,er0)
+00EB0A  6e 0c 00 04                           mov.b   @(4:16,er0), r4l
+00EB0E  ac 06                                 cmp.b   #6, r4l
+00EB10  47 0c                                 beq     loc_EB1E:8
+00EB12  ac 09                                 cmp.b   #9, r4l
+00EB14  47 08                                 beq     loc_EB1E:8
+00EB16  fc c0                                 mov.b   #0xC0, r4l
+00EB18  6e ac 00 05                           mov.b   r4l, @(5:16,er2)
+00EB1C  40 08                                 bra     loc_EB26:8
+00EB1E  fc c0                                 mov.b   #0xC0, r4l
+00EB20  cc 10                                 or.b    #0x10, r4l
+00EB22  6e ac 00 05                           mov.b   r4l, @(5:16,er2)
+00EB26  fc 12                                 mov.b   #0x12, r4l
+00EB28  7a 05 00 00 f6 d4                     mov.l   #0xF6D4, er5
+00EB2E  0f a6                                 mov.l   er2, er6
+00EB30  7a 16 00 00 00 06                     add.l   #6, er6
+00EB36  5e 03 f3 6e                           jsr     sub_3F36E:24
+00EB3A  fc 0d                                 mov.b   #0xD, r4l
+00EB3C  6e ac 00 1d                           mov.b   r4l, @(0x1D:16,er2)
+00EB40  6e 0c 00 04                           mov.b   @(4:16,er0), r4l
+00EB44  ac 06                                 cmp.b   #6, r4l
+00EB46  47 0c                                 beq     loc_EB54:8
+00EB48  ac 09                                 cmp.b   #9, r4l
+00EB4A  47 08                                 beq     loc_EB54:8
+00EB4C  fc 00                                 mov.b   #0, r4l
+00EB4E  6e ac 00 1e                           mov.b   r4l, @(0x1E:16,er2)
+00EB52  40 0c                                 bra     loc_EB60:8
+00EB54  fc 00                                 mov.b   #0, r4l
+00EB56  f4 02                                 mov.b   #2, r4h
+00EB58  13 c4                                 rotr.b  #2, r4h
+00EB5A  14 4c                                 or.b    r4h, r4l
+00EB5C  6e ac 00 1e                           mov.b   r4l, @(0x1E:16,er2)
+00EB60  fc 98                                 mov.b   #0x98, r4l
+00EB62  7a 20 00 ff 90 f0                     cmp.l   #0xFF90F0, er0
+00EB68  47 02                                 beq     loc_EB6C:8
+00EB6A  fc 18                                 mov.b   #0x18, r4l
+00EB6C  6e ac 00 1f                           mov.b   r4l, @(0x1F:16,er2)
+00EB70  5e 01 e6 e2                           jsr     sub_1E6E2:24
+00EB74  6e ab 00 01                           mov.b   r3l, @(1:16,er2)
+00EB78  55 66                                 bsr     sub_EBE0:8
+00EB7A  6e ab 00 1b                           mov.b   r3l, @(0x1B:16,er2)
+00EB7E  fc 00                                 mov.b   #0, r4l
+00EB80  6e 2b 00 01                           mov.b   @(1:16,er2), r3l
+00EB84  eb 0f                                 and.b   #0xF, r3l
+00EB86  55 64                                 bsr     sub_EBEC:8
+00EB88  47 08                                 beq     loc_EB92:8
+00EB8A  fc 05                                 mov.b   #5, r4l
+00EB8C  ab 01                                 cmp.b   #1, r3l
+00EB8E  47 02                                 beq     loc_EB92:8
+00EB90  fc 0a                                 mov.b   #0xA, r4l
+00EB92  6e ac 00 00                           mov.b   r4l, @(0:16,er2)
+00EB96  5e 01 e6 46                           jsr     sub_1E646:24
+00EB9A  ec 03                                 and.b   #3, r4l
+00EB9C  13 cc                                 rotr.b  #2, r4l
+00EB9E  6e 24 00 01                           mov.b   @(1:16,er2), r4h
+00EBA2  e4 3f                                 and.b   #0x3F, r4h
+00EBA4  14 4c                                 or.b    r4h, r4l
+00EBA6  6e ac 00 01                           mov.b   r4l, @(1:16,er2)
+00EBAA  7a 05 00 ff ac 76                     mov.l   #0xFFAC76, er5
+00EBB0  5e 03 fb 0c                           jsr     sub_3FB0C:24
+00EBB4  5e 03 a2 d0                           jsr     sub_3A2D0:24
+00EBB8  6a 10 81 7e 73 00                     btst    #0, @0xFFFF817E:16
+00EBBE  46 1e                                 bne     locret_EBDE:8
+00EBC0  6a 0c 80 0f                           mov.b   @0xFFFF800F:16, r4l
+00EBC4  f4 01                                 mov.b   #1, r4h
+00EBC6  ac 01                                 cmp.b   #1, r4l
+00EBC8  46 0c                                 bne     loc_EBD6:8
+00EBCA  6e 0b 00 04                           mov.b   @(4:16,er0), r3l
+00EBCE  ab 06                                 cmp.b   #6, r3l
+00EBD0  47 0c                                 beq     locret_EBDE:8
+00EBD2  ab 09                                 cmp.b   #9, r3l
+00EBD4  47 08                                 beq     locret_EBDE:8
+00EBD6  6e 0b 00 04                           mov.b   @(4:16,er0), r3l
+00EBDA  5e 03 a3 90                           jsr     sub_3A390:24
+00EBDE  54 70                                 rts
+
+### func sub_3A5F8@3A5F8 3A5F8-3A632 
+03A5F8  01 30 6d f0                           stm.l   er0-er3, @-sp
+03A5FC  5e 03 a6 ee                           jsr     sub_3A6EE:24
+03A600  46 16                                 bne     loc_3A618:8
+03A602  6d f6                                 push.w  r6
+03A604  5e 03 df 1c                           jsr     sub_3DF1C:24
+03A608  6d 76                                 pop.w   r6
+03A60A  5e 03 ab 80                           jsr     sub_3AB80:24
+03A60E  7a 05 00 ff ac 76                     mov.l   #0xFFAC76, er5
+03A614  5e 03 fb 0c                           jsr     sub_3FB0C:24
+03A618  01 30 6d 73                           ldm.l   @sp+, er0-er3
+03A61C  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0
+03A622  6a 10 8e a6 73 00                     btst    #0, @0xFFFF8EA6:16
+03A628  47 06                                 beq     locret_3A630:8
+03A62A  7a 00 00 ff 90 f0                     mov.l   #0xFF90F0, er0
+03A630  54 70                                 rts
+
+### func sub_3A5B6@3A5B6 3A5B6-3A5F8 
+03A5B6  01 30 6d f0                           stm.l   er0-er3, @-sp
+03A5BA  5e 03 a6 ee                           jsr     sub_3A6EE:24
+03A5BE  46 16                                 bne     loc_3A5D6:8
+03A5C0  6d f6                                 push.w  r6
+03A5C2  5e 03 df 1c                           jsr     sub_3DF1C:24
+03A5C6  6d 76                                 pop.w   r6
+03A5C8  5e 03 ab 80                           jsr     sub_3AB80:24
+03A5CC  7a 05 00 ff ac 76                     mov.l   #0xFFAC76, er5
+03A5D2  5e 03 fb 0c                           jsr     sub_3FB0C:24
+03A5D6  01 30 6d 73                           ldm.l   @sp+, er0-er3
+03A5DA  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0
+03A5E0  6a 10 81 7e 73 00                     btst    #0, @0xFFFF817E:16
+03A5E6  46 0e                                 bne     locret_3A5F6:8
+03A5E8  6a 10 8e a6 73 00                     btst    #0, @0xFFFF8EA6:16
+03A5EE  47 06                                 beq     locret_3A5F6:8
+03A5F0  7a 00 00 ff 90 f0                     mov.l   #0xFF90F0, er0
+03A5F6  54 70                                 rts
+
+### func sub_3FD48@3FD48 3FD48-3FE60 
+03FD48  5e 03 fe 60                           jsr     sub_3FE60:24
+03FD4C  6a 10 81 7e 73 00                     btst    #0, @0xFFFF817E:16
+03FD52  46 06                                 bne     loc_3FD5A:8
+03FD54  5e 01 cc 62                           jsr     sub_1CC62:24
+03FD58  40 04                                 bra     loc_3FD5E:8
+03FD5A  5e 02 20 42                           jsr     sub_22042:24
+03FD5E  6e 64 00 24                           mov.b   @(0x24:16,er6), r4h
+03FD62  e4 03                                 and.b   #3, r4h
+03FD64  14 4c                                 or.b    r4h, r4l
+03FD66  6e ec 00 24                           mov.b   r4l, @(0x24:16,er6)
+03FD6A  6e 6c 00 04                           mov.b   @(4:16,er6), r4l
+03FD6E  ec 0f                                 and.b   #0xF, r4l
+03FD70  6e 64 00 01                           mov.b   @(1:16,er6), r4h
+03FD74  e4 03                                 and.b   #3, r4h
+03FD76  13 c4                                 rotr.b  #2, r4h
+03FD78  14 4c                                 or.b    r4h, r4l
+03FD7A  6e 64 00 24                           mov.b   @(0x24:16,er6), r4h
+03FD7E  e4 30                                 and.b   #0x30, r4h
+03FD80  14 4c                                 or.b    r4h, r4l
+03FD82  6e dc 00 05                           mov.b   r4l, @(5:16,er5)
+03FD86  6f 64 00 10                           mov.w   @(0x10:16,er6), r4
+03FD8A  6f d4 00 06                           mov.w   r4, @(6:16,er5)
+03FD8E  01 00 6f 64 00 12                     mov.l   @(0x12:16,er6), er4
+03FD94  01 00 6f d4 00 08                     mov.l   er4, @(8:16,er5)
+03FD9A  01 00 6f 64 00 16                     mov.l   @(0x16:16,er6), er4
+03FDA0  01 00 6f d4 00 0c                     mov.l   er4, @(0xC:16,er5)
+03FDA6  01 00 6f 64 00 1a                     mov.l   @(0x1A:16,er6), er4
+03FDAC  01 00 6f d4 00 10                     mov.l   er4, @(0x10:16,er5)
+03FDB2  01 00 6f 64 00 1e                     mov.l   @(0x1E:16,er6), er4
+03FDB8  01 00 6f d4 00 14                     mov.l   er4, @(0x14:16,er5)
+03FDBE  6e 6c 00 00                           mov.b   @(0:16,er6), r4l
+03FDC2  6e dc 00 00                           mov.b   r4l, @(0:16,er5)
+03FDC6  6e 64 00 07                           mov.b   @(7:16,er6), r4h
+03FDCA  e4 03                                 and.b   #3, r4h
+03FDCC  13 c4                                 rotr.b  #2, r4h
+03FDCE  6e 6c 00 03                           mov.b   @(3:16,er6), r4l
+03FDD2  ec 03                                 and.b   #3, r4l
+03FDD4  10 4c                                 shll.b  #2, r4l
+03FDD6  10 4c                                 shll.b  #2, r4l
+03FDD8  14 c4                                 or.b    r4l, r4h
+03FDDA  6e 6c 00 02                           mov.b   @(2:16,er6), r4l
+03FDDE  ec 0f                                 and.b   #0xF, r4l
+03FDE0  14 4c                                 or.b    r4h, r4l
+03FDE2  6e dc 00 01                           mov.b   r4l, @(1:16,er5)
+03FDE6  01 00 6f 64 00 08                     mov.l   @(8:16,er6), er4
+03FDEC  6f dc 00 02                           mov.w   e4, @(2:16,er5)
+03FDF0  6e d4 00 04                           mov.b   r4h, @(4:16,er5)
+03FDF4  01 00 6f 64 00 0c                     mov.l   @(0xC:16,er6), er4
+03FDFA  6f dc 00 18                           mov.w   e4, @(0x18:16,er5)
+03FDFE  6e d4 00 1a                           mov.b   r4h, @(0x1A:16,er5)
+03FE02  6e 6c 00 05                           mov.b   @(5:16,er6), r4l
+03FE06  6e dc 00 1b                           mov.b   r4l, @(0x1B:16,er5)
+03FE0A  6e 6c 00 06                           mov.b   @(6:16,er6), r4l
+03FE0E  6e dc 00 1c                           mov.b   r4l, @(0x1C:16,er5)
+03FE12  6e 64 00 23                           mov.b   @(0x23:16,er6), r4h
+03FE16  e4 07                                 and.b   #7, r4h
+03FE18  13 c4                                 rotr.b  #2, r4h
+03FE1A  13 84                                 rotr.b  r4h
+03FE1C  6e 6c 00 22                           mov.b   @(0x22:16,er6), r4l
+03FE20  ec 1f                                 and.b   #0x1F, r4l
+03FE22  14 4c                                 or.b    r4h, r4l
+03FE24  6e dc 00 1d                           mov.b   r4l, @(0x1D:16,er5)
+03FE28  6e 64 00 25                           mov.b   @(0x25:16,er6), r4h
+03FE2C  e4 0f                                 and.b   #0xF, r4h
+03FE2E  6e 6c 00 24                           mov.b   @(0x24:16,er6), r4l
+03FE32  ec 03                                 and.b   #3, r4l
+03FE34  10 4c                                 shll.b  #2, r4l
+03FE36  10 4c                                 shll.b  #2, r4l
+03FE38  14 4c                                 or.b    r4h, r4l
+03FE3A  6e 64 00 24                           mov.b   @(0x24:16,er6), r4h
+03FE3E  e4 c0                                 and.b   #0xC0, r4h
+03FE40  14 4c                                 or.b    r4h, r4l
+03FE42  6e dc 00 1e                           mov.b   r4l, @(0x1E:16,er5)
+03FE46  6e 64 00 26                           mov.b   @(0x26:16,er6), r4h
+03FE4A  e4 07                                 and.b   #7, r4h
+03FE4C  6e 6c 00 27                           mov.b   @(0x27:16,er6), r4l
+03FE50  ec f8                                 and.b   #0xF8, r4l
+03FE52  14 4c                                 or.b    r4h, r4l
+03FE54  6e dc 00 1f                           mov.b   r4l, @(0x1F:16,er5)
+03FE58  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0
+03FE5E  54 70                                 rts

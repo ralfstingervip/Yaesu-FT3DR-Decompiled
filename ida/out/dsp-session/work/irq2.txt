@@ -1,0 +1,42 @@
+
+;---- func 0x561c2..0x56236
+0561c2  6d f4                    push.w  r4                                   <- 108
+0561c4  6b 04 ff 36              mov.w   @0xFFFFFF36:16, r4                   
+0561c8  72 2c                    bclr    #2, r4l                              
+0561ca  6b 84 ff 36              mov.w   r4, @0xFFFFFF36:16                   
+0561ce  6b 04 fd 6a              mov.w   @0xFFFFFD6A:16, r4                   
+0561d2  71 4c                    bnot    #4, r4l                              
+0561d4  71 5c                    bnot    #5, r4l                              
+0561d6  6b 84 fd 6a              mov.w   r4, @0xFFFFFD6A:16                   
+0561da  77 4c                    bld     #4, r4l                              
+0561dc  6a 18 b0 a2 67 70        bst     #7, @0xFFFFB0A2:16                   
+0561e2  45 38                    bcs     loc_5621C:8                          
+0561e4  7e bc 73 40              btst    #4, @0xBC:8                          
+0561e8  47 28                    beq     loc_56212:8                          
+0561ea  7f bc 72 40              bclr    #4, @0xBC:8                          
+0561ee  6a 0c fe e5              mov.b   @0xFFFFFEE5:16, r4l                  
+0561f2  73 4c                    btst    #4, r4l                              
+0561f4  46 12                    bne     loc_56208:8                          
+0561f6  6b 04 fe e6              mov.w   @0xFFFFFEE6:16, r4                   
+0561fa  79 24 7d 00              cmp.w   #0x7D00, r4                          
+0561fe  44 12                    bcc     loc_56212:8                          
+056200  fc 01                    mov.b   #1, r4l                              
+056202  6a 8c b1 2c              mov.b   r4l, @0xFFFFB12C:16                  
+056206  40 10                    bra     loc_56218:8                          
+056208  72 4c                    bclr    #4, r4l                              <- 561f4
+05620a  6a 8c fe e5              mov.b   r4l, @0xFFFFFEE5:16                  
+05620e  6a 0c fe e5              mov.b   @0xFFFFFEE5:16, r4l                  
+056212  fc 00                    mov.b   #0, r4l                              <- 561e8,561fe
+056214  6a 8c b1 2c              mov.b   r4l, @0xFFFFB12C:16                  
+056218  6d 74                    pop.w   r4                                   <- 56206
+05621a  56 70                    rte                                          
+05621c  6a 0c b0 a7              mov.b   @0xFFFFB0A7:16, r4l                  <- 561e2
+056220  ac 03                    cmp.b   #3, r4l                              
+056222  47 08                    beq     loc_5622C:8                          
+056224  ac 05                    cmp.b   #5, r4l                              
+056226  47 04                    beq     loc_5622C:8                          
+056228  ac 07                    cmp.b   #7, r4l                              
+05622a  46 06                    bne     loc_56232:8                          
+05622c  6a 18 b0 a2 70 00        bset    #0, @0xFFFFB0A2:16                   <- 56222,56226
+056232  6d 74                    pop.w   r4                                   <- 5622a
+056234  56 70                    rte                                          

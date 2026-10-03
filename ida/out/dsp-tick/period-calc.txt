@@ -1,0 +1,63 @@
+DSP TICK AND SCRIPT-GUARD PERIOD DERIVATION  (MAIN, H8S advanced, big-endian, base 0)
+=======================================================================================
+
+Clock.  phi = Pphi = 16 MHz  (established: SCI BRR ladder, docs 05/14; taken as given here).
+
+------------------------------------------------------------------------
+1. PERIODIC TICK  -- TPU channel 5, base 0xFFFEF0, vector 110 -> 0x002A30
+------------------------------------------------------------------------
+TCR = 0x21  (0x002482, bytes fc 21 6a 8c fe f0)
+    bits 7:5 CCLR = 001  -> clear TCNT on TGRA compare match
+    bits 4:3 CKEG = 00   -> count on rising edge
+    bits 2:0 TPSC = 001  -> internal clock Pphi/4           <-- the selected prescaler
+TGRA = 0x4E20 = 20000    (0x0024A2, bytes 79 04 4e 20 6b 84 fe f8)
+TIER = 0x41  -> TGIEA=1, so TGRA match raises the interrupt.
+
+count clock   = phi / 4 = 16 MHz / 4 = 4 MHz   -> 250 ns per count
+counts/cycle  = TGRA + 1 = 20001  (counter runs 0..20000 inclusive, then clears)
+INTERRUPT PERIOD = 20001 / 4 MHz = 5.00025 ms   ~= 5.000 ms
+
+=> "5 ms" CONFIRMED. Exact divider = phi/4. (H15's phi/8 -> 10 ms is WRONG:
+   phi/8 is not a TPU clock-select value at all; the TPU internal ladder is
+   /1,/4,/16,/64 = TPSC 000/001/010/011. TPSC=001 is unambiguously phi/4.)
+
+Software scheduler tiers built on this ISR (ISR decrements FF94B8/B9/BA;
+scheduler 0x003576 reloads FF94B8=2, cascades FF9534=10, FF9535=10):
+    ISR          5 ms
+    fast tier    2 x 5 ms   = 10 ms
+    slow tier    x10        = 100 ms
+    slowest tier x100       = 1 s
+(minimum periods; tiers advance only when a main loop polls 0x003576.)
+
+------------------------------------------------------------------------
+2. SCRIPT-STEP GUARD  -- TPU channel 3, base 0xFFFFF0, polled (not interrupt)
+------------------------------------------------------------------------
+TCR = 0x00  (0x0022F6 init; re-asserted 0x056776/0x056826/0x056950)
+    bits 7:5 CCLR = 000  -> no clear, free-running from 0
+    bits 2:0 TPSC = 000  -> internal clock Pphi/1           <-- prescaler
+TCNT at 0xFFFFF6 ; TSR at 0xFFFFF5 (bit4 = TCIV overflow) ; start/stop via TSTR 0xFFFFBC bit3.
+Guard body (e.g. 0x05B8A0): cmp.w #0x8980, TCNT  (bytes 6b 0c ff f6 / 79 2c 89 80)
+
+count clock   = phi / 1 = 16 MHz  -> 62.5 ns per count
+compare value = 0x8980 = 35200 counts
+GUARD PERIOD  = 35200 x 62.5 ns = 2,200,000 ns = 2.2000 ms   (exact)
+
+=> "~2.2 ms script guard" CONFIRMED. Exact: 35200 / 16 MHz = 2.2 ms.
+   Backstop: handler also exits on TSR.TCIV (16-bit TCNT overflow) at
+   65536 / 16 MHz = 4.096 ms, so worst case (a missed poll in the compare
+   window) resolves by 4.096 ms. Primary guard = 2.2 ms.
+
+Every 0x8980 compare in the DSP driver uses this same TPU3/phi/1 channel:
+    0x565FA, 0x56650  (DSP link turn / receive timeout)
+    0x5A1CA,0x5A25C,0x5A296,0x5A304,0x5A352  (session-request guards)
+    0x5B8AC, 0x5B8E4  (script-step guards)
+All are 2.2 ms. H15's "3 second" label (section 1 and section 3.3) is a CORRECTION -> 2.2 ms.
+
+------------------------------------------------------------------------
+3. VECTOR PROOF
+------------------------------------------------------------------------
+Vector table: 256 BE32 dwords at address 0.
+Vector 110 at file offset 110*4 = 0x1B8 : bytes 00 00 2a 30 -> handler 0x002A30  CONFIRMED.
+Handler 0x002A30 first real insn: 6a 18 fe f5 72 00 = bclr #0,@0xFFFEF5 (TSR.TGFA ack of TPU5),
+then conditional dec of FF94B8/FF94B9/FF94BA. Consistent with TPU5 TGIA.
+(cross-check: vector 66 at 0x108 = 00 05 61 c2 -> 0x0561C2 IRQ2, matches H15.)

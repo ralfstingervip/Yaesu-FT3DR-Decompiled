@@ -1,0 +1,100 @@
+05fb70  0c 3d                    mov.l   #0xFF0C3D, er5                       
+05fb72  40 0a                    bra     loc_5FB7E:8                          
+
+;---- func 0x5fb74..0x5fb7c
+05fb74  7a 05 00 ff 0c 49        mov.l   #0xFF0C49, er5                       <- 5fb4e
+05fb7a  40 68                    bra     loc_5FBE4:8                          
+
+;---- func 0x5fb7c..0x5fba6
+05fb7c  40 00                    bra     loc_5FB7E:8                          <- 58300,63976,68678
+05fb7e  6c 5b                    mov.b   @er5+, r3l                           <- 5fb6a,5fb72,5fb7c
+05fb80  ab 30                    cmp.b   #0x30, r3l ; '0'                     
+05fb82  45 1e                    bcs     loc_5FBA2:8                          
+05fb84  ab 3a                    cmp.b   #0x3A, r3l ; ':'                     
+05fb86  44 1a                    bcc     loc_5FBA2:8                          
+05fb88  fc 30                    mov.b   #0x30, r4l ; '0'                     
+05fb8a  18 cb                    sub.b   r4l, r3l                             
+05fb8c  fc 0a                    mov.b   #0xA, r4l                            
+05fb8e  50 c3                    mulxu.b r4l, r3                              
+05fb90  6c 53                    mov.b   @er5+, r3h                           
+05fb92  a3 30                    cmp.b   #0x30, r3h ; '0'                     
+05fb94  45 0c                    bcs     loc_5FBA2:8                          
+05fb96  a3 3a                    cmp.b   #0x3A, r3h ; ':'                     
+05fb98  44 08                    bcc     loc_5FBA2:8                          
+05fb9a  fc 30                    mov.b   #0x30, r4l ; '0'                     
+05fb9c  18 c3                    sub.b   r4l, r3h                             
+05fb9e  08 3b                    add.b   r3h, r3l                             
+05fba0  46 02                    bne     locret_5FBA4:8                       
+05fba2  fb 00                    mov.b   #0, r3l                              <- 5fb82,5fb86,5fb94,5fb98
+05fba4  54 70                    rts                                          <- 5fba0
+
+;---- func 0x5fba6..0x5fbe4
+05fba6  6c 5b                    mov.b   @er5+, r3l                           <- 639ae
+05fba8  ab 30                    cmp.b   #0x30, r3l ; '0'                     
+05fbaa  45 34                    bcs     loc_5FBE0:8                          
+05fbac  ab 3a                    cmp.b   #0x3A, r3l ; ':'                     
+05fbae  44 30                    bcc     loc_5FBE0:8                          
+05fbb0  fc 30                    mov.b   #0x30, r4l ; '0'                     
+05fbb2  18 cb                    sub.b   r4l, r3l                             
+05fbb4  fc 64                    mov.b   #0x64, r4l ; 'd'                     
+05fbb6  50 c3                    mulxu.b r4l, r3                              
+05fbb8  6c 5e                    mov.b   @er5+, r6l                           
+05fbba  ae 30                    cmp.b   #0x30, r6l ; '0'                     
+05fbbc  45 22                    bcs     loc_5FBE0:8                          
+05fbbe  ae 3a                    cmp.b   #0x3A, r6l ; ':'                     
+05fbc0  44 1e                    bcc     loc_5FBE0:8                          
+05fbc2  fc 30                    mov.b   #0x30, r4l ; '0'                     
+05fbc4  18 ce                    sub.b   r4l, r6l                             
+05fbc6  fc 0a                    mov.b   #0xA, r4l                            
+05fbc8  50 c6                    mulxu.b r4l, r6                              
+05fbca  09 63                    add.w   r6, r3                               
+05fbcc  6c 5e                    mov.b   @er5+, r6l                           
+05fbce  ae 30                    cmp.b   #0x30, r6l ; '0'                     
+05fbd0  45 0e                    bcs     loc_5FBE0:8                          
+05fbd2  ae 3a                    cmp.b   #0x3A, r6l ; ':'                     
+05fbd4  44 0a                    bcc     loc_5FBE0:8                          
+05fbd6  fc 30                    mov.b   #0x30, r4l ; '0'                     
+05fbd8  18 ce                    sub.b   r4l, r6l                             
+05fbda  f6 00                    mov.b   #0, r6h                              
+05fbdc  09 63                    add.w   r6, r3                               
+05fbde  46 02                    bne     locret_5FBE2:8                       
+05fbe0  fb 00                    mov.b   #0, r3l                              <- 5fbaa,5fbae,5fbbc,5fbc0,5fbd0,5fbd4
+05fbe2  54 70                    rts                                          <- 5fbde
+05fbe4  6c 5b                    mov.b   @er5+, r3l                           <- 5fb7a
+05fbe6  ab 30                    cmp.b   #0x30, r3l ; '0'                     
+05fbe8  45 1e                    bcs     loc_5FC08:8                          
+05fbea  ab 3a                    cmp.b   #0x3A, r3l ; ':'                     
+05fbec  44 1a                    bcc     loc_5FC08:8                          
+05fbee  fc 30                    mov.b   #0x30, r4l ; '0'                     
+05fbf0  18 cb                    sub.b   r4l, r3l                             
+05fbf2  fc 0a                    mov.b   #0xA, r4l                            
+05fbf4  50 c3                    mulxu.b r4l, r3                              
+05fbf6  6c 53                    mov.b   @er5+, r3h                           
+05fbf8  a3 30                    cmp.b   #0x30, r3h ; '0'                     
+05fbfa  45 0c                    bcs     loc_5FC08:8                          
+05fbfc  a3 3a                    cmp.b   #0x3A, r3h ; ':'                     
+05fbfe  44 08                    bcc     loc_5FC08:8                          
+05fc00  fc 30                    mov.b   #0x30, r4l ; '0'                     
+05fc02  18 c3                    sub.b   r4l, r3h                             
+05fc04  08 3b                    add.b   r3h, r3l                             
+05fc06  40 02                    bra     loc_5FC0A:8                          
+05fc08  fb 80                    mov.b   #0x80, r3l                           <- 5fbe8,5fbec,5fbfa,5fbfe
+05fc0a  ab 64                    cmp.b   #0x64, r3l ; 'd'                     <- 5fc06
+05fc0c  54 70                    rts                                          
+
+;---- func 0x5fc0e..0x5fd1c
+05fc0e  5e 03 dd 14              jsr     sub_3DD14:24                         <- 1ca80
+05fc12  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  
+05fc16  4b 18                    bmi     loc_5FC30:8                          
+05fc18  6a 0c 8d 90              mov.b   @0xFFFF8D90:16, r4l                  
+05fc1c  ac 01                    cmp.b   #1, r4l                              
+05fc1e  46 10                    bne     loc_5FC30:8                          
+05fc20  5e 02 59 b2              jsr     sub_259B2:24                         
+05fc24  58 60 00 ec              bne     loc_5FD14:16                         
+05fc28  fc 00                    mov.b   #0, r4l                              
+05fc2a  6a 8c b1 30              mov.b   r4l, @0xFFFFB130:16                  
+05fc2e  40 52                    bra     loc_5FC82:8                          
+05fc30  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  <- 5fc16,5fc1e
+05fc34  4a 30                    bpl     loc_5FC66:8                          
+05fc36  6a 18 b3 d9 72 00        bclr    #0, @0xFFFFB3D9:16                   
+05fc3c  6a 10 8d e0 73 70        btst    #7, @0xFFFF8DE0:16                   

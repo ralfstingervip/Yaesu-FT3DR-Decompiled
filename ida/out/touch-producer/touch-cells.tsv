@@ -1,0 +1,46 @@
+# Lane K2. Registers and RAM cells used by the touch path. SUB RAM addresses are absolute (base 0x12D44 + disp shown where code uses it).
+cpu	address	kind	name/role	access sites (examples)	status
+SUB	0x00080010	reg	MSTPCRA; bit16 cleared = S12AD1 out of module stop	FFEE13A3..A7 (bclr #16 with PRCR 0x803FE = A502/A500)	Confirmed write; bit meaning Inferred (RX64M MSTPA16=S12AD1)
+SUB	0x00089100	reg	S12AD1.ADCSR; 0 at init; b15 ADST set then polled per tick	FFEE13F3, FFEE1489, FFEE1492	Confirmed
+SUB	0x00089104	reg	S12AD1.ADANSA0 = 0	FFEE13FB	Confirmed
+SUB	0x00089106	reg	S12AD1.ADANSA1 = 0x000C (AN118, AN119)	FFEE1403	Confirmed write; channel names Inferred
+SUB	0x00089108/0x0008910A	reg	ADADS0/ADADS1 = 0 (no addition)	FFEE140B, FFEE1413	Confirmed write
+SUB	0x0008910E	reg	ADCER; b15 cleared (right-aligned)	FFEE141D	Confirmed write
+SUB	0x00089144	reg	S12AD1.ADDR18: pen detect (state 1) and X (state 2)	FFEE14BB, FFEE15B5	Confirmed
+SUB	0x00089146	reg	S12AD1.ADDR19: Y (state 3)	FFEE1631	Confirmed
+SUB	0x0008C060	reg	PORT0.PMR b0/b1 cleared	FFEE13B9, FFEE13C0	Confirmed
+SUB	0x0008C11F	reg	MPC.PWPR unlock/lock (B0WI/PFSWE)	FFEE13C7..FFEE13EC	Confirmed
+SUB	0x0008C140/0x0008C141	reg	P00PFS/P01PFS b7 ASEL set (analog inputs)	FFEE13D5, FFEE13DD	Confirmed write; pin = AN118/AN119 Inferred
+SUB	0x0008C025	reg	PORT5.PODR b4/b5/b6 = panel drive lines	FFEE1428..143D, 1547..1561, 1605..161F, 1689..16A3	Confirmed; X+/X-/Y+/Y- assignment Unknown
+SUB	0x0008C028	reg	PORT8.PODR b3 = panel drive line (b2 is the LCD strobe, doc 51)	FFEE142F, FFEE1553, FFEE1611, FFEE1695	Confirmed
+SUB	0x00088100/0x00088110..0x88119	reg	TPU TSTR b0; TPU0 TCR/TMDR/TIOR/TIER/TSR/TCNT/TGRA	sub_FFEE1105, vec_intb_135	Confirmed
+SUB	0x000124D4	ram16	TPU0 tick counter (ISR ++, sub_FFEE119E --)	FFEE11D3, FFEE11A4	Confirmed
+SUB	0x00008BF6	ram8	touch FSM state 1 detect / 2 X / 3 Y	FFEE149F, FFEE1569, FFEE1627, FFEE16AB	Confirmed
+SUB	0x00008BF7	ram8	ring write index (mod 4)	FFEE14D6..150A	Confirmed
+SUB	0x00008BF8	ram8	press debounce counter (init 4; report at 0)	FFEE1515..1537	Confirmed
+SUB	0x00008BF9	ram8	release debounce counter (4 after press; report at 0)	FFEE153E, FFEE156E..1591	Confirmed
+SUB	0x00008BFA	ram8	X/Y pair valid	FFEE14CA, FFEE1680	Confirmed
+SUB	0x000124D6..0x000124E5	ram	4 x {X16,Y16} sample ring	FFEE14E0, FFEE1712, FFEE16C6	Confirmed
+SUB	0x000124E6/0x000124E8	ram16	current calibrated X / Y sample	FFEE15FD, FFEE1678	Confirmed
+SUB	0x000124EA/0x000124EC	ram16	last reported X / Y (only reader sub_FFEE1467 -> sub_FFF37BBC, SUB-local slider)	FFEE1761, FFEE176A, FFEE146B	Confirmed
+SUB	0x0001B20C/0x0001B20D (0x12D44+0x84C8/9)	ram8	echo of last processed MAIN opcode, sent in every SUB->MAIN frame	FFEDCECD, FFEDC292, FFEDD227	Confirmed
+SUB	0x0001B20E.. (0x12D44+0x84CA)	ram	SUB->MAIN payload staging	FFEDC3D1..C410	Confirmed
+SUB	0x0001B33A.. (0x12D44+0x85F6)	ram	SUB->MAIN frame build buffer	sub_FFEDD182	Confirmed
+MAIN	0xFFF614/0xFFF615	reg	SCI-D SSR / RDR	sub_44A70	Confirmed
+MAIN	0xFF306A..0xFF3C6A	ram	SUB->MAIN RX ring; write ptr FF8146 (long), read ptr FF8142 (long), compare word FF8148	044A88, 047560	Confirmed
+MAIN	0xFF9D2A/0xFF9D2C/0xFF9D2D	ram	deframer index / remaining count / state	sub_4753E, sub_47792	Confirmed
+MAIN	0xFF9800..0xFF9811	ram	E0 frame assembly buffer	sub_47792	Confirmed
+MAIN	0xFFBBC8..0xFFBBD9	ram	copied E0 frame: C8=E0 C9=pen CA..CB=000E CC..CD=hdr ck CE..D0=01 02 00 D1..D2=echo opcode D3=pen D4..D5=X D6..D7=Y D8..D9=frame ck; FFBBC8 word cleared after use = new-frame flag	047864, 0262E4, 02633E	Confirmed
+MAIN	0xFF813E/0xFF813F..41	ram	one-shot capture of SUB link signature 01 02 00 (E0 or E3 frame)	047874..047894, 04796A..047984	Confirmed
+MAIN	0xFF3D74	ram16	last staged MAIN->SUB opcode (doc 25) compared with the echo	026352, 02636E	Confirmed
+MAIN	0xFFBBC2	ram16	touch button index (J3)	026F3C, 026F48, 026F6A	Confirmed
+MAIN	0xFFBBC4	ram16	secondary hit index (sub_26F9C, F100 tap/long)	026FD0, 02630A, 0266B6	Confirmed
+MAIN	0xFFBBC6	ram8	key code of a bit15 zone, re-issued on long press	026F78, 026328	Confirmed
+MAIN	0xFFBBC7	ram8	touch press state 0 idle / 1 long-press timer armed / 2 consumed	026F34, 026F60, 026F88, 026F96, 028FA6, 028FD8, 0266C6	Confirmed
+MAIN	0xFF954B	ram8	long-press countdown (0x32 when armed); decrementer not found as an abs16 operand	026F90, 028FA0	Confirmed writes; decrement site Unknown
+MAIN	0xFFA9ED	ram8	key event code (0x0A = touch button = key-table slot 10)	026F54, 026F74	Confirmed
+MAIN	0xFFA9EE b6/b7	ram bits	b6 = F100 tap/long arm, b7 = long-press flag	028F98, 026318, 026312	Confirmed
+MAIN	0xFFA9F0	ram8	digit value (keypad handlers convert key<0x0A)	026720, 0267A2, 026940, 026E2C	Confirmed
+MAIN	0xFFBBDA	ram32	saved X<<16|Y for screens F10B/F112; X read by sub_29354 (slider)	02698C, 0269C2, 02937C	Confirmed
+MAIN	0xFF94C0/0xFF94C1	ram8	mode gates on touch acceptance / table choice	02638C, 0267DE	Confirmed reads; meaning not decoded
+MAIN	0xFFAAE0/0xFFBBE5/0xFF817E b1	ram	set on echo mismatch (AAE0=0x1D, BBE5=1)	0266CC..0266D8	Confirmed writes; meaning Inferred (resync request)

@@ -1,0 +1,10 @@
+hop	main_addr	routine	buffer	note	label
+1 user selects stored pic	gallery UI	-	-	picks local tree, not in this repo file to transmit	Inferred
+2 read file size	0x055C1E	sub_55C1E (0xFFBC50=0)	name 0xFF301E size 0xFF301A->0xFFB208	opens file via sub_6EE2A; blkcount ceil(size/0x400)->0xFFB25A	Confirmed
+3 SUB reads SD -> MAIN	reverse 0xFF SCI-D frames	-> 0xFF9800	frame type 0xFF len 0x112	SUB streams stored JPEG back to MAIN	Confirmed(doc pc-06)
+4 reverse frame reassembly	0x055DFC	sub_55DFC (0xFFBC54 machine)	0xFF9800 -> 0xFF1489 (hdr 0x118 B), payload 0xFF9813 -> *0xFFBC48	block#/total checked vs 0xFFBC40/42; 32b sum 0xFFBC44	Confirmed
+5 pack block into TX msg	0x05FA26	sub_5FA26	0xFF5406 -> TX msg buf (*0xFFBABE)	sum->0xFFB1D4; len 0xFFBA74	Confirmed
+5a set size/blkcount for TX	0x05F89C	sub_5F89C	0xFF2F9A->0xFFB208; /0x400->0xFFB25A	picture send header setup	Confirmed
+6 build C4FM data messages	msg letters c/d (header), b (data), e (end)	-	-	same Yaesu data-msg framing as RX	Inferred
+7 DSP TX session	0x05B458 area (doc52/I5)	C4FM TX	SCI-C 0xFFFF88	DSP transmits data-FR frames over air	Inferred
+max picture size	-	-	0xFFB208	<= 81,920 B (SUB decode window 0x14000); blocks ceil(size/1024) ~ up to 80	Inferred(pc-06)

@@ -1,0 +1,9 @@
+addr	ida_function	callers	live	role (Confirmed bytes)	notes
+076FC8	076FC8-07711E	0781C0 (WINDOW)	live-via-window	SCI-C polled TX pump: drains <=64 B/call from queue 0xFF6288 to TDR 0xFFFF8B; re-arms USB IER0 0xFFEE04 bit6	arg ER0=channel ctrl block->ER3; ER6=0xFF6288; SSR@FFFF8C TDR@FFFF8B
+07711E	07711E-0771AE	0561B0 (SCI-C ISR)	live-via-bridge	SCI-C RX bridge handler: reads SSR/RDR, toggles SCR RE bit4, feeds ring; writes 0xFFFD62/0xFFFD54	only runs when bridge flag 0xFF813A!=0
+0771D6	none (standalone)	none found	dead?	single-byte polled SCI-C TX (wait TDRE, write TDR 0xFFFF8B, clear)	helper variant of the pump
+07801C	none (standalone)	none (0 code xref, 0 ptr)	DEAD	USB channel/endpoint config via 0xFF6000 block + sub_77F00/77E28/77DB8	orphan library routine
+0773E8	none (standalone)	none (0 code xref, 0 ptr)	DEAD	endpoint-status query (mask #0x3F, sel 0x4000/0x4001) -> 0xFFB01E/0xFFB020	orphan; byte-identical twin of 0779C4
+0779C4	none (standalone)	none (0 code xref, 0 ptr)	DEAD	endpoint-status query; identical to 0773E8	orphan duplicate
+076B4E	none (in 0767BE-076C08 block)	076B2A (MODULE jump)	live-intra-block	USB EP control: writes TRG 0xFFEE2C, IER 0xFFEE04-06, IFR0 0xFFEE00; reads 0xFEE000/01	NOT unreferenced; branch target; block entered only from window (078176->0768A8)
+056450	in 056272-05645C	0562F8 (jump)	live	btst #0,@0xFFFF52 (P3DR bit0); if set jsr sub_56046 (DSP shutdown)	runs in scheduler/dispatcher, not pump path

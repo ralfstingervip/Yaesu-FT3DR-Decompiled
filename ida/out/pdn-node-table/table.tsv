@@ -1,0 +1,49 @@
+slot	cmd_hex	cmd_char	ptr_bytes	target	arglen(0x74532)	handler	role_oneline	class	tx	host_addr
+0x00	0x30	0	00 07 3a fe	0x073AFE	0x02	sub_73AFE	Enter remote-control mode: FF8004=2, FF89BA=0 (TOT off), B0CC=0, FF8010/11=1, clear callsign if 0xFF	control	no	no
+0x01	0x31	1	00 00 20 70	0x002070	0x02	sub_2070	Software reset / re-init: reload SP, FF8004=3, jsr sub_20F6, jmp loc_DC5A	reset	no	no
+0x02	0x32	2	00 07 3b 6c	0x073B6C	0x01	sub_73B6C	Report identity/config (tag '2', dest sub_734BE, FF800E long), reply	read	no	fixed FF800E
+0x03	0x33	3	00 07 3b b4	0x073BB4	0x02	sub_73BB4	Inject PTT press(r1h=0)/release(r1h=1) key event -> key path -> sub_2244C keys TX	TX-key	yes	no
+0x04	0x34	4	00 07 3b e2	0x073BE2	0x04	sub_73BE2	Set 16-bit param from r1 (precond sub_73C02), format+send	write	no	fixed FF96FA
+0x05	0x35	5	00 07 3c 24	0x073C24	0xFF	sub_73C24	Bulk write variable-length payload into FF96FD buffer (precond), ACK	write	no	fixed FF96FD
+0x06	0x36	6	00 07 3c 3e	0x073C3E	0x04	sub_73C3E	Read/compute block via sub_3AB80 (tag '6'), reply	read	no	fixed
+0x07	0x37	7	00 07 3c 66	0x073C66	0xFF	sub_73C66	Bulk op via sub_3AD20 on FF96FD (variable length), ACK	write	no	fixed FF96FD
+0x08	0x38	8	00 07 3c 8a	0x073C8A	0x01	sub_73C8A	Read 128-byte block @FF8016 (tag 0x3881) -> reply	read	no	fixed FF8016 len0x80
+0x09	0x39	9	00 07 3c b0	0x073CB0	0x01	sub_73CB0	Action sub_39576, ACK	action	no	no
+0x0A	0x3A	:	00 07 3c ba	0x073CBA	0x01	sub_73CBA	Read 12 bytes @FFA98C (tag 0x3A0D) -> reply	read	no	fixed FFA98C len0x0C
+0x0B	0x3B	;	00 07 3c e0	0x073CE0	0x01	sub_73CE0	Read 1 status byte @(0x84,er0) (tag 0x3B02) -> reply	read	no	fixed struct off
+0x0C	0x3C	<	00 07 3c fc	0x073CFC	0x02	sub_73CFC	Set mode/state (A9ED=5, A9EE.b7 clr, sub_1C7B2), 2 args	write	no	no
+0x0D	0x3D	=	00 07 3d 4c	0x073D4C	0x05	sub_73D4C	Validate+read 4 bytes @FFAE8C (sub_25086), set 817E.b1, ACK	read	no	fixed FFAE8C
+0x0E	0x3E	>	00 07 3d 7e	0x073D7E	0x09	sub_73D7E	Set several bounded config fields into @(0x17,er0) context, 9 args	write	no	fixed struct off
+0x0F	0x3F	?	00 07 3e 20	0x073E20	0x03	sub_73E20	Set bounded 16-bit value (<0x44B) into @(8,er0) (sub_3F172/1C0DC), ACK	write	no	fixed struct off
+0x10	0x40	@	00 07 3e 58	0x073E58	0x02	sub_73E58	Node TX control (only while FF94C0==1): arg r1h 0x11->jsr sub_34A52->sub_35872 TX-start; 0x12->sub_350E4 TX-stop; <0x10->set TX subtype (AC09.b7,AC06=r1h+0x50,AAE1.b0)	TX-key	yes	no
+0x11	0x41	A	00 07 3e b4	0x073EB4	0x02	sub_73EB4	Set memory/channel index A9F0=r1h (r1h<0x17), clear A9EE.b7	write	no	fixed A9F0
+0x12	0x42	B	00 07 3e e2	0x073EE2	0x01	sub_73EE2	Read 128-byte block @FF8096 (tag 0x4281) -> reply	read	no	fixed FF8096 len0x80
+0x13	0x43	C	00 07 3f 08	0x073F08	0x02	sub_73F08	Restart/reset (r1h==0: ACK, delay, jmp sub_DBD8)	reset	no	no
+0x14	0x44	D	00 07 3f 1e	0x073F1E	0x03	sub_73F1E	Set runtime flag array @FFA9A8[r1h] (r1h<0x10), AA35.b4 toggle	write	no	bounded idx into fixed array
+0x15	0x45	E	00 07 3f c4	0x073FC4	0x03	sub_73FC4	Set per-band param FF8971=r1l (band B, r1l<0x10)	write	no	fixed FF8971
+0x16	0x46	F	00 07 40 10	0x074010	0x02	sub_74010	Set param FF89B1=r1h (r1h<0x0B), sub_16C36, ACK	write	no	fixed FF89B1
+0x17	0x47	G	00 07 40 2a	0x07402A	0x02	sub_7402A	TX-related toggle while keyed (FF94C0==1; r1h==0 -> sub_356C8)	TX-aux	maybe	no
+0x18	0x48	H	00 07 40 50	0x074050	0x01	sub_74050	Action sub_395A8, ACK	action	no	no
+0x19	0x49	I	00 07 40 5a	0x07405A	0x01	sub_7405A	Mask interrupts (orc #0x80,ccr) + jmp loc_25AC (halt/reset)	reset	no	no
+0x1A	0x4A	J	00 07 40 60	0x074060	0x01	sub_74060	Set AA35.b2 and port output @0xFFFF52 b7, ACK	write	no	fixed port
+0x1B	0x4B	K	00 07 40 70	0x074070	0x01	sub_74070	NAK (jsr loc_73AC2) - unsupported	nak	no	no
+0x1C	0x4C	L	00 07 40 76	0x074076	0x03	sub_74076	Set signed param FF80A4=r5 (|r1l|<0x41, band B)	write	no	fixed FF80A4
+0x1D	0x4D	M	00 07 3f ea	0x073FEA	0x03	sub_73FEA	Set param FF8975=r1l (r1h==1, r1l<9)	write	no	fixed FF8975
+0x1E	0x4E	N	00 07 40 d8	0x0740D8	0x03	sub_740D8	Delegate to sub_740E2	action	no	no
+0x1F	0x4F	O	00 07 41 0c	0x07410C	0x02	sub_7410C	Toggle band-B setting (8EA0.b7, sub_2113C), set 817E.b1, ACK	write	no	no
+0x20	0x50	P	00 07 41 34	0x074134	0x02	sub_74134	Toggle band-A setting (8EA0.b6, sub_21176), set 817E.b1, ACK	write	no	no
+0x21	0x51	Q	00 07 41 5c	0x07415C	0x02	sub_7415C	NAK (jsr loc_73AC2) - unsupported	nak	no	no
+0x22	0x52	R	00 07 41 62	0x074162	0x02	sub_74162	Set digital comm mode (FF8D20=1, 8EB3=2, 8DD5=0, 8EC2=0), per band	write	no	fixed
+0x23	0x53	S	00 07 41 f6	0x0741F6	0x01	sub_741F6	Read comm-mode status (8DD5/8D20 per band) -> reply	read	no	fixed
+0x24	0x54	T	00 07 42 1e	0x07421E	0x02	sub_7421E	Toggle param FF89C9 (r1h<2)	write	no	fixed FF89C9
+0x25	0x55	U	00 07 42 4e	0x07424E	0x02	sub_7424E	Read/set @A99E from loc_3EE46 while keyed (FF8D20!=0, FF94C0==1, r1h<2)	rw	no	fixed A99E
+0x26	0x56	V	00 07 42 86	0x074286	0x01	sub_74286	Action sub_DE20 when NOT transmitting (FF94C0==0), ACK	action	no	no
+0x27	0x57	W	00 07 42 9e	0x07429E	0x06	sub_7429E	Read 5-byte radio-ID @FF8060 -> reply	read	no	fixed FF8060 len5
+0x28	0x58	X	00 07 42 bc	0x0742BC	0x01	sub_742BC	Read radio-ID block @FF8060 (tag 0x5806) -> reply	read	no	fixed FF8060
+0x29	0x59	Y	00 07 42 e8	0x0742E8	0x01	sub_742E8	Write 18-byte block to FF8956 (FF8955=2, sub_194D2), ACK	write	no	fixed FF8956 len0x12
+0x2A	0x5A	Z	00 07 43 22	0x074322	0x01	sub_74310	Read comm-mode (8DD5/8D20 per band) -> reply	read	no	fixed
+0x2B	0x5B	[	00 07 43 64	0x074364	0x01	sub_74364	Read 3 bytes @FF813F (tag 0x5B04) -> reply	read	no	fixed FF813F len3
+0x2C	0x5C	\	00 07 43 90	0x074390	0x02	sub_74390	NAK (jsr loc_73AC2) - unsupported	nak	no	no
+0x2D	0x5D	]	00 07 43 96	0x074396	0x02	sub_74396	Set/clear B0CC remote TX-mode -> arms DSP session 0x15 on next TX (K11)	TX-arm	arms	no
+0x2E	0x5E	^	00 07 43 e0	0x0743E0	0x02	sub_743E0	Report RF-status line (0xFFFF4D b3 band A / b2 band B, after settle 8F.b2) -> reply	read	no	fixed port
+0x2F	0x5F	_	00 07 44 5a	0x07445A	0x02	sub_7445A	Set link/parser state FF94FE=r1h (1..2), ACK	control	no	fixed FF94FE

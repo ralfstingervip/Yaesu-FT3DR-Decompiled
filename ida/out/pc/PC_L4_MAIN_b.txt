@@ -1,0 +1,121 @@
+job PC_L4_MAIN b
+; ==== xrefs TO 00FF813A ====
+; (0)
+
+; ==== xrefs TO 00FFB0C4 ====
+; (0)
+
+; ==== xrefs TO FFFF813A ====
+  000021FA sub_20FA               mov.b   r4l, @0xFFFF813A:16
+  00002224 sub_20FA               mov.b   r4l, @0xFFFF813A:16
+  00002BE2 reset_handler          mov.b   @0xFFFF813A:16, r4l
+  00002C06 reset_handler          mov.b   @0xFFFF813A:16, r4l
+  000037EA reset_handler          mov.b   @0xFFFF813A:16, r4l
+  0000380C reset_handler          mov.b   @0xFFFF813A:16, r4l
+  0000392C reset_handler          mov.b   @0xFFFF813A:16, r4l
+  00003950 reset_handler          mov.b   @0xFFFF813A:16, r4l
+  0000DCC4 reset_handler          mov.b   @0xFFFF813A:16, r4l
+  0000EE82 sub_ED16               mov.b   @0xFFFF813A:16, r4l
+  000101B2 ?                      mov.b   @0xFFFF813A:16, r4l
+  00054D54 sub_54D50              mov.b   @0xFFFF813A:16, r4l
+  00056160 sub_5615C              mov.b   @0xFFFF813A:16, r4l
+  0005E9F2 sub_5E9E2              mov.b   @0xFFFF813A:16, r4h
+; (14)
+
+; ==== xrefs TO FFFFB0C4 ====
+  000103CA sub_103C0              mov.b   r4l, @0xFFFFB0C4:16
+  0005DCF2 sub_5DCE0              mov.b   r4l, @0xFFFFB0C4:16
+  0005DCFE sub_5DCFE              mov.b   @0xFFFFB0C4:16, r4l
+  0005DDE0 sub_5DCFE              mov.b   r4l, @0xFFFFB0C4:16
+  0005E9E6 sub_5E9E2              mov.b   @0xFFFFB0C4:16, r4l
+; (5)
+
+; ==== xrefs TO 0003FF10 ====
+  000103DE sub_103C0              jsr     sub_3FF10:24
+  0001051C sub_10506              jsr     sub_3FF10:24
+  0001053E sub_10528              jsr     sub_3FF10:24
+  0001492A sub_14924              jsr     sub_3FF10:24
+  00014946 sub_14930              jsr     sub_3FF10:24
+  00014B22 sub_14AF4              jsr     sub_3FF10:24
+  00014B48 sub_14AF4              jsr     sub_3FF10:24
+  00014B90 sub_14B76              jsr     sub_3FF10:24
+  00014BAC sub_14BA6              jsr     sub_3FF10:24
+  00014BDA sub_14BBA              jsr     sub_3FF10:24
+  00014BEA sub_14BBA              jsr     sub_3FF10:24
+  00014C80 sub_14C72              jsr     sub_3FF10:24
+  0001845C ?                      jsr     sub_3FF10:24
+  0001F7B4 sub_1F782              jsr     sub_3FF10:24
+  0001F968 sub_1F950              jsr     sub_3FF10:24
+  00021A1A sub_21A00              jsr     sub_3FF10:24
+  00024064 sub_2405C              jsr     sub_3FF10:24
+  000240B2 sub_24094              jsr     sub_3FF10:24
+  00024434 ?                      jsr     sub_3FF10:24
+  0002444E sub_24444              jsr     sub_3FF10:24
+  00024554 sub_244F8              jsr     sub_3FF10:24
+  00024A2C sub_249EE              jsr     sub_3FF10:24
+  00025294 ?                      jsr     sub_3FF10:24
+  000257E8 sub_257BA              jsr     sub_3FF10:24
+  0003FEFE sub_3FEFC              bsr     sub_3FF10:8
+; (25)
+
+; ==== linear 00010140-00010200 ====
+00010140  bne     loc_10158:8
+00010142  btst    #6, @0xFFFFBBF4:16
+00010148  bne     locret_10166:8
+0001014A  bset    #7, @0xFFFFBBF4:16
+00010150  bset    #6, @0xFFFFBBF4:16
+00010156  bra     locret_10166:8
+00010158  btst    #6, @0xFFFFBBF4:16
+0001015E  beq     locret_10166:8
+00010160  bclr    #6, @0xFFFFBBF4:16
+00010166  rts
+00010168  jsr     sub_10748:24
+0001016C  mov.b   #0xFF, r4l
+0001016E  mov.b   r4l, @0xFFFFA9EF:16
+00010172  mov.b   @0xFFFF816F:16, r4l
+00010176  bne     loc_101EC:8
+00010178  jsr     sub_100E4:24
+0001017C  cmp.l   #unk_FFFFF, er2
+00010182  beq     loc_101EC:8
+00010184  mov.b   #0, r3l
+00010186  mov.l   #dword_10216, er6
+0001018C  mov.b   #0xB, r3h
+0001018E  btst    #0, @0xFFFF89C2:16
+00010194  beq     loc_101B2:8
+00010196  mov.l   @er6+, er4
+0001019A  cmp.l   er2, er4
+0001019C  beq     loc_101CE:8
+0001019E  mov.l   @dword_1022E:32, er4
+000101A6  cmp.l   er2, er4
+000101A8  bne     loc_101EC:8
+000101AA  mov.b   #6, r4l
+000101AC  mov.b   r4l, @0xFFFFA9EF:16
+000101B0  bra     loc_101EC:8
+000101B2  mov.b   @0xFFFF813A:16, r4l
+000101B6  beq     loc_101BE:8
+000101B8  jsr     sub_103C0:24
+000101BC  bra     loc_101E6:8
+000101BE  mov.l   @er6+, er4
+000101C2  cmp.l   er2, er4
+000101C4  beq     loc_101CE:8
+000101C6  inc.b   r3l
+000101C8  cmp.b   r3h, r3l
+000101CA  bcs     loc_101B2:8
+000101CC  bra     loc_101EC:8
+000101CE  mov.b   r3l, @0xFFFFA9EF:16
+000101D2  and.l   #0xFF, er3
+000101D8  shll.l  #2, er3
+000101DC  mov.w   @word_10242:32, r6
+000101E2  jsr     @er6
+000101E4  bne     loc_101EC:8
+000101E6  mov.b   #0x16, r4l
+000101E8  mov.b   r4l, @0xFFFF8000:16
+000101EC  mov.b   @0xFFFF8000:16, r4l
+000101F0  mov.b   r4l, @0xFFFFAAE0:16
+000101F4  cmp.b   #0x16, r4l
+000101F6  beq     loc_1020A:8
+000101F8  mov.b   #0x20, r4l ; ' '
+000101FA  mov.b   r4l, @0xFFFFAAE0:16
+000101FE  bset    #6, @0xFFFFAA31:16
+000101FF  bset    #6, @0xFFFFAA31:16
+

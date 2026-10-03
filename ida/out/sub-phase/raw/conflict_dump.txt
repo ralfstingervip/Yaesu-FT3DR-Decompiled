@@ -1,0 +1,950 @@
+======================================================================
+== target FFEDB0AB  cover head FFEDB0AA  owner(valid) FFEDB0AA  idafunc FFEDB0AA
+   src chain: FFEDB125:jump <- root=valid
+   src chain: FFEDB125:xref <- root=valid
+   SRC FFEDB125 V 2986           blt FFEDB0AB
+  IDA items:
+   C FFEDB0A1 4b1e           add r1, r14
+   C FFEDB0A3 5cee           movu [r14], r14
+   C FFEDB0A5 7c0e           btst #0, r14
+   C FFEDB0A7 2178           bne FFEDB11F
+   u FFEDB0A9 2e7e           bra FFEDB127
+   V FFEDB0AA 7ea8           push r8   <== covers T
+   V FFEDB0AC 8975           mov 4[r7], r5
+   V FFEDB0AE 11             beq FFEDB0B7
+   V FFEDB0AF 18             bne FFEDB0B7
+   V FFEDB0B0 fbe2d82c0100   mov #12CD8, r14
+  ALT linear from T:
+   v FFEDB0AB a889           mov C[sp], r1
+   v FFEDB0AD 751118         mul #18, r1
+   resync at FFEDB0B0 (V)
+======================================================================
+== target FFEDB0B7  cover head FFEDB0B6  owner(valid) FFEDB0B0  idafunc FFEDB0B0
+   src chain: FFEDB0AE:jump <- root=valid
+   src chain: FFEDB0AE:xref <- root=valid
+   src chain: FFEDB0AF:jump <- root=valid
+   src chain: FFEDB0AF:xref <- root=valid
+   SRC FFEDB0AE V 11             beq FFEDB0B7
+   SRC FFEDB0AF V 18             bne FFEDB0B7
+  IDA items:
+   V FFEDB0AC 8975           mov 4[r7], r5
+   V FFEDB0AE 11             beq FFEDB0B7
+   V FFEDB0AF 18             bne FFEDB0B7
+   V FFEDB0B0 fbe2d82c0100   mov #12CD8, r14
+   V FFEDB0B6 4b1e           add r1, r14   <== covers T
+   V FFEDB0B8 d1e009         mov 12[r14], [sp]
+  ALT linear from T:
+   v FFEDB0B7 1e             bne FFEDB0BD
+   resync at FFEDB0B8 (V)
+======================================================================
+== target FFEE97EF  cover head FFEE97EE  owner(valid) FFEE97EE  idafunc FFEE97EE
+   src chain: FFEE97EC:flow <- FFEE97E9:flow <- FFEE97E7:flow <- FFEE97E5:flow <- FFEE97E3:flow <- FFEE97E1:flow <- FFEE97DF:flow <- FFEE97DB:flow <- FFEE97D8:flow <- FFEE97D5:flow <- FFEE97D3:flow <- FFEE97D1:flow <- FFEE97CE:flow <- FFEE97C8:flow <- FFEE97C5:flow <- FFEE97BF:flow <- FFEE97BC:flow <- FFEE97B9:flow <- FFEE97B7:flow <- FFEE97B5:flow <- FFEE97B3:flow <- FFEE97B0:flow <- FFEE926C:xref <- root=valid
+   SRC FFEE97EC u 3c0f6e         mov #6E, F[sp]
+  IDA items:
+   C FFEE97E3 2014           beq FFEE97F7
+   C FFEE97E5 6111           cmp #1, r1
+   C FFEE97E7 211e           bne FFEE9805
+   C FFEE97E9 3c0e6b         mov #6B, E[sp]
+   u FFEE97EC 3c0f6e         mov #6E, F[sp]
+   u FFEE97ED 0f             bra FFEE97F4
+   V FFEE97EE 6e3c           pushm t10(r3,v0,a0)   <== covers T
+   V FFEE97F0 806f           mov r7, 1[r6]
+   V FFEE97F2 3c8174         mov #74, 11[sp]
+  ALT linear from T:
+   v FFEE97EF 3c806f         mov #6F, 10[sp]
+   resync at FFEE97F2 (V)
+======================================================================
+== target FFEEA550  cover head FFEEA54F  owner(valid) FFEEA54F  idafunc FFEEA54F
+   src chain: FFEEA54D:flow <- FFEEA547:flow <- FFEEA544:flow <- FFEEA53E:flow <- FFEEA53C:flow <- FFEEA539:flow <- FFEEA533:flow <- FFEEA530:flow <- FFEEA52A:flow <- FFEEA50F:xref <- FFEEA50C:flow <- FFEEA506:flow <- FFEEA503:flow <- FFEEA4FD:flow <- FFEEA4E7:xref <- FFEEA4E5:flow <- FFEEA4E3:flow <- FFEEA4DD:flow <- FFEEA4D9:flow <- FFEEA4D7:flow <- FFEEA4D4:flow <- FFEEA4CE:flow <- FFEEA4CB:flow <- FFEEA4C5:flow <- FFEEA4C3:flow <- FFEEA4BD:flow <- FFEEA4BA:flow <- FFEEA4B4:flow <- FFEEA38A:xref <- root=valid
+   SRC FFEEA54D u 45fe6e         cmp 6E[r15], r14
+  IDA items:
+   C FFEEA53C 2115           bne FFEEA551
+   C FFEEA53E fbe24d8c0000   mov #8C4D, r14
+   C FFEEA544 59ee6e         movu 6E[r14], r14
+   C FFEEA547 fbf2468e0000   mov #8E46, r15
+   u FFEEA54D 45fe6e         cmp 6E[r15], r14
+   u FFEEA54E fe6e15         mov [r14], r5
+   V FFEEA54F 6e15           pushm t10(r1,v0,a0)   <== covers T
+   C FFEEA551 f80601         mov #1, [sp]
+   C FFEEA554 0c             bra FFEEA558
+   C FFEEA555 f80600         mov #0, [sp]
+  ALT linear from T:
+   v FFEEA550 15             beq FFEEA555
+   C FFEEA551 f80601         mov #1, [sp]
+   C FFEEA554 0c             bra FFEEA558
+   resync at FFEEA555 (C)
+======================================================================
+== target FFEEC137  cover head FFEEC136  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC133:flow <- FFEEC131:switch <- root=valid
+   SRC FFEEC133 u 05a3c5ff       bsr FFEE86D6
+  IDA items:
+   V FFEEC128 fbe27680f4ff   mov #FFF48076, r14
+   V FFEEC12E fe51ee         mov [r1], r14
+   V FFEEC131 7f4e           bra r14
+   u FFEEC133 05a3c5ff       bsr FFEE86D6
+   V FFEEC134 a3c5           mov r5, 38[r4]
+   V FFEEC136 ff3886         mul r8, r6, r8   <== covers T
+   V FFEEC139 00             brk 
+   V FFEEC13A 0567f1ff       bsr FFEEB2A1
+  ALT linear from T:
+   v FFEEC137 388600         bra FFEEC1BD
+   resync at FFEEC13A (V)
+======================================================================
+== target FFEEC142  cover head FFEEC140  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC13E:flow <- FFEEC13A:flow <- root=valid
+   SRC FFEEC13E u 0559f2ff       bsr FFEEB397
+  IDA items:
+   V FFEEC134 a3c5           mov r5, 38[r4]
+   V FFEEC136 ff3886         mul r8, r6, r8
+   V FFEEC139 00             brk 
+   V FFEEC13A 0567f1ff       bsr FFEEB2A1
+   u FFEEC13E 0559f2ff       bsr FFEEB397
+   u FFEEC13F 59f2ff         movu FF[r15], r2
+   V FFEEC140 f2ff2e7b       bclr #7, 7B2E[r15]   <== covers T
+   u FFEEC144 05f6a6ff       bsr FFEE683A
+  ALT linear from T:
+   v FFEEC142 2e7b           bra FFEEC1BD
+   resync at FFEEC144 (u)
+======================================================================
+== target FFEEC148  cover head FFEEC145  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC144:flow <- FFEEC140:flow <- root=valid
+   SRC FFEEC144 u 05f6a6ff       bsr FFEE683A
+  IDA items:
+   V FFEEC136 ff3886         mul r8, r6, r8
+   V FFEEC139 00             brk 
+   V FFEEC13A 0567f1ff       bsr FFEEB2A1
+   u FFEEC13E 0559f2ff       bsr FFEEB397
+   u FFEEC13F 59f2ff         movu FF[r15], r2
+   V FFEEC140 f2ff2e7b       bclr #7, 7B2E[r15]
+   u FFEEC144 05f6a6ff       bsr FFEE683A
+   V FFEEC145 f6a6ff2e       btst #6, 2EFF[r10]   <== covers T
+   V FFEEC149 7505ae         cmp #FFFFFFAE, r5
+  ALT linear from T:
+   v FFEEC148 2e75           bra FFEEC1BD
+   resync at FFEEC14A (v)
+======================================================================
+== target FFEEC14A  cover head FFEEC149  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC131:switch <- root=valid
+   SRC FFEEC131 V 7f4e           bra r14
+  IDA items:
+   V FFEEC139 00             brk 
+   V FFEEC13A 0567f1ff       bsr FFEEB2A1
+   u FFEEC13E 0559f2ff       bsr FFEEB397
+   u FFEEC13F 59f2ff         movu FF[r15], r2
+   V FFEEC140 f2ff2e7b       bclr #7, 7B2E[r15]
+   u FFEEC144 05f6a6ff       bsr FFEE683A
+   V FFEEC145 f6a6ff2e       btst #6, 2EFF[r10]
+   V FFEEC149 7505ae         cmp #FFFFFFAE, r5   <== covers T
+   u FFEEC14C 9dff           mov 2E[r7], r7
+   V FFEEC14D ff2e6f         add r6, r15, r14
+   u FFEEC150 05f4c8ff       bsr FFEE8A44
+  ALT linear from T:
+   v FFEEC14A 05ae9dff       bsr FFEE5EF8
+   v FFEEC14E 2e6f           bra FFEEC1BD
+   resync at FFEEC150 (u)
+======================================================================
+== target FFEEC14E  cover head FFEEC14D  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC14C:flow <- FFEEC149:flow <- root=valid
+   SRC FFEEC14C u 9dff           mov 2E[r7], r7
+  IDA items:
+   V FFEEC13A 0567f1ff       bsr FFEEB2A1
+   u FFEEC13E 0559f2ff       bsr FFEEB397
+   u FFEEC13F 59f2ff         movu FF[r15], r2
+   V FFEEC140 f2ff2e7b       bclr #7, 7B2E[r15]
+   u FFEEC144 05f6a6ff       bsr FFEE683A
+   V FFEEC145 f6a6ff2e       btst #6, 2EFF[r10]
+   V FFEEC149 7505ae         cmp #FFFFFFAE, r5
+   u FFEEC14C 9dff           mov 2E[r7], r7
+   V FFEEC14D ff2e6f         add r6, r15, r14   <== covers T
+   u FFEEC150 05f4c8ff       bsr FFEE8A44
+  ALT linear from T:
+   v FFEEC14E 2e6f           bra FFEEC1BD
+   resync at FFEEC150 (u)
+======================================================================
+== target FFEEC154  cover head FFEEC153  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC150:flow <- FFEEC14D:flow <- root=valid
+   SRC FFEEC150 u 05f4c8ff       bsr FFEE8A44
+  IDA items:
+   V FFEEC145 f6a6ff2e       btst #6, 2EFF[r10]
+   V FFEEC149 7505ae         cmp #FFFFFFAE, r5
+   u FFEEC14C 9dff           mov 2E[r7], r7
+   V FFEEC14D ff2e6f         add r6, r15, r14
+   u FFEEC150 05f4c8ff       bsr FFEE8A44
+   V FFEEC151 f4c8           push [r12]
+   V FFEEC153 ff2e69         add r6, r9, r14   <== covers T
+   u FFEEC156 0519bfff       bsr FFEE806F
+  ALT linear from T:
+   v FFEEC154 2e69           bra FFEEC1BD
+   resync at FFEEC156 (u)
+======================================================================
+== target FFEEC15A  cover head FFEEC159  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC156:flow <- FFEEC153:flow <- root=valid
+   src chain: FFEEC158:flow <- FFEEC157:flow <- root=valid
+   SRC FFEEC156 u 0519bfff       bsr FFEE806F
+   SRC FFEEC158 u bfff           movu 3E[r7], r7
+  IDA items:
+   V FFEEC14D ff2e6f         add r6, r15, r14
+   u FFEEC150 05f4c8ff       bsr FFEE8A44
+   V FFEEC151 f4c8           push [r12]
+   V FFEEC153 ff2e69         add r6, r9, r14
+   u FFEEC156 0519bfff       bsr FFEE806F
+   V FFEEC157 19             bne FFEEC160
+   u FFEEC158 bfff           movu 3E[r7], r7
+   V FFEEC159 ff2e63         add r6, r3, r14   <== covers T
+   u FFEEC15C 055be5ff       bsr FFEEA6B7
+  ALT linear from T:
+   v FFEEC15A 2e63           bra FFEEC1BD
+   resync at FFEEC15C (u)
+======================================================================
+== target FFEEC160  cover head FFEEC15F  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC157:jump <- root=valid
+   src chain: FFEEC157:xref <- root=valid
+   src chain: FFEEC15C:flow <- FFEEC159:flow <- root=valid
+   SRC FFEEC157 V 19             bne FFEEC160
+   SRC FFEEC15C u 055be5ff       bsr FFEEA6B7
+  IDA items:
+   V FFEEC153 ff2e69         add r6, r9, r14
+   u FFEEC156 0519bfff       bsr FFEE806F
+   V FFEEC157 19             bne FFEEC160
+   u FFEEC158 bfff           movu 3E[r7], r7
+   V FFEEC159 ff2e63         add r6, r3, r14
+   u FFEEC15C 055be5ff       bsr FFEEA6B7
+   V FFEEC15D 5be5           movu r14, r5
+   V FFEEC15F ff2e5d         add r5, r13, r14   <== covers T
+   u FFEEC162 0523b8ff       bsr FFEE7985
+  ALT linear from T:
+   v FFEEC160 2e5d           bra FFEEC1BD
+   resync at FFEEC162 (u)
+======================================================================
+== target FFEEC166  cover head FFEEC165  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC162:flow <- FFEEC15F:flow <- root=valid
+   SRC FFEEC162 u 0523b8ff       bsr FFEE7985
+  IDA items:
+   V FFEEC159 ff2e63         add r6, r3, r14
+   u FFEEC15C 055be5ff       bsr FFEEA6B7
+   V FFEEC15D 5be5           movu r14, r5
+   V FFEEC15F ff2e5d         add r5, r13, r14
+   u FFEEC162 0523b8ff       bsr FFEE7985
+   V FFEEC163 23b8           bltu FFEEC11B
+   V FFEEC165 ff2e57         add r5, r7, r14   <== covers T
+   u FFEEC168 05074105       bsr FFF4026F
+  ALT linear from T:
+   v FFEEC166 2e57           bra FFEEC1BD
+   resync at FFEEC168 (u)
+======================================================================
+== target FFEEC16C  cover head FFEEC16A  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC168:flow <- FFEEC165:flow <- root=valid
+   SRC FFEEC168 u 05074105       bsr FFF4026F
+  IDA items:
+   V FFEEC15D 5be5           movu r14, r5
+   V FFEEC15F ff2e5d         add r5, r13, r14
+   u FFEEC162 0523b8ff       bsr FFEE7985
+   V FFEEC163 23b8           bltu FFEEC11B
+   V FFEEC165 ff2e57         add r5, r7, r14
+   u FFEEC168 05074105       bsr FFF4026F
+   u FFEEC169 07             <invalid>
+   V FFEEC16A 41052e         sub 2E[sp], r5   <== covers T
+   V FFEEC16D 5105bf         and BF[sp], r5
+  ALT linear from T:
+   v FFEEC16C 2e51           bra FFEEC1BD
+   resync at FFEEC16E (v)
+======================================================================
+== target FFEEC16E  cover head FFEEC16D  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC131:switch <- root=valid
+   SRC FFEEC131 V 7f4e           bra r14
+  IDA items:
+   V FFEEC15F ff2e5d         add r5, r13, r14
+   u FFEEC162 0523b8ff       bsr FFEE7985
+   V FFEEC163 23b8           bltu FFEEC11B
+   V FFEEC165 ff2e57         add r5, r7, r14
+   u FFEEC168 05074105       bsr FFF4026F
+   u FFEEC169 07             <invalid>
+   V FFEEC16A 41052e         sub 2E[sp], r5
+   V FFEEC16D 5105bf         and BF[sp], r5   <== covers T
+   u FFEEC170 4f05           mul sp, r5
+   V FFEEC171 052e4b05       bsr FFF40C9F
+  ALT linear from T:
+   v FFEEC16E 05bf4f05       bsr FFF4112D
+   v FFEEC172 2e4b           bra FFEEC1BD
+   resync at FFEEC174 (v)
+======================================================================
+== target FFEEC172  cover head FFEEC171  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC170:flow <- FFEEC16D:flow <- root=valid
+   SRC FFEEC170 u 4f05           mul sp, r5
+  IDA items:
+   V FFEEC163 23b8           bltu FFEEC11B
+   V FFEEC165 ff2e57         add r5, r7, r14
+   u FFEEC168 05074105       bsr FFF4026F
+   u FFEEC169 07             <invalid>
+   V FFEEC16A 41052e         sub 2E[sp], r5
+   V FFEEC16D 5105bf         and BF[sp], r5
+   u FFEEC170 4f05           mul sp, r5
+   V FFEEC171 052e4b05       bsr FFF40C9F   <== covers T
+  ALT linear from T:
+   v FFEEC172 2e4b           bra FFEEC1BD
+   resync at FFEEC174 (v)
+======================================================================
+== target FFEEC174  cover head FFEEC171  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC131:switch <- root=valid
+   SRC FFEEC131 V 7f4e           bra r14
+  IDA items:
+   V FFEEC163 23b8           bltu FFEEC11B
+   V FFEEC165 ff2e57         add r5, r7, r14
+   u FFEEC168 05074105       bsr FFF4026F
+   u FFEEC169 07             <invalid>
+   V FFEEC16A 41052e         sub 2E[sp], r5
+   V FFEEC16D 5105bf         and BF[sp], r5
+   u FFEEC170 4f05           mul sp, r5
+   V FFEEC171 052e4b05       bsr FFF40C9F   <== covers T
+   V FFEEC175 b5ec           movu 17[r6], r4
+   V FFEEC177 ff2e45         add r4, r5, r14
+   V FFEEC17A 05678d05       bsr FFF44EE1
+  ALT linear from T:
+   v FFEEC174 05b5ecff       bsr FFEEAE29
+   v FFEEC178 2e45           bra FFEEC1BD
+   resync at FFEEC17A (V)
+======================================================================
+== target FFEEC184  cover head FFEEC183  owner(valid) FFEEC0D3  idafunc FFEEC0D3
+   src chain: FFEEC131:switch <- root=valid
+   SRC FFEEC131 V 7f4e           bra r14
+  IDA items:
+   V FFEEC175 b5ec           movu 17[r6], r4
+   V FFEEC177 ff2e45         add r4, r5, r14
+   V FFEEC17A 05678d05       bsr FFF44EE1
+   V FFEEC17E 05258e05       bsr FFF44FA3
+   u FFEEC182 2e3b           bra FFEEC1BD
+   V FFEEC183 3b0537         bne FFEEF888   <== covers T
+   V FFEEC186 9205           mov r5, 10[sp]
+   V FFEEC188 2e35           bra FFEEC1BD
+  ALT linear from T:
+   v FFEEC184 05379205       bsr FFF453BB
+   resync at FFEEC188 (V)
+======================================================================
+== target FFEF1B51  cover head FFEF1B50  owner(valid) FFEF1B50  idafunc FFEF1B50
+   src chain: FFEF1B4F:flow <- FFEF1B4D:flow <- FFEF1B4B:flow <- FFEF1B49:flow <- FFEF1B46:flow <- FFEF1B44:flow <- FFEF1B42:flow <- FFEF1BAD:xref <- root=valid
+   SRC FFEF1B4F u 2060           beq FFEF1BAF
+  IDA items:
+   C FFEF1B46 fec211         movu [r2], r1
+   C FFEF1B49 8009           mov r1, 1[sp]
+   C FFEF1B4B b009           movu 1[sp], r1
+   C FFEF1B4D 6101           cmp #0, r1
+   u FFEF1B4F 2060           beq FFEF1BAF
+   V FFEF1B50 60b0           sub #B, sp   <== covers T
+   V FFEF1B52 09             bra FFEF1B5B
+   V FFEF1B53 7551ff         cmp #FF, r1
+  ALT linear from T:
+   v FFEF1B51 b009           movu 1[sp], r1
+   resync at FFEF1B53 (V)
+======================================================================
+== target FFEF1B66  cover head FFEF1B65  owner(valid) FFEF1B50  idafunc FFEF1B50
+   src chain: FFEF1B64:flow <- FFEF1B62:flow <- root=valid
+   SRC FFEF1B64 u b189           movu 7[sp], r1
+  IDA items:
+   V FFEF1B5B 0a             bra FFEF1B65
+   V FFEF1B5C b389           movu F[sp], r1
+   V FFEF1B5E 050b37ff       bsr FFEE5269
+   V FFEF1B62 8109           mov r1, 5[sp]
+   u FFEF1B64 b189           movu 7[sp], r1
+   V FFEF1B65 8961           mov 4[r6], r1   <== covers T
+   V FFEF1B67 11             beq FFEF1B70
+   V FFEF1B68 1f             bne FFEF1B6F
+  ALT linear from T:
+   v FFEF1B66 6111           cmp #1, r1
+   resync at FFEF1B68 (V)
+======================================================================
+== target FFEF1B70  cover head FFEF1B6F  owner(valid) FFEF1B50  idafunc FFEF1B50
+   src chain: FFEF1B67:jump <- root=valid
+   src chain: FFEF1B67:xref <- root=valid
+   SRC FFEF1B67 V 11             beq FFEF1B70
+  IDA items:
+   V FFEF1B68 1f             bne FFEF1B6F
+   V FFEF1B69 b109           movu 5[sp], r1
+   V FFEF1B6B 6c11           shll #1, r1
+   V FFEF1B6D 8109           mov r1, 5[sp]
+   V FFEF1B6F ba09           movu 12[sp], r1   <== covers T
+   V FFEF1B71 06c90101       add 2[sp], r1
+  ALT linear from T:
+   v FFEF1B70 09             bra FFEF1B79
+   resync at FFEF1B71 (V)
+======================================================================
+== target FFEF378D  cover head FFEF378C  owner(valid) FFEF378C  idafunc FFEF378C
+   src chain: FFEF378A:flow <- FFEF3787:flow <- FFEF3784:flow <- FFEF3782:flow <- FFEF377F:flow <- FFEF377D:flow <- FFEF377A:flow <- FFEF3777:flow <- FFEF3774:flow <- FFEF3772:flow <- FFEF3722:xref <- root=valid
+   SRC FFEF378A u 755160         cmp #60, r1
+  IDA items:
+   C FFEF377F 75515d         cmp #5D, r1
+   C FFEF3782 202e           beq FFEF37B0
+   C FFEF3784 75515e         cmp #5E, r1
+   C FFEF3787 3a9700         beq FFEF381E
+   u FFEF378A 755160         cmp #60, r1
+   u FFEF378B 516020         and 20[r6], sp
+   V FFEF378C 6020           sub #2, sp   <== covers T
+   V FFEF378E 6575           or #7, r5
+   V FFEF3790 516a20         and 20[r6], r10
+   V FFEF3793 4a75515a       add 5A51[r7], r5
+   V FFEF3797 3b7901         bne FFEF3910
+  ALT linear from T:
+   v FFEF378D 2065           beq FFEF37F2
+   v FFEF378F 75516a         cmp #6A, r1
+   v FFEF3792 204a           beq FFEF37DC
+   v FFEF3794 75515a         cmp #5A, r1
+   resync at FFEF3797 (V)
+======================================================================
+== target FFEF495C  cover head FFEF495B  owner(valid) FFEF495B  idafunc FFEF495B
+   src chain: FFEF495A:flow <- FFEF4957:flow <- FFEF4955:flow <- FFEF4949:xref <- FFEF4947:flow <- FFEF4945:flow <- FFEF4942:flow <- FFEF4940:flow <- FFEF493E:flow <- FFEF493A:flow <- FFEF4937:flow <- FFEF48FD:xref <- FFEF48FB:flow <- FFEF48F9:flow <- FFEF48C8:xref <- FFEF48C4:flow <- FFEF48C2:flow <- FFEF4899:xref <- FFEF4895:flow <- FFEF4893:flow <- FFEF4891:flow <- FFEF488D:flow <- FFEF488B:flow <- FFEF4888:flow <- FFEF4886:flow <- FFEF4883:flow <- FFEF4880:flow <- FFEF487E:flow <- FFEF487B:flow <- FFEF4879:flow <- FFEF47E0:xref <- FFEF47DD:flow <- FFEF47DB:flow <- FFEF47D8:flow <- FFEF47D6:flow <- FFEF4
+   SRC FFEF495A u 686e           shlr #6, r14
+  IDA items:
+   C FFEF494F 0582b8ff       bsr FFEF01D1
+   C FFEF4953 2e14           bra FFEF4967
+   C FFEF4955 a981           mov 18[sp], r1
+   C FFEF4957 591e3d         movu 3D[r1], r14
+   u FFEF495A 686e           shlr #6, r14
+   V FFEF495B 6e7c           pushm t10(r7,v0,a0)   <== covers T
+   V FFEF495D 1e             bne FFEF4963
+   V FFEF495E 11             beq FFEF4967
+  ALT linear from T:
+   v FFEF495C 7c1e           btst #1, r14
+   resync at FFEF495E (V)
+======================================================================
+== target FFEF532F  cover head FFEF532E  owner(valid) FFEF532E  idafunc FFEF532E
+   src chain: FFEF532D:flow <- FFEF532A:flow <- FFEF5327:flow <- FFEF5325:flow <- FFEF5323:flow <- FFEF5321:flow <- FFEF531E:flow <- FFEF531B:flow <- FFEF5319:flow <- FFEF5317:flow <- FFEF5312:flow <- FFEF5310:flow <- FFEF530E:flow <- FFEF530C:flow <- FFEF530A:flow <- FFEF5308:flow <- FFEF5306:flow <- FFEF5304:flow <- FFEF5302:flow <- FFEF52FE:xref <- FFEF52FC:flow <- FFEF52F8:flow <- FFEF52E5:xref <- FFEF52E3:flow <- FFEF52E1:flow <- FFEF52DE:flow <- FFEF52DC:flow <- FFEF52D9:flow <- FFEF52D6:flow <- FFEF52D2:flow <- FFEF52CF:flow <- FFEF52CC:flow <- FFEF52CA:flow <- FFEF52C8:flow <- FFEF52AC:xref <- FFEF5
+   SRC FFEF532D u 616e           cmp #6, r14
+  IDA items:
+   C FFEF5323 200d           beq FFEF5330
+   C FFEF5325 a901           mov 10[sp], r1
+   C FFEF5327 591e35         movu 35[r1], r14
+   C FFEF532A 752e7f         and #7F, r14
+   u FFEF532D 616e           cmp #6, r14
+   V FFEF532E 6e1d           pushm t10(r1,v0,a0)   <== covers T
+   V FFEF5330 f80601         mov #1, [sp]
+  ALT linear from T:
+   v FFEF532F 1d             bne FFEF5334
+   resync at FFEF5330 (V)
+======================================================================
+== target FFEF95BE  cover head FFEF95BD  owner(valid) FFEF95BD  idafunc FFEF95BD
+   src chain: FFEF95BC:flow <- FFEF95B9:flow <- FFEF95B4:xref <- FFEF95B2:flow <- FFEF95AF:flow <- FFEF95AB:flow <- FFEF95A9:flow <- FFEF95A7:flow <- FFEF95A4:flow <- FFEF95A2:flow <- FFEF959F:flow <- FFEF959D:flow <- FFEF959A:flow <- FFEF9596:flow <- FFEF9594:flow <- FFEF9591:flow <- FFEF958F:flow <- FFEF958C:flow <- FFEF958A:flow <- FFEF9586:flow <- FFEF9584:flow <- FFEF9582:flow <- FFEF957C:flow <- FFEF957A:flow <- FFEF9577:flow <- FFEF9573:flow <- FFEF9571:flow <- FFEF956B:flow <- FFEF9569:flow <- FFEF9566:flow <- FFEF9563:flow <- FFEF9560:flow <- FFEF955D:flow <- FFEF955B:flow <- FFEF9558:flow <- FFEF9
+   SRC FFEF95BC u 616e           cmp #6, r14
+  IDA items:
+   C FFEF95B2 619e           cmp #9, r14
+   C FFEF95B4 2b05           ble FFEF95B9
+   C FFEF95B6 388f00         bra FFEF9645
+   C FFEF95B9 590e36         movu 36[sp], r14
+   u FFEF95BC 616e           cmp #6, r14
+   V FFEF95BD 6e17           pushm t10(r1,v0,a0)   <== covers T
+   V FFEF95BF 590e36         movu 36[sp], r14
+  ALT linear from T:
+   v FFEF95BE 17             beq FFEF95C5
+   resync at FFEF95BF (V)
+======================================================================
+== target FFEFE451  cover head FFEFE450  owner(valid) FFEFE44E  idafunc FFEFE44E
+   src chain: FFEFE44D:flow <- FFEFE44B:flow <- FFEFE445:flow <- FFEFE443:flow <- FFEFE43F:flow <- FFEFE43C:flow <- FFEFE43A:flow <- FFEFE438:flow <- root=valid
+   SRC FFEFE44D u 056e15ff       bsr FFEEF9BB
+  IDA items:
+   C FFEFE443 6602           mov #0, r2
+   C FFEFE445 fb12b8d30100   mov #1D3B8, r1
+   C FFEFE44B ef23           mov r2, r3
+   u FFEFE44D 056e15ff       bsr FFEEF9BB
+   V FFEFE44E 6e15           pushm t10(r1,v0,a0)
+   V FFEFE450 ff6240         xor r4, sp, r2   <== covers T
+   V FFEFE453 8089           mov r1, 3[sp]
+  ALT linear from T:
+   v FFEFE451 6240           add #4, sp
+   resync at FFEFE453 (V)
+======================================================================
+== target FFF00423  cover head FFF00422  owner(valid) FFF00420  idafunc FFF00420
+   src chain: FFF0041F:flow <- FFF0041D:flow <- FFF0041A:flow <- FFF00418:flow <- FFF00412:flow <- FFF0040F:flow <- FFF0040D:flow <- FFF00407:flow <- FFF00404:flow <- FFF003FF:flow <- FFF003FD:flow <- FFF003F9:flow <- FFF003F7:flow <- FFF003F4:flow <- FFF003F2:flow <- FFF003EC:flow <- FFF003E9:flow <- FFF003E7:flow <- FFF003E1:flow <- FFF003DE:flow <- FFF003D9:flow <- FFF003D7:flow <- FFF0042D:xref <- root=valid
+   SRC FFF0041F u 056e1cff       bsr FFEF208D
+  IDA items:
+   C FFF00418 4b31           add r3, r1
+   C FFF0041A 711175         add #75, r1, r1
+   C FFF0041D 6613           mov #1, r3
+   u FFF0041F 056e1cff       bsr FFEF208D
+   V FFF00420 6e1c           pushm t10(r1,v0,a0)
+   V FFF00422 ffb189         fmul r8, r9, r1   <== covers T
+   V FFF00425 6211           add #1, r1
+  ALT linear from T:
+   v FFF00423 b189           movu 7[sp], r1
+   resync at FFF00425 (V)
+======================================================================
+== target FFF03E32  cover head FFF03E31  owner(valid) FFF03E31  idafunc FFF03E31
+   src chain: FFF03E2F:flow <- FFF03E2C:flow <- FFF03E28:flow <- FFF03E25:flow <- FFF03E23:flow <- FFF03E04:xref <- FFF03E02:flow <- FFF03E00:flow <- FFF03DFD:flow <- FFF03DFA:flow <- FFF03DF7:flow <- FFF03DF3:flow <- FFF03DF1:flow <- FFF03DEB:flow <- FFF03DE8:flow <- FFF03DE5:flow <- FFF03DE1:flow <- FFF03DDB:flow <- FFF03DD8:flow <- FFF03DD5:flow <- FFF03DD1:flow <- FFF03DCB:flow <- FFF03DC7:flow <- FFF03DC1:flow <- FFF03AFD:xref <- root=valid
+   SRC FFF03E2F u 5d0160         movu C0[sp], r1
+  IDA items:
+   C FFF03E23 b10a           movu 5[sp], r2
+   C FFF03E25 710101         add #1, sp, r1
+   C FFF03E28 0545dffd       bsr FFEE1D6D
+   C FFF03E2C 5d025f         movu BE[sp], r2
+   u FFF03E2F 5d0160         movu C0[sp], r1
+   u FFF03E30 01             <invalid>
+   V FFF03E31 6060           sub #6, sp   <== covers T
+   V FFF03E33 c071           mov [r7], [r1]
+   V FFF03E35 03             nop 
+   V FFF03E36 0e             bra FFF03E3C
+   V FFF03E37 a00b           mov r3, 4[sp]
+  ALT linear from T:
+   v FFF03E32 60c0           sub #C, sp
+   v FFF03E34 71030e         add #E, sp, r3
+   resync at FFF03E37 (V)
+======================================================================
+== target FFF04EDE  cover head FFF04EDD  owner(valid) FFF04EDB  idafunc FFF04EDB
+   src chain: FFF04EDA:flow <- FFF04ED7:flow <- FFF04ED4:flow <- FFF04ED1:flow <- FFF04ECE:flow <- FFF04ECA:flow <- FFF04EC8:flow <- FFF04EC6:flow <- root=valid
+   SRC FFF04EDA u 056ecdfe       bsr FFEF1C48
+  IDA items:
+   C FFF04ED1 75431c         mov #1C, r3
+   C FFF04ED4 754241         mov #41, r2
+   C FFF04ED7 7541bc         mov #BC, r1
+   u FFF04EDA 056ecdfe       bsr FFEF1C48
+   V FFF04EDB 6ecd           pushm t10(r12,v0,a0)
+   V FFF04EDD fe6240         mov [r2], sp   <== covers T
+   V FFF04EE0 2e19           bra FFF04EF9
+  ALT linear from T:
+   v FFF04EDE 6240           add #4, sp
+   resync at FFF04EE0 (V)
+======================================================================
+== target FFF1B3B1  cover head FFF1B3B0  owner(valid) FFF1B3B0  idafunc FFF1B3B0
+   src chain: FFF1B3AE:flow <- FFF1B3AC:flow <- root=valid
+   SRC FFF1B3AE u 710460         add #60, sp, r4
+  IDA items:
+   C FFF1B3A4 7100f0         add #FFFFFFF0, sp, sp
+   C FFF1B3A7 a08b           mov r3, C[sp]
+   V FFF1B3A9 71045c         add #5C, sp, r4
+   V FFF1B3AC a084           mov r4, 8[sp]
+   u FFF1B3AE 710460         add #60, sp, r4
+   u FFF1B3AF 0460a00c       bra FFFE540F
+   V FFF1B3B0 60a0           sub #A, sp   <== covers T
+   V FFF1B3B2 0c             bra FFF1B3B6
+   V FFF1B3B3 3c0100         mov #0, 1[sp]
+  ALT linear from T:
+   v FFF1B3B1 a00c           mov r4, 4[sp]
+   resync at FFF1B3B3 (V)
+======================================================================
+== target FFF1BA03  cover head FFF1BA02  owner(valid) FFF1BA02  idafunc FFF1BA02
+   src chain: FFF1BA00:flow <- FFF1B9FE:flow <- root=valid
+   SRC FFF1BA00 u 710460         add #60, sp, r4
+  IDA items:
+   C FFF1B9F6 7100f0         add #FFFFFFF0, sp, sp
+   C FFF1B9F9 a08b           mov r3, C[sp]
+   V FFF1B9FB 71045c         add #5C, sp, r4
+   V FFF1B9FE a084           mov r4, 8[sp]
+   u FFF1BA00 710460         add #60, sp, r4
+   u FFF1BA01 0460a00c       bra FFFE5A61
+   V FFF1BA02 60a0           sub #A, sp   <== covers T
+   V FFF1BA04 0c             bra FFF1BA08
+   V FFF1BA05 3c0100         mov #0, 1[sp]
+  ALT linear from T:
+   v FFF1BA03 a00c           mov r4, 4[sp]
+   resync at FFF1BA05 (V)
+======================================================================
+== target FFF1BB36  cover head FFF1BB35  owner(valid) FFF1BB35  idafunc FFF1BB35
+   src chain: FFF1BB33:flow <- FFF1BB31:flow <- root=valid
+   SRC FFF1BB33 u 710460         add #60, sp, r4
+  IDA items:
+   V FFF1BB29 7100f0         add #FFFFFFF0, sp, sp
+   V FFF1BB2C a08c           mov r4, C[sp]
+   V FFF1BB2E 71045c         add #5C, sp, r4
+   V FFF1BB31 a084           mov r4, 8[sp]
+   u FFF1BB33 710460         add #60, sp, r4
+   u FFF1BB34 0460a00c       bra FFFE5B94
+   V FFF1BB35 60a0           sub #A, sp   <== covers T
+   V FFF1BB37 0c             bra FFF1BB3B
+   V FFF1BB38 3c0100         mov #0, 1[sp]
+  ALT linear from T:
+   v FFF1BB36 a00c           mov r4, 4[sp]
+   resync at FFF1BB38 (V)
+======================================================================
+== target FFF1BBD0  cover head FFF1BBCF  owner(valid) FFF1BBCF  idafunc FFF1BBCF
+   src chain: FFF1BBCD:flow <- FFF1BBCB:flow <- root=valid
+   SRC FFF1BBCD u 710460         add #60, sp, r4
+  IDA items:
+   V FFF1BBC3 7100f0         add #FFFFFFF0, sp, sp
+   V FFF1BBC6 a08b           mov r3, C[sp]
+   V FFF1BBC8 71045c         add #5C, sp, r4
+   V FFF1BBCB a084           mov r4, 8[sp]
+   u FFF1BBCD 710460         add #60, sp, r4
+   u FFF1BBCE 0460a00c       bra FFFE5C2E
+   V FFF1BBCF 60a0           sub #A, sp   <== covers T
+   V FFF1BBD1 0c             bra FFF1BBD5
+   V FFF1BBD2 3c0100         mov #0, 1[sp]
+  ALT linear from T:
+   v FFF1BBD0 a00c           mov r4, 4[sp]
+   resync at FFF1BBD2 (V)
+======================================================================
+== target FFF1BC06  cover head FFF1BC05  owner(valid) FFF1BC05  idafunc FFF1BC05
+   src chain: FFF1BC03:flow <- FFF1BC01:flow <- root=valid
+   SRC FFF1BC03 u 710460         add #60, sp, r4
+  IDA items:
+   V FFF1BBF9 7100f0         add #FFFFFFF0, sp, sp
+   V FFF1BBFC a08c           mov r4, C[sp]
+   V FFF1BBFE 71045c         add #5C, sp, r4
+   V FFF1BC01 a084           mov r4, 8[sp]
+   u FFF1BC03 710460         add #60, sp, r4
+   u FFF1BC04 0460a00c       bra FFFE5C64
+   V FFF1BC05 60a0           sub #A, sp   <== covers T
+   V FFF1BC07 0c             bra FFF1BC0B
+   V FFF1BC08 3c0100         mov #0, 1[sp]
+  ALT linear from T:
+   v FFF1BC06 a00c           mov r4, 4[sp]
+   resync at FFF1BC08 (V)
+======================================================================
+== target FFF2A98C  cover head FFF2A98B  owner(valid) FFF2A98B  idafunc FFF2A98B
+   src chain: FFF2A989:flow <- FFF2A987:flow <- FFF2A985:flow <- FFF2A983:flow <- root=valid
+   SRC FFF2A989 u 710360         add #60, sp, r3
+  IDA items:
+   V FFF2A983 a901           mov 10[sp], r1
+   C FFF2A985 60c0           sub #C, sp
+   C FFF2A987 a082           mov r2, 8[sp]
+   u FFF2A989 710360         add #60, sp, r3
+   C FFF2A98A 03             nop 
+   V FFF2A98B 60a0           sub #A, sp   <== covers T
+   V FFF2A98D 0b             bra FFF2A990
+   u FFF2A98E f80400         mov #0, [sp]
+   u FFF2A98F 04006604       bra FFF70F8F
+   V FFF2A990 00             brk 
+   V FFF2A991 6604           mov #0, r4
+  ALT linear from T:
+   v FFF2A98C a00b           mov r3, 4[sp]
+   u FFF2A98E f80400         mov #0, [sp]
+   resync at FFF2A991 (V)
+======================================================================
+== target FFF2F251  cover head FFF2F250  owner(valid) FFF2F250  idafunc FFF2F250
+   src chain: FFF2F24E:flow <- FFF2F24C:flow <- FFF2F24A:flow <- FFF2F21D:xref <- root=valid
+   SRC FFF2F24E u 710360         add #60, sp, r3
+  IDA items:
+   V FFF2F248 2e21           bra FFF2F269
+   C FFF2F24A af82           mov 78[sp], r2
+   C FFF2F24C 60c0           sub #C, sp
+   u FFF2F24E 710360         add #60, sp, r3
+   C FFF2F24F 03             nop 
+   V FFF2F250 60a0           sub #A, sp   <== covers T
+   V FFF2F252 0b             bra FFF2F255
+   u FFF2F253 f80400         mov #0, [sp]
+   u FFF2F254 0400a082       bra FF759254
+   V FFF2F255 00             brk 
+   V FFF2F256 a082           mov r2, 8[sp]
+  ALT linear from T:
+   v FFF2F251 a00b           mov r3, 4[sp]
+   u FFF2F253 f80400         mov #0, [sp]
+   resync at FFF2F256 (V)
+======================================================================
+== target FFF2F2D3  cover head FFF2F2D2  owner(valid) FFF2F2D2  idafunc FFF2F2D2
+   src chain: FFF2F2D0:flow <- FFF2F2CE:flow <- FFF2F2CC:flow <- FFF2F2CA:flow <- root=valid
+   SRC FFF2F2D0 u 710360         add #60, sp, r3
+  IDA items:
+   V FFF2F2CA ab81           mov 38[sp], r1
+   C FFF2F2CC 60c0           sub #C, sp
+   C FFF2F2CE a082           mov r2, 8[sp]
+   u FFF2F2D0 710360         add #60, sp, r3
+   C FFF2F2D1 03             nop 
+   V FFF2F2D2 60a0           sub #A, sp   <== covers T
+   V FFF2F2D4 0b             bra FFF2F2D7
+   u FFF2F2D5 f80400         mov #0, [sp]
+   u FFF2F2D6 04006604       bra FFF758D6
+   V FFF2F2D7 00             brk 
+   V FFF2F2D8 6604           mov #0, r4
+  ALT linear from T:
+   v FFF2F2D3 a00b           mov r3, 4[sp]
+   u FFF2F2D5 f80400         mov #0, [sp]
+   resync at FFF2F2D8 (V)
+======================================================================
+== target FFF2F7C6  cover head FFF2F7C5  owner(valid) FFF2F7C5  idafunc FFF2F7C5
+   src chain: FFF2F7C3:flow <- FFF2F7C1:flow <- FFF2F7BF:flow <- FFF2F792:xref <- root=valid
+   SRC FFF2F7C3 u 710360         add #60, sp, r3
+  IDA items:
+   V FFF2F7BD 2e21           bra FFF2F7DE
+   C FFF2F7BF af82           mov 78[sp], r2
+   C FFF2F7C1 60c0           sub #C, sp
+   u FFF2F7C3 710360         add #60, sp, r3
+   C FFF2F7C4 03             nop 
+   V FFF2F7C5 60a0           sub #A, sp   <== covers T
+   V FFF2F7C7 0b             bra FFF2F7CA
+   u FFF2F7C8 f80400         mov #0, [sp]
+   u FFF2F7C9 0400a082       bra FF7597C9
+   V FFF2F7CA 00             brk 
+   V FFF2F7CB a082           mov r2, 8[sp]
+  ALT linear from T:
+   v FFF2F7C6 a00b           mov r3, 4[sp]
+   u FFF2F7C8 f80400         mov #0, [sp]
+   resync at FFF2F7CB (V)
+======================================================================
+== target FFF305CB  cover head FFF305CA  owner(valid) FFF305CA  idafunc FFF305CA
+   src chain: FFF305C8:flow <- FFF305C6:flow <- FFF305C4:flow <- FFF305C2:flow <- root=valid
+   SRC FFF305C8 u 710360         add #60, sp, r3
+  IDA items:
+   V FFF305C2 ab01           mov 30[sp], r1
+   C FFF305C4 60c0           sub #C, sp
+   C FFF305C6 a082           mov r2, 8[sp]
+   u FFF305C8 710360         add #60, sp, r3
+   C FFF305C9 03             nop 
+   V FFF305CA 60a0           sub #A, sp   <== covers T
+   V FFF305CC 0b             bra FFF305CF
+   u FFF305CD f80400         mov #0, [sp]
+   u FFF305CE 04006604       bra FFF76BCE
+   V FFF305CF 00             brk 
+   V FFF305D0 6604           mov #0, r4
+  ALT linear from T:
+   v FFF305CB a00b           mov r3, 4[sp]
+   u FFF305CD f80400         mov #0, [sp]
+   resync at FFF305D0 (V)
+======================================================================
+== target FFF307AF  cover head FFF307AE  owner(valid) FFF307AE  idafunc FFF307AE
+   src chain: FFF307AC:flow <- FFF307AA:flow <- FFF307A8:flow <- root=valid
+   SRC FFF307AC u 710360         add #60, sp, r3
+  IDA items:
+   V FFF307A6 af8a           mov 7C[sp], r2
+   V FFF307A8 ab01           mov 30[sp], r1
+   C FFF307AA 60c0           sub #C, sp
+   u FFF307AC 710360         add #60, sp, r3
+   C FFF307AD 03             nop 
+   V FFF307AE 60a0           sub #A, sp   <== covers T
+   V FFF307B0 0b             bra FFF307B3
+   u FFF307B1 f80400         mov #0, [sp]
+   u FFF307B2 0400a082       bra FF75A7B2
+   V FFF307B3 00             brk 
+   V FFF307B4 a082           mov r2, 8[sp]
+  ALT linear from T:
+   v FFF307AF a00b           mov r3, 4[sp]
+   u FFF307B1 f80400         mov #0, [sp]
+   resync at FFF307B4 (V)
+======================================================================
+== target FFF30A5D  cover head FFF30A5C  owner(valid) FFF30A5C  idafunc FFF30A5C
+   src chain: FFF30A5A:flow <- FFF30A58:flow <- FFF30A56:flow <- FFF30A29:xref <- root=valid
+   SRC FFF30A5A u 710360         add #60, sp, r3
+  IDA items:
+   V FFF30A54 2e21           bra FFF30A75
+   C FFF30A56 af8a           mov 7C[sp], r2
+   C FFF30A58 60c0           sub #C, sp
+   u FFF30A5A 710360         add #60, sp, r3
+   C FFF30A5B 03             nop 
+   V FFF30A5C 60a0           sub #A, sp   <== covers T
+   V FFF30A5E 0b             bra FFF30A61
+   u FFF30A5F f80400         mov #0, [sp]
+   u FFF30A60 0400a082       bra FF75AA60
+   V FFF30A61 00             brk 
+   V FFF30A62 a082           mov r2, 8[sp]
+  ALT linear from T:
+   v FFF30A5D a00b           mov r3, 4[sp]
+   u FFF30A5F f80400         mov #0, [sp]
+   resync at FFF30A62 (V)
+======================================================================
+== target FFF3104D  cover head FFF3104C  owner(valid) FFF3104C  idafunc FFF3104C
+   src chain: FFF3104A:flow <- FFF31048:flow <- FFF31046:flow <- FFF31019:xref <- root=valid
+   SRC FFF3104A u 710360         add #60, sp, r3
+  IDA items:
+   V FFF31044 2e21           bra FFF31065
+   C FFF31046 af82           mov 78[sp], r2
+   C FFF31048 60c0           sub #C, sp
+   u FFF3104A 710360         add #60, sp, r3
+   C FFF3104B 03             nop 
+   V FFF3104C 60a0           sub #A, sp   <== covers T
+   V FFF3104E 0b             bra FFF31051
+   u FFF3104F f80400         mov #0, [sp]
+   u FFF31050 0400a082       bra FF75B050
+   V FFF31051 00             brk 
+   V FFF31052 a082           mov r2, 8[sp]
+  ALT linear from T:
+   v FFF3104D a00b           mov r3, 4[sp]
+   u FFF3104F f80400         mov #0, [sp]
+   resync at FFF31052 (V)
+======================================================================
+== target FFF310E3  cover head FFF310E2  owner(valid) FFF310E2  idafunc FFF310E2
+   src chain: FFF310E0:flow <- FFF310DE:flow <- FFF310DC:flow <- FFF310DA:flow <- root=valid
+   SRC FFF310E0 u 710360         add #60, sp, r3
+  IDA items:
+   V FFF310DA ab81           mov 38[sp], r1
+   C FFF310DC 60c0           sub #C, sp
+   C FFF310DE a082           mov r2, 8[sp]
+   u FFF310E0 710360         add #60, sp, r3
+   C FFF310E1 03             nop 
+   V FFF310E2 60a0           sub #A, sp   <== covers T
+   V FFF310E4 0b             bra FFF310E7
+   u FFF310E5 f80400         mov #0, [sp]
+   u FFF310E6 04006604       bra FFF776E6
+   V FFF310E7 00             brk 
+   V FFF310E8 6604           mov #0, r4
+  ALT linear from T:
+   v FFF310E3 a00b           mov r3, 4[sp]
+   u FFF310E5 f80400         mov #0, [sp]
+   resync at FFF310E8 (V)
+======================================================================
+== target FFF315EA  cover head FFF315E9  owner(valid) FFF315E9  idafunc FFF315E9
+   src chain: FFF315E7:flow <- FFF315E5:flow <- FFF315E3:flow <- FFF315B6:xref <- root=valid
+   SRC FFF315E7 u 710360         add #60, sp, r3
+  IDA items:
+   V FFF315E1 2e21           bra FFF31602
+   C FFF315E3 af82           mov 78[sp], r2
+   C FFF315E5 60c0           sub #C, sp
+   u FFF315E7 710360         add #60, sp, r3
+   C FFF315E8 03             nop 
+   V FFF315E9 60a0           sub #A, sp   <== covers T
+   V FFF315EB 0b             bra FFF315EE
+   u FFF315EC f80400         mov #0, [sp]
+   u FFF315ED 0400a082       bra FF75B5ED
+   V FFF315EE 00             brk 
+   V FFF315EF a082           mov r2, 8[sp]
+  ALT linear from T:
+   v FFF315EA a00b           mov r3, 4[sp]
+   u FFF315EC f80400         mov #0, [sp]
+   resync at FFF315EF (V)
+======================================================================
+== target FFF32443  cover head FFF32442  owner(valid) FFF32442  idafunc FFF32442
+   src chain: FFF32440:flow <- FFF3243E:flow <- FFF3243C:flow <- FFF3243A:flow <- root=valid
+   SRC FFF32440 u 710360         add #60, sp, r3
+  IDA items:
+   V FFF3243A ab01           mov 30[sp], r1
+   C FFF3243C 60c0           sub #C, sp
+   C FFF3243E a082           mov r2, 8[sp]
+   u FFF32440 710360         add #60, sp, r3
+   C FFF32441 03             nop 
+   V FFF32442 60a0           sub #A, sp   <== covers T
+   V FFF32444 0b             bra FFF32447
+   u FFF32445 f80400         mov #0, [sp]
+   u FFF32446 04006604       bra FFF78A46
+   V FFF32447 00             brk 
+   V FFF32448 6604           mov #0, r4
+  ALT linear from T:
+   v FFF32443 a00b           mov r3, 4[sp]
+   u FFF32445 f80400         mov #0, [sp]
+   resync at FFF32448 (V)
+======================================================================
+== target FFF32651  cover head FFF32650  owner(valid) FFF32650  idafunc FFF32650
+   src chain: FFF3264E:flow <- FFF3264C:flow <- FFF3264A:flow <- root=valid
+   SRC FFF3264E u 710360         add #60, sp, r3
+  IDA items:
+   V FFF32648 af8a           mov 7C[sp], r2
+   V FFF3264A ab01           mov 30[sp], r1
+   C FFF3264C 60c0           sub #C, sp
+   u FFF3264E 710360         add #60, sp, r3
+   C FFF3264F 03             nop 
+   V FFF32650 60a0           sub #A, sp   <== covers T
+   V FFF32652 0b             bra FFF32655
+   u FFF32653 f80400         mov #0, [sp]
+   u FFF32654 0400a082       bra FF75C654
+   V FFF32655 00             brk 
+   V FFF32656 a082           mov r2, 8[sp]
+  ALT linear from T:
+   v FFF32651 a00b           mov r3, 4[sp]
+   u FFF32653 f80400         mov #0, [sp]
+   resync at FFF32656 (V)
+======================================================================
+== target FFF32915  cover head FFF32914  owner(valid) FFF32914  idafunc FFF32914
+   src chain: FFF32912:flow <- FFF32910:flow <- FFF3290E:flow <- FFF328E1:xref <- root=valid
+   SRC FFF32912 u 710360         add #60, sp, r3
+  IDA items:
+   V FFF3290C 2e21           bra FFF3292D
+   C FFF3290E af8a           mov 7C[sp], r2
+   C FFF32910 60c0           sub #C, sp
+   u FFF32912 710360         add #60, sp, r3
+   C FFF32913 03             nop 
+   V FFF32914 60a0           sub #A, sp   <== covers T
+   V FFF32916 0b             bra FFF32919
+   u FFF32917 f80400         mov #0, [sp]
+   u FFF32918 0400a082       bra FF75C918
+   V FFF32919 00             brk 
+   V FFF3291A a082           mov r2, 8[sp]
+  ALT linear from T:
+   v FFF32915 a00b           mov r3, 4[sp]
+   u FFF32917 f80400         mov #0, [sp]
+   resync at FFF3291A (V)
+======================================================================
+== target FFF366C7  cover head FFF366C6  owner(valid) FFF366C6  idafunc FFF366C6
+   src chain: FFF366C4:flow <- FFF366C2:flow <- FFF366C0:flow <- FFF366BD:flow <- FFF366BB:flow <- FFF366B8:flow <- FFF366B6:flow <- FFF366B3:flow <- FFF364A6:xref <- FFF364A4:flow <- FFF364A1:flow <- FFF3649E:flow <- FFF3649C:flow <- FFF3649A:flow <- FFF36498:flow <- FFF36496:flow <- FFF36492:flow <- FFF36490:flow <- FFF3648E:flow <- FFF3648C:flow <- FFF36488:flow <- FFF36486:flow <- FFF36484:flow <- FFF36481:flow <- FFF3647E:flow <- FFF3647B:flow <- FFF36478:flow <- FFF36475:flow <- FFF36471:flow <- FFF3646E:flow <- FFF3646C:flow <- FFF36469:flow <- FFF3691C:xref <- root=valid
+   SRC FFF366C4 u 3983fb         bsr FFF36247
+  IDA items:
+   C FFF366BB a889           mov C[sp], r1
+   C FFF366BD 395bfb         bsr FFF36218
+   C FFF366C0 a189           mov r1, 1C[sp]
+   C FFF366C2 a889           mov C[sp], r1
+   u FFF366C4 3983fb         bsr FFF36247
+   u FFF366C5 83fb           mov r3, F[r7]
+   V FFF366C6 fba209a88939   mov #3989A809, r10   <== covers T
+   V FFF366CC b0fb           movu 3[r7], r3
+   V FFF366CE a181           mov r1, 18[sp]
+  ALT linear from T:
+   v FFF366C7 a209           mov r1, 24[sp]
+   v FFF366C9 a889           mov C[sp], r1
+   v FFF366CB 39b0fb         bsr FFF3627B
+   resync at FFF366CE (V)
+======================================================================
+== target FFF38E55  cover head FFF38E54  owner(valid) FFF38E54  idafunc FFF38E54
+   src chain: FFF38E52:flow <- FFF38E50:flow <- FFF38E4A:flow <- FFF38E44:flow <- FFF38D05:xref <- root=valid
+   SRC FFF38E52 u 3995fb         bsr FFF389E7
+  IDA items:
+   V FFF38E42 2e33           bra FFF38E75
+   C FFF38E44 fb324b030100   mov #1034B, r3
+   C FFF38E4A fb2258030100   mov #10358, r2
+   C FFF38E50 6651           mov #5, r1
+   u FFF38E52 3995fb         bsr FFF389E7
+   u FFF38E53 95fb           mov r3, 2E[r7]
+   V FFF38E54 fb3e01000f     mov #F0001, r3   <== covers T
+   V FFF38E59 a809           mov 4[sp], r1
+  ALT linear from T:
+   v FFF38E55 3e0100         mov #0, 4[sp]
+   v FFF38E58 0f             bra FFF38E5F
+   resync at FFF38E59 (V)
+======================================================================
+== target FFF4030A  cover head FFF40309  owner(valid) FFF40309  idafunc FFF40309
+   src chain: FFF40306:flow <- FFF40304:flow <- FFF40301:flow <- FFF402FB:flow <- FFF402F8:flow <- FFF402F3:flow <- FFF402F1:flow <- FFF402EF:flow <- root=valid
+   SRC FFF40306 u 0538a8fb       bsr FFEFAB3E
+  IDA items:
+   C FFF402F8 f80510         mov #10, [sp]
+   C FFF402FB fb424d8c0000   mov #8C4D, r4
+   C FFF40301 71446c         add #6C, r4, r4
+   C FFF40304 6613           mov #1, r3
+   u FFF40306 0538a8fb       bsr FFEFAB3E
+   u FFF40307 38a8fb         bra FFF3FEAF
+   u FFF40308 a8fb           mov C[r7], r3
+   V FFF40309 fb6240390800   mov #83940, r6   <== covers T
+   V FFF4030F 391001         bsr FFF4041F
+  ALT linear from T:
+   v FFF4030A 6240           add #4, sp
+   v FFF4030C 390800         bsr FFF40314
+   resync at FFF4030F (V)
+======================================================================
+== target FFF40C9F  cover head FFF40C9D  owner(valid) FFF40C3E  idafunc FFF40C3E
+   src chain: FFEEC171:call <- root=valid
+   src chain: FFEEC171:xref <- root=valid
+   SRC FFEEC171 V 052e4b05       bsr FFF40C9F
+  IDA items:
+   V FFF40C90 4b1e           add r1, r14
+   V FFF40C92 59ee81         movu 81[r14], r14
+   V FFF40C95 fbf2468e0000   mov #8E46, r15
+   V FFF40C9B 4b1f           add r1, r15
+   V FFF40C9D 45fe81         cmp 81[r15], r14   <== covers T
+   V FFF40CA0 201e           beq FFF40CBE
+   V FFF40CA2 b081           movu 2[sp], r1
+  ALT linear from T:
+   v FFF40C9F 8120           mov sp, 4[r2]
+   v FFF40CA1 1e             bne FFF40CA7
+   resync at FFF40CA2 (V)
+======================================================================
+== target FFF454E6  cover head FFF454E5  owner(valid) FFF454E5  idafunc FFF454E5
+   src chain: FFF454E4:flow <- FFF454E2:flow <- FFF454E0:flow <- FFF454DC:flow <- FFF454DA:flow <- FFF454D8:flow <- FFF454D6:flow <- FFF454D4:flow <- FFF454D2:flow <- FFF454CF:flow <- FFF454CB:flow <- FFF454C9:flow <- FFF454C7:flow <- FFF454C5:flow <- FFF45F5D:xref <- root=valid
+   SRC FFF454E4 u 7c6e           btst #6, r14
+  IDA items:
+   C FFF454DA ef61           mov r6, r1
+   C FFF454DC 05310900       bsr FFF45E0D
+   u FFF454E0 5c6e           movu [r6], r14
+   C FFF454E1 6eef           pushm t10(r14,v0,a0)
+   C FFF454E3 18             bne FFF454EB
+   u FFF454E4 7c6e           btst #6, r14
+   V FFF454E5 6e17           pushm t10(r1,v0,a0)   <== covers T
+   V FFF454E7 a869           mov 4[r6], r1
+  ALT linear from T:
+   v FFF454E6 17             beq FFF454ED
+   resync at FFF454E7 (V)
+======================================================================
+== target FFF4C682  cover head FFF4C681  owner(valid) FFF4C442  idafunc FFF4C442
+   src chain: FFF4C680:flow <- FFF4C67D:flow <- root=valid
+   SRC FFF4C680 u 4b6e           add r6, r14
+  IDA items:
+   V FFF4C677 610e           cmp #0, r14
+   V FFF4C679 2b0e           ble FFF4C687
+   V FFF4C67B 601e           sub #1, r14
+   V FFF4C67D e76e08         mov r14, 20[r6]
+   u FFF4C680 4b6e           add r6, r14
+   V FFF4C681 6e59           pushm t10(r5,v0,a0)   <== covers T
+   V FFF4C683 ee1e2e3d       mov F4B8[r1], r14
+   V FFF4C687 ec6e           mov [r6], r14
+  ALT linear from T:
+   v FFF4C682 59ee1e         movu 1E[r14], r14
+   v FFF4C685 2e3d           bra FFF4C6C2
+   resync at FFF4C687 (V)

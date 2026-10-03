@@ -1,0 +1,97 @@
+
+;==== range 34BCA-34C10
+
+; ---- func 34BCA
+034BCA  55fc             bsr     nullsub_7:8   ; <- 0x34b76,0x34d28
+034BCC  5e0356c8         jsr     loc_356C8:24
+034BD0  5e03ef6e         jsr     sub_3EF6E:24
+034BD4  6e0b0017         mov.b   @(0x17:16,er0), r3l
+034BD8  ac07             cmp.b   #7, r4l
+034BDA  4616             bne     loc_34BF2:8
+034BDC  fc32             mov.b   #0x32, r4l ; '2'
+034BDE  6a8c9579         mov.b   r4l, @0xFFFF9579:16
+034BE2  6a0b896a         mov.b   @0xFFFF896A:16, r3l
+034BE6  6a10aad17370     btst    #7, @0xFFFFAAD1:16
+034BEC  4704             beq     loc_34BF2:8
+034BEE  6a0b896b         mov.b   @0xFFFF896B:16, r3l
+034BF2  7a63000000ff     and.l   #0xFF, er3
+034BF8  1033             shll.l  er3
+034BFA  78306b2400035158 mov.w   @(word_35158:32,er3), r4
+034C02  6b84aab4         mov.w   r4, @0xFFFFAAB4:16
+034C06  79040000         mov.w   #0, r4
+034C0A  6b84aab2         mov.w   r4, @0xFFFFAAB2:16
+034C0E  6a18aad27070     bset    #7, @0xFFFFAAD2:16
+
+;==== range D180-D200
+00D180  4e45             bgt     loc_D1C6:8
+00D182  2f44             mov.b   @0xFFFFFF44:8, r7l
+00D184  4353             bls     loc_D1D8:8
+00D186  54               db
+00D187  4f               db
+00D188  4e               db
+00D189  45               db
+00D18A  20               db
+00D18B  52               db
+00D18C  45               db
+00D18D  46               db
+00D18E  7a050000d22a     mov.l   #0xD22A, er5   ; <- 0xd13c
+00D194  6d54             mov.w   @er5+, r4
+00D196  7a0600ff3de2     mov.l   #0xFF3DE2, er6
+00D19C  7bd4598f         eepmov.w
+00D1A0  0d44             mov.w   r4, r4
+00D1A2  46f8             bne     loc_D19C:8
+00D1A4  7a0600ff3de2     mov.l   #0xFF3DE2, er6
+00D1AA  7a050000585a     mov.l   #0x585A, er5
+00D1B0  7a63000000ff     and.l   #0xFF, er3
+00D1B6  1033             shll.l  er3
+00D1B8  0ab5             add.l   er3, er5
+00D1BA  685c             mov.b   @er5, r4l
+00D1BC  ecf0             and.b   #0xF0, r4l
+00D1BE  470a             beq     loc_D1CA:8
+00D1C0  114c             shlr.b  #2, r4l
+00D1C2  114c             shlr.b  #2, r4l
+00D1C4  cc30             or.b    #0x30, r4l
+00D1C6  6eec0000         mov.b   r4l, @(0:16,er6)
+00D1CA  fa02             mov.b   #2, r2l
+00D1CC  0b06             adds    #1, er6
+00D1CE  4030             bra     loc_D200:8
+00D1D0  7a050000d234     mov.l   #0xD234, er5   ; <- 0xd154
+00D1D6  6d54             mov.w   @er5+, r4
+00D1D8  7a0600ff3de2     mov.l   #0xFF3DE2, er6
+00D1DE  7bd4598f         eepmov.w
+00D1E2  0d44             mov.w   r4, r4
+00D1E4  46f8             bne     loc_D1DE:8
+00D1E6  7a0600ff3de2     mov.l   #0xFF3DE2, er6
+00D1EC  7a0500005072     mov.l   #0x5072, er5
+00D1F2  7a63000000ff     and.l   #0xFF, er3
+00D1F8  1033             shll.l  er3
+00D1FA  0ab5             add.l   er3, er5
+00D1FC  fa03             mov.b   #3, r2l
+00D1FE  0b96             adds    #4, er6
+
+;==== range 26060-260A0
+026060  1154             shlr.w  #2, r4
+026062  1154             shlr.w  #2, r4
+026064  1d34             cmp.w   r3, r4
+026066  4708             beq     loc_26070:8
+026068  0a0e             inc.b   r6l
+02606A  ae32             cmp.b   #0x32, r6l ; '2'
+02606C  45f0             bcs     loc_2605E:8
+02606E  fe0c             mov.b   #0xC, r6l
+026070  6a0c8dde         mov.b   @0xFFFF8DDE:16, r4l
+026074  4b04             bmi     loc_2607A:8
+026076  6e8e0017         mov.b   r6l, @(0x17:16,er0)
+02607A  7a0200ff1aea     mov.l   #0xFF1AEA, er2
+026080  682c             mov.b   @er2, r4l
+026082  ac46             cmp.b   #0x46, r4l ; 'F'
+026084  4726             beq     loc_260AC:8
+026086  5e02613e         jsr     sub_2613E:24
+02608A  4614             bne     loc_260A0:8
+02608C  fe00             mov.b   #0, r6l
+02608E  7a0500005072     mov.l   #0x5072, er5
+026094  6d54             mov.w   @er5+, r4
+026096  1d34             cmp.w   r3, r4
+026098  4708             beq     loc_260A2:8
+02609A  0a0e             inc.b   r6l
+02609C  ae68             cmp.b   #0x68, r6l ; 'h'
+02609E  45f4             bcs     loc_26094:8

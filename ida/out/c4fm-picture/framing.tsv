@@ -1,0 +1,12 @@
+field	where	value/format	note
+message class	0xFEF963	'^' '"' 'N' ']' 'G'	Yaesu C4FM data-message category (I4)
+message letter	0xFEF964	a,b,c,d,e,f,g,h,i,0,r,R,s	sub-type; per-letter max length table 0x40CC/0x41CC/0x42CC/0x43CC
+picture header msg	letter c/d	ID(5)+callsign(10)+size(u32)+pos+date	parsed at 0x05F330 into 0xFFB1DE.. / 0xFFB208
+picture data block msg	letter b	<= 0x400 (1024) B body	0xFF07F2 body; block # 0xFF07EE; len 0xFF07F0
+picture end msg	letter e	block# / total / 32b sum	0x05F53E; sum compared vs 0xFFB1D4
+per-msg checksum	DSP frame	ETX 0x03 + additive byte sum	I4
+picture 32b checksum	0xFFB1D4	sum of all picture bytes	0x05F49E
+block numbering	0xFFB252 / 0xFFB24E	1-based current / prev block	sub_5F250 resync/retransmit
+FFFF frame	SCI-D	opcode 0xFFFF, 256-B block, 32b sum	doc51
+filename	sub_6EE38	H + radioID(5) + '0' + 5-digit serial + .jpg	e.g. HE1abc000123.jpg; radio ID 0xFF8060
+QSOPCTDIR record	local tree, not in this repo	128 B: flags, sender ID+call, radioID, own call, BCD date/time, ASCII date, size, name, 20-B GPS pos	pc-06 S4

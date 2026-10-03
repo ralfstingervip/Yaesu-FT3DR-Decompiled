@@ -1,0 +1,10 @@
+reg	accesses_outside_window	value(s)	where	best_fit_name	confidence	role
+FFEE08	1 write	0x00	sub_54C44 @054c7e (USB init, just before IER0)	ISR0 Interrupt Select Register 0	Inferred	write-once init select for the IFR0/IER0 source group; never read; parallels IFR0=EE00 / IER0=EE04
+FFEE09	1 write	0x07	sub_54C44 @054c84 (just before IER1)	ISR1 Interrupt Select Register 1	Inferred	write-once init select for the IFR1/IER1 group (mask b0-b2); never read
+FFEE0A	1 write	0x1F	sub_54C44 @054c8a (just before IER2)	ISR2 Interrupt Select Register 2	Inferred	write-once init select for the IFR2/IER2 group (mask b0-b4); never read
+FFEE2E	1 write	0x00	sub_54CAE @054cca (USB reset/clear block)	USB control (reserved/aux)	Inferred	zeroed once during module reset alongside EE2D control; no live read/write; function not provable from bytes
+FFEE2F	3 writes	0x00 init; 0x08 then 0x00 pulse	sub_54CAE @054cd0 (=0); DEAD block sub_54CFA @054d24/054d48 (8->0 pulse)	USB control - resume/wakeup drive (b3)	Inferred	live write is init=0; the 8->0 pulse sits in the unreachable tail of vector-238 (suspend/resume) ISR, skipped by bra at 054d20; intended bus-resume/remote-wakeup drive, never executed
+FFEE44	1 write	0x00	sub_54CAE @054cdc (USB reset/clear block)	USB control (reserved/aux)	Inferred	zeroed once during module reset; no live read/write; function not provable from bytes
+FFEE50	3 writes	port-init value (r4l=0 boot; r2l in NMI)	sub_20FA @0022c0 (boot); nmi_handler @002748, @0027fc (standby)	NOT USB data path - port/pin or standby control	Inferred	written only inside port-DDR init blocks (0xFFFB8x/FBAx/FBBx) at power-on and in the NMI/standby handler; grouped with I/O-port setup, never touched by the USB stack
+FFEE51	1 write	0x00	sub_20FA @0022ba (boot, before EE50)	NOT USB data path - port/pin or standby control	Inferred	written once at boot immediately before EE50, in the port-init block
+FFEE53	1 write	bset #1	sub_446BE @0446c4 (SCI init at 0xFFF610)	NOT USB data path - module/clock or pin enable for the 0xFFF610 SCI	Inferred	set bit 1 interleaved with SCI SMR/BRR clears (0xFFF610/611/612); a peripheral-enable/pin-mux bit, not a USB register

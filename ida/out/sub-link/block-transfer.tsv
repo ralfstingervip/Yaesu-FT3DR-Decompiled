@@ -1,0 +1,26 @@
+field	value	evidence
+transport	MAIN SCI_6 (0xFFF610) -> SUB SCI0 (0x0008A000), same link as all IPC	doc 09/25
+write_opcode	0xFFFF (MAIN->SUB data block)	MAIN B634; SUB FFEDCA6A
+readback_opcode	0xFE00 (MAIN->SUB: send block n back)	MAIN B5DE; SUB FFEDCD83 -> FFEDC4DD
+error_reply	0xFFFE (SUB->MAIN on checksum mismatch; also abort)	SUB FFEDCC2A->FFEDC493
+block_size	256 bytes (0x100) data; frame len field 0x10C, total 0x116	MAIN B63E/B62A; SUB FFEDCB40 (len-0xC=0x100)
+frame_layout_blocknum	frame +0x0B..0x0C = block number (1-based)	SUB FFEDCAA8; MAIN 0xFF3D7A
+frame_layout_total	frame +0x0D..0x0E = total block count	SUB FFEDCAD0; MAIN 0xFF3D7C
+frame_layout_checksum	frame +0x0F..0x12 = 32-bit big-endian checksum	SUB FFEDCBAA..FFEDCC23; MAIN 0xFF3D7E
+frame_layout_payload	frame +0x13.. = 256 data bytes	SUB FFEDCB66; MAIN 0xFF3D82
+checksum_algo	32-bit sum of all data bytes across all blocks (running, zeroed on block 1)	SUB FFEDCB7D accum at 0x1CC44
+checksum_check	on last block (block==total), running sum vs frame +0x0F..12; mismatch -> FFFE	SUB FFEDCBA7..FFEDCC2F
+dest_buffer	external RAM 0x070E1000 + (block-1)*256	SUB FFEDCB27; MAIN er5 source 0xFF5806..0xFF5C06
+dest_cs_area	CS6 (RX64M external bus area base 0x07000000); 0x070E1000 = +0xE1000	RX64M fixed CS map; firmware accesses
+dest_purpose	JPEG/image decoder input staging buffer in SUB graphics RAM	FFF3CAD0 loads here; FFEDE804 decodes to framebuffer 0x070BB800
+state_var	0x1CC4C: 1=receiving, 2=complete-ok, 3=error	SUB FFEDCAC7/FFEDCC44/FFEDCC38
+cur_block	0x1CC3A (9EF6)	SUB FFEDCAB5
+total_block	0x1CC3C (9EF8)	SUB FFEDCAD8
+running_offset	0x1CC40 (9EFC)	SUB FFEDCB50
+running_cksum	0x1CC44 (9F00)	SUB FFEDCB80
+expected_cksum	0x1CC48 (9F04)	SUB FFEDCBB2
+gate	0x0008281E bit of upper bits == set -> abort reception (engine-busy guard, DMAC/EXDMAC region)	SUB FFEDCA97
+main_source	MAIN RAM 4x256B buffers 0xFF5806/5906/5A06/5B06; byte counter 0xFFB098	MAIN 55976
+main_drivers	MAIN 0x559xx-0x55Fxx region (adjacent to USB module 0x54CFA-0x55818)	MAIN xrefs to B610
+lcd_device	0x06000000 = CS5 LCD controller; cmd 0x28=off (F000), 0x29=on (F001)	SUB FFEDE298/FFEF2022/FFEF201A
+lcd_blit	EXDMAC @0x00082800, dest reg = 0x06000000	SUB FFEF1EFA

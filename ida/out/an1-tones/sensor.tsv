@@ -1,0 +1,11 @@
+channel	role	reader	address	bytes	store	consumer	confidence
+AN0 (ADDRA 0xFFFF90)	supply/battery voltage	sub_32C0 every 60 ms; sub_3466 at boot	0x003346	2c 90 6a 8c a9 8c f4 00 79 06 1a e6 52 46 5e 03 fa 2c	A98C raw; A9BC BCD volts, A9BE type 0/1/2, A9BF bars	main loop, sub_34AD2 (dry cell -> LOW2 cap), display	Inferred strong (BCD V, 'Volt Ext/Lit/Dry')
+AN1 (ADDRB 0xFFFF92)	TX protection sensor	sub_34538 / sub_35C14 every 80 ms while FF94C0==1	0x034544	fc 01 3c a0 7f a0 70 50 7e a0 73 50 46 fa 7f a0 72 70 2c 92 6a 8c a9 96	A996	sub_35BAA only (main machine)	Unknown identity; PA temperature Inferred low-moderate
+AN2 (ADDRC 0xFFFF94)	per-band level (band A)	sub_32C0	0x0032D2	2c 94 6a 8c a9 92	A992	sub_67DA, sub_23496, sub_306EA	Unknown
+AN3 (ADDRD 0xFFFF96)	per-band level (band A)	sub_32C0	0x0032EA	2c 96 6a 8c a9 93	A993	sub_67DA, sub_23496, sub_3E060, sub_3E110	Unknown
+AN4 (ADDRE 0xFFFF98)	per-band level (band B)	sub_32C0 if 8DDE==0	0x003308	2c 98 6a 8c a9 94	A994	sub_67DA, sub_23496, sub_3210C	Unknown
+AN5 (ADDRF 0xFFFF9A)	per-band level (band B)	sub_32C0 if 8DDE==0	0x003320	2c 9a 6a 8c a9 95	A995	sub_67DA, sub_23496, sub_3E26C, sub_3E31A	Unknown
+AN1 thresholds	foldback/cutoff	sub_35BAA	0x035BBA	ac eb 45 54 ac ef 45 1c ac f4 45 20	>=0xEB L<=1, >=0xEF L=0, >=0xF4 cut	AAD8, AAD9	Confirmed
+AAD9 clear	trip latch	sub_34706 per TX; sub_3266E; sub_ED16; twin sub_35D4C	0x034774	fc 00 6a 8c aa d9	AAD9=0	next TX request	Confirmed
+popup 0x23	dropped	sub_1BF40	0x01BF40	ac 02 45 32 ac 0c 44 2e 6a 8c 94 f5	94F5 only for 2..0x0B	never shown	Confirmed
+SUB HEAT	message popup id 0xA9	sub_FFF0B665	0xFFF0B728	75 51 a9 3a 7e 05	string 0xFFF4AB33	no MAIN imm writer of 0xA9 to BBE1 found	Confirmed string; link Not found

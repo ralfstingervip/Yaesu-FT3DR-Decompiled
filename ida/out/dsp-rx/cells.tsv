@@ -1,0 +1,20 @@
+cell	role	writers_in_rx_path	downstream_readers	label
+FFB0E0..FFB0FF	rx frame buffer rx[0..31]	assembler 0x05683E	all handlers	Confirmed
+FFB102	RX state index 0..26	79 writers, all mov.b #imm	0x056B10 0x056B58 0x057154 0x057E4E 0x057F0C 0x05D9F6 0x05DA10	Confirmed
+FFB103 FFB105 FFB107 FFB256	header-seen flag; cleared flag; voice-end pending (0xFF); expected N length	handlers and reset paths	0x058E02 (B107); 0x05899E 0x0589C6 (B256)	Confirmed
+FFB104 FFB108..FFB10F FFB116 FFB118 FFB1DC	data accumulator: checksum, frame no., count, BN, BT, frames left, blocks left, end flags, length, write pointer, last checksum	states 5 6 11 12 17 18	message validators	Confirmed
+FFB110	CS field latch, always 2	0x056F14 only	A6/A7 handlers (dead branches)	Confirmed
+FFB111 FFB113	DG-ID verdict: B111=1 accepted; B113=1 filter active, 2 mismatch	state 0, 0x056AFE	0x02CD66..0x034736, 0x05D9E6, 0x05EA3A, 0x06C200	writers Confirmed; squelch use Inferred
+FFB112 FFBC5F	last DT, band A / band B	state 0	0x02F2E0 0x030654 0x031836 0x032058	writers Confirmed; mode display Inferred
+FF8EB5 FF8EC4	band-record DT when mode byte [8D20]/[8DD5]==2	state 0	0x01C9E8 0x01C9C2	Inferred (automatic mode select)
+FFB11C	b0/b1 DT1 activity A/B (timers 957B/958C=50), b7 B band	states 0 and 18	0x02F664 0x030654 0x031152 0x032058	writers Confirmed
+FFB115	b0/b1 TERM RX A/B (timers 957C/958D=25)	assembler	0x02FCC8 0x031836	Confirmed
+FFB0C5 FFB0C6 FF9558	header-repeat counter (from [8E20]), hold count, 100-tick timer	0x056A94, state 0	0x056AB8	Confirmed
+FFBC01 FFBC02	opcode of last A6/B6; opcode of last stored CSD1	A6 handlers	0x05D3BA family (band select)	Confirmed
+FEF920..FEF961	CSD1 (26 B incl. FICH), CSD2 (20 B), CSD3 (20 B); 0xFF in first payload byte = empty	A6/A7/A8 handlers; set to FF at 0x056A6E and every reset path	0x05D316 0x05D382 0x05D3BA 0x05D720 0x05EA3A 0x06C200	Confirmed
+FEF962..FEFD71	data message accumulator, at most 4 blocks x 13 frames x 20 B = 1040 B	states 6 12 18	validators 0x057FC0..0x058616	bound Confirmed from nibble checks; buffer end Inferred from neighbour FEFD72
+FFB1C6 FFAA00..FFAA0E / FFBC0C FFBC20 FFBBFE..FFBC2A	received callsign and downlink-ID text, band A / band B	0x05D3BA 0x05D720	0x0520F8 / 0x052164, which call sub_00C7E4 (12-byte text slot: 2-char tag + callsign at *[FFBC2C]+4)	copy Confirmed; display role Inferred
+FFA81E / FFBC8E	per-band record: flag, 5-B radio ID, 10-B callsign, 12 B	0x05D3BA	0x046602 0x0468C6 0x046BBC 0x0486C4	writer Confirmed
+FF4705 FF4706 FF4715	ID capture: if [FF4705]==1 and rx[6]&0xC0==0, copy rx[12..27] (16 B) to FF4706 and set FF4715=1	sub_056C2C	0x06802A 0x0697AC 0x0697EC	copy Confirmed; DP-ID naming Inferred
+FFB12D	b0 9C seen; b1 version; b7 9E seen	assembler	TX session scripts 0x059C28..0x05C44C (lane I5)	Confirmed
+FFAAE0	alert request code (0x16 data error, 0x3F Nb accepted, 0x1D list full)	0x058BCE 0x05802C 0x056D4A	0x01062E 0x011074	role Inferred

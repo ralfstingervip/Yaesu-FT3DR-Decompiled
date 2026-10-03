@@ -1,0 +1,18 @@
+mapped_addr	type	role
+FFB098	u24/u32	remaining image bytes to send (init=total size at D1; decremented per block)
+FFB09C	u16	64-byte USB packet count = ceil(size/0x40) (D1)
+FFBA46	u32	total image size (latched at D1; used as camera-save size)
+FFBA6E	u32	remaining size counter decremented in bulk handler by EP1 byte count
+FFBA6C	u16	current write index into the 1KB buffer window (0..0x400)
+FFBA72	u8	abort/refuse flag; set=1 to drain FIFO without storing (bulk loop gate)
+FFBA38	u8	buffer-full / wrap marker (set when index reaches 0x400)
+FFBC3E	u16	block data length for sub_B610 (0x100 full / short last)
+FFBC40	u16	1-based block number (pre-incremented in sub_B610)
+FFBC42	u16	total block count = ceil(size/256) (loc_55B28)
+FFBC44	u32	running 32-bit checksum of image bytes sent (sub_B6B6)
+FFBC48	ptr	source pointer handed to sub_B610 (points into FF5806 window)
+FF2EC9	u8	image-transfer-in-progress / busy flag (D1 refuses if !=0; cleared at D2)
+FF94C0	u8	global busy gate (D1 refuses start if !=0)
+FF8184	u8	camera command byte sent on EP0x83 interrupt-IN (=1 at D1 start)
+FF8183	u8	EP0x83 interrupt-IN report length (=8 at D1)
+FF89CD	u8	JPEG quality shadow (C1 D4 returns 0x18/0x30/0x50)

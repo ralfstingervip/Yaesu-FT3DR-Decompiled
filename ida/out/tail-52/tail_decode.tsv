@@ -1,0 +1,22 @@
+addr	bytes	mnem	note
+0771AC	54 02	rts/l er2	last insn of sub_7711E [07711E-0771AE]; RETURN -> no fall-through
+0771AE	01 00 6d f2	push.l er2	TAIL entry; near-dup of sub_7711E ring-enqueue, er0 = ring base
+0771B2	0c 9a	mov.b r1l, r2l	
+0771B4	01 00 69 01	mov.l @er0, er1	
+0771B8	68 9a	mov.b r2l, @er1	
+0771BA	01 00 69 02	mov.l @er0, er2	
+0771BE	01 03 69 01	mov.l @(0xC,er0), er1	
+0771C2	1f 92	cmp.l er1, er2	
+0771C4	45 06	bcs loc_771CC	intra-block branch (target 0771CC in range)
+0771C6	01 08 20 00	mov.l @(8,er0), @er0	
+0771CA	54 02	rts/l er2	
+0771CC	0f 99	mov.l #1, er1	intra-block branch target
+0771CE	0a 92	add.l er1, er2	
+0771D0	01 00 69 82	mov.l er2, @er0	
+0771D4	54 02	rts/l er2	
+0771D6	20 8c	mov.b @0x8C:8, r0h	intra-block branch target (spin-wait)
+0771D8	4a fc	bpl loc_771D6	intra-block branch (target 0771D6 in range)
+0771DA	38 8b	mov.b r0l, @0x8B:8	
+0771DC	7f 8c 72 70	bclr #7, @0x8C:8	
+0771E0	54 70	rts	TAIL end (0771E0-0771E1)
+0771E2	1b 97	subs #4, sp	first insn of sub_771E2 [0771E2-07720E]; separate function

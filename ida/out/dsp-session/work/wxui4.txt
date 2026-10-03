@@ -1,0 +1,23 @@
+008b30  00 00 82 74              add.l   #0x8274, er5                         
+008b34  40 32                    bra     loc_8B68:8                           
+008b36  79 04 00 12              mov.w   #0x12, r4                            <- 8ae2
+008b3a  7a 05 00 00 83 04        mov.l   #0x8304, er5                         
+008b40  7a 06 00 ff b0 5a        mov.l   #0xFFB05A, er6                       
+008b46  7b d4 59 8f              eepmov.w                                     <- 8b4c
+008b4a  0d 44                    mov.w   r4, r4                               
+008b4c  46 f8                    bne     loc_8B46:8                           
+008b4e  6a 0c 8d e2              mov.b   @0xFFFF8DE2:16, r4l                  
+008b52  7a 64 00 00 00 ff        and.l   #0xFF, er4                           
+008b58  10 34                    shll.l  er4                                  
+008b5a  6f 44 44 90              mov.w   @(0x4490:16,er4), r4                 
+008b5e  6b 84 b0 62              mov.w   r4, @0xFFFFB062:16                   
+008b62  7a 05 00 ff b0 5a        mov.l   #0xFFB05A, er5                       <- 8b02,8b0a
+008b68  7a 06 00 ff 3d f0        mov.l   #0xFF3DF0, er6                       <- 8aa6,8ab4,8aba,8b34
+008b6e  79 04 00 12              mov.w   #0x12, r4                            
+008b72  7b d4 59 8f              eepmov.w                                     <- 8b78
+008b76  0d 44                    mov.w   r4, r4                               
+008b78  46 f8                    bne     loc_8B72:8                           
+008b7a  54 70                    rts                                          
+
+;---- func 0x8b7c..0x8ba4
+008b7c  6a 10 8e a0 73 70        btst    #7, @0xFFFF8EA0:16                   <- 4938

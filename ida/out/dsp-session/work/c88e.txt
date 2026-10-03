@@ -1,0 +1,22 @@
+0088c0  7a 06 00 ff b0 5a        mov.l   #0xFFB05A, er6                       
+0088c6  79 04 00 0c              mov.w   #0xC, r4                             
+0088ca  7b d4 59 8f              eepmov.w                                     <- 88d0
+0088ce  0d 44                    mov.w   r4, r4                               
+0088d0  46 f8                    bne     loc_88CA:8                           
+0088d2  fc 01                    mov.b   #1, r4l                              
+0088d4  6a 8c b0 5f              mov.b   r4l, @0xFFFFB05F:16                  
+0088d8  7a 05 00 ff b0 5a        mov.l   #0xFFB05A, er5                       
+0088de  01 00 6d 76              pop.l   er6                                  
+0088e2  54 70                    rts                                          
+
+;---- func 0x88e4..0x896c
+0088e4  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  <- 47d2,6a62,6c9e,6fd8
+0088e8  47 06                    beq     loc_88F0:8                           
+0088ea  5e 00 8a 14              jsr     sub_8A14:24                          
+0088ee  40 7a                    bra     locret_896A:8                        
+0088f0  6e 0c 00 05              mov.b   @(5:16,er0), r4l                     <- 88e8
+0088f4  ac 02                    cmp.b   #2, r4l                              
+0088f6  46 28                    bne     loc_8920:8                           
+0088f8  6e 0c 00 01              mov.b   @(1:16,er0), r4l                     
+0088fc  ac 03                    cmp.b   #3, r4l                              
+0088fe  46 20                    bne     loc_8920:8                           

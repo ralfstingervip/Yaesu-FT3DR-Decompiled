@@ -1,0 +1,421 @@
+### refrange FF9100-FF9112
+008BF4  6a 0c 91 09                           mov.b   @0xFFFF9109:16, r4l  | sub_8BA4@8BA4            ref=FF9109
+00E8FA  6a 8b 91 01                           mov.b   r3l, @0xFFFF9101:16  | sub_E8AE@E8AE            ref=FF9101
+01497E  01 00 6b 04 91 0a                     mov.l   @0xFFFF910A:16, er4  | sub_1494C@1494C          ref=FF910A
+01499A  01 00 6b 04 91 0a                     mov.l   @0xFFFF910A:16, er4  | sub_1494C@1494C          ref=FF910A
+01D294  6a 8c 91 01                           mov.b   r4l, @0xFFFF9101:16  | sub_1D220@1D220          ref=FF9101
+03FB32  7a 06 00 ff 91 02                     mov.l   #0xFF9102, er6  | sub_3FB0C@3FB0C          ref=FF9102
+03FE98  7a 06 00 ff 91 02                     mov.l   #0xFF9102, er6  | sub_3FE60@3FE60          ref=FF9102
+
+### dis 14940-149D2 
+014940  5e 02 40 7c                           jsr     sub_2407C:24
+014944  fb 0c                                 mov.b   #0xC, r3l
+014946  5e 03 ff 10                           jsr     sub_3FF10:24
+01494A  54 70                                 rts
+01494C  6a 10 89 c1 73 30                     btst    #3, @0xFFFF89C1:16
+014952  47 7c                                 beq     locret_149D0:8
+014954  6a 10 bc 8a 73 70                     btst    #7, @0xFFFFBC8A:16
+01495A  46 74                                 bne     locret_149D0:8
+01495C  6e 0c 00 01                           mov.b   @(1:16,er0), r4l
+014960  ac 0c                                 cmp.b   #0xC, r4l
+014962  46 6c                                 bne     locret_149D0:8
+014964  fc 00                                 mov.b   #0, r4l
+014966  6a 8c bc 8a                           mov.b   r4l, @0xFFFFBC8A:16
+01496A  6a 0c 8f 2e                           mov.b   @0xFFFF8F2E:16, r4l
+01496E  ac 05                                 cmp.b   #5, r4l
+014970  47 4c                                 beq     loc_149BE:8
+014972  ac 00                                 cmp.b   #0, r4l
+014974  47 40                                 beq     loc_149B6:8
+014976  ac 08                                 cmp.b   #8, r4l
+014978  47 20                                 beq     loc_1499A:8
+01497A  ac 0a                                 cmp.b   #0xA, r4l
+01497C  46 52                                 bne     locret_149D0:8
+01497E  01 00 6b 04 91 0a                     mov.l   @0xFFFF910A:16, er4
+014984  7a 24 00 06 66 00                     cmp.l   #loc_66600, er4
+01498A  46 44                                 bne     locret_149D0:8
+01498C  fc 16                                 mov.b   #0x16, r4l
+01498E  6a 8c aa e0                           mov.b   r4l, @0xFFFFAAE0:16
+014992  6a 18 bc 8a 70 60                     bset    #6, @0xFFFFBC8A:16
+014998  40 2a                                 bra     loc_149C4:8
+01499A  01 00 6b 04 91 0a                     mov.l   @0xFFFF910A:16, er4
+0149A0  7a 24 00 06 66 00                     cmp.l   #loc_66600, er4
+0149A6  46 28                                 bne     locret_149D0:8
+0149A8  fc 16                                 mov.b   #0x16, r4l
+0149AA  6a 8c aa e0                           mov.b   r4l, @0xFFFFAAE0:16
+0149AE  6a 18 bc 8a 70 50                     bset    #5, @0xFFFFBC8A:16
+0149B4  40 0e                                 bra     loc_149C4:8
+0149B6  6a 18 bc 8a 70 40                     bset    #4, @0xFFFFBC8A:16
+0149BC  40 06                                 bra     loc_149C4:8
+0149BE  6a 18 bc 8a 70 30                     bset    #3, @0xFFFFBC8A:16
+0149C4  6a 18 bc 8a 70 70                     bset    #7, @0xFFFFBC8A:16
+0149CA  fc 08                                 mov.b   #8, r4l
+0149CC  6a 8c bc 8b                           mov.b   r4l, @0xFFFFBC8B:16
+0149D0  54 70                                 rts
+
+### dis 7DA0-7E60 
+007DA0  70 4b                                 bset    #4, r3l
+007DA2  6a ab 00 ff 3d 85                     mov.b   r3l, @0xFF3D85:32
+007DA8  6a 0b a9 c3                           mov.b   @0xFFFFA9C3:16, r3l
+007DAC  6a ab 00 ff 3d 86                     mov.b   r3l, @0xFF3D86:32
+007DB2  6a 0b bb eb                           mov.b   @0xFFFFBBEB:16, r3l
+007DB6  47 04                                 beq     loc_7DBC:8
+007DB8  8b 09                                 add.b   #9, r3l
+007DBA  40 04                                 bra     loc_7DC0:8
+007DBC  6a 0b bb e1                           mov.b   @0xFFFFBBE1:16, r3l
+007DC0  6a ab 00 ff 3d 87                     mov.b   r3l, @0xFF3D87:32
+007DC6  fb 00                                 mov.b   #0, r3l
+007DC8  6a 10 89 20 77 00                     bld     #0, @0xFFFF8920:16
+007DCE  67 7b                                 bst     #7, r3l
+007DD0  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16
+007DD6  47 02                                 beq     loc_7DDA:8
+007DD8  55 58                                 bsr     sub_7E32:8
+007DDA  6a 0d 89 bb                           mov.b   @0xFFFF89BB:16, r5l
+007DDE  47 14                                 beq     loc_7DF4:8
+007DE0  f5 01                                 mov.b   #1, r5h
+007DE2  6a 0d 89 bb                           mov.b   @0xFFFF89BB:16, r5l
+007DE6  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16
+007DEC  47 04                                 beq     loc_7DF2:8
+007DEE  f5 02                                 mov.b   #2, r5h
+007DF0  8d 02                                 add.b   #2, r5l
+007DF2  14 5b                                 or.b    r5h, r3l
+007DF4  6a 0c 89 bc                           mov.b   @0xFFFF89BC:16, r4l
+007DF8  ec 07                                 and.b   #7, r4l
+007DFA  10 4c                                 shll.b  #2, r4l
+007DFC  14 cb                                 or.b    r4l, r3l
+007DFE  6a ab 00 ff 3d 8c                     mov.b   r3l, @0xFF3D8C:32
+007E04  7a 65 00 00 00 ff                     and.l   #0xFF, er5
+007E0A  78 50 6a 2b 00 00 7e 2c               mov.b   @(0x7E2C:32,er5), r3l
+007E12  6a ab 00 ff 3d 8d                     mov.b   r3l, @0xFF3D8D:32
+007E18  6a 0c 89 d0                           mov.b   @0xFFFF89D0:16, r4l
+007E1C  6a ac 00 ff 3d 8f                     mov.b   r4l, @0xFF3D8F:32
+007E22  fc 99                                 mov.b   #0x99, r4l
+007E24  6a ac 00 ff 3d 93                     mov.b   r4l, @0xFF3D93:32
+007E2A  54 70                                 rts
+007E32  6a 0c 89 bb                           mov.b   @0xFFFF89BB:16, r4l
+007E36  46 08                                 bne     loc_7E40:8
+007E38  6a 10 89 20 73 70                     btst    #7, @0xFFFF8920:16
+007E3E  46 0c                                 bne     loc_7E4C:8
+007E40  6a 0c bb 70                           mov.b   @0xFFFFBB70:16, r4l
+007E44  ac 00                                 cmp.b   #0, r4l
+007E46  46 0e                                 bne     locret_7E56:8
+007E48  70 6b                                 bset    #6, r3l
+007E4A  40 0a                                 bra     locret_7E56:8
+007E4C  70 5b                                 bset    #5, r3l
+007E4E  6a 10 bb 8f 77 70                     bld     #7, @0xFFFFBB8F:16
+007E54  67 eb                                 bist    #6, r3l
+007E56  54 70                                 rts
+007E58  54 70                                 rts
+007E5A  7a 04 00 ff 3d 94                     mov.l   #0xFF3D94, er4
+
+### dis FB90-FC20 
+00FB90  a9 ed                                 mov.b   @0xFFFFA9ED:16, r4l
+00FB92  4a 34                                 bpl     loc_FBC8:8
+00FB94  5e 00 fd 5e                           jsr     sub_FD5E:24
+00FB98  6a 0c a9 ed                           mov.b   @0xFFFFA9ED:16, r4l
+00FB9C  4a 2a                                 bpl     loc_FBC8:8
+00FB9E  5e 00 fd c8                           jsr     sub_FDC8:24
+00FBA2  6a 0c a9 ed                           mov.b   @0xFFFFA9ED:16, r4l
+00FBA6  4a 20                                 bpl     loc_FBC8:8
+00FBA8  5e 02 62 e4                           jsr     sub_262E4:24
+00FBAC  6a 0c a9 ed                           mov.b   @0xFFFFA9ED:16, r4l
+00FBB0  4a 34                                 bpl     loc_FBE6:8
+00FBB2  5e 01 05 be                           jsr     sub_105BE:24
+00FBB6  6a 0c a9 ed                           mov.b   @0xFFFFA9ED:16, r4l
+00FBBA  4a 0c                                 bpl     loc_FBC8:8
+00FBBC  40 28                                 bra     loc_FBE6:8
+00FBBE  77 0b                                 bld     #0, r3l
+00FBC0  6a 18 a9 ee 67 00                     bst     #0, @0xFFFFA9EE:16
+00FBC6  fc 16                                 mov.b   #0x16, r4l
+00FBC8  ac 0a                                 cmp.b   #0xA, r4l
+00FBCA  44 08                                 bcc     loc_FBD4:8
+00FBCC  6a 8c a9 f0                           mov.b   r4l, @0xFFFFA9F0:16
+00FBD0  fc 00                                 mov.b   #0, r4l
+00FBD2  40 04                                 bra     loc_FBD8:8
+00FBD4  fb 09                                 mov.b   #9, r3l
+00FBD6  18 bc                                 sub.b   r3l, r4l
+00FBD8  6a 8c a9 ed                           mov.b   r4l, @0xFFFFA9ED:16
+00FBDC  ac 08                                 cmp.b   #8, r4l
+00FBDE  46 06                                 bne     loc_FBE6:8
+00FBE0  6a 18 a9 ee 72 00                     bclr    #0, @0xFFFFA9EE:16
+00FBE6  6a 0a a9 f2                           mov.b   @0xFFFFA9F2:16, r2l
+00FBEA  47 0a                                 beq     loc_FBF6:8
+00FBEC  fc 00                                 mov.b   #0, r4l
+00FBEE  6a 8c a9 f2                           mov.b   r4l, @0xFFFFA9F2:16
+00FBF2  6a 8c a9 f4                           mov.b   r4l, @0xFFFFA9F4:16
+00FBF6  6a 0b a9 f4                           mov.b   @0xFFFFA9F4:16, r3l
+00FBFA  7a 63 00 00 00 ff                     and.l   #0xFF, er3
+00FC00  10 73                                 shll.l  #2, er3
+00FC02  78 b0 6b 26 00 00 fc 0c               mov.l   @(0xFC0C:32,er3), er6
+00FC0A  59 60                                 jmp     @er6
+00FC0C  00 00 fc 1c                           .long sub_FC1C
+00FC10  00 00 fc 2e                           .long sub_FC2E
+00FC14  00 00 fc 2e                           .long sub_FC2E
+00FC18  00 00 fc 2e                           .long sub_FC2E
+00FC1C  aa 01                                 cmp.b   #1, r2l
+00FC1E  46 0c                                 bne     locret_FC2C:8
+
+### dis 346C0-34706 
+0346C0  00 03 5b 4a                           .long sub_35B4A
+0346C4  00 03 59 ea                           .long sub_359EA
+0346C8  55 3c                                 bsr     sub_34706:8
+0346CA  fc 0e                                 mov.b   #0xE, r4l
+0346CC  6a 8c aa d5                           mov.b   r4l, @0xFFFFAAD5:16
+0346D0  54 70                                 rts
+0346D2  6a 0c aa e8                           mov.b   @0xFFFFAAE8:16, r4l
+0346D6  46 04                                 bne     locret_346DC:8
+0346D8  5e 03 47 82                           jsr     sub_34782:24
+0346DC  54 70                                 rts
+0346DE  6a 0c aa d5                           mov.b   @0xFFFFAAD5:16, r4l
+0346E2  ac 0e                                 cmp.b   #0xE, r4l
+0346E4  46 0e                                 bne     loc_346F4:8
+0346E6  fc ff                                 mov.b   #0xFF, r4l
+0346E8  6a 8c aa e0                           mov.b   r4l, @0xFFFFAAE0:16
+0346EC  fc 0f                                 mov.b   #0xF, r4l
+0346EE  6a 8c aa d5                           mov.b   r4l, @0xFFFFAAD5:16
+0346F2  40 04                                 bra     locret_346F8:8
+0346F4  5e 03 ff a0                           jsr     sub_3FFA0:24
+0346F8  54 70                                 rts
+0346FA  0c aa                                 mov.b   r2l, r2l
+0346FC  47 06                                 beq     locret_34704:8
+0346FE  55 06                                 bsr     sub_34706:8
+034700  5e 03 47 82                           jsr     sub_34782:24
+034704  54 70                                 rts
+
+### refrange FFBB8F-FFBB8F
+007E4E  6a 10 bb 8f 77 70                     bld     #7, @0xFFFFBB8F:16  | sub_7E32@7E32            ref=FFBB8F
+00D38C  6a 10 bb 8f 73 00                     btst    #0, @0xFFFFBB8F:16  | sub_D38C@D38C            ref=FFBB8F
+00D4B4  6a 18 bb 8f 72 00                     bclr    #0, @0xFFFFBB8F:16  | sub_D38C@D38C            ref=FFBB8F
+00D4BA  6a 18 bb 8f 70 10                     bset    #1, @0xFFFFBB8F:16  | sub_D38C@D38C            ref=FFBB8F
+02C0FA  6a 18 bb 8f 70 00                     bset    #0, @0xFFFFBB8F:16  | sub_2C0FA@2C0FA          ref=FFBB8F
+03926A  6a 18 bb 8f 70 60                     bset    #6, @0xFFFFBB8F:16  | sub_391C0@391C0          ref=FFBB8F
+0392D2  6a 18 bb 8f 72 60                     bclr    #6, @0xFFFFBB8F:16  | sub_391C0@391C0          ref=FFBB8F
+07312A  6a 10 bb 8f 73 10                     btst    #1, @0xFFFFBB8F:16  | sub_7312A@7312A          ref=FFBB8F
+073370  6a 18 bb 8f 72 10                     bclr    #1, @0xFFFFBB8F:16  | sub_73358@73358          ref=FFBB8F
+073460  6a 10 bb 8f 73 60                     btst    #6, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+073476  6a 10 bb 8f 73 70                     btst    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+073484  6a 18 bb 8f 70 70                     bset    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+073492  6a 10 bb 8f 73 70                     btst    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+0734A0  6a 18 bb 8f 72 70                     bclr    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+0734A8  6a 18 bb 8f 72 70                     bclr    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+0734B6  6a 18 bb 8f 72 70                     bclr    #7, @0xFFFFBB8F:16  | sub_734B0@734B0          ref=FFBB8F
+
+### refrange FF8920-FF8920
+007C92  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_7C20@7C20            ref=FF8920
+007DC8  6a 10 89 20 77 00                     bld     #0, @0xFFFF8920:16  | sub_7C20@7C20            ref=FF8920
+007DD0  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_7C20@7C20            ref=FF8920
+007DE6  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_7C20@7C20            ref=FF8920
+007E38  6a 10 89 20 73 70                     btst    #7, @0xFFFF8920:16  | sub_7E32@7E32            ref=FF8920
+00D318  6a 10 89 20 77 00                     bld     #0, @0xFFFF8920:16  | sub_D2FC@D2FC            ref=FF8920
+00D360  6a 10 89 20 77 00                     bld     #0, @0xFFFF8920:16  | sub_D2FC@D2FC            ref=FF8920
+00D526  6a 10 89 20 77 70                     bld     #7, @0xFFFF8920:16  | sub_D526@D526            ref=FF8920
+00FB04  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_FA30@FA30            ref=FF8920
+00FB2C  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_FA30@FA30            ref=FF8920
+010690  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_105BE@105BE          ref=FF8920
+019C60  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_19C50@19C50          ref=FF8920
+019C68  6a 10 89 20 73 70                     btst    #7, @0xFFFF8920:16  | sub_19C50@19C50          ref=FF8920
+019D04  6a 18 89 20 71 00                     bnot    #0, @0xFFFF8920:16  | sub_19CFE@19CFE          ref=FF8920
+019D16  6a 18 89 20 71 70                     bnot    #7, @0xFFFF8920:16  | sub_19D10@19D10          ref=FF8920
+02C0C0  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_2C0C0@2C0C0          ref=FF8920
+02C0C8  6a 18 89 20 70 00                     bset    #0, @0xFFFF8920:16  | sub_2C0C0@2C0C0          ref=FF8920
+0395C2  7a 01 00 ff 89 20                     mov.l   #0xFF8920, er1  | sub_395B8@395B8          ref=FF8920
+03CCC8  7a 11 00 ff 89 20                     add.l   #0xFF8920, er1  | sub_3CCBC@3CCBC          ref=FF8920
+03CCD6  7a 30 00 ff 89 20                     sub.l   #0xFF8920, er0  | sub_3CCD0@3CCD0          ref=FF8920
+07309C  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_7309C@7309C          ref=FF8920
+073412  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16  | sub_73412@73412          ref=FF8920
+073424  6a 10 89 20 73 70                     btst    #7, @0xFFFF8920:16  | sub_73412@73412          ref=FF8920
+
+### refrange FFAAD2-FFAAD2
+002958  6a 10 aa d2 73 70                     btst    #7, @0xFFFFAAD2:16  | sub_2950@2950            ref=FFAAD2
+00297C  6a 10 aa d2 73 20                     btst    #2, @0xFFFFAAD2:16  | sub_2950@2950            ref=FFAAD2
+00777C  6a 10 aa d2 73 60                     btst    #6, @0xFFFFAAD2:16  | sub_7748@7748            ref=FFAAD2
+00FCC2  6a 18 aa d2 72 00                     bclr    #0, @0xFFFFAAD2:16  | sub_FC9C@FC9C            ref=FFAAD2
+00FCC8  6a 18 aa d2 72 10                     bclr    #1, @0xFFFFAAD2:16  | sub_FC9C@FC9C            ref=FFAAD2
+00FD06  6a 18 aa d2 72 00                     bclr    #0, @0xFFFFAAD2:16  | sub_FCF4@FCF4            ref=FFAAD2
+00FD42  6a 10 aa d2 73 00                     btst    #0, @0xFFFFAAD2:16  | sub_FD22@FD22            ref=FFAAD2
+00FD52  6a 18 aa d2 70 00                     bset    #0, @0xFFFFAAD2:16  | sub_FD22@FD22            ref=FFAAD2
+01F90A  6a 18 aa d2 72 60                     bclr    #6, @0xFFFFAAD2:16  | sub_1F90A@1F90A          ref=FFAAD2
+02250C  6a 18 aa d2 72 50                     bclr    #5, @0xFFFFAAD2:16  | sub_2244C@2244C          ref=FFAAD2
+02269C  6a 18 aa d2 72 50                     bclr    #5, @0xFFFFAAD2:16  | sub_22676@22676          ref=FFAAD2
+022830  6a 18 aa d2 72 70                     bclr    #7, @0xFFFFAAD2:16  | sub_227BC@227BC          ref=FFAAD2
+022DDE  6a 10 aa d2 73 50                     btst    #5, @0xFFFFAAD2:16  | -                        ref=FFAAD2
+022DF0  6a 18 aa d2 70 50                     bset    #5, @0xFFFFAAD2:16  | sub_22DF0@22DF0          ref=FFAAD2
+022EF8  6a 18 aa d2 72 50                     bclr    #5, @0xFFFFAAD2:16  | sub_22EF4@22EF4          ref=FFAAD2
+022F0C  6a 18 aa d2 72 50                     bclr    #5, @0xFFFFAAD2:16  | sub_22F06@22F06          ref=FFAAD2
+03266E  6a 0c aa d2                           mov.b   @0xFFFFAAD2:16, r4l  | sub_3266E@3266E          ref=FFAAD2
+032674  6a 8c aa d2                           mov.b   r4l, @0xFFFFAAD2:16  | sub_3266E@3266E          ref=FFAAD2
+034A92  6a 18 aa d2 72 30                     bclr    #3, @0xFFFFAAD2:16  | sub_34A7C@34A7C          ref=FFAAD2
+034AE2  6a 10 aa d2 73 60                     btst    #6, @0xFFFFAAD2:16  | sub_34AD2@34AD2          ref=FFAAD2
+034AEE  6a 18 aa d2 72 60                     bclr    #6, @0xFFFFAAD2:16  | sub_34AD2@34AD2          ref=FFAAD2
+034C0E  6a 18 aa d2 70 70                     bset    #7, @0xFFFFAAD2:16  | sub_34BCA@34BCA          ref=FFAAD2
+034D70  6a 10 aa d2 73 10                     btst    #1, @0xFFFFAAD2:16  | sub_34D70@34D70          ref=FFAAD2
+0351BC  6a 10 aa d2 73 70                     btst    #7, @0xFFFFAAD2:16  | sub_351BC@351BC          ref=FFAAD2
+0351C4  6a 10 aa d2 73 20                     btst    #2, @0xFFFFAAD2:16  | sub_351BC@351BC          ref=FFAAD2
+035BFE  6a 18 aa d2 72 30                     bclr    #3, @0xFFFFAAD2:16  | sub_35BAA@35BAA          ref=FFAAD2
+035C0C  6a 18 aa d2 72 60                     bclr    #6, @0xFFFFAAD2:16  | sub_35BAA@35BAA          ref=FFAAD2
+038D5A  6a 18 aa d2 70 20                     bset    #2, @0xFFFFAAD2:16  | sub_38CCA@38CCA          ref=FFAAD2
+038ED6  6a 10 aa d2 73 10                     btst    #1, @0xFFFFAAD2:16  | sub_38E84@38E84          ref=FFAAD2
+039030  6a 18 aa d2 72 20                     bclr    #2, @0xFFFFAAD2:16  | sub_39030@39030          ref=FFAAD2
+
+### refrange FFAA30-FFAA30
+002D04  6a 0a aa 30                           mov.b   @0xFFFFAA30:16, r2l  | sub_2D04@2D04            ref=FFAA30
+002D0C  6a 18 aa 30 72 10                     bclr    #1, @0xFFFFAA30:16  | sub_2D04@2D04            ref=FFAA30
+003218  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_320E@320E            ref=FFAA30
+003246  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_323C@323C            ref=FFAA30
+00EDBC  6a 18 aa 30 70 10                     bset    #1, @0xFFFFAA30:16  | sub_ED16@ED16            ref=FFAA30
+00EE40  6a 18 aa 30 70 30                     bset    #3, @0xFFFFAA30:16  | sub_ED16@ED16            ref=FFAA30
+00FD62  6a 18 aa 30 72 00                     bclr    #0, @0xFFFFAA30:16  | sub_FD5E@FD5E            ref=FFAA30
+00FDA0  6a 18 aa 30 70 00                     bset    #0, @0xFFFFAA30:16  | sub_FD96@FD96            ref=FFAA30
+00FDC0  6a 18 aa 30 70 00                     bset    #0, @0xFFFFAA30:16  | sub_FDAE@FDAE            ref=FFAA30
+010ADE  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_10A78@10A78          ref=FFAA30
+010BE2  6a 18 aa 30 70 10                     bset    #1, @0xFFFFAA30:16  | sub_10BDC@10BDC          ref=FFAA30
+010BF8  6a 18 aa 30 70 30                     bset    #3, @0xFFFFAA30:16  | sub_10BE8@10BE8          ref=FFAA30
+0148D2  6a 10 aa 30 73 00                     btst    #0, @0xFFFFAA30:16  | sub_148CA@148CA          ref=FFAA30
+014B6E  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_14B54@14B54          ref=FFAA30
+014DF2  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_14DB6@14DB6          ref=FFAA30
+015380  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_15380@15380          ref=FFAA30
+015CEA  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_15CCE@15CCE          ref=FFAA30
+015F74  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_15F34@15F34          ref=FFAA30
+01605C  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_1605C@1605C          ref=FFAA30
+0160D0  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_160BC@160BC          ref=FFAA30
+01611E  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_1611E@1611E          ref=FFAA30
+0162E4  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_162D6@162D6          ref=FFAA30
+01668E  6a 18 aa 30 70 30                     bset    #3, @0xFFFFAA30:16  | sub_16684@16684          ref=FFAA30
+01669C  6a 18 aa 30 70 30                     bset    #3, @0xFFFFAA30:16  | sub_16696@16696          ref=FFAA30
+016760  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_16738@16738          ref=FFAA30
+0168AC  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_1687C@1687C          ref=FFAA30
+0168EA  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | -                        ref=FFAA30
+016C0E  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_16BC0@16BC0          ref=FFAA30
+017048  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_1700A@1700A          ref=FFAA30
+017496  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_17488@17488          ref=FFAA30
+0176C6  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_176B0@176B0          ref=FFAA30
+01772C  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_1771C@1771C          ref=FFAA30
+01779E  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_17780@17780          ref=FFAA30
+01781A  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_177DC@177DC          ref=FFAA30
+017AE6  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_17ADC@17ADC          ref=FFAA30
+017B5E  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_17B5E@17B5E          ref=FFAA30
+017D3A  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_17D34@17D34          ref=FFAA30
+017E3C  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_17E3C@17E3C          ref=FFAA30
+017E66  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_17E3C@17E3C          ref=FFAA30
+017EA8  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_17E8A@17E8A          ref=FFAA30
+018026  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18008@18008          ref=FFAA30
+01802C  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_18008@18008          ref=FFAA30
+018060  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18040@18040          ref=FFAA30
+0181CE  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_181B6@181B6          ref=FFAA30
+0183D6  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_183AA@183AA          ref=FFAA30
+018412  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_183E4@183E4          ref=FFAA30
+018480  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_18464@18464          ref=FFAA30
+0187E8  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_187DC@187DC          ref=FFAA30
+018832  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18808@18808          ref=FFAA30
+0188C2  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_188A8@188A8          ref=FFAA30
+018904  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_188F6@188F6          ref=FFAA30
+0189A8  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_189A8@189A8          ref=FFAA30
+0189B2  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_189B2@189B2          ref=FFAA30
+018A2A  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_189B2@189B2          ref=FFAA30
+018A6C  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18A5C@18A5C          ref=FFAA30
+018B38  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18B1E@18B1E          ref=FFAA30
+018D34  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18D12@18D12          ref=FFAA30
+018D5A  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18D42@18D42          ref=FFAA30
+018F74  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18F4E@18F4E          ref=FFAA30
+018F94  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18F4E@18F4E          ref=FFAA30
+018FB0  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_18FA2@18FA2          ref=FFAA30
+019158  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_19158@19158          ref=FFAA30
+0191AA  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_19158@19158          ref=FFAA30
+019444  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_19444@19444          ref=FFAA30
+01944C  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_19444@19444          ref=FFAA30
+019454  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_19454@19454          ref=FFAA30
+01945C  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_19454@19454          ref=FFAA30
+0194E8  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_194E8@194E8          ref=FFAA30
+0194F0  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_194E8@194E8          ref=FFAA30
+0196D6  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_196D6@196D6          ref=FFAA30
+0196DE  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_196D6@196D6          ref=FFAA30
+019702  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_19702@19702          ref=FFAA30
+01970A  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_19702@19702          ref=FFAA30
+01972C  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_1972C@1972C          ref=FFAA30
+019734  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_1972C@1972C          ref=FFAA30
+019A8A  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_19A8A@19A8A          ref=FFAA30
+019A92  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_19A8A@19A8A          ref=FFAA30
+019CFE  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_19CFE@19CFE          ref=FFAA30
+019D10  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_19D10@19D10          ref=FFAA30
+019F40  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_19F3A@19F3A          ref=FFAA30
+019F54  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_19F54@19F54          ref=FFAA30
+019F62  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_19F62@19F62          ref=FFAA30
+019FFA  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_19FDE@19FDE          ref=FFAA30
+01A292  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | -                        ref=FFAA30
+01A412  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | -                        ref=FFAA30
+01A652  6a 18 aa 30 72 50                     bclr    #5, @0xFFFFAA30:16  | sub_1A5CC@1A5CC          ref=FFAA30
+01A65E  6a 18 aa 30 70 50                     bset    #5, @0xFFFFAA30:16  | sub_1A5CC@1A5CC          ref=FFAA30
+01A684  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_1A58C@1A58C          ref=FFAA30
+01A73E  6a 18 aa 30 72 70                     bclr    #7, @0xFFFFAA30:16  | sub_1A6EC@1A6EC          ref=FFAA30
+01A758  6a 10 aa 30 73 70                     btst    #7, @0xFFFFAA30:16  | sub_1A754@1A754          ref=FFAA30
+01A760  6a 10 aa 30 73 50                     btst    #5, @0xFFFFAA30:16  | sub_1A754@1A754          ref=FFAA30
+01A7A4  6a 10 aa 30 73 50                     btst    #5, @0xFFFFAA30:16  | sub_1A7A4@1A7A4          ref=FFAA30
+01A836  6a 18 aa 30 72 70                     bclr    #7, @0xFFFFAA30:16  | -                        ref=FFAA30
+01A996  6a 10 aa 30 73 70                     btst    #7, @0xFFFFAA30:16  | sub_1A974@1A974          ref=FFAA30
+01A9B6  6a 18 aa 30 72 70                     bclr    #7, @0xFFFFAA30:16  | sub_1A974@1A974          ref=FFAA30
+01AA10  6a 10 aa 30 73 70                     btst    #7, @0xFFFFAA30:16  | sub_1A9EC@1A9EC          ref=FFAA30
+01AA34  6a 18 aa 30 72 70                     bclr    #7, @0xFFFFAA30:16  | sub_1A9EC@1A9EC          ref=FFAA30
+01AA78  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_1AA46@1AA46          ref=FFAA30
+01BA1E  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | -                        ref=FFAA30
+01BF28  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_1BF28@1BF28          ref=FFAA30
+01F86A  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_1F866@1F866          ref=FFAA30
+01F956  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_1F950@1F950          ref=FFAA30
+01F99C  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_1F996@1F996          ref=FFAA30
+01FE2E  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_1FE2E@1FE2E          ref=FFAA30
+020AE8  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_20AD0@20AD0          ref=FFAA30
+022A36  6a 10 aa 30 73 00                     btst    #0, @0xFFFFAA30:16  | sub_22A28@22A28          ref=FFAA30
+023DB4  6a 10 aa 30 73 00                     btst    #0, @0xFFFFAA30:16  | sub_23DAC@23DAC          ref=FFAA30
+023E00  6a 10 aa 30 73 60                     btst    #6, @0xFFFFAA30:16  | sub_23E00@23E00          ref=FFAA30
+023E08  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_23E00@23E00          ref=FFAA30
+023F52  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_23F48@23F48          ref=FFAA30
+028D80  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_28B62@28B62          ref=FFAA30
+029530  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_2952A@2952A          ref=FFAA30
+0295D4  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_295CE@295CE          ref=FFAA30
+029C40  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_29C40@29C40          ref=FFAA30
+029C56  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_29C54@29C54          ref=FFAA30
+029C60  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_29C5C@29C5C          ref=FFAA30
+029DFA  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | -                        ref=FFAA30
+029F94  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_29F66@29F66          ref=FFAA30
+029FBA  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_29FA4@29FA4          ref=FFAA30
+029FC6  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_29FA4@29FA4          ref=FFAA30
+029FDE  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_29FA4@29FA4          ref=FFAA30
+02A616  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_2A600@2A600          ref=FFAA30
+03287A  6a 10 aa 30 73 00                     btst    #0, @0xFFFFAA30:16  | sub_3286C@3286C          ref=FFAA30
+034A08  6a 18 aa 30 70 20                     bset    #2, @0xFFFFAA30:16  | sub_34966@34966          ref=FFAA30
+034A52  6a 18 aa 30 70 40                     bset    #4, @0xFFFFAA30:16  | sub_34A52@34A52          ref=FFAA30
+034EEE  6a 0a aa 30                           mov.b   @0xFFFFAA30:16, r2l  | sub_34EEE@34EEE          ref=FFAA30
+034EF6  6a 18 aa 30 72 20                     bclr    #2, @0xFFFFAA30:16  | sub_34EEE@34EEE          ref=FFAA30
+03505C  6a 0a aa 30                           mov.b   @0xFFFFAA30:16, r2l  | sub_3505C@3505C          ref=FFAA30
+035064  6a 18 aa 30 72 40                     bclr    #4, @0xFFFFAA30:16  | sub_3505C@3505C          ref=FFAA30
+03599A  6a 18 aa 30 70 20                     bset    #2, @0xFFFFAA30:16  | sub_35872@35872          ref=FFAA30
+038514  6a 10 aa 30 73 00                     btst    #0, @0xFFFFAA30:16  | sub_384C2@384C2          ref=FFAA30
+038604  6a 10 aa 30 73 00                     btst    #0, @0xFFFFAA30:16  | sub_38594@38594          ref=FFAA30
+038690  6a 10 aa 30 73 00                     btst    #0, @0xFFFFAA30:16  | sub_38686@38686          ref=FFAA30
+0386EC  6a 10 aa 30 73 00                     btst    #0, @0xFFFFAA30:16  | sub_38686@38686          ref=FFAA30
+03A796  6a 18 aa 30 72 60                     bclr    #6, @0xFFFFAA30:16  | sub_3A796@3A796          ref=FFAA30
+03E682  6a 0a aa 30                           mov.b   @0xFFFFAA30:16, r2l  | sub_3E682@3E682          ref=FFAA30
+03E68A  6a 18 aa 30 72 30                     bclr    #3, @0xFFFFAA30:16  | sub_3E682@3E682          ref=FFAA30
+03F628  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_3F600@3F600          ref=FFAA30
+0507AC  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_507AC@507AC          ref=FFAA30
+050828  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_50828@50828          ref=FFAA30
+050972  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_5095A@5095A          ref=FFAA30
+050CC8  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_50C9C@50C9C          ref=FFAA30
+050D50  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | -                        ref=FFAA30
+050DDA  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_50D7E@50D7E          ref=FFAA30
+05E11A  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_5E0E8@5E0E8          ref=FFAA30
+05E15A  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_5E15A@5E15A          ref=FFAA30
+05E1D2  6a 18 aa 30 70 70                     bset    #7, @0xFFFFAA30:16  | sub_5E15A@5E15A          ref=FFAA30
+05E224  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_5E218@5E218          ref=FFAA30
+05E496  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_5E478@5E478          ref=FFAA30
+05E4D6  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_5E4C0@5E4C0          ref=FFAA30
+05E748  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_5E706@5E706          ref=FFAA30
+069B48  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_69B14@69B14          ref=FFAA30
+069C58  6a 18 aa 30 70 60                     bset    #6, @0xFFFFAA30:16  | sub_69C22@69C22          ref=FFAA30
+
+### refrange FF3D8C-FF3D8C
+007DFE  6a ab 00 ff 3d 8c                     mov.b   r3l, @0xFF3D8C:32  | sub_7C20@7C20            ref=FF3D8C
+00850C  6a ac 00 ff 3d 8c                     mov.b   r4l, @0xFF3D8C:32  | sub_84C4@84C4            ref=FF3D8C
+07128E  6b a4 00 ff 3d 8c                     mov.w   r4, @0xFF3D8C:32  | sub_71196@71196          ref=FF3D8C
+
+### imm 66600
+014984  7a 24 00 06 66 00                     cmp.l   #loc_66600, er4  | sub_1494C@1494C
+0149A0  7a 24 00 06 66 00                     cmp.l   #loc_66600, er4  | sub_1494C@1494C

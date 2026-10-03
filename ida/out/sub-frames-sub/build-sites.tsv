@@ -1,0 +1,103 @@
+# Lane L12. One row per SUB->MAIN frame build site (the bsr into the wrapper or builder). SUB RX64M, file offset = addr - 0xFFC00000.
+type	site	function	via	payload_value	trigger	status
+E0	FFEE1779	sub_FFEE16EE	sub_FFEDC3BD->sub_FFEDD182	pen,X,Y	touch report; callers FFEE153B (pen=1 press) / FFEE159F (pen=0 release) in sub_FFEE1480 (TPU0 tick)	Confirmed
+E1	FFEDFEFE	sub_FFEDFEB9	sub_FFEDC2E1->sub_FFEDD182	raw NMEA from 0x8A93, n=[0x124C0]	class1 $GPRMC; gate [0x8A86]==0	Confirmed
+E1	FFEE005E	sub_FFEDFEB9	sub_FFEDC2E1->sub_FFEDD182	raw NMEA from 0x8A93, n=[0x124C0]	class2 $GPGGA; gate [0x8A86]==0	Confirmed
+E1	FFEE0148	sub_FFEDFEB9	sub_FFEDC2E1->sub_FFEDD182	raw NMEA from 0x8A93, n=[0x124C0]	class3 $GPGSA (dropped: byte[4] is S); gate [0x8A86]==0	Confirmed
+E1	FFEE017A	sub_FFEDFEB9	sub_FFEDC2E1->sub_FFEDD182	raw NMEA from 0x8A93, n=[0x124C0]	class4 $GPVTG (dropped: byte[4] is T); gate [0x8A86]==0	Confirmed
+E2	FFEDC74F	sub_FFEDC615	sub_FFEDC493->sub_FFEDD182	0xFFF1	deframer state 3: len>0x7FFF, opcode hi FF	Confirmed
+E2	FFEDC835	sub_FFEDC615	sub_FFEDC493->sub_FFEDD182	0xFFF0	deframer state 5: header checksum mismatch, opcode hi FF	Confirmed
+E2	FFEDC905	sub_FFEDC615	sub_FFEDC493->sub_FFEDD182	block# (frame +6..+7)	deframer state 8: frame checksum mismatch, opcode hi FF	Confirmed
+E2	FFEDCC2F	sub_FFEDC976	sub_FFEDC493->sub_FFEDD182	0xFFFE	FFFF last block: 32-bit sum != expected	Confirmed
+E2	FFEDE4F1	sub_FFEDE480	sub_FFEDC493->sub_FFEDD182	0xFFFE	picture step table FFED3F78: transfer state [0x1CC4C]<=1	Confirmed
+E2	FFEDE578	sub_FFEDE523	sub_FFEDC493->sub_FFEDD182	0xFFFE	picture step table FFED3F7C: JPEG decode sub_FFEDE804 != 1	Confirmed
+E2	FFEDC48E	dead_FFEDC455	sub_FFEDD355	status word	dead (0 inbound edges, K7)	Confirmed (dead)
+E3	FFEDCEDD	sub_FFEDC976	sub_FFEDC429->sub_FFEDD182	00 00 00	MAIN frame byte +7 bit6 (ack request)	Confirmed
+FF	FFEDCDC0	sub_FFEDC976	sub_FFEDC4DD->sub_FFEDD182	block#,total,sum32,data	MAIN FE00 read-back request	Confirmed
+E4	FFF38B09	sub_FFF38AF0	sub_FFF389E7->sub_FFEDD528	0x10 (blank name/addr)	BT search callback code 5	Confirmed bytes; meaning Inferred
+E4	FFF38B32	sub_FFF38AF0	sub_FFF389E7->sub_FFEDD528	0x12 + FIND result entry	BT search callback code 1 (device found; external)	Confirmed bytes; meaning Inferred
+E4	FFF38B4F	sub_FFF38AF0	sub_FFF389E7->sub_FFEDD528	0x11	BT search callback code 2	Confirmed bytes; meaning Inferred
+E4	FFF38B63	sub_FFF38AF0	sub_FFF389E7->sub_FFEDD528	0x13	BT search callback code 3	Confirmed bytes; meaning Inferred
+E4	FFF38B77	sub_FFF38AF0	sub_FFF389E7->sub_FFEDD528	0x13	BT search callback code 4	Confirmed bytes; meaning Inferred
+E4	FFF38B93	sub_FFF38B7E	sub_FFF389E7->sub_FFEDD528	9 + 0x1033A/0x1032D	F3D5 identity callback	Confirmed bytes; meaning Inferred
+E4	FFF38CD1	sub_FFF38BDA	sub_FFF389E7->sub_FFEDD528	0	link callback code 1	Confirmed bytes; meaning Inferred
+E4	FFF38D65	sub_FFF38BDA	sub_FFF389E7->sub_FFEDD528	5	link callback code 2, retry count >0x22	Confirmed bytes; meaning Inferred
+E4	FFF38E03	sub_FFF38BDA	sub_FFF389E7->sub_FFEDD528	5	link callback code 2, retry count >2	Confirmed bytes; meaning Inferred
+E4	FFF38E52	sub_FFF38BDA	sub_FFF389E7->sub_FFEDD528	5	link callback code 2	Confirmed bytes; meaning Inferred
+E4	FFF38EAD	sub_FFF38BDA	sub_FFF389E7->sub_FFEDD528	2	link callback code 9	Confirmed bytes; meaning Inferred
+E4	FFF38EF4	sub_FFF38BDA	sub_FFF389E7->sub_FFEDD528	1	link callback code 3	Confirmed bytes; meaning Inferred
+E4	FFF391FD	sub_FFF391E2	sub_FFF389E7->sub_FFEDD528	1	sub_FFF37CB9 callback code 0	Confirmed bytes; meaning Inferred
+E4	FFF38C9E	sub_FFF38BDA	sub_FFEDD528	3 + 0x10358/0x1034B (direct to builder)	link callback code 5	Confirmed bytes; meaning Inferred
+E5	FFF37FEC	sub_FFF37D88	sub_FFEDD528	0	MAIN F3D2 sub-op 2 (link request) closes open state first, [0x12CBA]==1 -> 2	Confirmed bytes; meaning Inferred
+E5	FFF38251	sub_FFF38107	sub_FFEDD528	0	MAIN F3D6 closes open state first, [0x12CBA]==1 -> 2	Confirmed bytes; meaning Inferred
+E5	FFF38FA0	sub_FFF38EFB	sub_FFEDD528	1	SCOL callback code1, [0x122A0]==4	Confirmed bytes; meaning Inferred
+E5	FFF3903D	sub_FFF38EFB	sub_FFEDD528	0	SCOL callback code3, [0x122A0]==1	Confirmed bytes; meaning Inferred
+E5	FFF39095	sub_FFF38EFB	sub_FFEDD528	0	SCOL callback code3, [0x122A0]==4	Confirmed bytes; meaning Inferred
+E5	FFF394CF	sub_FFF3945C	sub_FFEDD528	1	callback code1, [0x1251E] in 5..6 -> [0x12CBA]=1	Confirmed bytes; meaning Inferred
+E5	FFF39516	sub_FFF3945C	sub_FFEDD528	0	callback code2 -> [0x12CBA]=2	Confirmed bytes; meaning Inferred
+E6	FFF37FB0	sub_FFF37D88	sub_FFEDD528	0	MAIN F3D2 sub-op 2 (link request) closes open state first, [0x12CBC]==2 -> 3	Confirmed bytes; meaning Inferred
+E6	FFF38215	sub_FFF38107	sub_FFEDD528	0	MAIN F3D6 closes open state first, [0x12CBC]==2 -> 3	Confirmed bytes; meaning Inferred
+E6	FFF38FD2	sub_FFF38EFB	sub_FFEDD528	1	SCOL callback code1, [0x122A0]==3 -> [0x12CBC]=2	Confirmed bytes; meaning Inferred
+E6	FFF3906F	sub_FFF38EFB	sub_FFEDD528	0	SCOL callback code3, [0x122A0]==3 -> [0x12CBC]=3	Confirmed bytes; meaning Inferred
+E6	FFF39284	sub_FFF39216	sub_FFEDD528	1	callback -> [0x12CBC]=2	Confirmed bytes; meaning Inferred
+E6	FFF39312	sub_FFF39216	sub_FFEDD528	1	callback, [0x12CB8]==2 -> [0x12CBC]=2	Confirmed bytes; meaning Inferred
+E6	FFF393B6	sub_FFF39216	sub_FFEDD528	0	callback -> [0x12CBC]=3	Confirmed bytes; meaning Inferred
+E6	FFF393F4	sub_FFF39216	sub_FFEDD528	0	callback, [0x12CB8]==2 -> [0x12CBC]=3	Confirmed bytes; meaning Inferred
+EA	FFF3E9F7	sub_FFF3E98C	sub_FFEDD6FB	0xA0	MAIN F640 while player busy ([0x1085F] not 0/0x0C/5)	Confirmed values; trigger naming Inferred
+EA	FFF3EBED	sub_FFF3EB8C	sub_FFEDD6FB	0xA0	SD queue record state 5/6 (local tree, not in this repo) failure	Confirmed values; trigger naming Inferred
+EA	FFF3EC2E	sub_FFF3EB8C	sub_FFEDD6FB	0xA0	same	Confirmed values; trigger naming Inferred
+EA	FFF3EDBE	sub_FFF3EB8C	sub_FFEDD6FB	0xA0	same	Confirmed values; trigger naming Inferred
+EA	FFF3EEBC	sub_FFF3EE00	sub_FFEDD6FB	0xA0 or 0x00	record step (callback sub_FFF3F8A5 registered)	Confirmed values; trigger naming Inferred
+EA	FFF3EF86	sub_FFF3EECA	sub_FFEDD6FB	0xA0 or 0x00	record step (callback sub_FFF3F8A5 registered)	Confirmed values; trigger naming Inferred
+EA	FFF3EFF3	sub_FFF3EF94	sub_FFEDD6FB	0xA0	common header +9 bits3:2 == 0 and opcode != FC00; failure only	Confirmed values; trigger naming Inferred
+EA	FFF3F0AC	sub_FFF3F037	sub_FFEDD6FB	0xA0 or 0x00	common header +9 bits3:2 == 2	Confirmed values; trigger naming Inferred
+EA	FFF3F138	sub_FFF3F0BA	sub_FFEDD6FB	0xA0 or 0x00	common header +9 bits3:2 == 1	Confirmed values; trigger naming Inferred
+EA	FFF3F1EF	sub_FFF3F146	sub_FFEDD6FB	0xA0 or 0x00	play state [0x122B7]=0	Confirmed values; trigger naming Inferred
+EA	FFF3F2FC	sub_FFF3F1FF	sub_FFEDD6FB	0xA0 or 0x00	play state 1	Confirmed values; trigger naming Inferred
+EA	FFF3F3C1	sub_FFF3F30D	sub_FFEDD6FB	0xA0	play state 2	Confirmed values; trigger naming Inferred
+EA	FFF3F40E	sub_FFF3F30D	sub_FFEDD6FB	0x00	play state 2	Confirmed values; trigger naming Inferred
+EA	FFF3F4D8	sub_FFF3F43E	sub_FFEDD6FB	0x11	play state 3	Confirmed values; trigger naming Inferred
+EA	FFF3F552	sub_FFF3F43E	sub_FFEDD6FB	0xA0	play state 3	Confirmed values; trigger naming Inferred
+EA	FFF3F59F	sub_FFF3F43E	sub_FFEDD6FB	0x00	play state 3	Confirmed values; trigger naming Inferred
+EA	FFF3F63A	sub_FFF3F5CF	sub_FFEDD6FB	0xA0 or 0x00	play state 4	Confirmed values; trigger naming Inferred
+EA	FFF3F6E1	sub_FFF3F648	sub_FFEDD6FB	0xA0	play state 0x10 seek (position from SUB-local touch seek bar sub_FFF375FB)	Confirmed values; trigger naming Inferred
+EA	FFF3F774	sub_FFF3F648	sub_FFEDD6FB	0xA0	seek	Confirmed values; trigger naming Inferred
+EA	FFF3F7B2	sub_FFF3F648	sub_FFEDD6FB	0x00	seek	Confirmed values; trigger naming Inferred
+EA	FFF3F81A	sub_FFF3F7CB	sub_FFEDD6FB	0x10	play engine callback code 1	Confirmed values; trigger naming Inferred
+EA	FFF3F845	sub_FFF3F7CB	sub_FFEDD6FB	0x11	callback code 5	Confirmed values; trigger naming Inferred
+EA	FFF3F86F	sub_FFF3F7CB	sub_FFEDD6FB	0x00	callback code 2	Confirmed values; trigger naming Inferred
+EA	FFF3F89D	sub_FFF3F7CB	sub_FFEDD6FB	0xA0	callback code 0xFFFF	Confirmed values; trigger naming Inferred
+EA	FFF3F8F3	sub_FFF3F8A5	sub_FFEDD6FB	0x00	record engine callback code 2	Confirmed values; trigger naming Inferred
+EA	FFF3F926	sub_FFF3F8A5	sub_FFEDD6FB	0x01	callback code 3, then delete local tree, not in this repo	Confirmed values; trigger naming Inferred
+EA	FFF3F973	sub_FFF3F8A5	sub_FFEDD6FB	0x02	callback code 4, then delete local tree, not in this repo	Confirmed values; trigger naming Inferred
+EA	FFF3F9C4	sub_FFF3F8A5	sub_FFEDD6FB	0xA0	callback code 0xFFFF, then delete local tree, not in this repo	Confirmed values; trigger naming Inferred
+FE	FFF3B9FB	sub_FFF3B8DE	sub_FFEDD8DC	B.w0=0xC8 (0xC9 if a mkdir failed), w18=0	card inserted: tree FT3D, FT3D\BACKUP, FT3D\GPSLOG, FT3D_MEMORY-CH, QSOLOG, PHOTO, VOICE	Confirmed site/len; command meaning Inferred
+FE	FFF3BB04	sub_FFF3BA5A	sub_FFEDD8DC	B.w0=0xCD, w18=0	card removed	Confirmed site/len; command meaning Inferred
+FE	FFF3BC06	sub_FFF3BB0C	sub_FFEDD8DC	w18=0	cmd 0x78	Confirmed site/len; command meaning Inferred
+FE	FFF3BC8E	sub_FFF3BB0C	sub_FFEDD8DC	w18=0	cmd 0x78	Confirmed site/len; command meaning Inferred
+FE	FFF3C89A	sub_FFF3C765	sub_FFEDD8DC	w18=0	record state 1 continuation	Confirmed site/len; command meaning Inferred
+FE	FFF3C8FF	sub_FFF3C765	sub_FFEDD8DC	w18=0	record state 1 continuation	Confirmed site/len; command meaning Inferred
+FE	FFF3C9A4	sub_FFF3C911	sub_FFEDD8DC	w18=0	record state 4 continuation	Confirmed site/len; command meaning Inferred
+FE	FFF3CABC	sub_FFF3C911	sub_FFEDD8DC	w18=0	record state 4 continuation	Confirmed site/len; command meaning Inferred
+FE	FFF3CDF8	sub_FFF3CAD0	sub_FFEDD8DC	w18=0	cmd 0x12: load image file into 0x070E1000 (JPEG path)	Confirmed site/len; command meaning Inferred
+FE	FFF3CFBE	sub_FFF3CE12	sub_FFEDD8DC	w18=B.l10 (<=0x400), data = file-op buffer	cmd 0x0A/0x0B (sub_FFF12E8B) and 0x0D-0x10 (sub_FFF12F9B): SD file data when reading	Confirmed site/len; command meaning Inferred
+FE	FFF3D0C7	sub_FFF3CFD8	sub_FFEDD8DC	w18=0	cmd 0x14	Confirmed site/len; command meaning Inferred
+FE	FFF3D1F7	sub_FFF3D0D9	sub_FFEDD8DC	w18=0	cmd 0x1E	Confirmed site/len; command meaning Inferred
+FE	FFF3D2EC	sub_FFF3D209	sub_FFEDD8DC	w18=0	cmd 0x28	Confirmed site/len; command meaning Inferred
+FE	FFF3D3B6	sub_FFF3D2FD	sub_FFEDD8DC	w18=0	cmd 0x32	Confirmed site/len; command meaning Inferred
+FE	FFF3D47D	sub_FFF3D3C7	sub_FFEDD8DC	w18=0	cmd 0x3C	Confirmed site/len; command meaning Inferred
+FE	FFF3D545	sub_FFF3D48F	sub_FFEDD8DC	w18=0	cmd 0x46	Confirmed site/len; command meaning Inferred
+FE	FFF3D5DF	sub_FFF3D556	sub_FFEDD8DC	w18=0	cmd 0x50	Confirmed site/len; command meaning Inferred
+FE	FFF3D65D	sub_FFF3D556	sub_FFEDD8DC	w18=0	cmd 0x50	Confirmed site/len; command meaning Inferred
+FE	FFF3D837	sub_FFF3D680	sub_FFEDD8DC	w18=0	batch list 0x684F0 step (after queue walk)	Confirmed site/len; command meaning Inferred
+FE	FFF3D93A	sub_FFF3D887	sub_FFEDD8DC	w18=0	batch file callback code 0	Confirmed site/len; command meaning Inferred
+FE	FFF3D9CD	sub_FFF3D887	sub_FFEDD8DC	w18=0, A.w6=0xFFFF	batch file callback code 1	Confirmed site/len; command meaning Inferred
+FE	FFF3DB07	sub_FFF3D887	sub_FFEDD8DC	w18=0	batch file callback	Confirmed site/len; command meaning Inferred
+FE	FFF3DCC8	sub_FFF3DB6E	sub_FFEDD8DC	w18=0	post-queue step	Confirmed site/len; command meaning Inferred
+FE	FFF3DD81	sub_FFF3DB6E	sub_FFEDD8DC	w18=0	post-queue step	Confirmed site/len; command meaning Inferred
+FE	FFF3DF55	sub_FFF3DE6A	sub_FFEDD8DC	w18=0	callback of sub_FFF3DB6E	Confirmed site/len; command meaning Inferred
+FE	FFF3E051	sub_FFF3DF66	sub_FFEDD8DC	w18=0	callback of sub_FFF3DB6E	Confirmed site/len; command meaning Inferred
+FE	FFF3E121	sub_FFF3E062	sub_FFEDD8DC	B.w0=0xD2, w18=0	callback	Confirmed site/len; command meaning Inferred
+FE	FFF3E1C8	sub_FFF3E062	sub_FFEDD8DC	B.w0=0xFB, w18=0	callback	Confirmed site/len; command meaning Inferred
+FE	FFF3E386	sub_FFF3E229	sub_FFEDD8DC	w18=10: [0..1] volume word, [2..5] long, [6..9] long (sub_FFF12B18 card info)	cmd 0x6E	Confirmed site/len; command meaning Inferred
+FE	FFF3E495	sub_FFF3E398	sub_FFEDD8DC	w18=0	cmd 0x64	Confirmed site/len; command meaning Inferred

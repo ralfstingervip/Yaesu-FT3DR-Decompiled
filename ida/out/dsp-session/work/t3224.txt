@@ -1,0 +1,42 @@
+
+;---- func 0x32240..0x322d6
+032240  ab 02                    cmp.b   #2, r3l                              
+032242  47 1c                    beq     loc_32260:8                          
+032244  fc 1e                    mov.b   #0x1E, r4l                           
+032246  6a 8c 95 91              mov.b   r4l, @0xFFFF9591:16                  
+03224a  fc 02                    mov.b   #2, r4l                              
+03224c  6a 8c a9 e6              mov.b   r4l, @0xFFFFA9E6:16                  
+032250  6a 0c b0 ac              mov.b   @0xFFFFB0AC:16, r4l                  
+032254  ec 03                    and.b   #3, r4l                              
+032256  47 70                    beq     loc_322C8:8                          
+032258  fc 00                    mov.b   #0, r4l                              
+03225a  6a 8c b0 ac              mov.b   r4l, @0xFFFFB0AC:16                  
+03225e  40 68                    bra     loc_322C8:8                          
+032260  6a 0c 95 91              mov.b   @0xFFFF9591:16, r4l                  <- 32242
+032264  46 62                    bne     loc_322C8:8                          
+032266  6a 0c 89 b1              mov.b   @0xFFFF89B1:16, r4l                  
+03226a  47 2e                    beq     loc_3229A:8                          
+03226c  6a 0c b3 f9              mov.b   @0xFFFFB3F9:16, r4l                  
+032270  46 28                    bne     loc_3229A:8                          
+032272  6a 0c 8d d5              mov.b   @0xFFFF8DD5:16, r4l                  
+032276  47 04                    beq     loc_3227C:8                          
+032278  ac 02                    cmp.b   #2, r4l                              
+03227a  46 08                    bne     loc_32284:8                          
+03227c  6a 0c 8a a0              mov.b   @0xFFFF8AA0:16, r4l                  <- 32276
+032280  ac 00                    cmp.b   #0, r4l                              
+032282  46 16                    bne     loc_3229A:8                          
+032284  6a 0c 8f e2              mov.b   @0xFFFF8FE2:16, r4l                  <- 3227a
+032288  46 10                    bne     loc_3229A:8                          
+03228a  6a 10 8e a0 73 70        btst    #7, @0xFFFF8EA0:16                   
+032290  47 18                    beq     loc_322AA:8                          
+032292  6a 0c 90 ea              mov.b   @0xFFFF90EA:16, r4l                  
+032296  46 02                    bne     loc_3229A:8                          
+032298  40 10                    bra     loc_322AA:8                          
+03229a  6a 0c b0 ac              mov.b   @0xFFFFB0AC:16, r4l                  <- 3226a,32270,32282,32288,32296
+03229e  ec 03                    and.b   #3, r4l                              
+0322a0  46 26                    bne     loc_322C8:8                          
+0322a2  fc 01                    mov.b   #1, r4l                              
+0322a4  6a 8c b0 ac              mov.b   r4l, @0xFFFFB0AC:16                  
+0322a8  40 1e                    bra     loc_322C8:8                          
+0322aa  fc 01                    mov.b   #1, r4l                              <- 32290,32298
+0322ac  6a 8c a9 e6              mov.b   r4l, @0xFFFFA9E6:16                  

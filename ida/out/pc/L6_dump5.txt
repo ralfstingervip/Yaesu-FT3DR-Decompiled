@@ -1,0 +1,640 @@
+
+== range 0x54F00-0x55380
+054F00  6a8c8180         mov.b   r4l, @0xFFFF8180:16
+054F04  6a8c8181         mov.b   r4l, @0xFFFF8181:16
+054F08  fc00             mov.b   #0, r4l
+054F0A  6a8c8183         mov.b   r4l, @0xFFFF8183:16
+054F0E  6a8c8182         mov.b   r4l, @0xFFFF8182:16
+054F12  f401             mov.b   #1, r4h
+054F14  fc00             mov.b   #0, r4l
+054F16  0d4c             mov.w   r4, e4
+054F18  7904ffff         mov.w   #0xFFFF, r4
+054F1C  01006b848184     mov.l   er4, @0xFFFF8184:16
+054F22  7a0400ff3cea     mov.l   #0xFF3CEA, er4
+054F28  01006b848152     mov.l   er4, @0xFFFF8152:16
+054F2E  01006b848156     mov.l   er4, @0xFFFF8156:16
+054F34  6d7c             pop.w   e4
+054F36  6d74             pop.w   r4   ; xref 0x54efa
+054F38  5670             rte
+054F3A  732c             btst    #2, r4l
+054F3C  474a             beq     loc_54F88:8
+054F3E  722c             bclr    #2, r4l
+054F40  cc03             or.b    #3, r4l
+054F42  6a8cee01         mov.b   r4l, @0xFFFFEE01:16
+054F46  0000             nop
+054F48  0000             nop
+054F4A  6a0cee01         mov.b   @0xFFFFEE01:16, r4l
+054F4E  6a0c8184         mov.b   @0xFFFF8184:16, r4l
+054F52  6a8cee18         mov.b   r4l, @0xFFFFEE18:16
+054F56  6a8c8185         mov.b   r4l, @0xFFFF8185:16
+054F5A  6a0489ce         mov.b   @0xFFFF89CE:16, r4h
+054F5E  6a84ee18         mov.b   r4h, @0xFFFFEE18:16
+054F62  6a0c89cd         mov.b   @0xFFFF89CD:16, r4l
+054F66  470c             beq     loc_54F74:8
+054F68  ac01             cmp.b   #1, r4l
+054F6A  4704             beq     loc_54F70:8
+054F6C  fc50             mov.b   #0x50, r4l ; 'P'
+054F6E  4006             bra     loc_54F76:8
+054F70  fc30             mov.b   #0x30, r4l ; '0'   ; xref 0x54f6a
+054F72  4002             bra     loc_54F76:8
+054F74  fc18             mov.b   #0x18, r4l   ; xref 0x54f66
+054F76  6a8cee18         mov.b   r4l, @0xFFFFEE18:16   ; xref 0x54f6e,0x54f72
+054F7A  6b848186         mov.w   r4, @0xFFFF8186:16
+054F7E  fc40             mov.b   #0x40, r4l ; '@'
+054F80  6a8cee2c         mov.b   r4l, @0xFFFFEE2C:16
+054F84  6d74             pop.w   r4
+054F86  5670             rte
+054F88  731c             btst    #1, r4l   ; xref 0x54ecc,0x54f3c
+054F8A  471a             beq     loc_54FA6:8
+054F8C  721c             bclr    #1, r4l
+054F8E  cc05             or.b    #5, r4l
+054F90  6a8cee01         mov.b   r4l, @0xFFFFEE01:16
+054F94  0000             nop
+054F96  0000             nop
+054F98  6a0cee01         mov.b   @0xFFFFEE01:16, r4l
+054F9C  6a1881807020     bset    #2, @0xFFFF8180:16
+054FA2  6d74             pop.w   r4
+054FA4  5670             rte
+054FA6  6a0cee02         mov.b   @0xFFFFEE02:16, r4l   ; xref 0x54f8a
+054FAA  ec3b             and.b   #0x3B, r4l
+054FAC  734c             btst    #4, r4l
+054FAE  471e             beq     loc_54FCE:8
+054FB0  724c             bclr    #4, r4l
+054FB2  cc0b             or.b    #0xB, r4l
+054FB4  6a8cee02         mov.b   r4l, @0xFFFFEE02:16
+054FB8  0000             nop
+054FBA  0000             nop
+054FBC  6a0cee02         mov.b   @0xFFFFEE02:16, r4l
+054FC0  f400             mov.b   #0, r4h
+054FC2  775c             bld     #5, r4l
+054FC4  6a1881806750     bst     #5, @0xFFFF8180:16
+054FCA  6d74             pop.w   r4
+054FCC  5670             rte
+054FCE  733c             btst    #3, r4l   ; xref 0x54fae
+054FD0  4716             beq     loc_54FE8:8
+054FD2  723c             bclr    #3, r4l
+054FD4  cc13             or.b    #0x13, r4l
+054FD6  6a8cee02         mov.b   r4l, @0xFFFFEE02:16
+054FDA  0000             nop
+054FDC  0000             nop
+054FDE  6a0cee02         mov.b   @0xFFFFEE02:16, r4l
+054FE2  6a1881807070     bset    #7, @0xFFFF8180:16
+054FE8  6d74             pop.w   r4   ; xref 0x54fd0
+054FEA  5670             rte
+054FEC  6a0b8183         mov.b   @0xFFFF8183:16, r3l   ; xref 0x2be8,0x37f0,0x3932
+054FF0  7a63000000ff     and.l   #0xFF, er3
+054FF6  1073             shll.l  #2, er3
+054FF8  78               .byte 0x78 ; x
+054FF9  b06b             subx    #0x6B, r0h ; 'k'
+054FFB  2600             mov.b   @0xFFFFFF00:8, r6h
+054FFD  0550             xorc    #0x50, ccr ; 'P'
+054FFF  02               .byte    2
+055000  5960             jmp     @er6
+055002  00               .byte    0
+055003  0550             xorc    #0x50, ccr ; 'P'
+055005  3400             mov.b   r4h, @0xFFFFFF00:8
+055007  0550             xorc    #0x50, ccr ; 'P'
+055009  4200             bhi     loc_55009+1:8
+05500B  0551             xorc    #0x51, ccr ; 'Q'
+05500D  9600             addx    #0, r6h
+05500F  0551             xorc    #0x51, ccr ; 'Q'
+055011  aa00             cmp.b   #0, r2l
+055013  0551             xorc    #0x51, ccr ; 'Q'
+055015  c200             or.b    #0, r2h
+055017  0550             xorc    #0x50, ccr ; 'P'
+055019  4200             bhi     loc_55019+1:8
+05501B  0551             xorc    #0x51, ccr ; 'Q'
+05501D  da00             xor.b   #0, r2l
+05501F  0553             xorc    #0x53, ccr ; 'S'
+055021  0600             andc    #0, ccr
+055023  0555             xorc    #0x55, ccr ; 'U'
+055025  2000             mov.b   @0xFFFFFF00:8, r0h
+055027  0555             xorc    #0x55, ccr ; 'U'
+055029  5200             mulxu.w r0, er0
+05502B  0553             xorc    #0x53, ccr ; 'S'
+05502D  0600             andc    #0, ccr
+05502F  0556             xorc    #0x56, ccr ; 'V'
+055031  c8               .byte 0xC8
+055032  5470             rts   ; xref 0x5503a,0x5504e,0x550dc,0x550ea,0x550ee
+055034  6a1081807300     btst    #0, @0xFFFF8180:16
+05503A  47f6             beq     nullsub_97:8
+05503C  fc01             mov.b   #1, r4l
+05503E  6a8c8183         mov.b   r4l, @0xFFFF8183:16
+055042  01006b048152     mov.l   @0xFFFF8152:16, er4
+055048  6b068158         mov.w   @0xFFFF8158:16, r6
+05504C  1d46             cmp.w   r4, r6
+05504E  47e2             beq     nullsub_97:8
+055050  fe08             mov.b   #8, r6l
+055052  7a0500ff3d6a     mov.l   #0xFF3D6A, er5
+055058  6c4a             mov.b   @er4+, r2l   ; xref 0x5506c
+05505A  68da             mov.b   r2l, @er5
+05505C  0b05             adds    #1, er5
+05505E  79243d6a         cmp.w   #0x3D6A, r4
+055062  4506             bcs     loc_5506A:8
+055064  7a0400ff3cea     mov.l   #0xFF3CEA, er4
+05506A  1a0e             dec.b   r6l   ; xref 0x55062
+05506C  46ea             bne     loc_55058:8
+05506E  01006b848152     mov.l   er4, @0xFFFF8152:16
+055074  01006b2200ff3d6a mov.l   @0xFF3D6A:32, er2
+05507C  792a8006         cmp.w   #0x8006, e2
+055080  4756             beq     loc_550D8:8
+055082  792ac1d4         cmp.w   #0xC1D4, e2
+055086  4750             beq     loc_550D8:8
+055088  792a41d3         cmp.w   #0x41D3, e2
+05508C  474a             beq     loc_550D8:8
+05508E  792a41d1         cmp.w   #0x41D1, e2
+055092  4744             beq     loc_550D8:8
+055094  792a41d2         cmp.w   #0x41D2, e2
+055098  473e             beq     loc_550D8:8
+05509A  7a01000558fe     mov.l   #dword_558FE, er1
+0550A0  01006b2500ff3d6a mov.l   @0xFF3D6A:32, er5
+0550A8  01006b2600ff3d6e mov.l   @0xFF3D6E:32, er6
+0550B0  fc08             mov.b   #8, r4l
+0550B2  01006d12         mov.l   @er1+, er2   ; xref 0x550ce
+0550B6  01006d13         mov.l   @er1+, er3
+0550BA  1fa5             cmp.l   er2, er5
+0550BC  460e             bne     loc_550CC:8
+0550BE  1fb6             cmp.l   er3, er6
+0550C0  460a             bne     loc_550CC:8
+0550C2  01006b22000558fe mov.l   @dword_558FE:32, er2
+0550CA  400c             bra     loc_550D8:8
+0550CC  1a0c             dec.b   r4l   ; xref 0x550bc,0x550c0
+0550CE  46e2             bne     loc_550B2:8
+0550D0  01006b2200ff3d6a mov.l   @0xFF3D6A:32, er2
+0550D8  792a8006         cmp.w   #0x8006, e2   ; xref 0x55080,0x55086,0x5508c,0x55092,0x55098,0x550ca
+0550DC  5860ff52         bne     nullsub_97:16
+0550E0  aa01             cmp.b   #1, r2l
+0550E2  4744             beq     loc_55128:8
+0550E4  aa02             cmp.b   #2, r2l
+0550E6  470a             beq     loc_550F2:8
+0550E8  aa03             cmp.b   #3, r2l
+0550EA  5860ff44         bne     nullsub_97:16
+0550EE  5800ff40         bra     nullsub_97:16
+0550F2  6a1081817300     btst    #0, @0xFFFF8181:16   ; xref 0x550e6
+0550F8  471c             beq     sub_55116:8
+0550FA  fb06             mov.b   #6, r3l
+0550FC  fe20             mov.b   #0x20, r6l ; ' '
+0550FE  6a0d89cf         mov.b   @0xFFFF89CF:16, r5l
+055102  fd00             mov.b   #0, r5l
+055104  104d             shll.b  #2, r5l
+055106  7a65000000ff     and.l   #0xFF, er5
+05510C  78               .byte 0x78 ; x
+05510D  d06b             xor.b   #0x6B, r0h
+05510F  2500             mov.b   @0xFFFFFF00:8, r5h
+055111  0558             xorc    #0x58, ccr ; 'X'
+055113  4a40             bpl     loc_55152+2:8
+055115  2e               .byte 0x2E ; .
+055116  6a1881817000     bset    #0, @0xFFFF8181:16   ; xref 0x550f8
+05511C  fb05             mov.b   #5, r3l
+05511E  fe09             mov.b   #9, r6l
+055120  7a050005582a     mov.l   #loc_5582A, er5
+055126  401c             bra     sub_55144:8
+055128  fb05             mov.b   #5, r3l   ; xref 0x550e2
+05512A  6a0c8183         mov.b   @0xFFFF8183:16, r4l
+05512E  ac01             cmp.b   #1, r4l
+055130  470a             beq     loc_5513C:8
+055132  fe12             mov.b   #0x12, r6l
+055134  7a0500055818     mov.l   #(loc_55817+1), er5
+05513A  4008             bra     sub_55144:8
+05513C  fe08             mov.b   #8, r6l   ; xref 0x55130
+05513E  7a0500055810     mov.l   #loc_55810, er5
+055144  6a8eb094         mov.b   r6l, @0xFFFFB094:16   ; xref 0x55126,0x5513a,0x55300
+055148  01006b85b09e     mov.l   er5, @0xFFFFB09E:16
+05514E  6a8b8182         mov.b   r3l, @0xFFFF8182:16
+055152  6a1881807230     bclr    #3, @0xFFFF8180:16
+055158  6a1881807240     bclr    #4, @0xFFFF8180:16
+05515E  fc02             mov.b   #2, r4l
+055160  6a8c8183         mov.b   r4l, @0xFFFF8183:16
+055164  6a0cb094         mov.b   @0xFFFFB094:16, r4l
+055168  01006b05b09e     mov.l   @0xFFFFB09E:16, er5
+05516E  f400             mov.b   #0, r4h
+055170  ac09             cmp.b   #9, r4l
+055172  4506             bcs     loc_5517A:8
+055174  0cc4             mov.b   r4l, r4h
+055176  fc08             mov.b   #8, r4l
+055178  18c4             sub.b   r4l, r4h
+05517A  6a84b094         mov.b   r4h, @0xFFFFB094:16   ; xref 0x55172
+05517E  6c54             mov.b   @er5+, r4h   ; xref 0x55186
+055180  6a84ee0c         mov.b   r4h, @0xFFFFEE0C:16
+055184  1a0c             dec.b   r4l
+055186  46f6             bne     loc_5517E:8
+055188  01006b85b09e     mov.l   er5, @0xFFFFB09E:16
+05518E  fc01             mov.b   #1, r4l
+055190  6a8cee2c         mov.b   r4l, @0xFFFFEE2C:16
+055194  5470             rts
+055196  6a1081807330     btst    #3, @0xFFFF8180:16
+05519C  4722             beq     locret_551C0:8
+05519E  6a1881807230     bclr    #3, @0xFFFF8180:16
+0551A4  fc03             mov.b   #3, r4l
+0551A6  6a8c8183         mov.b   r4l, @0xFFFF8183:16
+0551AA  6a1081807340     btst    #4, @0xFFFF8180:16
+0551B0  470e             beq     locret_551C0:8
+0551B2  6a1881807240     bclr    #4, @0xFFFF8180:16
+0551B8  6a0c8182         mov.b   @0xFFFF8182:16, r4l
+0551BC  6a8c8183         mov.b   r4l, @0xFFFF8183:16
+0551C0  5470             rts   ; xref 0x5519c,0x551b0
+0551C2  6a1081807330     btst    #3, @0xFFFF8180:16
+0551C8  470e             beq     locret_551D8:8
+0551CA  6a1881807230     bclr    #3, @0xFFFF8180:16
+0551D0  6a0c8182         mov.b   @0xFFFF8182:16, r4l
+0551D4  6a8c8183         mov.b   r4l, @0xFFFF8183:16
+0551D8  5470             rts   ; xref 0x551c8
+0551DA  6b048184         mov.w   @0xFFFF8184:16, r4
+0551DE  1c4c             cmp.b   r4h, r4l
+0551E0  4620             bne     loc_55202:8
+0551E2  6b0c8186         mov.w   @0xFFFF8186:16, e4
+0551E6  6a0489ce         mov.b   @0xFFFF89CE:16, r4h
+0551EA  6a0c89cd         mov.b   @0xFFFF89CD:16, r4l
+0551EE  470c             beq     loc_551FC:8
+0551F0  ac01             cmp.b   #1, r4l
+0551F2  4704             beq     loc_551F8:8
+0551F4  fc50             mov.b   #0x50, r4l ; 'P'
+0551F6  4006             bra     loc_551FE:8
+0551F8  fc30             mov.b   #0x30, r4l ; '0'   ; xref 0x551f2
+0551FA  4002             bra     loc_551FE:8
+0551FC  fc18             mov.b   #0x18, r4l   ; xref 0x551ee
+0551FE  1dc4             cmp.w   e4, r4   ; xref 0x551f6,0x551fa
+055200  473e             beq     loc_55240:8
+055202  6a0cee27         mov.b   @0xFFFFEE27:16, r4l   ; xref 0x551e0
+055206  735c             btst    #5, r4l
+055208  4636             bne     loc_55240:8
+05520A  6a0c8184         mov.b   @0xFFFF8184:16, r4l
+05520E  6a8cee18         mov.b   r4l, @0xFFFFEE18:16
+055212  6a8c8185         mov.b   r4l, @0xFFFF8185:16
+055216  6a0489ce         mov.b   @0xFFFF89CE:16, r4h
+05521A  6a84ee18         mov.b   r4h, @0xFFFFEE18:16
+05521E  6a0c89cd         mov.b   @0xFFFF89CD:16, r4l
+055222  470c             beq     loc_55230:8
+055224  ac01             cmp.b   #1, r4l
+055226  4704             beq     loc_5522C:8
+055228  fc50             mov.b   #0x50, r4l ; 'P'
+05522A  4006             bra     loc_55232:8
+05522C  fc30             mov.b   #0x30, r4l ; '0'   ; xref 0x55226
+05522E  4002             bra     loc_55232:8
+055230  fc18             mov.b   #0x18, r4l   ; xref 0x55222
+055232  6a8cee18         mov.b   r4l, @0xFFFFEE18:16   ; xref 0x5522a,0x5522e
+055236  6b848186         mov.w   r4, @0xFFFF8186:16
+05523A  fc40             mov.b   #0x40, r4l ; '@'
+05523C  6a8cee2c         mov.b   r4l, @0xFFFFEE2C:16
+055240  01006b048152     mov.l   @0xFFFF8152:16, er4   ; xref 0x55200,0x55208
+055246  6b068158         mov.w   @0xFFFF8158:16, r6
+05524A  1d46             cmp.w   r4, r6
+05524C  587000b4         beq     locret_55304:16
+055250  fe08             mov.b   #8, r6l
+055252  7a0500ff3d6a     mov.l   #0xFF3D6A, er5
+055258  6c4a             mov.b   @er4+, r2l   ; xref 0x5526c
+05525A  68da             mov.b   r2l, @er5
+05525C  0b05             adds    #1, er5
+05525E  79243d6a         cmp.w   #0x3D6A, r4
+055262  4506             bcs     loc_5526A:8
+055264  7a0400ff3cea     mov.l   #0xFF3CEA, er4
+05526A  1a0e             dec.b   r6l   ; xref 0x55262
+05526C  46ea             bne     loc_55258:8
+05526E  01006b848152     mov.l   er4, @0xFFFF8152:16
+055274  01006b2200ff3d6a mov.l   @0xFF3D6A:32, er2
+05527C  792a8006         cmp.w   #0x8006, e2
+055280  4756             beq     loc_552D8:8
+055282  792ac1d4         cmp.w   #0xC1D4, e2
+055286  4750             beq     loc_552D8:8
+055288  792a41d3         cmp.w   #0x41D3, e2
+05528C  474a             beq     loc_552D8:8
+05528E  792a41d1         cmp.w   #0x41D1, e2
+055292  4744             beq     loc_552D8:8
+055294  792a41d2         cmp.w   #0x41D2, e2
+055298  473e             beq     loc_552D8:8
+05529A  7a01000558fe     mov.l   #dword_558FE, er1
+0552A0  01006b2500ff3d6a mov.l   @0xFF3D6A:32, er5
+0552A8  01006b2600ff3d6e mov.l   @0xFF3D6E:32, er6
+0552B0  fc08             mov.b   #8, r4l
+0552B2  01006d12         mov.l   @er1+, er2   ; xref 0x552ce
+0552B6  01006d13         mov.l   @er1+, er3
+0552BA  1fa5             cmp.l   er2, er5
+0552BC  460e             bne     loc_552CC:8
+0552BE  1fb6             cmp.l   er3, er6
+0552C0  460a             bne     loc_552CC:8
+0552C2  01006b22000558fe mov.l   @dword_558FE:32, er2
+0552CA  400c             bra     loc_552D8:8
+0552CC  1a0c             dec.b   r4l   ; xref 0x552bc,0x552c0
+0552CE  46e2             bne     loc_552B2:8
+0552D0  01006b2200ff3d6a mov.l   @0xFF3D6A:32, er2
+0552D8  792ac1d4         cmp.w   #0xC1D4, e2   ; xref 0x55280,0x55286,0x5528c,0x55292,0x55298,0x552ca
+0552DC  4626             bne     locret_55304:8
+0552DE  fb07             mov.b   #7, r3l
+0552E0  fe01             mov.b   #1, r6l
+0552E2  6a0c89cd         mov.b   @0xFFFF89CD:16, r4l
+0552E6  470c             beq     loc_552F4:8
+0552E8  ac01             cmp.b   #1, r4l
+0552EA  4704             beq     loc_552F0:8
+0552EC  fc50             mov.b   #0x50, r4l ; 'P'
+0552EE  4006             bra     loc_552F6:8
+0552F0  fc30             mov.b   #0x30, r4l ; '0'   ; xref 0x552ea
+0552F2  4002             bra     loc_552F6:8
+0552F4  fc18             mov.b   #0x18, r4l   ; xref 0x552e6
+0552F6  6a8cb095         mov.b   r4l, @0xFFFFB095:16   ; xref 0x552ee,0x552f2
+0552FA  7a0500ffb095     mov.l   #0xFFB095, er5
+055300  5e055144         jsr     sub_55144:24
+055304  5470             rts   ; xref 0x5524c,0x552dc
+055306  6b048184         mov.w   @0xFFFF8184:16, r4
+05530A  1c4c             cmp.b   r4h, r4l
+05530C  4620             bne     loc_5532E:8
+05530E  6b0c8186         mov.w   @0xFFFF8186:16, e4
+055312  6a0489ce         mov.b   @0xFFFF89CE:16, r4h
+055316  6a0c89cd         mov.b   @0xFFFF89CD:16, r4l
+05531A  470c             beq     loc_55328:8
+05531C  ac01             cmp.b   #1, r4l
+05531E  4704             beq     loc_55324:8
+055320  fc50             mov.b   #0x50, r4l ; 'P'
+055322  4006             bra     loc_5532A:8
+055324  fc30             mov.b   #0x30, r4l ; '0'   ; xref 0x5531e
+055326  4002             bra     loc_5532A:8
+055328  fc18             mov.b   #0x18, r4l   ; xref 0x5531a
+05532A  1dc4             cmp.w   e4, r4   ; xref 0x55322,0x55326
+05532C  473e             beq     loc_5536C:8
+05532E  6a0cee27         mov.b   @0xFFFFEE27:16, r4l   ; xref 0x5530c
+055332  735c             btst    #5, r4l
+055334  4636             bne     loc_5536C:8
+055336  6a0c8184         mov.b   @0xFFFF8184:16, r4l
+05533A  6a8cee18         mov.b   r4l, @0xFFFFEE18:16
+05533E  6a8c8185         mov.b   r4l, @0xFFFF8185:16
+055342  6a0489ce         mov.b   @0xFFFF89CE:16, r4h
+055346  6a84ee18         mov.b   r4h, @0xFFFFEE18:16
+05534A  6a0c89cd         mov.b   @0xFFFF89CD:16, r4l
+05534E  470c             beq     loc_5535C:8
+055350  ac01             cmp.b   #1, r4l
+055352  4704             beq     loc_55358:8
+055354  fc50             mov.b   #0x50, r4l ; 'P'
+055356  4006             bra     loc_5535E:8
+055358  fc30             mov.b   #0x30, r4l ; '0'   ; xref 0x55352
+05535A  4002             bra     loc_5535E:8
+05535C  fc18             mov.b   #0x18, r4l   ; xref 0x5534e
+05535E  6a8cee18         mov.b   r4l, @0xFFFFEE18:16   ; xref 0x55356,0x5535a
+055362  6b848186         mov.w   r4, @0xFFFF8186:16
+055366  fc40             mov.b   #0x40, r4l ; '@'
+055368  6a8cee2c         mov.b   r4l, @0xFFFFEE2C:16
+05536C  01006b048152     mov.l   @0xFFFF8152:16, er4   ; xref 0x5532c,0x55334
+055372  6b068158         mov.w   @0xFFFF8158:16, r6
+055376  1d46             cmp.w   r4, r6
+055378  587001a0         beq     locret_5551C:16
+05537C  fe08             mov.b   #8, r6l
+05537E  7a0500ff3d6a     mov.l   #0xFF3D6A, er5
+
+== range 0x710C4-0x71200
+0710C4  01006b04b208     mov.l   @0xFFFFB208:16, er4   ; xref 0x55a76
+0710CA  01006b84ba96     mov.l   er4, @0xFFFFBA96:16
+0710D0  400c             bra     loc_710DE:8
+0710D2  01006b04ba46     mov.l   @0xFFFFBA46:16, er4   ; xref 0x55a48
+0710D8  01006b84ba96     mov.l   er4, @0xFFFFBA96:16
+0710DE  6a18ba307070     bset    #7, @0xFFFFBA30:16   ; xref 0x710d0
+0710E4  79040098         mov.w   #0x98, r4
+0710E8  6b84ba86         mov.w   r4, @0xFFFFBA86:16
+0710EC  7a0400071326     mov.l   #(loc_71325+1), er4
+0710F2  01006b84ba88     mov.l   er4, @0xFFFFBA88:16
+0710F8  fc01             mov.b   #1, r4l
+0710FA  6a8cba9e         mov.b   r4l, @0xFFFFBA9E:16
+0710FE  fc04             mov.b   #4, r4l
+071100  6a8cba9f         mov.b   r4l, @0xFFFFBA9F:16
+071104  fc05             mov.b   #5, r4l
+071106  6a8cbaa0         mov.b   r4l, @0xFFFFBAA0:16
+07110A  5e06ee38         jsr     sub_6EE38:24
+07110E  79040004         mov.w   #4, r4
+071112  7a050006a976     mov.l   #sub_6A976, er5
+071118  7a0600ffba56     mov.l   #0xFFBA56, er6
+07111E  7bd4598f         eepmov.w   ; xref 0x71124
+071122  0d44             mov.w   r4, r4
+071124  46f8             bne     sub_7111E:8
+071126  fc10             mov.b   #0x10, r4l
+071128  6a8cbad4         mov.b   r4l, @0xFFFFBAD4:16
+07112C  79040010         mov.w   #0x10, r4
+071130  7a0500ffba4a     mov.l   #0xFFBA4A, er5
+071136  7a0600ffbac2     mov.l   #0xFFBAC2, er6
+07113C  7bd4598f         eepmov.w   ; xref 0x71142
+071140  0d44             mov.w   r4, r4
+071142  46f8             bne     loc_7113C:8
+071144  6a0cba3d         mov.b   @0xFFFFBA3D:16, r4l
+071148  0a0c             inc.b   r4l
+07114A  6a8cba3d         mov.b   r4l, @0xFFFFBA3D:16
+07114E  5470             rts
+071150  6a18ba307070     bset    #7, @0xFFFFBA30:16   ; xref 0x6ef90
+071156  79040098         mov.w   #0x98, r4
+07115A  6b84ba86         mov.w   r4, @0xFFFFBA86:16
+07115E  7a0400071326     mov.l   #(loc_71325+1), er4
+071164  01006b84ba88     mov.l   er4, @0xFFFFBA88:16
+07116A  fc0b             mov.b   #0xB, r4l
+07116C  6a8cba9e         mov.b   r4l, @0xFFFFBA9E:16
+071170  fc05             mov.b   #5, r4l
+071172  6a8cbaa0         mov.b   r4l, @0xFFFFBAA0:16
+071176  fc10             mov.b   #0x10, r4l
+071178  6a8cbad4         mov.b   r4l, @0xFFFFBAD4:16
+07117C  79040010         mov.w   #0x10, r4
+071180  7a0500ff301e     mov.l   #0xFF301E, er5
+071186  7a0600ffbac2     mov.l   #0xFFBAC2, er6
+07118C  7bd4598f         eepmov.w   ; xref 0x71192
+071190  0d44             mov.w   r4, r4
+071192  46f8             bne     loc_7118C:8
+071194  5470             rts
+071196  6b04ba8c         mov.w   @0xFFFFBA8C:16, r4   ; xref 0xd568
+07119A  6ba400ff3d7a     mov.w   r4, @0xFF3D7A:32
+0711A0  7a060007131e     mov.l   #unk_7131E, er6
+0711A6  5e03f6fa         jsr     sub_3F6FA:24
+0711AA  01006b05ba88     mov.l   @0xFFFFBA88:16, er5
+0711B0  6954             mov.w   @er5, r4
+0711B2  7a0600ff3d7c     mov.l   #0xFF3D7C, er6
+0711B8  7bd4598f         eepmov.w   ; xref 0x711be
+0711BC  0d44             mov.w   r4, r4
+0711BE  46f8             bne     loc_711B8:8
+0711C0  6d54             mov.w   @er5+, r4
+0711C2  471a             beq     loc_711DE:8
+0711C4  6b2c00ff3d7c     mov.w   @0xFF3D7C:32, e4
+0711CA  094c             add.w   r4, e4
+0711CC  6bac00ff3d7c     mov.w   e4, @0xFF3D7C:32
+0711D2  01006955         mov.l   @er5, er5
+0711D6  7bd4598f         eepmov.w   ; xref 0x711dc
+0711DA  0d44             mov.w   r4, r4
+0711DC  46f8             bne     loc_711D6:8
+0711DE  6a0cba32         mov.b   @0xFFFFBA32:16, r4l   ; xref 0x711c2
+0711E2  f400             mov.b   #0, r4h
+0711E4  6ba400ff3d80     mov.w   r4, @0xFF3D80:32
+0711EA  fc03             mov.b   #3, r4l
+0711EC  f400             mov.b   #0, r4h
+0711EE  7a0500ffa9c4     mov.l   #0xFFA9C4, er5
+0711F4  7a0600ff3d84     mov.l   #0xFF3D84, er6
+0711FA  7bd4598f         eepmov.w   ; xref 0x71200
+0711FE  0d44             mov.w   r4, r4
+
+== range 0x74AE0-0x74B30
+074AE0  5e075eb4         jsr     nullsub_55:24
+074AE4  5e075eb6         jsr     sub_75EB6:24   ; xref 0x74ad2
+074AE8  5e039504         jsr     sub_39504:24
+074AEC  5a00dc4e         jmp     loc_DC4E:24   ; xref 0x748aa,0x74958,0x749e0,0x74ab2
+074AF0  6a18817e7010     bset    #1, @0xFFFF817E:16   ; xref 0x7482a,0x7484a
+074AF6  6a18ba937220     bclr    #2, @0xFFFFBA93:16
+074AFC  fc02             mov.b   #2, r4l
+074AFE  5e01bf78         jsr     sub_1BF78:24
+074B02  01006d70         pop.l   er0
+074B06  5470             rts
+074B08  01106df0         stm.l   er0-er1, @-sp   ; xref 0x25b4,0x2694,0x7484e,0x74dce
+074B0C  5e0557a2         jsr     sub_557A2:24
+074B10  5e02f400         jsr     sub_2F400:24
+074B14  5e030f00         jsr     sub_30F00:24
+074B18  5e0330f0         jsr     sub_330F0:24
+074B1C  5e039080         jsr     loc_39080:24
+074B20  5e003490         jsr     sub_3490:24
+074B24  01106d71         ldm.l   @sp+, er0-er1
+074B28  5470             rts
+074B2A  01006df0         push.l  er0   ; xref 0x2abf6
+074B2E  7a0400000000     mov.l   #0, er4
+
+== func 6F512-6F534 callers 0x5547a,0x5f2f0,0x5f316
+06F512  fc01             mov.b   #1, r4l   ; xref 0x5547a,0x5f2f0,0x5f316
+06F514  6aac00ff2ec9     mov.b   r4l, @0xFF2EC9:32
+06F51A  fc80             mov.b   #0x80, r4l
+06F51C  f400             mov.b   #0, r4h
+06F51E  7a050006f534     mov.l   #loc_6F534, er5
+06F524  7a0600ff2f4a     mov.l   #0xFF2F4A, er6
+06F52A  7bd4598f         eepmov.w   ; xref 0x6f530
+06F52E  0d44             mov.w   r4, r4
+06F530  46f8             bne     loc_6F52A:8
+06F532  5470             rts
+
+== range 0x6A628-0x6A802
+06A628  6aab00ff2f4a     mov.b   r3l, @0xFF2F4A:32   ; xref 0x65698,0x65f90,0x6a626
+06A62E  6b04b422         mov.w   @0xFFFFB422:16, r4
+06A632  6ba400ff2f4c     mov.w   r4, @0xFF2F4C:32
+06A638  733b             btst    #3, r3l
+06A63A  4606             bne     loc_6A642:8
+06A63C  eb07             and.b   #7, r3l
+06A63E  ab04             cmp.b   #4, r3l
+06A640  4404             bcc     loc_6A646:8
+06A642  fc0f             mov.b   #0xF, r4l   ; xref 0x6a63a
+06A644  4002             bra     loc_6A648:8
+06A646  fc15             mov.b   #0x15, r4l   ; xref 0x6a640
+06A648  7a0600ff2f4e     mov.l   #0xFF2F4E, er6   ; xref 0x6a644
+06A64E  f400             mov.b   #0, r4h
+06A650  7bd4598f         eepmov.w   ; xref 0x6a656
+06A654  0d44             mov.w   r4, r4
+06A656  46f8             bne     loc_6A650:8
+06A658  fc05             mov.b   #5, r4l
+06A65A  7a0500ff8060     mov.l   #0xFF8060, er5
+06A660  7a0600ff2f63     mov.l   #0xFF2F63, er6
+06A666  f400             mov.b   #0, r4h
+06A668  7bd4598f         eepmov.w   ; xref 0x6a66e
+06A66C  0d44             mov.w   r4, r4
+06A66E  46f8             bne     loc_6A668:8
+06A670  fc0a             mov.b   #0xA, r4l
+06A672  f400             mov.b   #0, r4h
+06A674  7a0500ffa8da     mov.l   #0xFFA8DA, er5
+06A67A  7a0600ff2f68     mov.l   #0xFF2F68, er6
+06A680  7bd4598f         eepmov.w   ; xref 0x6a686
+06A684  0d44             mov.w   r4, r4
+06A686  46f8             bne     loc_6A680:8
+06A688  fc03             mov.b   #3, r4l
+06A68A  f400             mov.b   #0, r4h
+06A68C  7a0500ffa9c4     mov.l   #0xFFA9C4, er5
+06A692  7a0600ff2f78     mov.l   #0xFF2F78, er6
+06A698  7bd4598f         eepmov.w   ; xref 0x6a69e
+06A69C  0d44             mov.w   r4, r4
+06A69E  46f8             bne     loc_6A698:8
+06A6A0  fc03             mov.b   #3, r4l
+06A6A2  f400             mov.b   #0, r4h
+06A6A4  7a0500ffa9c8     mov.l   #0xFFA9C8, er5
+06A6AA  7a0600ff2f7b     mov.l   #0xFF2F7B, er6
+06A6B0  7bd4598f         eepmov.w   ; xref 0x6a6b6
+06A6B4  0d44             mov.w   r4, r4
+06A6B6  46f8             bne     loc_6A6B0:8
+06A6B8  fc03             mov.b   #3, r4l
+06A6BA  f400             mov.b   #0, r4h
+06A6BC  7a0500ffa9c4     mov.l   #0xFFA9C4, er5
+06A6C2  7a0600ff2f7e     mov.l   #0xFF2F7E, er6
+06A6C8  7bd4598f         eepmov.w   ; xref 0x6a6ce
+06A6CC  0d44             mov.w   r4, r4
+06A6CE  46f8             bne     loc_6A6C8:8
+06A6D0  fc03             mov.b   #3, r4l
+06A6D2  f400             mov.b   #0, r4h
+06A6D4  7a0500ffa9c8     mov.l   #0xFFA9C8, er5
+06A6DA  7a0600ff2f81     mov.l   #0xFF2F81, er6
+06A6E0  7bd4598f         eepmov.w   ; xref 0x6a6e6
+06A6E4  0d44             mov.w   r4, r4
+06A6E6  46f8             bne     loc_6A6E0:8
+06A6E8  6a18ba817030     bset    #3, @0xFFFFBA81:16
+06A6EE  6a18ba817220     bclr    #2, @0xFFFFBA81:16
+06A6F4  6a18ba817200     bclr    #0, @0xFFFFBA81:16
+06A6FA  5800014e         bra     loc_6A84C:16
+06A6FE  5470             rts
+06A700  fb00             mov.b   #0, r3l   ; xref 0x5547e
+06A702  6aab00ff2f4a     mov.b   r3l, @0xFF2F4A:32
+06A708  fc05             mov.b   #5, r4l
+06A70A  7a0500ff8060     mov.l   #0xFF8060, er5
+06A710  7a0600ff2f63     mov.l   #0xFF2F63, er6
+06A716  f400             mov.b   #0, r4h
+06A718  7bd4598f         eepmov.w   ; xref 0x6a71e
+06A71C  0d44             mov.w   r4, r4
+06A71E  46f8             bne     loc_6A718:8
+06A720  fc0a             mov.b   #0xA, r4l
+06A722  f400             mov.b   #0, r4h
+06A724  7a0500ffa8da     mov.l   #0xFFA8DA, er5
+06A72A  7a0600ff2f68     mov.l   #0xFF2F68, er6
+06A730  7bd4598f         eepmov.w   ; xref 0x6a736
+06A734  0d44             mov.w   r4, r4
+06A736  46f8             bne     loc_6A730:8
+06A738  fc03             mov.b   #3, r4l
+06A73A  f400             mov.b   #0, r4h
+06A73C  7a0500ffa9c4     mov.l   #0xFFA9C4, er5
+06A742  7a0600ff2f78     mov.l   #0xFF2F78, er6
+06A748  7bd4598f         eepmov.w   ; xref 0x6a74e
+06A74C  0d44             mov.w   r4, r4
+06A74E  46f8             bne     loc_6A748:8
+06A750  fc03             mov.b   #3, r4l
+06A752  f400             mov.b   #0, r4h
+06A754  7a0500ffa9c8     mov.l   #0xFFA9C8, er5
+06A75A  7a0600ff2f7b     mov.l   #0xFF2F7B, er6
+06A760  7bd4598f         eepmov.w   ; xref 0x6a766
+06A764  0d44             mov.w   r4, r4
+06A766  46f8             bne     loc_6A760:8
+06A768  fc03             mov.b   #3, r4l
+06A76A  f400             mov.b   #0, r4h
+06A76C  7a0500ffa9c4     mov.l   #0xFFA9C4, er5
+06A772  7a0600ff2f7e     mov.l   #0xFF2F7E, er6
+06A778  7bd4598f         eepmov.w   ; xref 0x6a77e
+06A77C  0d44             mov.w   r4, r4
+06A77E  46f8             bne     loc_6A778:8
+06A780  fc03             mov.b   #3, r4l
+06A782  f400             mov.b   #0, r4h
+06A784  7a0500ffa9c8     mov.l   #0xFFA9C8, er5
+06A78A  7a0600ff2f81     mov.l   #0xFF2F81, er6
+06A790  7bd4598f         eepmov.w   ; xref 0x6a796
+06A794  0d44             mov.w   r4, r4
+06A796  46f8             bne     loc_6A790:8
+06A798  fc03             mov.b   #3, r4l
+06A79A  f400             mov.b   #0, r4h
+06A79C  7a0500ffa9c4     mov.l   #0xFFA9C4, er5
+06A7A2  7a0600ff2f84     mov.l   #0xFF2F84, er6
+06A7A8  7bd4598f         eepmov.w   ; xref 0x6a7ae
+06A7AC  0d44             mov.w   r4, r4
+06A7AE  46f8             bne     loc_6A7A8:8
+06A7B0  fc03             mov.b   #3, r4l
+06A7B2  f400             mov.b   #0, r4h
+06A7B4  7a0500ffa9c8     mov.l   #0xFFA9C8, er5
+06A7BA  7a0600ff2f87     mov.l   #0xFF2F87, er6
+06A7C0  7bd4598f         eepmov.w   ; xref 0x6a7c6
+06A7C4  0d44             mov.w   r4, r4
+06A7C6  46f8             bne     loc_6A7C0:8
+06A7C8  5e0230ce         jsr     sub_230CE:24
+06A7CC  4714             beq     loc_6A7E2:8
+06A7CE  fc14             mov.b   #0x14, r4l
+06A7D0  7a0600ff2fae     mov.l   #0xFF2FAE, er6
+06A7D6  f400             mov.b   #0, r4h
+06A7D8  7bd4598f         eepmov.w   ; xref 0x6a7de
+06A7DC  0d44             mov.w   r4, r4
+06A7DE  46f8             bne     loc_6A7D8:8
+06A7E0  4018             bra     loc_6A7FA:8
+06A7E2  fc14             mov.b   #0x14, r4l   ; xref 0x6a7cc
+06A7E4  f400             mov.b   #0, r4h
+06A7E6  7a050000f6d6     mov.l   #0xF6D6, er5
+06A7EC  7a0600ff2fae     mov.l   #0xFF2FAE, er6
+06A7F2  7bd4598f         eepmov.w   ; xref 0x6a7f8
+06A7F6  0d44             mov.w   r4, r4
+06A7F8  46f8             bne     loc_6A7F2:8
+06A7FA  5e06a8aa         jsr     sub_6A8AA:24   ; xref 0x6a7e0
+06A7FE  580000a6         bra     locret_6A8A8:16
+
+== xrefs to 557A2: 0x74b0c(sub_74B08)

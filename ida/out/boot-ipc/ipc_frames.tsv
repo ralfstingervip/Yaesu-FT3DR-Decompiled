@@ -1,0 +1,14 @@
+direction	field	offset	size	meaning	evidence
+MAIN->SUB	opcode	0	2	command word, big-endian (families 0xF0xx..0xF8xx + specials 0xFC00/0xFD00/0xFE00/0xF3D5); written at 0xFF3D74 by ~124 builder sites	sub_B6B6 @0xB6B6; opcodes_main_to_sub.tsv
+MAIN->SUB	length	2	2	content length = (total frame bytes - 10); written at 0xFF3D76	sub_7FCE/84C4/AE3C: len@FF3D72 minus 10 == param@FF3D76
+MAIN->SUB	header_cksum	4	2	16-bit sum of the 4 header bytes [0..3]; stored at 0xFF3D78/79	sub_B6B6 0xB720-0xB736 (r6=4 loop, store 3D78/3D79)
+MAIN->SUB	payload	6	length-2	command-specific data (freq/mode/meter/icons/memory-channel/version/settings...)	builder functions fill via sub_7C20 etc.
+MAIN->SUB	frame_cksum	total-8	2	16-bit sum of bytes [0 .. total-9]; appended by sub_B6B6	sub_B6B6 0xB73C-0xB766 (r2=len-8 loop)
+MAIN->SUB	trailer_pad	total-6	6	six 0x00 bytes	sub_B6B6 0xB76A-0xB774 (r6=6, write 0)
+MAIN->SUB	transport	-	-	assembled in RAM buffer 0xFF3D72(len)/0xFF3D74(frame); de-duplicated vs last frame at 0xFF4176; DMA ch0 to SCI-D TDR 0xFFF613 at 500 kbaud	sub_B6B6 -> sub_482D4; DMAC MAR=0xFFFFFC00 DAR=0xFFF613 trig FFFFFD20=0xE1
+SUB->MAIN	transport	-	-	SUB SCI0 TX -> MAIN SCI-D RXI (vec224 sub_44A70) per-byte into ring 0xFF306A..0xFF3C6A (3 KB); consumer not fully traced	sub_44A70 dumped; ring wrap 0xFF3C6B->0xFF306A
+SUB->MAIN	framing	-	-	same opcode+length+checksum family expected (symmetric buffered UART); opcode table on SUB side not enumerated in this pass	inferred; SUB SCI0 driver sub_FFEDB300 family
+MAIN<->DSP	opcode	0	1	SCI-C (clock-sync, DMA ch1) frame; first byte = opcode; 0x15/0x16/0x19 -> 96-byte frame (voice/channel), else 32-byte (control)	sub_04834E @0x4834E (opcode-keyed length); DSP-AMBE owns detail
+MAIN-ext(SCI-A 0xFFFE90)	msg	0	1	external CAT/clone ID+version message id (0x5A=DSP ver, 0x5B=MAIN ver, 0x32, plus 'AH72M' unit-ID string); built into 0xFF96F8, TX by sub_738CC (poll SSR FFFE94, write TDR FFFE93, additive cksum accumulated in r6h/0xFF812E). NOTE: this is the EXTERNAL data-jack path, not the SUB link.	sub_74310(0x5A)/sub_74364(0x5B)/sub_73B62(0x32)/sub_73908(AH72M) build 0xFF96F8; sub_738CC transmits FFFE93
+MAIN-ext(SCI-A 0xFFFE90)	len	1	1	message length; sub_738CC treats len==3 specially for checksum accumulation	sub_738CC 0x738EC
+MAIN<->DSP-write-bridge	path	-	-	DSP firmware DOWNLOAD path (bridge/DSP-WRITE mode). USB Function Module 0xFFEE00 (status bit4) / EPDR 0xFFEE2C <-> queue engine control block 0xFF6288 + DSP-RX buffer 0xFF62C8 + staging 0xFEE008/0xFEE010 <-> DSP async SCI-C 0xFFFF88 (TX polled 0x7701E->TDR 0xFFFF8B; RX ISR sub_5615C bridge branch -> loc_7711E <-RDR 0xFFFF8D). Queue pumped by loc_7815C from DSP-loader states 5-7.	loc_7815C 0x78192 (btst#4 0xFFEE00, ->0xFFEE2C); sub_768A8; 0x7701E; loc_7711E; started loc_78106 when 0xFF813A=1

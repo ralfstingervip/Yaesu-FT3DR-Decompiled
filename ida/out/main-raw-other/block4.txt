@@ -1,0 +1,69 @@
+block4 smart-resync decode [076B4E,076C04)  (* = inside block 076B50-076BED)
+ 076B4E +6  7a0001000000       C      mov.l   #0x1000000, er0
+*076B54 +4  01f06601           C      and.l   er0, er1
+*076B58 +2  1f81               C      cmp.l   er0, er1
+*076B5A +4  5870009c           C      beq     unk_76BFA:16
+*076B5E +6  7a0000ff62fc       C      mov.l   #0xFF62FC, er0
+*076B64 +6  7a0100ff6288       C      mov.l   #0xFF6288, er1
+*076B6A +4  5e0783da           C      jsr     loc_783DA:24
+*076B6E +2  1f10               ISLAND undecodable 2B 1f10
+*076B70 +4  5870007e           C      beq     unk_76BF2:16
+*076B74 +2  f214               C      mov.b   #0x14, r2h
+*076B76 +2  0ca8               C      mov.b   r2l, r0l
+*076B78 +2  5020               C      mulxu.b r2h, r0
+*076B7A +2  1770               C      extu.l  er0
+*076B7C +6  7a0100ff6304       C      mov.l   #0xFF6304, er1
+*076B82 +2  0a90               C      add.l   er1, er0
+*076B84 +4  6e09000c           C      mov.b   @(0xC:16,er0), r1l
+*076B88 +4  6a89ee2c           C      mov.b   r1l, @0xFFFFEE2C:16
+*076B8C +6  6a18ee047210       C      bclr    #1, @0xFFFFEE04:16
+*076B92 +4  6a09ee04           C      mov.b   @0xFFFFEE04:16, r1l
+*076B96 +1  17                 ISLAND undecodable 1B 17
+*076B97 +2  6103               C      bnot    r0h, r3h
+*076B99 +2  9810               C      addx    #0x10, r0l
+*076B9B +2  316a               C      mov.b   r1h, @0xFFFFFF6A:8
+*076B9D +2  08ee               C      add.b   r6l, r6l
+*076B9F +2  0517               C      xorc    #0x17, ccr
+*076BA1 +2  6010               C      bset    r1h, r0h
+*076BA3 +2  f801               C      mov.b   #1, r0l
+*076BA5 +2  f064               C      mov.b   #0x64, r0h ; 'd'
+*076BA7 +2  016a               ISLAND undecodable 2B 016a
+*076BA9 +2  08ee               C      add.b   r6l, r6l
+*076BAB +2  0617               C      andc    #0x17, ccr
+*076BAD +2  6010               C      bset    r1h, r0h
+*076BAF +1  78                 ISLAND undecodable 1B 78
+*076BB0 +4  01f06401           C      or.l    er0, er1
+*076BB4 +6  7a4100082000       C      or.l    #unk_82000, er1
+*076BBA +8  01006ba100ff62f8   C      mov.l   er1, @0xFF62F8:32
+*076BC2 +2  017d               ISLAND undecodable 2B 017d
+*076BC4 +2  40fd               C      bra     unk_76BC2:8
+*076BC6 +2  ee00               C      and.b   #0, r6l
+*076BC8 +6  6a2800fee000       C      mov.b   @0xFEE000:32, r0l
+*076BCE +2  e860               C      and.b   #0x60, r0l
+*076BD0 +2  1988               C      sub.w   e0, e0
+*076BD2 +2  a820               C      cmp.b   #0x20, r0l ; ' '
+*076BD4 +2  4602               C      bne     unk_76BD8:8
+*076BD6 +2  0f18               ISLAND undecodable 2B 0f18
+*076BD8 +6  6a2800fee001       C      mov.b   @0xFEE001:32, r0l  <== branch target
+*076BDE +2  1911               C      sub.w   r1, r1
+*076BE0 +2  a820               C      cmp.b   #0x20, r0l ; ' '
+*076BE2 +2  4602               C      bne     unk_76BE6:8
+*076BE4 +2  f901               C      mov.b   #1, r1l
+*076BE6 +2  6618               C      and.w   r1, e0  <== branch target
+*076BE8 +2  471c               C      beq     loc_76C06:8
+*076BEA +4  5e07823c           C      jsr     sub_7823C:24
+ 076BEE +2  6d72               C      pop.w   r2
+ 076BF0 +2  5470               C      rts
+ 076BF2 +4  5e07821e           C      jsr     sub_7821E:24  <== branch target
+ 076BF6 +2  6d72               C      pop.w   r2
+ 076BF8 +2  5470               C      rts
+ 076BFA +2  017d               ISLAND undecodable 2B 017d  <== branch target
+ 076BFC +2  40fe               C      bra     loc_76BFC:8  <== branch target
+ 076BFE +2  ee00               C      and.b   #0, r6l
+ 076C00 +2  6bf0               ISLAND undecodable 2B 6bf0
+ 076C02 +2  00ff               ISLAND undecodable 2B 00ff
+
+--- 54 insns (166 B), 9 undecodable islands (16 B) ---
+branch targets in window: 076BC3 076BD8 076BE6 076BF2 076BFA 076BFC 076C06
+islands: 076B6E(+2) 076B96(+1) 076BA7(+2) 076BAF(+1) 076BC2(+2) 076BD6(+2) 076BFA(+2) 076C00(+2) 076C02(+2)
+islands that are branch targets: 076BFA

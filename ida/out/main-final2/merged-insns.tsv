@@ -1,0 +1,821 @@
+addr	len	bytes	lanes	text
+000706	6	7a 06 00 00 00 00	I9	mov.l #0x0,er6
+00070C	4	6a 0d aa dc	I9	mov.b @0xaadc:16,r5l
+000710	2	0c de	I9	mov.b r5l,r6l
+000712	2	10 76	I9	shll.l #2,er6
+000714	6	6a 10 aa cd 73 00	I9	btst #0x0,@0xaacd:16
+00071A	4	58 60 01 d2	I9	bne .+466 (0x8f0)
+00071E	6	6a 10 aa cd 73 10	I9	btst #0x1,@0xaacd:16
+000724	4	58 60 01 e0	I9	bne .+480 (0x908)
+000728	4	6a 0c aa db	I9	mov.b @0xaadb:16,r4l
+00072C	4	58 60 00 e0	I9	bne .+224 (0x810)
+000730	4	6a 0c aa cb	I9	mov.b @0xaacb:16,r4l
+000734	2	ac 08	I9	cmp.b #0x8,r4l
+000736	4	58 50 00 86	I9	bcs .+134 (0x7c0)
+00073A	4	58 70 00 82	I9	beq .+130 (0x7c0)
+00073E	2	ac 21	I9	cmp.b #0x21,r4l
+000740	2	45 46	I9	bcs .+70 (0x788)
+000742	2	47 06	I9	beq .+6 (0x74a)
+000744	2	ac 28	I9	cmp.b #0x28,r4l
+000746	2	45 68	I9	bcs .+104 (0x7b0)
+000748	2	40 4a	I9	bra .+74 (0x794)
+00074A	4	6a 04 aa ca	I9	mov.b @0xaaca:16,r4h
+00074E	2	1a 04	I9	dec.b r4h
+000750	4	6a 84 aa ca	I9	mov.b r4h,@0xaaca:16
+000754	2	46 14	I9	bne .+20 (0x76a)
+000756	6	01 00 6b 05 aa c6	I9	mov.l @0xaac6:16,er5
+00075C	6	01 00 6b 85 aa c2	I9	mov.l er5,@0xaac2:16
+000762	2	f4 17	I9	mov.b #0x17,r4h
+000764	4	6a 84 aa ca	I9	mov.b r4h,@0xaaca:16
+000768	2	40 0e	I9	bra .+14 (0x778)
+00076A	6	01 00 6b 05 aa c2	I9	mov.l @0xaac2:16,er5
+000770	2	10 b5	I9	shal.l er5
+000772	6	01 00 6b 85 aa c2	I9	mov.l er5,@0xaac2:16
+000778	2	f4 00	I9	mov.b #0x0,r4h
+00077A	2	10 b5	I9	shal.l er5
+00077C	2	67 04	I9	bst #0x0,r4h
+00077E	4	6a 84 aa dd	I9	mov.b r4h,@0xaadd:16
+000782	2	f4 01	I9	mov.b #0x1,r4h
+000784	4	6a 84 aa dc	I9	mov.b r4h,@0xaadc:16
+000788	2	0a 0c	I9	inc r4l
+00078A	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+00078E	4	01 20 6d 76	I9	ldm.l @sp+,er4-er6
+000792	2	56 70	I9	rte 
+000794	2	fc 01	I9	mov.b #0x1,r4l
+000796	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+00079A	4	6a 04 aa dd	I9	mov.b @0xaadd:16,r4h
+00079E	2	46 ee	I9	bne .-18 (0x78e)
+0007A0	2	fc 01	I9	mov.b #0x1,r4l
+0007A2	4	6a 8c aa db	I9	mov.b r4l,@0xaadb:16
+0007A6	8	78 e0 6b 26 00 00 0d 72	I9	mov.l @(0xd72:32,er6),er6
+0007AE	2	40 2a	I9	bra .+42 (0x7da)
+0007B0	4	6a 04 aa dd	I9	mov.b @0xaadd:16,r4h
+0007B4	2	46 d2	I9	bne .-46 (0x788)
+0007B6	8	78 e0 6b 26 00 00 0d 72	I9	mov.l @(0xd72:32,er6),er6
+0007BE	2	40 0e	I9	bra .+14 (0x7ce)
+0007C0	4	6a 04 aa dd	I9	mov.b @0xaadd:16,r4h
+0007C4	2	46 c2	I9	bne .-62 (0x788)
+0007C6	8	78 e0 6b 26 00 00 0d 32	I9	mov.l @(0xd32:32,er6),er6
+0007CE	2	0a 0c	I9	inc r4l
+0007D0	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+0007D4	2	0a 0d	I9	inc r5l
+0007D6	4	6a 8d aa dc	I9	mov.b r5l,@0xaadc:16
+0007DA	2	0f e6	I9	mov.l er6,er6
+0007DC	2	4b 16	I9	bmi .+22 (0x7f4)
+0007DE	4	79 6e 00 ff	I9	and.w #0xff,e6
+0007E2	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+0007E6	2	50 ce	I9	mulxu.b r4l,e6
+0007E8	2	19 e6	I9	sub.w e6,r6
+0007EA	2	fc 64	I9	mov.b #0x64,r4l
+0007EC	2	51 c6	I9	divxu.b r4l,r6
+0007EE	2	fc 7f	I9	mov.b #0x7f,r4l
+0007F0	2	18 ec	I9	sub.b r6l,r4l
+0007F2	2	40 14	I9	bra .+20 (0x808)
+0007F4	4	79 6e 00 ff	I9	and.w #0xff,e6
+0007F8	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+0007FC	2	50 ce	I9	mulxu.b r4l,e6
+0007FE	2	19 e6	I9	sub.w e6,r6
+000800	2	fc 64	I9	mov.b #0x64,r4l
+000802	2	51 c6	I9	divxu.b r4l,r6
+000804	2	fc 7f	I9	mov.b #0x7f,r4l
+000806	2	08 ec	I9	add.b r6l,r4l
+000808	2	3c 69	I9	mov.b r4l,@0x69:8
+00080A	4	01 20 6d 76	I9	ldm.l @sp+,er4-er6
+00080E	2	56 70	I9	rte 
+000810	4	6a 0c aa cb	I9	mov.b @0xaacb:16,r4l
+000814	2	ac 08	I9	cmp.b #0x8,r4l
+000816	4	58 50 00 86	I9	bcs .+134 (0x8a0)
+00081A	4	58 70 00 82	I9	beq .+130 (0x8a0)
+00081E	2	ac 21	I9	cmp.b #0x21,r4l
+000820	2	45 46	I9	bcs .+70 (0x868)
+000822	2	47 06	I9	beq .+6 (0x82a)
+000824	2	ac 28	I9	cmp.b #0x28,r4l
+000826	2	45 68	I9	bcs .+104 (0x890)
+000828	2	40 4a	I9	bra .+74 (0x874)
+00082A	4	6a 04 aa ca	I9	mov.b @0xaaca:16,r4h
+00082E	2	1a 04	I9	dec.b r4h
+000830	4	6a 84 aa ca	I9	mov.b r4h,@0xaaca:16
+000834	2	46 14	I9	bne .+20 (0x84a)
+000836	6	01 00 6b 05 aa c6	I9	mov.l @0xaac6:16,er5
+00083C	6	01 00 6b 85 aa c2	I9	mov.l er5,@0xaac2:16
+000842	2	f4 17	I9	mov.b #0x17,r4h
+000844	4	6a 84 aa ca	I9	mov.b r4h,@0xaaca:16
+000848	2	40 0e	I9	bra .+14 (0x858)
+00084A	6	01 00 6b 05 aa c2	I9	mov.l @0xaac2:16,er5
+000850	2	10 b5	I9	shal.l er5
+000852	6	01 00 6b 85 aa c2	I9	mov.l er5,@0xaac2:16
+000858	2	f4 00	I9	mov.b #0x0,r4h
+00085A	2	10 b5	I9	shal.l er5
+00085C	2	67 84	I9	bist #0x0,r4h
+00085E	4	6a 84 aa dd	I9	mov.b r4h,@0xaadd:16
+000862	2	f4 01	I9	mov.b #0x1,r4h
+000864	4	6a 84 aa dc	I9	mov.b r4h,@0xaadc:16
+000868	2	0a 0c	I9	inc r4l
+00086A	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+00086E	4	01 20 6d 76	I9	ldm.l @sp+,er4-er6
+000872	2	56 70	I9	rte 
+000874	2	fc 01	I9	mov.b #0x1,r4l
+000876	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+00087A	4	6a 04 aa dd	I9	mov.b @0xaadd:16,r4h
+00087E	2	46 ee	I9	bne .-18 (0x86e)
+000880	2	fc 00	I9	mov.b #0x0,r4l
+000882	4	6a 8c aa db	I9	mov.b r4l,@0xaadb:16
+000886	8	78 e0 6b 26 00 00 0d 32	I9	mov.l @(0xd32:32,er6),er6
+00088E	2	40 2a	I9	bra .+42 (0x8ba)
+000890	4	6a 04 aa dd	I9	mov.b @0xaadd:16,r4h
+000894	2	46 d2	I9	bne .-46 (0x868)
+000896	8	78 e0 6b 26 00 00 0d 32	I9	mov.l @(0xd32:32,er6),er6
+00089E	2	40 0e	I9	bra .+14 (0x8ae)
+0008A0	4	6a 04 aa dd	I9	mov.b @0xaadd:16,r4h
+0008A4	2	46 c2	I9	bne .-62 (0x868)
+0008A6	8	78 e0 6b 26 00 00 0d 72	I9	mov.l @(0xd72:32,er6),er6
+0008AE	2	0a 0c	I9	inc r4l
+0008B0	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+0008B4	2	0a 0d	I9	inc r5l
+0008B6	4	6a 8d aa dc	I9	mov.b r5l,@0xaadc:16
+0008BA	2	0f e6	I9	mov.l er6,er6
+0008BC	2	4b 16	I9	bmi .+22 (0x8d4)
+0008BE	4	79 6e 00 ff	I9	and.w #0xff,e6
+0008C2	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+0008C6	2	50 ce	I9	mulxu.b r4l,e6
+0008C8	2	19 e6	I9	sub.w e6,r6
+0008CA	2	fc 64	I9	mov.b #0x64,r4l
+0008CC	2	51 c6	I9	divxu.b r4l,r6
+0008CE	2	fc 7f	I9	mov.b #0x7f,r4l
+0008D0	2	18 ec	I9	sub.b r6l,r4l
+0008D2	2	40 14	I9	bra .+20 (0x8e8)
+0008D4	4	79 6e 00 ff	I9	and.w #0xff,e6
+0008D8	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+0008DC	2	50 ce	I9	mulxu.b r4l,e6
+0008DE	2	19 e6	I9	sub.w e6,r6
+0008E0	2	fc 64	I9	mov.b #0x64,r4l
+0008E2	2	51 c6	I9	divxu.b r4l,r6
+0008E4	2	fc 7f	I9	mov.b #0x7f,r4l
+0008E6	2	08 ec	I9	add.b r6l,r4l
+0008E8	2	3c 69	I9	mov.b r4l,@0x69:8
+0008EA	4	01 20 6d 76	I9	ldm.l @sp+,er4-er6
+0008EE	2	56 70	I9	rte 
+0008F0	2	fc 02	I9	mov.b #0x2,r4l
+0008F2	4	6a 8c aa cd	I9	mov.b r4l,@0xaacd:16
+0008F6	2	fc 1e	I9	mov.b #0x1e,r4l
+0008F8	4	6a 8c aa cc	I9	mov.b r4l,@0xaacc:16
+0008FC	2	fc 07	I9	mov.b #0x7,r4l
+0008FE	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+000902	2	f4 01	I9	mov.b #0x1,r4h
+000904	4	6a 84 aa dc	I9	mov.b r4h,@0xaadc:16
+000908	4	6a 0c aa db	I9	mov.b @0xaadb:16,r4l
+00090C	4	58 60 00 a0	I9	bne .+160 (0x9b0)
+000910	4	6a 0c aa cb	I9	mov.b @0xaacb:16,r4l
+000914	2	ac 07	I9	cmp.b #0x7,r4l
+000916	2	45 4e	I9	bcs .+78 (0x966)
+000918	2	47 4c	I9	beq .+76 (0x966)
+00091A	2	ac 0e	I9	cmp.b #0xe,r4l
+00091C	2	45 0e	I9	bcs .+14 (0x92c)
+00091E	2	47 06	I9	beq .+6 (0x926)
+000920	2	ac 14	I9	cmp.b #0x14,r4l
+000922	2	45 38	I9	bcs .+56 (0x95c)
+000924	2	40 12	I9	bra .+18 (0x938)
+000926	2	f4 01	I9	mov.b #0x1,r4h
+000928	4	6a 84 aa dc	I9	mov.b r4h,@0xaadc:16
+00092C	2	0a 0c	I9	inc r4l
+00092E	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+000932	4	01 20 6d 76	I9	ldm.l @sp+,er4-er6
+000936	2	56 70	I9	rte 
+000938	8	78 e0 6b 26 00 00 0d ea	I9	mov.l @(0xdea:32,er6),er6
+000940	2	fc 01	I9	mov.b #0x1,r4l
+000942	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+000946	2	fc 01	I9	mov.b #0x1,r4l
+000948	4	6a 8c aa db	I9	mov.b r4l,@0xaadb:16
+00094C	4	6a 0c aa cc	I9	mov.b @0xaacc:16,r4l
+000950	2	1a 0c	I9	dec.b r4l
+000952	4	6a 8c aa cc	I9	mov.b r4l,@0xaacc:16
+000956	4	58 70 00 f4	I9	beq .+244 (0xa4e)
+00095A	2	40 1e	I9	bra .+30 (0x97a)
+00095C	8	78 e0 6b 26 00 00 0d ea	I9	mov.l @(0xdea:32,er6),er6
+000964	2	40 08	I9	bra .+8 (0x96e)
+000966	8	78 e0 6b 26 00 00 0d b2	I9	mov.l @(0xdb2:32,er6),er6
+00096E	2	0a 0c	I9	inc r4l
+000970	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+000974	2	0a 0d	I9	inc r5l
+000976	4	6a 8d aa dc	I9	mov.b r5l,@0xaadc:16
+00097A	2	0f e6	I9	mov.l er6,er6
+00097C	2	4b 16	I9	bmi .+22 (0x994)
+00097E	4	79 6e 00 ff	I9	and.w #0xff,e6
+000982	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+000986	2	50 ce	I9	mulxu.b r4l,e6
+000988	2	19 e6	I9	sub.w e6,r6
+00098A	2	fc 64	I9	mov.b #0x64,r4l
+00098C	2	51 c6	I9	divxu.b r4l,r6
+00098E	2	fc 7f	I9	mov.b #0x7f,r4l
+000990	2	18 ec	I9	sub.b r6l,r4l
+000992	2	40 14	I9	bra .+20 (0x9a8)
+000994	4	79 6e 00 ff	I9	and.w #0xff,e6
+000998	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+00099C	2	50 ce	I9	mulxu.b r4l,e6
+00099E	2	19 e6	I9	sub.w e6,r6
+0009A0	2	fc 64	I9	mov.b #0x64,r4l
+0009A2	2	51 c6	I9	divxu.b r4l,r6
+0009A4	2	fc 7f	I9	mov.b #0x7f,r4l
+0009A6	2	08 ec	I9	add.b r6l,r4l
+0009A8	2	3c 69	I9	mov.b r4l,@0x69:8
+0009AA	4	01 20 6d 76	I9	ldm.l @sp+,er4-er6
+0009AE	2	56 70	I9	rte 
+0009B0	4	6a 0c aa cb	I9	mov.b @0xaacb:16,r4l
+0009B4	2	ac 07	I9	cmp.b #0x7,r4l
+0009B6	2	45 4c	I9	bcs .+76 (0xa04)
+0009B8	2	47 4a	I9	beq .+74 (0xa04)
+0009BA	2	ac 0e	I9	cmp.b #0xe,r4l
+0009BC	2	45 0e	I9	bcs .+14 (0x9cc)
+0009BE	2	47 06	I9	beq .+6 (0x9c6)
+0009C0	2	ac 14	I9	cmp.b #0x14,r4l
+0009C2	2	45 36	I9	bcs .+54 (0x9fa)
+0009C4	2	40 12	I9	bra .+18 (0x9d8)
+0009C6	2	f4 01	I9	mov.b #0x1,r4h
+0009C8	4	6a 84 aa dc	I9	mov.b r4h,@0xaadc:16
+0009CC	2	0a 0c	I9	inc r4l
+0009CE	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+0009D2	4	01 20 6d 76	I9	ldm.l @sp+,er4-er6
+0009D6	2	56 70	I9	rte 
+0009D8	8	78 e0 6b 26 00 00 0d b2	I9	mov.l @(0xdb2:32,er6),er6
+0009E0	2	fc 01	I9	mov.b #0x1,r4l
+0009E2	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+0009E6	2	fc 00	I9	mov.b #0x0,r4l
+0009E8	4	6a 8c aa db	I9	mov.b r4l,@0xaadb:16
+0009EC	4	6a 0c aa cc	I9	mov.b @0xaacc:16,r4l
+0009F0	2	1a 0c	I9	dec.b r4l
+0009F2	4	6a 8c aa cc	I9	mov.b r4l,@0xaacc:16
+0009F6	2	47 56	I9	beq .+86 (0xa4e)
+0009F8	2	40 1e	I9	bra .+30 (0xa18)
+0009FA	8	78 e0 6b 26 00 00 0d b2	I9	mov.l @(0xdb2:32,er6),er6
+000A02	2	40 08	I9	bra .+8 (0xa0c)
+000A04	8	78 e0 6b 26 00 00 0d ea	I9	mov.l @(0xdea:32,er6),er6
+000A0C	2	0a 0c	I9	inc r4l
+000A0E	4	6a 8c aa cb	I9	mov.b r4l,@0xaacb:16
+000A12	2	0a 0d	I9	inc r5l
+000A14	4	6a 8d aa dc	I9	mov.b r5l,@0xaadc:16
+000A18	2	0f e6	I9	mov.l er6,er6
+000A1A	2	4b 16	I9	bmi .+22 (0xa32)
+000A1C	4	79 6e 00 ff	I9	and.w #0xff,e6
+000A20	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+000A24	2	50 ce	I9	mulxu.b r4l,e6
+000A26	2	19 e6	I9	sub.w e6,r6
+000A28	2	fc 64	I9	mov.b #0x64,r4l
+000A2A	2	51 c6	I9	divxu.b r4l,r6
+000A2C	2	fc 7f	I9	mov.b #0x7f,r4l
+000A2E	2	18 ec	I9	sub.b r6l,r4l
+000A30	2	40 14	I9	bra .+20 (0xa46)
+000A32	4	79 6e 00 ff	I9	and.w #0xff,e6
+000A36	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+000A3A	2	50 ce	I9	mulxu.b r4l,e6
+000A3C	2	19 e6	I9	sub.w e6,r6
+000A3E	2	fc 64	I9	mov.b #0x64,r4l
+000A40	2	51 c6	I9	divxu.b r4l,r6
+000A42	2	fc 7f	I9	mov.b #0x7f,r4l
+000A44	2	08 ec	I9	add.b r6l,r4l
+000A46	2	3c 69	I9	mov.b r4l,@0x69:8
+000A48	4	01 20 6d 76	I9	ldm.l @sp+,er4-er6
+000A4C	2	56 70	I9	rte 
+000A4E	2	0f e6	I9	mov.l er6,er6
+000A50	2	4b 16	I9	bmi .+22 (0xa68)
+000A52	4	79 6e 00 ff	I9	and.w #0xff,e6
+000A56	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+000A5A	2	50 ce	I9	mulxu.b r4l,e6
+000A5C	2	19 e6	I9	sub.w e6,r6
+000A5E	2	fc 64	I9	mov.b #0x64,r4l
+000A60	2	51 c6	I9	divxu.b r4l,r6
+000A62	2	fc 7f	I9	mov.b #0x7f,r4l
+000A64	2	18 ec	I9	sub.b r6l,r4l
+000A66	2	40 14	I9	bra .+20 (0xa7c)
+000A68	4	79 6e 00 ff	I9	and.w #0xff,e6
+000A6C	4	6a 0c aa de	I9	mov.b @0xaade:16,r4l
+000A70	2	50 ce	I9	mulxu.b r4l,e6
+000A72	2	19 e6	I9	sub.w e6,r6
+000A74	2	fc 64	I9	mov.b #0x64,r4l
+000A76	2	51 c6	I9	divxu.b r4l,r6
+000A78	2	fc 7f	I9	mov.b #0x7f,r4l
+000A7A	2	08 ec	I9	add.b r6l,r4l
+000A7C	2	3c 69	I9	mov.b r4l,@0x69:8
+000A7E	4	5e 02 f5 50	I9	jsr @0x2f550:24
+000A82	2	fc 7f	I9	mov.b #0x7f,r4l
+000A84	2	3c 69	I9	mov.b r4l,@0x69:8
+000A86	4	01 20 6d 76	I9	ldm.l @sp+,er4-er6
+000A8A	2	56 70	I9	rte 
+00327E	2	0c aa	I8x	mov.b r2l,r2l
+003280	2	46 06	I8x	bne .+6 (0x3288)
+003282	2	fc 01	I8x	mov.b #0x1,r4l
+003284	4	6a 8c a9 e0	I8x	mov.b r4l,@0xa9e0:16
+003288	2	54 70	I8x	rts 
+00328A	2	0c aa	I8x	mov.b r2l,r2l
+00328C	2	47 0c	I8x	beq .+12 (0x329a)
+00328E	2	fc 50	I8x	mov.b #0x50,r4l
+003290	4	6a 8c 95 36	I8x	mov.b r4l,@0x9536:16
+003294	2	fc 02	I8x	mov.b #0x2,r4l
+003296	4	6a 8c a9 e0	I8x	mov.b r4l,@0xa9e0:16
+00329A	2	54 70	I8x	rts 
+00329C	2	0c aa	I8x	mov.b r2l,r2l
+00329E	2	47 0c	I8x	beq .+12 (0x32ac)
+0032A0	4	6a 0c 95 36	I8x	mov.b @0x9536:16,r4l
+0032A4	2	46 18	I8x	bne .+24 (0x32be)
+0032A6	2	04 80	I8x	orc #0x80,ccr
+0032A8	4	5a 00 25 ac	I8x	jmp @0x25ac:24
+0032AC	4	6a 0c 95 36	I8x	mov.b @0x9536:16,r4l
+0032B0	2	ac 46	I8x	cmp.b #0x46,r4l
+0032B2	2	44 04	I8x	bcc .+4 (0x32b8)
+0032B4	4	5e 01 cf 0a	I8x	jsr @0x1cf0a:24
+0032B8	2	fc 01	I8x	mov.b #0x1,r4l
+0032BA	4	6a 8c a9 e0	I8x	mov.b r4l,@0xa9e0:16
+0032BE	2	54 70	I8x	rts 
+016A44	2	fe 04	I6	mov.b #0x4,r6l
+016A46	6	7a 05 00 ff ad 8a	I6	mov.l #0xffad8a,er5
+019250	4	79 01 00 73	I6	mov.w #0x73,r1
+019254	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019258	4	79 01 00 74	I6	mov.w #0x74,r1
+01925C	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019260	4	79 01 00 77	I6	mov.w #0x77,r1
+019264	4	5e 03 cc bc	I6	jsr @0x3ccbc:24
+019268	4	79 01 00 9f	I6	mov.w #0x9f,r1
+01926C	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019270	4	79 01 00 75	I6	mov.w #0x75,r1
+019274	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019278	4	79 01 00 76	I6	mov.w #0x76,r1
+01927C	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019280	4	79 01 00 80	I6	mov.w #0x80,r1
+019284	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019288	4	79 01 00 84	I6	mov.w #0x84,r1
+01928C	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019290	4	79 01 00 85	I6	mov.w #0x85,r1
+019294	4	5e 03 cc bc	I6	jsr @0x3ccbc:24
+019298	4	79 01 00 9e	I6	mov.w #0x9e,r1
+01929C	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0192B0	4	79 01 00 87	I6	mov.w #0x87,r1
+0192B4	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0192B8	4	79 01 00 8a	I6	mov.w #0x8a,r1
+0192BC	4	5e 03 cc bc	I6	jsr @0x3ccbc:24
+0192C0	4	58 00 01 0e	I6	bra .+270 (0x193d2)
+0192C4	4	79 01 00 89	I6	mov.w #0x89,r1
+0192C8	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0192CC	4	79 01 00 8b	I6	mov.w #0x8b,r1
+0192D0	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0192D4	4	79 01 00 8d	I6	mov.w #0x8d,r1
+0192D8	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0192DC	4	79 01 00 8c	I6	mov.w #0x8c,r1
+0192E0	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0192E4	4	79 01 00 93	I6	mov.w #0x93,r1
+0192E8	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0192EC	4	79 01 00 90	I6	mov.w #0x90,r1
+0192F0	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0192F4	4	79 01 00 8f	I6	mov.w #0x8f,r1
+0192F8	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0192FC	6	7a 01 00 ff 89 90	I6	mov.l #0xff8990,er1
+019302	4	79 06 00 02	I6	mov.w #0x2,r6
+019306	4	5a 03 cc d0	I6	jmp @0x3ccd0:24
+01930A	4	79 01 00 92	I6	mov.w #0x92,r1
+01930E	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019312	4	79 01 00 96	I6	mov.w #0x96,r1
+019316	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01931A	4	79 01 00 91	I6	mov.w #0x91,r1
+01931E	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019322	4	79 01 00 97	I6	mov.w #0x97,r1
+019326	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01932A	4	79 01 00 95	I6	mov.w #0x95,r1
+01932E	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01933A	4	79 01 00 9a	I6	mov.w #0x9a,r1
+01933E	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019342	4	79 01 00 72	I6	mov.w #0x72,r1
+019346	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01934A	4	79 01 00 a7	I6	mov.w #0xa7,r1
+01934E	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019362	4	79 01 00 ac	I6	mov.w #0xac,r1
+019366	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01936A	6	7a 01 00 ff 89 cd	I6	mov.l #0xff89cd,er1
+019370	4	79 06 00 03	I6	mov.w #0x3,r6
+019374	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+019378	2	40 58	I6	bra .+88 (0x193d2)
+01937A	4	79 01 00 b0	I6	mov.w #0xb0,r1
+01937E	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019382	4	79 01 00 a8	I6	mov.w #0xa8,r1
+019386	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019392	4	79 01 00 94	I6	mov.w #0x94,r1
+019396	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01939A	4	79 01 00 9e	I6	mov.w #0x9e,r1
+01939E	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0193BA	4	79 01 00 a2	I6	mov.w #0xa2,r1
+0193BE	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0193C2	4	79 01 00 a3	I6	mov.w #0xa3,r1
+0193C6	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0193D2	4	79 01 00 a5	I6	mov.w #0xa5,r1
+0193D6	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0193DA	2	54 70	I6	rts 
+0193DC	6	7a 01 00 ff 89 bb	I6	mov.l #0xff89bb,er1
+0193E2	4	79 06 00 02	I6	mov.w #0x2,r6
+0193E6	4	5a 03 cc d0	I6	jmp @0x3ccd0:24
+0193EA	6	7a 01 00 ff 89 d1	I6	mov.l #0xff89d1,er1
+0193F0	4	79 06 00 02	I6	mov.w #0x2,r6
+0193F4	4	5a 03 cc d0	I6	jmp @0x3ccd0:24
+019406	4	6e 0c 00 05	I6	mov.b @(0x5:16,er0),r4l
+01940A	2	ac 02	I6	cmp.b #0x2,r4l
+01940C	2	47 0e	I6	beq .+14 (0x1941c)
+01940E	2	ac 05	I6	cmp.b #0x5,r4l
+019410	2	46 12	I6	bne .+18 (0x19424)
+019412	4	6e 0b 00 03	I6	mov.b @(0x3:16,er0),r3l
+019416	4	5e 03 aa 66	I6	jsr @0x3aa66:24
+01941A	2	40 08	I6	bra .+8 (0x19424)
+01941C	4	5e 03 f2 1a	I6	jsr @0x3f21a:24
+019420	4	5e 03 a9 f6	I6	jsr @0x3a9f6:24
+019424	2	54 70	I6	rts 
+019426	4	6e 0c 00 05	I6	mov.b @(0x5:16,er0),r4l
+01942A	2	ac 02	I6	cmp.b #0x2,r4l
+01942C	2	46 14	I6	bne .+20 (0x19442)
+01942E	4	5e 03 f1 dc	I6	jsr @0x3f1dc:24
+019432	2	47 0e	I6	beq .+14 (0x19442)
+019434	6	7a 01 00 ff 89 76	I6	mov.l #0xff8976,er1
+01943A	4	79 06 00 02	I6	mov.w #0x2,r6
+01943E	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+019442	2	54 70	I6	rts 
+019444	6	6a 10 aa 30 73 60	I6	btst #0x6,@0xaa30:16
+01944A	2	47 06	I6	beq .+6 (0x19452)
+01944C	6	6a 18 aa 30 72 60	I6	bclr #0x6,@0xaa30:16
+019452	2	54 70	I6	rts 
+019474	6	7a 01 00 ff 89 26	I6	mov.l #0xff8926,er1
+01947A	4	79 06 00 10	I6	mov.w #0x10,r6
+01947E	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+019482	4	79 01 00 9e	I6	mov.w #0x9e,r1
+019486	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01948A	6	7a 01 00 ff 89 99	I6	mov.l #0xff8999,er1
+019490	4	79 06 00 07	I6	mov.w #0x7,r6
+019494	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+019498	6	7a 01 00 ff 89 c1	I6	mov.l #0xff89c1,er1
+01949E	4	79 06 00 01	I6	mov.w #0x1,r6
+0194A2	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+0194A6	4	79 01 00 a0	I6	mov.w #0xa0,r1
+0194AA	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0194AE	6	7a 01 00 ff 89 a1	I6	mov.l #0xff89a1,er1
+0194B4	4	79 06 00 01	I6	mov.w #0x1,r6
+0194B8	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+0194BC	6	7a 01 00 ff 89 a2	I6	mov.l #0xff89a2,er1
+0194C2	4	79 06 00 01	I6	mov.w #0x1,r6
+0194C6	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+0194CA	4	79 01 00 a0	I6	mov.w #0xa0,r1
+0194CE	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01950E	4	79 01 00 9f	I6	mov.w #0x9f,r1
+019512	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019516	4	6e 0c 00 05	I6	mov.b @(0x5:16,er0),r4l
+01951A	2	ac 02	I6	cmp.b #0x2,r4l
+01951C	2	47 18	I6	beq .+24 (0x19536)
+01951E	2	ac 05	I6	cmp.b #0x5,r4l
+019520	2	46 26	I6	bne .+38 (0x19548)
+019522	4	6e 0c 00 12	I6	mov.b @(0x12:16,er0),r4l
+019526	2	70 7c	I6	bset #0x7,r4l
+019528	4	6e 8c 00 12	I6	mov.b r4l,@(0x12:16,er0)
+01952C	4	6e 0b 00 03	I6	mov.b @(0x3:16,er0),r3l
+019530	4	5e 03 a8 e2	I6	jsr @0x3a8e2:24
+019534	2	40 12	I6	bra .+18 (0x19548)
+019536	4	6e 0c 00 12	I6	mov.b @(0x12:16,er0),r4l
+01953A	2	70 7c	I6	bset #0x7,r4l
+01953C	4	6e 8c 00 12	I6	mov.b r4l,@(0x12:16,er0)
+019540	4	5e 03 f2 1a	I6	jsr @0x3f21a:24
+019544	4	5e 03 a9 22	I6	jsr @0x3a922:24
+019548	2	54 70	I6	rts 
+01954A	6	7a 01 00 ff 89 88	I6	mov.l #0xff8988,er1
+019550	4	79 06 00 02	I6	mov.w #0x2,r6
+019554	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+019558	6	7a 01 00 ff 89 8a	I6	mov.l #0xff898a,er1
+01955E	4	79 06 00 02	I6	mov.w #0x2,r6
+019562	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+019566	4	79 01 00 a1	I6	mov.w #0xa1,r1
+01956A	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01956E	6	7a 01 00 ff 89 8a	I6	mov.l #0xff898a,er1
+019574	4	79 06 00 02	I6	mov.w #0x2,r6
+019578	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+01957C	4	79 01 00 a1	I6	mov.w #0xa1,r1
+019580	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019584	6	7a 01 00 ff 89 68	I6	mov.l #0xff8968,er1
+01958A	4	79 06 00 04	I6	mov.w #0x4,r6
+01958E	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+019592	4	79 01 00 a3	I6	mov.w #0xa3,r1
+019596	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+01959A	6	6a 10 aa 34 73 60	I6	btst #0x6,@0xaa34:16
+0195A0	2	47 2e	I6	beq .+46 (0x195d0)
+0195A2	6	6a 18 aa 34 72 60	I6	bclr #0x6,@0xaa34:16
+0195A8	4	5e 01 6a 44	I6	jsr @0x16a44:24
+0195AC	2	4b 22	I6	bmi .+34 (0x195d0)
+0195AE	6	01 00 6b 04 ad 8a	I6	mov.l @0xad8a:16,er4
+0195B4	6	01 00 6b 84 89 6c	I6	mov.l er4,@0x896c:16
+0195BA	6	7a 01 00 ff 89 6c	I6	mov.l #0xff896c,er1
+0195C0	4	79 06 00 04	I6	mov.w #0x4,r6
+0195C4	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+0195C8	4	79 01 00 a2	I6	mov.w #0xa2,r1
+0195CC	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0195D0	2	54 70	I6	rts 
+0195D2	4	6e 0c 00 05	I6	mov.b @(0x5:16,er0),r4l
+0195D6	2	ac 02	I6	cmp.b #0x2,r4l
+0195D8	2	46 42	I6	bne .+66 (0x1961c)
+0195DA	4	5e 03 f1 dc	I6	jsr @0x3f1dc:24
+0195DE	2	ac 04	I6	cmp.b #0x4,r4l
+0195E0	2	47 20	I6	beq .+32 (0x19602)
+0195E2	2	ac 07	I6	cmp.b #0x7,r4l
+0195E4	2	46 36	I6	bne .+54 (0x1961c)
+0195E6	4	5e 03 ce cc	I6	jsr @0x3cecc:24
+0195EA	4	5e 03 f2 1a	I6	jsr @0x3f21a:24
+0195EE	6	7a 63 00 00 ff ff	I6	and.l #0xffff,er3
+0195F4	4	6e 0c 00 16	I6	mov.b @(0x16:16,er0),r4l
+0195F8	4	6e bc ac e2	I6	mov.b r4l,@(0xace2:16,er3)
+0195FC	4	5e 03 ce dc	I6	jsr @0x3cedc:24
+019600	2	40 1a	I6	bra .+26 (0x1961c)
+019602	4	5e 03 ce 9a	I6	jsr @0x3ce9a:24
+019606	4	5e 03 f2 1a	I6	jsr @0x3f21a:24
+01960A	6	7a 63 00 00 ff ff	I6	and.l #0xffff,er3
+019610	4	6e 0c 00 16	I6	mov.b @(0x16:16,er0),r4l
+019614	4	6e bc ac e2	I6	mov.b r4l,@(0xace2:16,er3)
+019618	4	5e 03 ce aa	I6	jsr @0x3ceaa:24
+01961C	2	54 70	I6	rts 
+01961E	6	7a 02 00 00 00 14	I6	mov.l #0x14,er2
+019624	4	6e 09 00 17	I6	mov.b @(0x17:16,er0),r1l
+019628	2	55 10	I6	bsr .+16 (0x1963a)
+01962A	2	54 70	I6	rts 
+01962C	6	7a 02 00 00 00 28	I6	mov.l #0x28,er2
+019632	4	6e 09 00 18	I6	mov.b @(0x18:16,er0),r1l
+019636	2	55 02	I6	bsr .+2 (0x1963a)
+019638	2	54 70	I6	rts 
+019664	4	79 01 00 9e	I6	mov.w #0x9e,r1
+019668	4	5e 03 cc bc	I6	jsr @0x3ccbc:24
+01966C	4	79 01 00 9f	I6	mov.w #0x9f,r1
+019670	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+019674	4	6e 0c 00 05	I6	mov.b @(0x5:16,er0),r4l
+019678	2	ac 02	I6	cmp.b #0x2,r4l
+01967A	2	46 22	I6	bne .+34 (0x1969e)
+01967C	4	5e 03 f1 dc	I6	jsr @0x3f1dc:24
+019680	2	ac 04	I6	cmp.b #0x4,r4l
+019682	2	46 1a	I6	bne .+26 (0x1969e)
+019684	4	5e 03 f2 1a	I6	jsr @0x3f21a:24
+019688	6	7a 63 00 00 ff ff	I6	and.l #0xffff,er3
+01968E	4	5e 03 ce 9a	I6	jsr @0x3ce9a:24
+019692	4	6e 0c 00 34	I6	mov.b @(0x34:16,er0),r4l
+019696	4	6e bc ac f6	I6	mov.b r4l,@(0xacf6:16,er3)
+01969A	4	5e 03 ce aa	I6	jsr @0x3ceaa:24
+01969E	2	54 70	I6	rts 
+0196A0	6	7a 01 00 ff 89 8c	I6	mov.l #0xff898c,er1
+0196A6	4	79 06 00 02	I6	mov.w #0x2,r6
+0196AA	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+0196AE	2	54 70	I6	rts 
+0196B0	6	7a 01 00 ff 89 8e	I6	mov.l #0xff898e,er1
+0196B6	4	79 06 00 02	I6	mov.w #0x2,r6
+0196BA	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+0196BE	4	79 01 00 a6	I6	mov.w #0xa6,r1
+0196C2	4	5a 03 cc bc	I6	jmp @0x3ccbc:24
+0196C6	6	7a 01 00 ff 8a 1c	I6	mov.l #0xff8a1c,er1
+0196CC	4	79 06 00 04	I6	mov.w #0x4,r6
+0196D0	4	5e 03 cc d0	I6	jsr @0x3ccd0:24
+0196D4	2	54 70	I6	rts 
+019762	2	54 70	I6	rts 
+01976C	4	79 01 00 00	I6	mov.w #0x0,r1
+019770	4	5a 03 cc ec	I6	jmp @0x3ccec:24
+019774	4	79 01 00 1d	I6	mov.w #0x1d,r1
+019778	4	5a 03 cc ec	I6	jmp @0x3ccec:24
+01977C	4	79 01 00 1c	I6	mov.w #0x1c,r1
+019780	4	5a 03 cc ec	I6	jmp @0x3ccec:24
+019784	4	79 01 01 28	I6	mov.w #0x128,r1
+019788	4	5e 03 cc ec	I6	jsr @0x3ccec:24
+01978C	4	79 01 01 2a	I6	mov.w #0x12a,r1
+019790	4	5a 03 cc ec	I6	jmp @0x3ccec:24
+019794	4	79 01 01 8d	I6	mov.w #0x18d,r1
+019798	4	5e 03 cc ec	I6	jsr @0x3ccec:24
+01979C	4	79 01 00 01	I6	mov.w #0x1,r1
+0197A0	4	5e 03 cc ec	I6	jsr @0x3ccec:24
+0197A4	6	7a 01 00 ff 8a c0	I6	mov.l #0xff8ac0,er1
+0197AA	4	79 06 00 02	I6	mov.w #0x2,r6
+0197AE	4	5e 03 cd 00	I6	jsr @0x3cd00:24
+0197B2	6	7a 01 00 ff 8c 1e	I6	mov.l #0xff8c1e,er1
+0197B8	4	79 06 00 04	I6	mov.w #0x4,r6
+0197BC	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+0197C0	6	7a 01 00 ff 8a fc	I6	mov.l #0xff8afc,er1
+0197C6	4	79 06 00 82	I6	mov.w #0x82,r6
+0197CA	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+0197CE	2	fc 00	I6	mov.b #0x0,r4l
+0197D0	4	6a 8c 8a c2	I6	mov.b r4l,@0x8ac2:16
+0197D4	6	7a 01 00 ff 8a c2	I6	mov.l #0xff8ac2,er1
+0197DA	4	79 06 00 3a	I6	mov.w #0x3a,r6
+0197DE	4	5e 03 cd 00	I6	jsr @0x3cd00:24
+0197E2	6	7a 01 00 ff 8b e5	I6	mov.l #0xff8be5,er1
+0197E8	4	79 06 00 39	I6	mov.w #0x39,r6
+0197EC	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+0197F0	6	7a 01 00 ff 8b 7e	I6	mov.l #0xff8b7e,er1
+0197F6	4	79 06 00 4a	I6	mov.w #0x4a,r6
+0197FA	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+0197FE	6	7a 01 00 ff 8a a2	I6	mov.l #0xff8aa2,er1
+019804	4	79 06 00 07	I6	mov.w #0x7,r6
+019808	4	5e 03 cd 00	I6	jsr @0x3cd00:24
+01980C	4	5e 01 7d 90	I6	jsr @0x17d90:24
+019810	4	5e 05 0f e8	I6	jsr @0x50fe8:24
+019814	2	54 70	I6	rts 
+019816	6	7a 01 00 ff 8a b0	I6	mov.l #0xff8ab0,er1
+01981C	4	79 06 00 09	I6	mov.w #0x9,r6
+019820	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+019824	4	79 01 00 09	I6	mov.w #0x9,r1
+019828	4	5a 03 cc ec	I6	jmp @0x3ccec:24
+01982C	4	79 01 01 29	I6	mov.w #0x129,r1
+019830	4	5a 03 cc ec	I6	jmp @0x3ccec:24
+019834	6	7a 01 00 ff 8c 42	I6	mov.l #0xff8c42,er1
+01983A	4	79 06 00 14	I6	mov.w #0x14,r6
+01983E	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+01984A	6	7a 01 00 ff 8a ac	I6	mov.l #0xff8aac,er1
+019850	4	79 06 00 02	I6	mov.w #0x2,r6
+019854	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+019866	6	7a 01 00 ff 8a ae	I6	mov.l #0xff8aae,er1
+01986C	4	79 06 00 02	I6	mov.w #0x2,r6
+019870	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+019874	6	7a 01 00 ff 8b e2	I6	mov.l #0xff8be2,er1
+01987A	4	79 06 00 03	I6	mov.w #0x3,r6
+01987E	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+019882	6	7a 01 00 ff 8c 22	I6	mov.l #0xff8c22,er1
+019888	4	79 06 00 03	I6	mov.w #0x3,r6
+01988C	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+019890	6	7a 01 00 ff 8c 26	I6	mov.l #0xff8c26,er1
+019896	4	79 06 00 05	I6	mov.w #0x5,r6
+01989A	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+01989E	6	7a 01 00 ff 8c 2e	I6	mov.l #0xff8c2e,er1
+0198A4	4	79 06 00 14	I6	mov.w #0x14,r6
+0198A8	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+0198AC	2	54 70	I6	rts 
+0198AE	6	7a 01 00 ff 8c f8	I6	mov.l #0xff8cf8,er1
+0198B4	4	79 06 00 02	I6	mov.w #0x2,r6
+0198B8	4	5a 03 cd 00	I6	jmp @0x3cd00:24
+0198BC	4	79 01 01 8b	I6	mov.w #0x18b,r1
+0198C0	4	5a 03 cc ec	I6	jmp @0x3ccec:24
+0198FA	4	79 01 00 bc	I6	mov.w #0xbc,r1
+0198FE	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+019910	6	7a 01 00 ff 8d 85	I6	mov.l #0xff8d85,er1
+019916	4	79 06 00 02	I6	mov.w #0x2,r6
+01991A	4	5a 03 cd 30	I6	jmp @0x3cd30:24
+01991E	4	79 01 00 67	I6	mov.w #0x67,r1
+019922	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+019926	4	79 01 01 0a	I6	mov.w #0x10a,r1
+01992A	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+01992E	4	79 01 01 0b	I6	mov.w #0x10b,r1
+019932	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+019936	4	79 01 01 0c	I6	mov.w #0x10c,r1
+01993A	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+01993E	4	79 01 01 0d	I6	mov.w #0x10d,r1
+019942	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+019946	6	7a 01 00 ff 8d 22	I6	mov.l #0xff8d22,er1
+01994C	4	79 06 00 02	I6	mov.w #0x2,r6
+019950	4	5a 03 cd 30	I6	jmp @0x3cd30:24
+019976	4	79 01 00 62	I6	mov.w #0x62,r1
+01997A	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+01997E	6	7a 01 00 ff 8e 20	I6	mov.l #0xff8e20,er1
+019984	4	79 06 00 02	I6	mov.w #0x2,r6
+019988	4	5a 03 cd 30	I6	jmp @0x3cd30:24
+01998C	6	7a 01 00 ff 8e 22	I6	mov.l #0xff8e22,er1
+019992	4	79 06 00 04	I6	mov.w #0x4,r6
+019996	4	5a 03 cd 30	I6	jmp @0x3cd30:24
+01999A	6	7a 01 00 ff 8e 26	I6	mov.l #0xff8e26,er1
+0199A0	4	79 06 00 04	I6	mov.w #0x4,r6
+0199A4	4	5a 03 cd 30	I6	jmp @0x3cd30:24
+0199A8	4	79 01 01 0e	I6	mov.w #0x10e,r1
+0199AC	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+0199B0	6	7a 01 00 ff 8e 2f	I6	mov.l #0xff8e2f,er1
+0199B6	4	79 06 00 05	I6	mov.w #0x5,r6
+0199BA	4	5a 03 cd 30	I6	jmp @0x3cd30:24
+0199BE	6	7a 01 00 ff 8e 34	I6	mov.l #0xff8e34,er1
+0199C4	4	79 06 00 02	I6	mov.w #0x2,r6
+0199C8	4	5a 03 cd 30	I6	jmp @0x3cd30:24
+0199CC	4	79 01 01 16	I6	mov.w #0x116,r1
+0199D0	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+0199D4	4	79 01 01 1d	I6	mov.w #0x11d,r1
+0199D8	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+0199DC	4	79 01 01 1e	I6	mov.w #0x11e,r1
+0199E0	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+0199E4	4	79 01 01 1f	I6	mov.w #0x11f,r1
+0199E8	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+0199EC	6	7a 01 00 ff 8d 88	I6	mov.l #0xff8d88,er1
+0199F2	4	79 06 00 02	I6	mov.w #0x2,r6
+0199F6	4	5a 03 cd 30	I6	jmp @0x3cd30:24
+0199FA	4	79 01 00 6c	I6	mov.w #0x6c,r1
+0199FE	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+019A02	4	79 01 00 6d	I6	mov.w #0x6d,r1
+019A06	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+019A0A	4	79 01 00 6e	I6	mov.w #0x6e,r1
+019A0E	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+019A12	4	79 01 00 6f	I6	mov.w #0x6f,r1
+019A16	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+019A1A	4	79 01 00 b4	I6	mov.w #0xb4,r1
+019A1E	4	5a 03 cd 1c	I6	jmp @0x3cd1c:24
+019A22	6	7a 01 00 ff 8d 90	I6	mov.l #0xff8d90,er1
+019A28	4	79 06 00 0e	I6	mov.w #0xe,r6
+019A2C	4	5a 03 cd 30	I6	jmp @0x3cd30:24
+019A8A	6	6a 10 aa 30 73 60	I6	btst #0x6,@0xaa30:16
+019A90	2	47 0a	I6	beq .+10 (0x19a9c)
+019A92	6	6a 18 aa 30 72 60	I6	bclr #0x6,@0xaa30:16
+019A98	4	5e 03 dd 32	I6	jsr @0x3dd32:24
+019A9C	2	54 70	I6	rts 
+01A084	6	7a 02 00 01 a1 f8	I9	mov.l #0x1a1f8,er2
+01A08A	2	40 5e	I9	bra .+94 (0x1a0ea)
+01BEF2	4	6a 0c bc 34	I9	mov.b @0xbc34:16,r4l
+01BEF6	2	47 14	I9	beq .+20 (0x1bf0c)
+01BEF8	2	ac 01	I9	cmp.b #0x1,r4l
+01BEFA	2	47 08	I9	beq .+8 (0x1bf04)
+01BEFC	6	7a 04 00 01 b3 52	I9	mov.l #0x1b352,er4
+01BF02	2	40 0e	I9	bra .+14 (0x1bf12)
+01BF04	6	7a 04 00 01 bc fe	I9	mov.l #0x1bcfe,er4
+01BF0A	2	40 06	I9	bra .+6 (0x1bf12)
+01BF0C	6	7a 04 00 01 b1 d0	I9	mov.l #0x1b1d0,er4
+01BF12	4	6a 8a ad 80	I9	mov.b r2l,@0xad80:16
+01BF16	4	5e 01 a9 ec	I9	jsr @0x1a9ec:24
+01BF1A	2	47 0a	I9	beq .+10 (0x1bf26)
+01BF1C	4	6a 0c b9 ed	I9	mov.b @0xb9ed:16,r4l
+01BF20	2	0a 0c	I9	inc r4l
+01BF22	4	6a 8c b9 ed	I9	mov.b r4l,@0xb9ed:16
+01BF26	2	54 70	I9	rts 
+01BF28	6	6a 18 aa 30 70 70	I9	bset #0x7,@0xaa30:16
+01BF2E	4	5e 01 9f ae	I9	jsr @0x19fae:24
+01BF32	4	6a 0c b9 ed	I9	mov.b @0xb9ed:16,r4l
+01BF36	2	54 70	I9	rts 
+029732	6	7a 01 00 ff ba 02	I9	mov.l #0xffba02,er1
+029738	6	7a 02 00 00 00 00	I9	mov.l #0x0,er2
+02973E	4	6a 0a b9 ed	I9	mov.b @0xb9ed:16,r2l
+029742	4	6a 0c b9 e4	I9	mov.b @0xb9e4:16,r4l
+029746	2	ac 04	I9	cmp.b #0x4,r4l
+029748	2	47 04	I9	beq .+4 (0x2974e)
+02974A	2	fd 04	I9	mov.b #0x4,r5l
+02974C	2	40 02	I9	bra .+2 (0x29750)
+02974E	2	fd 10	I9	mov.b #0x10,r5l
+029750	4	5e 01 be f2	I9	jsr @0x1bef2:24
+029754	2	54 70	I9	rts 
+029764	2	55 0e	I9	bsr .+14 (0x29774)
+029766	4	5e 02 9c 46	I9	jsr @0x29c46:24
+02976A	2	54 70	I9	rts 
+034CCE	4	7e 4d 73 30	I8c	btst #0x3,@0x4d:8
+034CD2	2	46 60	I8c	bne .+96 (0x34d34)
+034CD4	4	6a 0c aa d3	I8c	mov.b @0xaad3:16,r4l
+034CD8	2	ec 0f	I8c	and.b #0xf,r4l
+034CDA	2	46 50	I8c	bne .+80 (0x34d2c)
+034CDC	6	6a 10 aa d1 73 10	I8c	btst #0x1,@0xaad1:16
+034CE2	2	47 10	I8c	beq .+16 (0x34cf4)
+034CE4	4	6a 0c 95 46	I8c	mov.b @0x9546:16,r4l
+034CE8	2	46 0a	I8c	bne .+10 (0x34cf4)
+034CEA	6	6a 18 aa d1 72 10	I8c	bclr #0x1,@0xaad1:16
+034CF0	4	5e 03 4c 34	I8c	jsr @0x34c34:24
+034CF4	4	5e 03 ef 6e	I8c	jsr @0x3ef6e:24
+034CF8	2	ac 07	I8c	cmp.b #0x7,r4l
+034CFA	2	46 30	I8c	bne .+48 (0x34d2c)
+034CFC	4	6a 0c 95 79	I8c	mov.b @0x9579:16,r4l
+034D00	2	46 2a	I8c	bne .+42 (0x34d2c)
+034D02	6	6a 10 aa d1 73 00	I8c	btst #0x0,@0xaad1:16
+034D08	2	47 18	I8c	beq .+24 (0x34d22)
+034D0A	4	6a 0c aa ce	I8c	mov.b @0xaace:16,r4l
+034D0E	2	1a 0c	I8c	dec.b r4l
+034D10	4	6a 8c aa ce	I8c	mov.b r4l,@0xaace:16
+034D14	2	46 0c	I8c	bne .+12 (0x34d22)
+034D16	6	6a 18 aa d1 72 00	I8c	bclr #0x0,@0xaad1:16
+034D1C	4	5e 02 27 bc	I8c	jsr @0x227bc:24
+034D20	2	40 0a	I8c	bra .+10 (0x34d2c)
+034D22	6	6a 18 aa d1 71 70	I8c	bnot #0x7,@0xaad1:16
+034D28	4	5e 03 4b ca	I8c	jsr @0x34bca:24
+034D2C	2	fc 01	I8c	mov.b #0x1,r4l
+034D2E	4	6a 8c aa d7	I8c	mov.b r4l,@0xaad7:16
+034D32	2	40 0c	I8c	bra .+12 (0x34d40)
+034D34	2	fc 04	I8c	mov.b #0x4,r4l
+034D36	4	6a 8c 95 68	I8c	mov.b r4l,@0x9568:16
+034D3A	2	fc 03	I8c	mov.b #0x3,r4l
+034D3C	4	6a 8c aa d5	I8c	mov.b r4l,@0xaad5:16
+034D40	2	54 70	I8c	rts 
+05E33E	6	7a 01 00 ff ba 02	I9	mov.l #0xffba02,er1
+05E344	2	fa 00	I9	mov.b #0x0,r2l
+05E346	2	0f 95	I9	mov.l er1,er5
+05E348	6	7a 06 00 05 e3 76	I9	mov.l #0x5e376,er6
+05E34E	4	6e 64 00 01	I9	mov.b @(0x1:16,er6),r4h
+05E352	2	0a 04	I9	inc r4h
+05E354	2	6c 5c	I9	mov.b @er5+,r4l
+05E356	2	ac ff	I9	cmp.b #0xff,r4l
+05E358	2	47 06	I9	beq .+6 (0x5e360)
+05E35A	2	0a 0a	I9	inc r2l
+05E35C	2	1a 04	I9	dec.b r4h
+05E35E	2	46 f4	I9	bne .-12 (0x5e354)
+05E360	2	0c ac	I9	mov.b r2l,r4l
+05E362	2	47 10	I9	beq .+16 (0x5e374)
+05E364	2	0a 0a	I9	inc r2l
+05E366	6	7a 06 00 05 e3 76	I9	mov.l #0x5e376,er6
+05E36C	4	5e 01 bf 28	I9	jsr @0x1bf28:24
+05E370	2	1c ab	I9	cmp.b r2l,r3l
+05E372	2	44 f2	I9	bcc .-14 (0x5e366)
+05E374	2	54 70	I9	rts 
+05E37C	6	7a 01 00 ff ba 02	I9	mov.l #0xffba02,er1
+05E382	2	fa 00	I9	mov.b #0x0,r2l
+05E384	2	0f 95	I9	mov.l er1,er5
+05E386	6	7a 06 00 05 e3 b4	I9	mov.l #0x5e3b4,er6
+05E38C	4	6e 64 00 01	I9	mov.b @(0x1:16,er6),r4h
+05E390	2	0a 04	I9	inc r4h
+05E392	2	6c 5c	I9	mov.b @er5+,r4l
+05E394	2	ac ff	I9	cmp.b #0xff,r4l
+05E396	2	47 06	I9	beq .+6 (0x5e39e)
+05E398	2	0a 0a	I9	inc r2l
+05E39A	2	1a 04	I9	dec.b r4h
+05E39C	2	46 f4	I9	bne .-12 (0x5e392)
+05E39E	2	0c ac	I9	mov.b r2l,r4l
+05E3A0	2	47 10	I9	beq .+16 (0x5e3b2)
+05E3A2	2	0a 0a	I9	inc r2l
+05E3A4	6	7a 06 00 05 e3 b4	I9	mov.l #0x5e3b4,er6
+05E3AA	4	5e 01 bf 28	I9	jsr @0x1bf28:24
+05E3AE	2	1c ab	I9	cmp.b r2l,r3l
+05E3B0	2	44 f2	I9	bcc .-14 (0x5e3a4)
+05E3B2	2	54 70	I9	rts 

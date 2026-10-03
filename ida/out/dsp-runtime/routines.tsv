@@ -1,0 +1,52 @@
+# Lane H15 routines (MAIN, base 0, file offset = address). C reconstructions in docs\deep\52-dsp-runtime-driver.md.
+addr	end	name	role	callers / vector	key evidence
+0x0561C2	0x056236	isr_irq2_dsp_line	IRQ2 ISR: clear ISR 0xFFFF36 b2, toggle ISCR 0xFFFD6A b4/b5 (both edges), latch level into 0xFFB0A2 b7; in link states 3/5/7 set 0xFFB0A2 b0; TX-timeout check on TMR 0xFFFEE5/0xFFFEE6 (< 0x7D00)	vector 66 (0x000108 = 000561C2)	0x0561C4..0x0561DC
+0x05615C	0x0561C2	isr_scic_rx	SCI-C ERI/RXI. 0xFF813A != 0 -> jsr 0x07711E (bridge, edge into module); else error clear or RDR -> 1 KB ring 0xFF23C8..0xFF27C7 (wptr 0xFF815E)	vectors 148/149	0x056160..0x05618A
+0x0483D0	0x0483D2	isr_scic_txi	bare rte (TX is DMA)	vector 150	56 70
+0x0483D2	0x0483F6	isr_dmac1_end	SCR.TIE off, DMAC1 control b0 off, 0xFFBC8C = 0 (TX done)	vector 129	0x0483D6..0x0483EC
+0x04834E	0x0483D0	dsp_dma_tx(er5 = frame)	wait TDRE; DMAC1 SAR=er5, DAR=0xFFFF8B, count 0x20/0x60 by opcode, +0x18=0x200000, act 0xFFFD21=0x96, ctl 0x800001A0; P3DR b1 = 0; SCR.TIE = 1	0x056714, 0x0567BE	0x048354..0x0483CA
+0x048300	0x048326	scid_dma_arm	DMAC ch0 = SCI-D (MAIN->SUB), not the DSP	0x0482FA	0xFFFD20 = 0xE1; bset 0xFFF612 b7
+0x048328	0x04834E	isr_dmac0_end	SCI-D TIE off, 0xFFBBE4 = 0	vector 128	0x04832C
+0x055FFE	0x056036	bridge_ring_init	bridge ring ptrs 0xFF8152/0xFF8156 = 0xFF3CEA	0x002228	-
+0x056036	0x056046	dsp_off_if_8d20	if 0xFF8D20 != 0 -> dsp_shutdown	(none found)	-
+0x056046	0x056056	dsp_shutdown	0xFFB0B4 = 5 (retries), 0xFFB0A4 = 0, dsp_power_off	0x00EDA0, 0x03EA2C, 0x05603A, 0x056456, 0x0743D0	-
+0x056056	0x05615C	dsp_power_off	P3DR b0,b3,b1,b2,b4 = 0; 0xFFFBA4 b2 = 0; 0xFFFF59 b4 = 0; ring reset; IER 0xFFFF34 b2 = 0; 0xFFFB90 b2 = 0; zero link state; clear RX callsign slots	0x056052, 0x056582	-
+0x056236	0x056272	dsp_tick_a	scheduler entry (0xFFBBFA b0 = 0) -> common body 0x05629E	0x002CC0, 0x002EB8, 0x002EF8, 0x002F3A, 0x002F6C, 0x002FD6, 0x00300C, 0x003044	-
+0x056272	0x05645C	dsp_tick_b	power SM (0xFFB0A6, table 0x05645C), link SM (0xFFB0A7, table 0x056470), rx_assemble, version watchdog, init script, session scripts, trace print	0x0030B8	0x0562B2, 0x0562C8
+0x056490	0x0564B2	pwr_s0_enable	irq2_setup; P3DR b0 = 1; timer 0xFF9552 = 10; 0xFFB0A6 = 1	table 0x05645C[0]	0x056498 7f 52 70 00
+0x0564B2	0x0564FA	irq2_setup	0xFFB0A2 = 0x80; ISCR = (ISCR & 0xFFC0) | 0x10; 0xFFFB90 b2; IER 0xFFFF34 b2 = 1; ISR 0xFFFF36 b2 = 0	0x056496	-
+0x0564FA	0x056520	pwr_s1_assert	when timer 0: 0xFFFBA4 b2; P3DR b1, b2, b3 = 1; timer = 3; 0xFFB0A6 = 2	table[1]	0x05650E 7f 52 70 30
+0x056520	0x056574	pwr_s2_release_init	when timer 0: P3DR b3 = 0; SCR = 0x02; 0xFFFB91 b4, b5; SMR = 0x80; BRR = 0; SSR clr; SCR = 0x12; SCR.RIE; trace 1; 0xFF9596 = 0x78; 0xFFB0A6 = 4; 0xFFB0A7 = 1	table[2]	0x05652C..0x056550
+0x056574	0x0565BC	dsp_version_watchdog	state >= 4 and 0xFF9596 == 0 (still no version): power off; --0xFFB0B4; retry (trace 2) or give up: B0A4 b0, state 3, trace 3	0x0562DE	-
+0x0565C0	0x0565EE	link_idle	DSP line (0xFFB0A2 b7) high: ACK queued (0xFFB0B2 b6) -> state 6, command queued (b7) -> state 4; else if version known and nothing awaited -> 0xFFB0A4 b7 (ready)	link table[0], [1]	0x056626..0x0566BA
+0x0565EE	0x056626	link_abort	3 s TPU timeout handling; state 3; P3DR b1 = 0	-	cmp.w #0x8980 at 0x0565FA
+0x0566C4	0x0566E4	link_s3_wait	wait for line edge (0xFFB0A2 b0) then link_idle	link table[3]	-
+0x0566E4	0x056732	link_s4_tx_cmd	SSR clr; SCR = 0x22; 0xFFBC8C = 1; dsp_dma_tx(*0xFFB13A); spin on 0xFFBC8C; trace 7; state 5	link table[4]	0x056704..0x05671C
+0x056732	0x05678E	link_s5_rx	on edge: P3DR b1 = 1; SCR = 0x12 | RIE; state 1; 0xFFFBA4 b2; arm TPU 3 s timeout	link table[5]	-
+0x05678E	0x0567DC	link_s6_tx_ack	as s4 with frame 0xFFB1A0; trace 8; state 7	link table[6]	0x0567B8
+0x0567DC	0x05683E	link_s7_rx	clear 0xFFB0A4 b3, 0xFFB0B2 b6; then as s5	link table[7]	-
+0x05683E	0x056A94	dsp_rx_assemble	drain ring; start byte 0x86..0xBB (only 0x9F until version known); 32-byte frame into 0xFFB0E0; checksum; dispatch; ACK/NAK	0x0562D2	0x056976..0x056982
+0x056A94	0x056B6E	dsp_rx_frame	r1h = op, r1l = b1 & 0xC0, r2l = b3 & 3; RX state 0xFFB102 -> table 0x056B8A (28 entries) -> 0x056EE4..0x057F1A	0x056A4E	0x056B64
+0x058EE6	0x058F2A	build_nak	0x10 frame at 0xFFB1A0	0x056A52	-
+0x058F2A	0x058F86	build_ack	0x20 frame at 0xFFB1A0; 0xFFB0A4 b3; 0xFFB0B2 b6	0x056A4A	-
+0x058F86	0x058F94	send_canned_ver	0xFFB13A = ROM 0x05901E (1F 02) - dead	table 0x05A3CE[0] only	-
+0x058F94	0x058FA2	send_canned_stop	0xFFB13A = ROM 0x05903E (18)	0x05BC24	-
+0x058FA2	0x058FFE	frame_finish	clear B0A4 b4/b5; length by opcode; checksum; 0xFFB13A = 0xFFB13E; B0A4 b6; B0B2 b7	all builders	0x058FB0..0x058FF6
+0x05905E	0x0591AE	build_11_config	opcode 0x11	0x05AFE2, 0x05B3B8	-
+0x059240	0x0593C8	build_12_mode	opcode 0x12	see opcodes.tsv	-
+0x0594FA	0x0599BE	build_hdr(r1l = op)	clear frame; opcode; header fields b1..b6 (0x0594FA for 0x16/0x07/0x08/0x06; 0x059680 for 0x09/0x19)	builders	-
+0x0599BE	0x059C14	build_16 / 07 / 08	96-byte header frames and 32-byte sub-blocks	sequencer	-
+0x059C28	0x059D8E	build_09 / 19 stream	data chunks from ptr 0xFFB128 / count 0xFFB126	sequencer	-
+0x059D8E	0x059F00	build_1A / 1D	RX enable/disable, mute	sequencer	-
+0x059F40	0x05A040	build_0B_dtmf	DTMF	0x05B996, 0x05B9B6	-
+0x05A040	0x05A0B4	build_1C	DATA TEXT SET	0x05C446	-
+0x05A0B4	0x05A1BE	build_15_list	callsign / ID list upload	0x05B0F0, 0x05B106, 0x05B118, 0x05B128	-
+0x05A1BE	0x05A33E	dsp_session_request	UI entries: 0xFFB0B5 = 1, script code 0xFFB0B7 (0x02 / 0x0B / 0x10 / 0x0A / 0x15) -> 0xFFB0BE	0x03596A, 0x035EEE, 0x06CF3E; siblings 0x05A250, 0x05A28A, 0x05A2F8	-
+0x05A33E	0x05A376	(dead) request with 0xFFB0B5 == 0	no code xref; no BE32 pointer; no jsr/jmp @aa:24	-	-
+0x05A3CE	0x05A47E	builder table (44 entries)	VER? / 0x11 / 0x12 / 0x1A / 0x06 / 0x07 / 0x08 / 0x09 / STOP / MUTE / 32 x DTMF - reachable only through dead 0x05A33E	-	-
+0x05AF70	0x05B184	dsp_init_script	14-step table 0x05AF92 on 0xFFB0A9	0x056304	-
+0x05B310	0x05B388	session script table	0xFFB0BE -> script; step 0xFFB0BF	0x0563DA	-
+0x05BA22	0x05BBD2	pdn_send_codec	0x0C / 0x0D / 0x0E codec frames from ring 0xFEE944, paced by DSP 0x9A	0x05B87A, 0x05B93E, 0x05EC3C	-
+0x06C402	0x06C538	pdn_rx_codec	DSP 0xAC..0xAE -> 0xFEEAB8 (5 per block) -> 0xFEE944, flag 0xFFB3D7 b6	0x05699E	-
+0x06C344	0x06C3DE	pdn_host_tx	ASCII-hex packet at 0xFEE000 (7-byte ROM header 0x06C5D0 / D8 / E0 + payload) -> 0x06CC76 checksum -> SCI-A DMA ch2	0x06BA9A	0x06B92E..0x06B97E
+0x06C850	0x06C8E8	pdn_host_rx_codec	host packet type 'E' (0xFF1AC9) -> ring slot 0xFEE944 + 0xFEEAAC / B0 / B4	0x06BB22	-

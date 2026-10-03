@@ -1,0 +1,879 @@
+job ABI_IPC_SUB  SUB RX64M CC-RX ABI + IPC receive
+total functions: 3806
+
+=== (1) prologue pushm register ranges ===
+  pushm r6-r7              31 funcs
+  pushm r14-r15            14 funcs
+  pushm r6-r13             13 funcs
+  pushm r6-r14              9 funcs
+  pushm r6-r9               6 funcs
+  pushm r6-r10              5 funcs
+  pushm r1-r7               2 funcs
+  pushm r1-r5               2 funcs
+  pushm r10-r11             2 funcs
+  pushm r1-r2               2 funcs
+  pushm r3-r12              1 funcs
+  pushm r7-r12              1 funcs
+  pushm r1-r13              1 funcs
+  pushm r1-r12              1 funcs
+  pushm r12-r13             1 funcs
+  pushm r10-r13             1 funcs
+  pushm r1-r9               1 funcs
+  pushm r6-r8               1 funcs
+  pushm r6-r12              1 funcs
+functions with pushm prologue: 95 / 3806
+--- epilogue popm ranges ---
+  popm  r1-r5              15 funcs
+  popm  r14-r15            14 funcs
+  popm  r1-r2               2 funcs
+  popm  r6-r9               1 funcs
+
+=== (2) terminators ===
+  rtsd      1857
+  movu       434
+  bra        330
+  rts        316
+  mov        238
+  rte        222
+  sub        174
+  add        109
+  bsr         39
+  bne         22
+  bset        22
+  beq         17
+  blt          6
+  bclr         5
+  shll         3
+  mul          3
+  and          3
+  bltu         2
+  push         1
+  ble          1
+--- rtsd variants (stack release + optional reg restore) ---
+  rtsd    #1                     611
+  rtsd    #2                     324
+  rtsd    #3                     135
+  rtsd    #4                     121
+  rtsd    #6                     102
+  rtsd    #5                      86
+  rtsd    #7                      59
+  rtsd    #8                      49
+  rtsd    #9                      36
+  rtsd    #0ah                    24
+  rtsd    #0bh                    20
+  rtsd    #0dh                    16
+  rtsd    #-2                     14
+  rtsd    #0eh                    11
+  rtsd    #47h                    11
+  rtsd    #0ch, r6-r6             10
+  rtsd    #0ch                    10
+  rtsd    #43h                    10
+  rtsd    #1ah                     9
+  rtsd    #28h, r6-r6              8
+
+=== live-in r1..r4 (candidate ARGUMENTS, CC-RX passes args r1-r4) ===
+  r1 :  1340 funcs
+  r2 :   770 funcs
+  r3 :   544 funcs
+  r4 :   188 funcs
+functions with >=1 live-in r1-r4: 1515
+
+=== (3) call addressing modes ===
+  bsr label (pc-rel/abs)           8863
+  jsr rN (reg-indirect)             309
+--- most-called targets (candidate CC-RX runtime helpers) ---
+  FFEF1B23    414  sub_FFEF1B23
+  FFF1EE20    394  sub_FFF1EE20
+  FFEF1C48    270  sub_FFEF1C48
+  FFEEF9BB    257  sub_FFEEF9BB
+  FFEF036F    253  sub_FFEF036F
+  FFEF68D5    239  sub_FFEF68D5
+  FFEEFEA4    223  sub_FFEEFEA4
+  FFEF0648    168  sub_FFEF0648
+  FFEFA7E7    167  sub_FFEFA7E7
+  FFEF04F7    147  sub_FFEF04F7
+  FFF1EE7B    140  sub_FFF1EE7B
+  FFEF2505    125  sub_FFEF2505
+  FFEEFEEE    117  sub_FFEEFEEE
+  FFEF190D     92  sub_FFEF190D
+  FFF20698     92  sub_FFF20698
+  FFF08826     87  sub_FFF08826
+  FFEF208D     82  sub_FFEF208D
+  FFF1EFAC     76  sub_FFF1EFAC
+  FFF2E78B     72  sub_FFF2E78B
+  FFF2E4AF     70  sub_FFF2E4AF
+  FFEF002C     66  sub_FFEF002C
+  FFEDE2B5     60  sub_FFEDE2B5
+  FFEF0408     60  sub_FFEF0408
+  FFEF690B     60  sub_FFEF690B
+  FFEF003F     59  sub_FFEF003F
+  FFEEFB84     58  sub_FFEEFB84
+  FFEEFFEA     58  sub_FFEEFFEA
+  FFEF40BA     58  sub_FFEF40BA
+  FFEF0294     57  sub_FFEF0294
+  FFF2432F     57  sub_FFF2432F
+--- disasm of top 8 helpers ---
+; ---- FFEF1B23 (414 callers) sub_FFEF1B23 ----
+  FFEF1B23  add     #-14h, sp, sp
+  FFEF1B26  mov.w   r1, 14h+var_2[sp]
+  FFEF1B28  mov.w   r2, 14h+var_4[sp]
+  FFEF1B2A  mov.b   r3, 14h+var_5[sp]
+  FFEF1B2C  mov.b   r4, 14h+var_6[sp]
+  FFEF1B2E  mov.b   14h+arg_0[sp], 14h+var_7[sp]
+  FFEF1B32  mov.l   14h+arg_4[sp], 14h+var_C[sp]
+  FFEF1B36  mov.b   14h+arg_8[sp], 14h+var_D[sp]
+  FFEF1B3A  mov.w   #0, 14h+var_12[sp]
+  FFEF1B3D  mov.b   #0, 14h+var_E[sp]
+  FFEF1B40  bra.b   loc_FFEF1BA8
+
+; ---- FFF1EE20 (394 callers) sub_FFF1EE20 ----
+  FFF1EE20  add     #-10h, sp, sp
+  FFF1EE23  mov.l   r1, 10h+var_4[sp]
+  FFF1EE25  mov.l   r2, 10h+var_8[sp]
+  FFF1EE27  mov.l   #65E30h, r14
+  FFF1EE2D  mov.l   10h+var_4[sp], [r14]
+  FFF1EE30  mov.l   10h+var_4[sp], r1
+  FFF1EE32  bsr.a   sub_FFF15CE7
+  FFF1EE36  mov.l   10h+var_8[sp], r1
+  FFF1EE38  cmp     #0, r1
+  FFF1EE3A  beq.s   loc_FFF1EE41
+  FFF1EE3B  mov.l   10h+var_4[sp], r1
+  FFF1EE3D  mov.l   10h+var_8[sp], r2
+  FFF1EE3F  mov.l   r1, 10h[r2]
+  FFF1EE41  mov.l   10h+var_4[sp], r1
+  FFF1EE43  shlr    #1Fh, r1
+  FFF1EE45  cmp     #0, r1
+  FFF1EE47  beq.s   loc_FFF1EE4C
+  FFF1EE48  mov.l   #-1, 10h+var_10[sp]
+  FFF1EE4B  bra.s   loc_FFF1EE4F
+  FFF1EE4C  mov.l   #0, 10h+var_10[sp]
+  FFF1EE4F  mov.l   10h+var_10[sp], r1
+  FFF1EE51  mov.l   r1, 10h+var_C[sp]
+  FFF1EE53  rtsd    #4
+
+; ---- FFEF1C48 (270 callers) sub_FFEF1C48 ----
+  FFEF1C48  add     #-14h, sp, sp
+  FFEF1C4B  mov.w   r1, 14h+var_2[sp]
+  FFEF1C4D  mov.w   r2, 14h+var_4[sp]
+  FFEF1C4F  mov.w   r3, 14h+var_6[sp]
+  FFEF1C51  mov.w   r4, 14h+var_8[sp]
+  FFEF1C53  mov.w   14h+arg_0[sp], 14h+var_A[sp]
+  FFEF1C57  mov.w   14h+var_2[sp], 14h+var_12[sp]
+  FFEF1C5B  mov.w   14h+var_4[sp], 14h+var_10[sp]
+  FFEF1C5F  mov.w   14h+var_6[sp], 14h+var_E[sp]
+  FFEF1C63  mov.w   14h+var_8[sp], 14h+var_C[sp]
+  FFEF1C67  mov.l   #1D3C8h, r14
+  FFEF1C6D  mov.l   [r14], r1
+  FFEF1C6F  movu.w  14h+var_A[sp], r3
+  FFEF1C71  add     #14h+var_12, sp, r2
+  FFEF1C74  bsr.w   sub_FFEF0581
+  FFEF1C77  rtsd    #5
+
+; ---- FFEEF9BB (257 callers) sub_FFEEF9BB ----
+  FFEEF9BB  add     #-14h, sp, sp
+  FFEEF9BE  mov.l   r1, 14h+var_4[sp]
+  FFEEF9C0  mov.w   r2, 14h+var_6[sp]
+  FFEEF9C2  mov.w   r3, 14h+var_8[sp]
+  FFEEF9C4  mov.w   r4, 14h+var_A[sp]
+  FFEEF9C6  mov.w   14h+arg_0[sp], 14h+var_C[sp]
+  FFEEF9CA  mov.b   #0, 14h+var_F[sp]
+  FFEEF9CD  movu.w  14h+var_A[sp], r1
+  FFEEF9CF  cmp     #0, r1
+  FFEEF9D1  beq.s   loc_FFEEF9D7
+  FFEEF9D2  movu.w  14h+var_C[sp], r1
+  FFEEF9D4  cmp     #0, r1
+  FFEEF9D6  bne.s   loc_FFEEF9DB
+  FFEEF9D7  mov.l   #1, 14h+var_14[sp]
+  FFEEF9DA  bra.s   loc_FFEEF9DE
+  FFEEF9DB  mov.l   #0, 14h+var_14[sp]
+  FFEEF9DE  mov.l   14h+var_14[sp], r1
+  FFEEF9E0  cmp     #0, r1
+  FFEEF9E2  beq.s   loc_FFEEF9E9
+  FFEEF9E3  mov.b   14h+var_F[sp], 14h+var_10[sp]
+  FFEEF9E7  bra.b   loc_FFEEFA5A
+  FFEEF9E9  mov.b   #0, 14h+var_E[sp]
+  FFEEF9EC  bra.b   loc_FFEEFA50
+  FFEEF9EE  movu.b  14h+var_E[sp], r1
+  FFEEF9F0  mov.l   #8F75h, r14
+  FFEEF9F6  movu.b  [r14, r1], r14
+  FFEEF9F9  cmp     #0, r14
+  FFEEF9FB  bne.b   loc_FFEEFA4C
+  FFEEF9FD  movu.b  r1, r14
+  FFEEF9FF  mov.l   #8F75h, r15
+  FFEEFA05  mov.l   #1, r5
+  FFEEFA07  mov.b   r5, [r15, r14]
+  FFEEFA0A  mov.l   14h+var_4[sp], r1
+  FFEEFA0C  mov.b   #0, [r1]
+  FFEEFA0F  movu.b  14h+var_E[sp], r1
+  FFEEFA11  mov.l   14h+var_4[sp], r2
+  FFEEFA13  mov.b   r1, 1[r2]
+  FFEEFA15  movu.b  14h+var_E[sp], r1
+  FFEEFA17  mul     #25800h, r1
+  FFEEFA1C  add     #704B000h, r1, r1
+
+; ---- FFEF036F (253 callers) sub_FFEF036F ----
+  FFEF036F  mov.l   #1D3B8h, r1
+  FFEF0375  bsr.w   sub_FFEEFA9E
+  FFEF0378  mov.l   #8C4Ch, r14
+  FFEF037E  movu.b  [r14], r15
+  FFEF0380  add     #1, r15
+  FFEF0382  mov.b   r15, [r14]
+  FFEF0384  rts
+
+; ---- FFEF68D5 (239 callers) sub_FFEF68D5 ----
+  FFEF68D5  sub     #0Ch, sp
+  FFEF68D7  mov.w   r1, 0Ch+var_2[sp]
+  FFEF68D9  mov.w   r2, 0Ch+var_4[sp]
+  FFEF68DB  mov.b   r3, 0Ch+var_5[sp]
+  FFEF68DD  mov.l   r4, 0Ch+var_C[sp]
+  FFEF68DF  cmp     #0, r4
+  FFEF68E1  beq.b   loc_FFEF6909
+  FFEF68E3  movu.b  0Ch+var_5[sp], r1
+  FFEF68E5  cmp     #1, r1
+  FFEF68E7  mov.l   0Ch+var_C[sp], r3
+  FFEF68E9  mov.w   0Ch+var_4[sp], r1
+  FFEF68EB  mov.w   0Ch+var_2[sp], r5
+  FFEF68ED  bne.b   loc_FFEF68F9
+  FFEF68EF  movu.w  r1, r2
+  FFEF68F1  movu.w  r5, r1
+  FFEF68F3  bsr.a   sub_FFEF0648
+  FFEF68F7  rtsd    #3
+  FFEF68F9  mov.l   0Ch+var_C[sp], r2
+  FFEF68FB  movu.w  2[r2], r4
+  FFEF68FD  movu.w  [r3], r3
+  FFEF68FF  movu.w  r1, r2
+  FFEF6901  movu.w  r5, r1
+  FFEF6903  bsr.a   sub_FFEF04F7
+  FFEF6907  rtsd    #3
+  FFEF6909  rtsd    #3
+
+; ---- FFEEFEA4 (223 callers) sub_FFEEFEA4 ----
+  FFEEFEA4  sub     #4, sp
+  FFEEFEA6  mov.l   r1, 4+var_4[sp]
+  FFEEFEA8  mov.l   #1D3B0h, r14
+  FFEEFEAE  or      [r14].l, r1
+  FFEEFEB1  mov.l   r1, [r14]
+  FFEEFEB3  rtsd    #1
+
+; ---- FFEF0648 (168 callers) sub_FFEF0648 ----
+  FFEF0648  add     #-40h, sp, sp
+  FFEF064B  mov.w   r1, 40h+var_2[sp]
+  FFEF064D  mov.w   r2, 40h+var_4[sp]
+  FFEF064F  mov.l   r3, 40h+var_8[sp]
+  FFEF0651  cmp     #0, r3
+  FFEF0653  beq.w   loc_FFEF0947
+  FFEF0656  mov.l   40h+var_8[sp], r1
+  FFEF0658  mov.w   [r1], 40h+var_12[sp]
+  FFEF065B  mov.l   40h+var_8[sp], r1
+  FFEF065D  mov.w   2[r1], 40h+var_14[sp]
+  FFEF0661  mov.l   #140h, r14
+  FFEF0665  sub     40h+var_2[sp].uw, r14
+  FFEF0669  movu.w  40h+var_12[sp], r1
+  FFEF066B  cmp     r14, r1
+  FFEF066D  bgt.b   loc_FFEF067C
+  FFEF066F  mov.l   #-10h, r14
+  FFEF0672  sub     40h+var_4[sp].uw, r14
+  FFEF0676  movu.w  40h+var_14[sp], r1
+  FFEF0678  cmp     r14, r1
+  FFEF067A  ble.b   loc_FFEF0680
+  FFEF067C  mov.l   #1, 40h+var_40[sp]
+  FFEF067F  bra.s   loc_FFEF0683
+  FFEF0680  mov.l   #0, 40h+var_40[sp]
+  FFEF0683  mov.l   40h+var_40[sp], r1
+  FFEF0685  cmp     #0, r1
+  FFEF0687  bne.w   loc_FFEF0947
+  FFEF068A  mov.l   40h+var_8[sp], r1
+  FFEF068C  mov.w   8[r1], 40h+var_26[sp]
+  FFEF0690  mov.l   40h+var_8[sp], r1
+  FFEF0692  mov.w   0Ah[r1], 40h+var_28[sp]
+  FFEF0696  mov.l   40h+var_8[sp], r1
+  FFEF0698  mov.w   0Ch[r1], 40h+var_2A[sp]
+  FFEF069C  mov.l   40h+var_8[sp], r1
+  FFEF069E  mov.l   4[r1], 40h+var_C[sp]
+  FFEF06A2  mov.l   #1D3C8h, r14
+  FFEF06A8  mov.l   [r14], r1
+  FFEF06AA  mov.l   0Ch[r1], 40h+var_18[sp]
+  FFEF06AE  movu.w  40h+var_2A[sp], r1
+  FFEF06B0  cmp     #1, r1
+  FFEF06B2  bne.w   loc_FFEF07A4
+
+=== (4) IPC receive chain ===
+; ==== FFEDC1F6  sub_FFEDC1F6 ====
+  FFEDC1F6  sub     #8, sp
+  FFEDC1F8  mov.w   #0, 8+var_4[sp]
+  FFEDC1FB  mov.l   #12D44h, r14
+  FFEDC201  movu.b  84C7h[r14], r15
+  FFEDC205  cmp     84C6h[r14], r15
+  FFEDC209  beq.w   loc_FFEDC2D7
+  FFEDC20C  mvtipl  #3
+  FFEDC20F  bra.b   loc_FFEDC23D
+  FFEDC211  mov.l   #12D44h, r14
+  FFEDC217  mov.b   #0, 84C7h[r14]
+  FFEDC21C  mov.l   #12D44h, r14
+  FFEDC222  movu.b  84C7h[r14], r15
+  FFEDC226  cmp     84C6h[r14], r15
+  FFEDC22A  movu.b  8+var_5[sp], r1
+  FFEDC22C  beq.b   loc_FFEDC268
+  FFEDC22E  shll    #1, r1
+  FFEDC230  mov.l   #12D44h, r14
+  FFEDC236  add     r1, r14
+  FFEDC238  mov.w   #0, 800Eh[r14]
+  FFEDC23D  mov.l   #12D44h, r14
+  FFEDC243  mov.b   84C7h[r14], 8+var_5[sp]
+  FFEDC248  mov.l   #12D44h, r14
+  FFEDC24E  movu.b  84C7h[r14], r15
+  FFEDC252  add     #1, r15
+  FFEDC254  mov.b   r15, 84C7h[r14]
+  FFEDC258  mov.l   #12D44h, r14
+  FFEDC25E  movu.b  84C7h[r14], r14
+  FFEDC262  cmp     #3, r14
+  FFEDC264  bgt.b   loc_FFEDC211
+  FFEDC266  bra.b   loc_FFEDC21C
+  FFEDC268  shll    #1, r1
+  FFEDC26A  mov.l   #12D44h, r14
+  FFEDC270  add     r1, r14
+  FFEDC272  mov.w   800Eh[r14], 8+var_4[sp]
+  FFEDC277  mov.l   #12D44h, r1
+  FFEDC27D  movu.b  5[r1], r1
+  FFEDC27F  cmp     #-4, r1
+  FFEDC282  beq.b   loc_FFEDC2AC
+  FFEDC284  movu.b  8+var_5[sp], r1
+  FFEDC286  mul     #12Ch, r1
+  FFEDC28A  mov.l   #12D44h, r14
+  FFEDC290  add     r14, r1
+  FFEDC292  mov.b   8016h[r1], 84C8h[r14]
+  FFEDC298  movu.b  8+var_5[sp], r1
+  FFEDC29A  mul     #12Ch, r1
+  FFEDC29E  mov.l   #12D44h, r14
+  FFEDC2A4  add     r14, r1
+  FFEDC2A6  mov.b   8017h[r1], 84C9h[r14]
+  FFEDC2AC  movu.b  8+var_5[sp], r2
+  FFEDC2AE  mul     #12Ch, r2
+  FFEDC2B2  mov.l   #12D44h, r1
+  FFEDC2B8  add     r2, r1
+  FFEDC2BA  add     #8016h, r1, r1
+  FFEDC2BF  bsr.a   sub_FFEF0385
+  FFEDC2C3  movu.b  8+var_5[sp], r1
+  FFEDC2C5  shll    #1, r1
+  FFEDC2C7  mov.l   #12D44h, r14
+  FFEDC2CD  add     r1, r14
+  FFEDC2CF  mov.w   #0, 800Eh[r14]
+  FFEDC2D4  mvtipl  #0
+  FFEDC2D7  mov.w   8+var_4[sp], 8+var_2[sp]
+  FFEDC2DB  mov.w   8+var_2[sp], r1
+  FFEDC2DD  movu.w  r1, r1
+  FFEDC2DF  rtsd    #2
+
+; ==== FFEDF1D8  sub_FFEDF1D8 ====
+  FFEDF1D8  sub     #4, sp
+  FFEDF1DA  mov.b   #0, 4+var_2[sp]
+  FFEDF1DD  mov.l   #8E46h, r14
+  FFEDF1E3  movu.b  [r14], r14
+  FFEDF1E5  add     #-0F0h, r14, r14; switch 16 cases
+  FFEDF1E9  cmp     #0Fh, r14
+  FFEDF1EB  bgtu.b  def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF1ED  mov.l   #jpt_FFEDF1F6, r15
+  FFEDF1F3  mov.b   [r14, r15], r14
+  FFEDF1F6  bra.l   r14; switch jump
+  FFEDF1F8  bsr.w   sub_FFEDF269; jumptable FFEDF1F6 case 240
+  FFEDF1FB  mov.b   r1, 4+var_2[sp]
+  FFEDF1FD  bra.b   def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF1FF  bsr.w   sub_FFEDF2E0; jumptable FFEDF1F6 case 241
+  FFEDF202  mov.b   r1, 4+var_2[sp]
+  FFEDF204  bra.b   def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF206  bsr.w   sub_FFEDF36A; jumptable FFEDF1F6 case 242
+  FFEDF209  mov.b   r1, 4+var_2[sp]
+  FFEDF20B  bra.b   def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF20D  bsr.w   sub_FFEDF3A7; jumptable FFEDF1F6 cases 243,244
+  FFEDF210  mov.b   r1, 4+var_2[sp]
+  FFEDF212  bra.b   def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF214  bsr.w   sub_FFEDF447; jumptable FFEDF1F6 case 245
+  FFEDF217  mov.b   r1, 4+var_2[sp]
+  FFEDF219  bra.b   def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF21B  bsr.w   sub_FFEDF4B8; jumptable FFEDF1F6 case 246
+  FFEDF21E  mov.b   r1, 4+var_2[sp]
+  FFEDF220  bra.b   def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF222  bsr.w   sub_FFEDF53E; jumptable FFEDF1F6 case 247
+  FFEDF225  mov.b   r1, 4+var_2[sp]
+  FFEDF227  bra.b   def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF229  bsr.w   sub_FFEDF56F; jumptable FFEDF1F6 case 248
+  FFEDF22C  mov.b   r1, 4+var_2[sp]
+  FFEDF22E  bra.b   def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF230  bsr.w   sub_FFEDF61B; jumptable FFEDF1F6 case 253
+  FFEDF233  mov.b   r1, 4+var_2[sp]
+  FFEDF235  bra.s   def_FFEDF1F6; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF236  bsr.w   sub_FFEDF645; jumptable FFEDF1F6 cases 254,255
+  FFEDF239  mov.b   r1, 4+var_2[sp]
+  FFEDF23B  movu.b  4+var_2[sp], r1; jumptable FFEDF1F6 default case, cases 249-252
+  FFEDF23D  cmp     #-1, r1
+  FFEDF240  beq.b   loc_FFEDF24D
+  FFEDF242  mov.l   #8A8Eh, r14
+  FFEDF248  mov.b   #1, [r14]
+  FFEDF24B  bra.b   loc_FFEDF25F
+  FFEDF24D  mov.l   #8A8Eh, r14
+  FFEDF253  mov.b   #0, [r14]
+  FFEDF256  mov.l   #8A8Ch, r14
+  FFEDF25C  mov.b   [r14], 4+var_2[sp]
+  FFEDF25F  mov.b   4+var_2[sp], 4+var_1[sp]
+  FFEDF263  movu.b  4+var_1[sp], r1
+  FFEDF265  movu.b  r1, r1
+  FFEDF267  rtsd    #1
+
+; ==== FFEDF269  sub_FFEDF269 ====
+  FFEDF269  sub     #4, sp
+  FFEDF26B  mov.b   #-1, 4+var_2[sp]
+  FFEDF26E  mov.l   #8E46h, r14
+  FFEDF274  movu.b  [r14], r14
+  FFEDF276  cmp     #-10h, r14
+  FFEDF279  bne.b   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF27B  mov.l   #8E46h, r1
+  FFEDF281  movu.b  1[r1], r1
+  FFEDF283  cmp     #0Bh, r1; switch 12 cases
+  FFEDF285  bgtu.b  def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF287  mov.l   #jpt_FFEDF290, r14
+  FFEDF28D  mov.b   [r1, r14], r14
+  FFEDF290  bra.l   r14; switch jump
+  FFEDF292  mov.l   #0, r1; jumptable FFEDF290 case 0
+  FFEDF294  bsr.a   sub_FFEDE259
+  FFEDF298  bsr.a   sub_FFEF2022
+  FFEDF29C  bra.b   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF29E  mov.l   #1, r1; jumptable FFEDF290 case 1
+  FFEDF2A0  bsr.a   sub_FFEDE259
+  FFEDF2A4  bsr.a   sub_FFEF201A
+  FFEDF2A8  bra.b   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF2AA  mov.b   #12h, 4+var_2[sp]; jumptable FFEDF290 case 2
+  FFEDF2AD  bra.b   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF2AF  mov.b   #14h, 4+var_2[sp]; jumptable FFEDF290 cases 3,4
+  FFEDF2B2  mov.b   #15h, 4+var_2[sp]
+  FFEDF2B5  bra.b   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF2B7  mov.b   #13h, 4+var_2[sp]; jumptable FFEDF290 case 5
+  FFEDF2BA  bra.b   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF2BC  mov.b   #16h, 4+var_2[sp]; jumptable FFEDF290 case 6
+  FFEDF2BF  bra.b   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF2C1  mov.b   #17h, 4+var_2[sp]; jumptable FFEDF290 case 7
+  FFEDF2C4  bra.b   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF2C6  mov.b   #18h, 4+var_2[sp]; jumptable FFEDF290 case 8
+  FFEDF2C9  bra.b   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF2CB  mov.b   #19h, 4+var_2[sp]; jumptable FFEDF290 case 9
+  FFEDF2CE  bra.s   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF2CF  mov.b   #1Ah, 4+var_2[sp]; jumptable FFEDF290 case 10
+  FFEDF2D2  bra.s   def_FFEDF290; jumptable FFEDF290 default case
+  FFEDF2D3  mov.b   #1Bh, 4+var_2[sp]; jumptable FFEDF290 case 11
+  FFEDF2D6  mov.b   4+var_2[sp], 4+var_1[sp]; jumptable FFEDF290 default case
+  FFEDF2DA  movu.b  4+var_1[sp], r1
+  FFEDF2DC  movu.b  r1, r1
+  FFEDF2DE  rtsd    #1
+
+; ==== FFEF0385  sub_FFEF0385 ====
+  FFEF0385  sub     #4, sp
+  FFEF0387  mov.l   r1, r2
+  FFEF0389  mov.l   r2, 4+var_4[sp]
+  FFEF038B  mov.l   #12Ch, r3
+  FFEF038F  mov.l   #8E46h, r1
+  FFEF0395  bsr.a   sub_FFEFB268
+  FFEF0399  rtsd    #1
+
+; ==== FFEF4142  sub_FFEF4142 ====
+  FFEF4142  sub     #4, sp
+  FFEF4144  mov.l   #8C4Dh, r1
+  FFEF414A  movu.b  7[r1], r1
+  FFEF414C  and     #1, r1
+  FFEF414E  mov.l   #8E46h, r2
+  FFEF4154  movu.b  7[r2], r2
+  FFEF4156  and     #1, r2
+  FFEF4158  cmp     r2, r1
+  FFEF415A  beq.b   loc_FFEF4172
+  FFEF415C  mov.l   #1, r1
+  FFEF415E  bsr.a   sub_FFEEFEA4
+  FFEF4162  mov.l   #8C4Dh, r14
+  FFEF4168  mov.l   #8E46h, r15
+  FFEF416E  mov.b   7[r15], 7[r14]
+  FFEF4172  mov.l   #8C4Dh, r1
+  FFEF4178  movu.b  0Ah[r1], r1
+  FFEF417A  mov.l   #8E46h, r14
+  FFEF4180  cmp     0Ah[r14], r1
+  FFEF4183  bne.b   loc_FFEF4197
+  FFEF4185  mov.l   #8C4Dh, r1
+  FFEF418B  movu.b  0Bh[r1], r1
+  FFEF418D  mov.l   #8E46h, r14
+  FFEF4193  cmp     0Bh[r14], r1
+  FFEF4196  beq.s   loc_FFEF419B
+  FFEF4197  mov.l   #1, 4+var_4[sp]
+  FFEF419A  bra.s   loc_FFEF419E
+  FFEF419B  mov.l   #0, 4+var_4[sp]
+  FFEF419E  mov.l   4+var_4[sp], r1
+  FFEF41A0  cmp     #0, r1
+  FFEF41A2  bne.b   loc_FFEF41B6
+  FFEF41A4  mov.l   #8C4Dh, r1
+  FFEF41AA  movu.b  0Ch[r1], r1
+  FFEF41AC  mov.l   #8E46h, r14
+  FFEF41B2  cmp     0Ch[r14], r1
+  FFEF41B5  beq.s   loc_FFEF41BA
+  FFEF41B6  mov.l   #1, 4+var_4[sp]
+  FFEF41B9  bra.s   loc_FFEF41BD
+  FFEF41BA  mov.l   #0, 4+var_4[sp]
+  FFEF41BD  mov.l   4+var_4[sp], r1
+  FFEF41BF  cmp     #0, r1
+  FFEF41C1  beq.b   loc_FFEF41F9
+  FFEF41C3  mov.l   #1, r1
+  FFEF41C5  bsr.a   sub_FFEEFEA4
+  FFEF41C9  mov.l   #8C4Dh, r14
+  FFEF41CF  mov.l   #8E46h, r15
+  FFEF41D5  mov.b   0Ah[r15], 0Ah[r14]
+  FFEF41D9  mov.l   #8C4Dh, r14
+  FFEF41DF  mov.l   #8E46h, r15
+  FFEF41E5  mov.b   0Bh[r15], 0Bh[r14]
+  FFEF41E9  mov.l   #8C4Dh, r14
+  FFEF41EF  mov.l   #8E46h, r15
+  FFEF41F5  mov.b   0Ch[r15], 0Ch[r14]
+  FFEF41F9  mov.l   #8C4Dh, r1
+  FFEF41FF  movu.b  9[r1], r1
+  FFEF4201  and     #1, r1
+  FFEF4203  mov.l   #8E46h, r2
+  FFEF4209  movu.b  9[r2], r2
+  FFEF420B  and     #1, r2
+  FFEF420D  cmp     r2, r1
+  FFEF420F  bne.b   loc_FFEF4223
+  FFEF4211  mov.l   #8C4Dh, r1
+  FFEF4217  movu.b  0Eh[r1], r1
+  FFEF4219  mov.l   #8E46h, r14
+  FFEF421F  cmp     0Eh[r14], r1
+  FFEF4222  beq.s   loc_FFEF4227
+  FFEF4223  mov.l   #1, 4+var_4[sp]
+  FFEF4226  bra.s   loc_FFEF422A
+  FFEF4227  mov.l   #0, 4+var_4[sp]
+  FFEF422A  mov.l   4+var_4[sp], r1
+  FFEF422C  cmp     #0, r1
+  FFEF422E  bne.b   loc_FFEF4242
+  FFEF4230  mov.l   #8C4Dh, r1
+  FFEF4236  movu.b  0Fh[r1], r1
+  FFEF4238  mov.l   #8E46h, r14
+  FFEF423E  cmp     0Fh[r14], r1
+  FFEF4241  beq.s   loc_FFEF4246
+  FFEF4242  mov.l   #1, 4+var_4[sp]
+  FFEF4245  bra.s   loc_FFEF4249
+  FFEF4246  mov.l   #0, 4+var_4[sp]
+  FFEF4249  mov.l   4+var_4[sp], r1
+  FFEF424B  cmp     #0, r1
+  FFEF424D  beq.b   loc_FFEF426F
+  FFEF424F  mov.l   #8C4Dh, r14
+  FFEF4255  mov.l   #8E46h, r15
+  FFEF425B  mov.b   0Eh[r15], 0Eh[r14]
+  FFEF425F  mov.l   #8C4Dh, r14
+  FFEF4265  mov.l   #8E46h, r15
+  FFEF426B  mov.b   0Fh[r15], 0Fh[r14]
+  FFEF426F  mov.l   #8C4Dh, r1
+  FFEF4275  movu.b  9[r1], r1
+  FFEF4277  shlr    #7, r1
+  FFEF4279  mov.l   #8E46h, r2
+  FFEF427F  movu.b  9[r2], r2
+  FFEF4281  shlr    #7, r2
+  FFEF4283  cmp     r2, r1
+  FFEF4285  beq.b   loc_FFEF42A2
+  FFEF4287  mov.l   #-80h, r14
+  FFEF428A  mov.l   #8E46h, r15
+  FFEF4290  and     9[r15], r14
+  FFEF4293  mov.l   #8C4Dh, r1
+  FFEF4299  movu.b  9[r1], r2
+  FFEF429B  and     #7Fh, r2
+  FFEF429E  or      r14, r2
+  FFEF42A0  mov.b   r2, 9[r1]
+  FFEF42A2  bsr.w   sub_FFEF3CF8
+  FFEF42A5  rtsd    #1
+
+; ==== FFEDB131  loc_FFEDB131 ====
+  (no function; linear 80)
+  FFEDB131  add     #-14h, sp, sp
+  FFEDB134  mov.l   r1, 10h[sp]
+  FFEDB136  mov.l   r2, 0Ch[sp]
+  FFEDB138  mov.w   r3, 0Ah[sp]
+  FFEDB13A  mov.w   #0, 2[sp]
+  FFEDB13D  mov.l   10h[sp], r1
+  FFEDB13F  cmp     #2, r1
+  FFEDB141  ble.b   loc_FFEDB146
+  FFEDB143  bra.w   loc_FFEDB1E4
+  FFEDB146  mov.l   10h[sp], r1
+  FFEDB148  mul     #18h, r1
+  FFEDB14B  mov.l   #12CD8h, r14
+  FFEDB151  add     r1, r14
+  FFEDB153  movu.w  [r14], r14
+  FFEDB155  btst    #8, r14
+  FFEDB157  beq.w   loc_FFEDB1E4
+  FFEDB15A  mov.w   #0, 6[sp]
+  FFEDB15D  bra.b   loc_FFEDB1D5
+  FFEDB15F  mov.l   10h[sp], r1
+  FFEDB161  mul     #18h, r1
+  FFEDB164  mov.l   #12CD8h, r14
+  FFEDB16A  add     r1, r14
+  FFEDB16C  mov.w   14h[r14], 4[sp]
+  FFEDB170  mov.w   4[sp], r1
+  FFEDB172  add     #1, r1
+  FFEDB174  mov.w   r1, 4[sp]
+  FFEDB176  mov.l   10h[sp], r1
+  FFEDB178  mul     #18h, r1
+  FFEDB17B  mov.l   #12CD8h, r14
+  FFEDB181  add     r1, r14
+  FFEDB183  movu.w  4[sp], r1
+  FFEDB185  cmp     0Ch[r14].uw, r1
+  FFEDB189  blt.b   loc_FFEDB18E
+  FFEDB18B  mov.w   #0, 4[sp]
+  FFEDB18E  mov.l   10h[sp], r1
+  FFEDB190  mul     #18h, r1
+  FFEDB193  mov.l   #12CD8h, r14
+  FFEDB199  add     r1, r14
+  FFEDB19B  movu.w  4[sp], r1
+  FFEDB19D  cmp     16h[r14].uw, r1
+  FFEDB1A1  beq.b   loc_FFEDB1DD
+  FFEDB1A3  mov.l   10h[sp], r1
+  FFEDB1A5  mul     #18h, r1
+  FFEDB1A8  mov.l   #12CD8h, r2
+  FFEDB1AE  add     r1, r2
+  FFEDB1B0  mov.l   4[r2], r1
+  FFEDB1B2  movu.w  14h[r2], r2
+  FFEDB1B4  movu.w  6[sp], r3
+  FFEDB1B6  mov.l   0Ch[sp], r4
+  FFEDB1B8  movu.b  [r4, r3], r14
+  FFEDB1BB  mov.b   r14, [r1, r2]
+  FFEDB1BE  mov.l   10h[sp], r1
+  FFEDB1C0  mul     #18h, r1
+  FFEDB1C3  mov.l   #12CD8h, r2
+  FFEDB1C9  add     r1, r2
+  FFEDB1CB  mov.w   4[sp], 14h[r2]
+  FFEDB1CF  mov.w   6[sp], r1
+  FFEDB1D1  add     #1, r1
+  FFEDB1D3  mov.w   r1, 6[sp]
+  FFEDB1D5  movu.w  6[sp], r1
+  FFEDB1D7  cmp     0Ah[sp].uw, r1
+  FFEDB1DB  blt.b   loc_FFEDB15F
+  FFEDB1DD  mov.l   10h[sp], r1
+  FFEDB1DF  bsr.w   sub_FFEDB1EE
+  FFEDB1E2  mov.w   r1, 2[sp]
+  FFEDB1E4  mov.w   2[sp], 8[sp]
+  FFEDB1E8  mov.w   8[sp], r1
+  FFEDB1EA  movu.w  r1, r1
+  FFEDB1EC  rtsd    #5
+  FFEDB1EE  sub     #8, sp
+  FFEDB1F0  mov.l   r1, 8+var_4[sp]
+  FFEDB1F2  mul     #18h, r1
+  FFEDB1F5  mov.l   #12CD8h, r2
+  FFEDB1FB  add     r2, r1
+  FFEDB1FD  movu.w  14h[r1], r1
+  FFEDB1FF  mov.l   8+var_4[sp], r3
+  FFEDB201  mul     #18h, r3
+  FFEDB204  add     r2, r3
+  FFEDB206  mov.l   8+var_4[sp], r4
+  FFEDB208  mul     #18h, r4
+
+; ==== FFEDB081  loc_FFEDB081 ====
+  (no function; linear 80)
+  FFEDB081  add     #-10h, sp, sp
+  FFEDB084  mov.l   r1, 0Ch[sp]
+  FFEDB086  mov.l   r2, 8[sp]
+  FFEDB088  mov.w   r3, 6[sp]
+  FFEDB08A  mov.w   #0, 2[sp]
+  FFEDB08D  mov.l   0Ch[sp], r1
+  FFEDB08F  cmp     #2, r1
+  FFEDB091  ble.b   loc_FFEDB096
+  FFEDB093  bra.w   loc_FFEDB127
+  FFEDB096  mov.l   0Ch[sp], r1
+  FFEDB098  mul     #18h, r1
+  FFEDB09B  mov.l   #12CD8h, r14
+  FFEDB0A1  add     r1, r14
+  FFEDB0A3  movu.w  [r14], r14
+  FFEDB0A5  btst    #0, r14
+  FFEDB0A7  bne.b   loc_FFEDB11F
+  FFEDB0AA  push.l  r8
+  FFEDB0AC  mov.b   4[r7], r5
+  FFEDB0AE  beq.s   loc_FFEDB0B6+1
+  FFEDB0AF  bne.s   loc_FFEDB0B6+1
+  FFEDB0B0  mov.l   #12CD8h, r14
+  FFEDB0B6  add     r1, r14
+  FFEDB0B8  mov.w   12h[r14], [sp]
+  FFEDB0BB  mov.l   0Ch[sp], r1
+  FFEDB0BD  mul     #18h, r1
+  FFEDB0C0  mov.l   #12CD8h, r14
+  FFEDB0C6  add     r1, r14
+  FFEDB0C8  movu.w  [sp], r1
+  FFEDB0CA  cmp     10h[r14].uw, r1
+  FFEDB0CE  beq.b   loc_FFEDB127
+  FFEDB0D0  mov.l   0Ch[sp], r1
+  FFEDB0D2  mul     #18h, r1
+  FFEDB0D5  mov.l   #12CD8h, r2
+  FFEDB0DB  add     r1, r2
+  FFEDB0DD  mov.l   8[r2], r1
+  FFEDB0DF  movu.w  [sp], r2
+  FFEDB0E1  movu.b  [r1, r2], r14
+  FFEDB0E4  movu.w  2[sp], r1
+  FFEDB0E6  mov.l   8[sp], r2
+  FFEDB0E8  mov.b   r14, [r2, r1]
+  FFEDB0EB  mov.w   [sp], r1
+  FFEDB0ED  add     #1, r1
+  FFEDB0EF  mov.w   r1, [sp]
+  FFEDB0F1  mov.l   0Ch[sp], r1
+  FFEDB0F3  mul     #18h, r1
+  FFEDB0F6  mov.l   #12CD8h, r14
+  FFEDB0FC  add     r1, r14
+  FFEDB0FE  movu.w  [sp], r1
+  FFEDB100  cmp     0Eh[r14].uw, r1
+  FFEDB104  blt.b   loc_FFEDB109
+  FFEDB106  mov.w   #0, [sp]
+  FFEDB109  mov.l   0Ch[sp], r1
+  FFEDB10B  mul     #18h, r1
+  FFEDB10E  mov.l   #12CD8h, r2
+  FFEDB114  add     r1, r2
+  FFEDB116  mov.w   [sp], 12h[r2]
+  FFEDB119  mov.w   2[sp], r1
+  FFEDB11B  add     #1, r1
+  FFEDB11D  mov.w   r1, 2[sp]
+  FFEDB11F  movu.w  2[sp], r1
+  FFEDB121  cmp     6[sp].uw, r1
+  FFEDB125  blt.b   loc_FFEDB0AA+1
+  FFEDB127  mov.w   2[sp], 4[sp]
+  FFEDB12B  mov.w   4[sp], r1
+  FFEDB12D  movu.w  r1, r1
+  FFEDB12F  rtsd    #4
+  FFEDB131  add     #-14h, sp, sp
+  FFEDB134  mov.l   r1, 10h[sp]
+  FFEDB136  mov.l   r2, 0Ch[sp]
+  FFEDB138  mov.w   r3, 0Ah[sp]
+  FFEDB13A  mov.w   #0, 2[sp]
+  FFEDB13D  mov.l   10h[sp], r1
+  FFEDB13F  cmp     #2, r1
+  FFEDB141  ble.b   loc_FFEDB146
+  FFEDB143  bra.w   loc_FFEDB1E4
+  FFEDB146  mov.l   10h[sp], r1
+  FFEDB148  mul     #18h, r1
+  FFEDB14B  mov.l   #12CD8h, r14
+  FFEDB151  add     r1, r14
+  FFEDB153  movu.w  [r14], r14
+
+; ==== FFEDAB4C  sub_FFEDAB4C ====
+  FFEDAB4C  sub     #0Ch, sp
+  FFEDAB4E  mov.l   #unk_FFF483C8, r14
+  FFEDAB54  mov.w   [r14], 0Ch+var_A[sp]
+  FFEDAB57  mov.b   2[r14], 0Ch+var_8[sp]
+  FFEDAB5B  mov.b   3[r14], 0Ch+var_7[sp]
+  FFEDAB5F  mov.b   4[r14], 0Ch+var_6[sp]
+  FFEDAB63  mov.b   5[r14], 0Ch+var_5[sp]
+  FFEDAB67  bsr.a   sub_FFEDB300
+  FFEDAB6B  mov.l   #unk_FFC3EB44, r1
+  FFEDAB71  bsr.a   sub_FFEDB4E8
+  FFEDAB75  mov.l   #unk_FFC3EB44, r1
+  FFEDAB7B  add     #6, r1
+  FFEDAB7D  bsr.a   sub_FFEDB8F1
+  FFEDAB81  add     #0Ch+var_A, sp, r1
+  FFEDAB84  bsr.a   sub_FFEDBD53
+  FFEDAB88  mov.l   #0, 0Ch+var_4[sp]
+  FFEDAB8B  bra.w   loc_FFEDAC0C
+  FFEDAB8E  mov.l   0Ch+var_4[sp], r1
+  FFEDAB90  mul     #18h, r1
+  FFEDAB93  mov.l   #12CD8h, r14
+  FFEDAB99  add     r1, r14
+  FFEDAB9B  mov.w   #0, [r14]
+  FFEDAB9E  mov.l   0Ch+var_4[sp], r1
+  FFEDABA0  mov.l   r1, r14
+  FFEDABA2  mul     #18h, r14
+  FFEDABA5  mov.l   #12CD8h, r15
+  FFEDABAB  add     r14, r15
+  FFEDABAD  mul     #0Ch, r1
+  FFEDABAF  mov.l   #unk_FFECE4E8, r14
+  FFEDABB5  add     r1, r14
+  FFEDABB7  mov.l   [r14], 4[r15]
+  FFEDABBA  mov.l   4[r14], 8[r15]
+  FFEDABBE  mov.w   8[r14], 0Ch[r15]
+  FFEDABC2  mov.w   0Ah[r14], 0Eh[r15]
+  FFEDABC6  mov.l   0Ch+var_4[sp], r1
+  FFEDABC8  mul     #18h, r1
+  FFEDABCB  mov.l   #12CD8h, r2
+  FFEDABD1  add     r1, r2
+  FFEDABD3  mov.w   #0, 10h[r2]
+  FFEDABD6  mov.l   0Ch+var_4[sp], r1
+  FFEDABD8  mul     #18h, r1
+  FFEDABDB  mov.l   #12CD8h, r2
+  FFEDABE1  add     r1, r2
+  FFEDABE3  mov.w   #0, 12h[r2]
+  FFEDABE6  mov.l   0Ch+var_4[sp], r1
+  FFEDABE8  mul     #18h, r1
+  FFEDABEB  mov.l   #12CD8h, r2
+  FFEDABF1  add     r1, r2
+  FFEDABF3  mov.w   #0, 14h[r2]
+  FFEDABF6  mov.l   0Ch+var_4[sp], r1
+  FFEDABF8  mul     #18h, r1
+  FFEDABFB  mov.l   #12CD8h, r2
+  FFEDAC01  add     r1, r2
+  FFEDAC03  mov.w   #0, 16h[r2]
+  FFEDAC06  mov.l   0Ch+var_4[sp], r1
+  FFEDAC08  add     #1, r1
+  FFEDAC0A  mov.l   r1, 0Ch+var_4[sp]
+  FFEDAC0C  mov.l   0Ch+var_4[sp], r1
+  FFEDAC0E  cmp     #3, r1
+  FFEDAC10  bge.b   loc_FFEDAC15
+  FFEDAC12  bra.w   loc_FFEDAB8E
+  FFEDAC15  rtsd    #3
+
+=== (5) handler pointer table at 0xFFED4050 (little-endian dwords) ===
+  most-common (dummy/default?) target: FFF0CDFC x7
+  [ 0] FFED4050 -> FFEE837F  sub_FFEE837F
+  [ 1] FFED4054 -> FFEEAE5E  sub_FFEEAE5E
+  [ 2] FFED4058 -> FFEF2032  unk_FFEF2032
+  [ 3] FFED405C -> FFEE609E  sub_FFEE609E
+  [ 4] FFED4060 -> FFEE5C42  sub_FFEE5C42
+  [ 5] FFED4064 -> FFEE5C42  sub_FFEE5C42
+  [ 6] FFED4068 -> FFEE87EE  sub_FFEE87EE
+  [ 7] FFED406C -> FFEE7C9F  sub_FFEE7C9F
+  [ 8] FFED4070 -> FFEEA1AE  sub_FFEEA1AE
+  [ 9] FFED4074 -> FFEEA1AE  sub_FFEEA1AE
+  [10] FFED4078 -> FFEEA1AE  sub_FFEEA1AE
+  [11] FFED407C -> FFEE7497  sub_FFEE7497
+  [12] FFED4080 -> FFEF2032  unk_FFEF2032
+  [13] FFED4084 -> FFEE6A51  sub_FFEE6A51
+  [14] FFED4088 -> FFEF2032  unk_FFEF2032
+  [15] FFED408C -> FFEEA7DB  sub_FFEEA7DB
+  [16] FFED4090 -> FFEF2032  unk_FFEF2032
+  [17] FFED4094 -> FFEE8AA5  sub_FFEE8AA5
+  [18] FFED4098 -> FFF0CDFC  sub_FFF0CDFC  <== dummy
+  [19] FFED409C -> FFF0CDFC  sub_FFF0CDFC  <== dummy
+  [20] FFED40A0 -> FFF0C9FD  sub_FFF0C9FD
+  [21] FFED40A4 -> FFF0C9FD  sub_FFF0C9FD
+  [22] FFED40A8 -> FFEE7C9F  sub_FFEE7C9F
+  [23] FFED40AC -> FFF0CDFC  sub_FFF0CDFC  <== dummy
+  [24] FFED40B0 -> FFF0CDFC  sub_FFF0CDFC  <== dummy
+  [25] FFED40B4 -> FFF0CDFC  sub_FFF0CDFC  <== dummy
+  [26] FFED40B8 -> FFF0CDFC  sub_FFF0CDFC  <== dummy
+  [27] FFED40BC -> FFF0CDFC  sub_FFF0CDFC  <== dummy
+  [28] FFED40C0 -> FFEE52B3  sub_FFEE52B3
+  [29] FFED40C4 -> FFF0AC89  sub_FFF0AC89
+  [30] FFED40C8 -> FFF0896A  sub_FFF0896A
+  [31] FFED40CC -> FFEFE223  sub_FFEFE223
+  [32] FFED40D0 -> FFEFD6E9  sub_FFEFD6E9
+  [33] FFED40D4 -> FFF0A86D  sub_FFF0A86D
+  [34] FFED40D8 -> FFEE2248  sub_FFEE2248
+  [35] FFED40DC -> FFEE2E69  sub_FFEE2E69
+  [36] FFED40E0 -> FFEE4421  sub_FFEE4421
+  [37] FFED40E4 -> FFEE3EF7  sub_FFEE3EF7
+  [38] FFED40E8 -> FFEE3A1C  sub_FFEE3A1C
+  [39] FFED40EC -> FFEE4E99  sub_FFEE4E99
+  [40] FFED40F0 -> FFEE3497  sub_FFEE3497
+  [41] FFED40F4 -> FFEFB7F8  sub_FFEFB7F8
+  [42] FFED40F8 -> FFEFC0F7  sub_FFEFC0F7
+  [43] FFED40FC -> FFEFC987  sub_FFEFC987
+  [44] FFED4100 -> FFEFCE16  sub_FFEFCE16
+  [45] FFED4104 -> FFEF2032  unk_FFEF2032
+  [46] FFED4108 -> FFEEF315  sub_FFEEF315
+  [47] FFED410C -> FFEF2032  unk_FFEF2032
+  [48] FFED4110 -> FFF11E24  sub_FFF11E24
+  [49] FFED4114 -> FFF0EBB5  sub_FFF0EBB5
+  [50] FFED4118 -> FFF0F961  sub_FFF0F961
+  [51] FFED411C -> FFF0FF98  sub_FFF0FF98
+  [52] FFED4120 -> FFF10CC3  sub_FFF10CC3
+  [53] FFED4124 -> FFF11554  sub_FFF11554
+  [54] FFED4128 -> FFF0F66B  sub_FFF0F66B
+  [55] FFED412C -> FFF11117  sub_FFF11117
+  [56] FFED4130 -> FFF12565  sub_FFF12565
+  [57] FFED4134 -> FFF0EF47  sub_FFF0EF47
+  [58] FFED4138 -> FFF0E7E0  sub_FFF0E7E0
+  [59] FFED413C -> FFF1039A  sub_FFF1039A
+  [60] FFED4140 -> FFF107EC  sub_FFF107EC
+  [61] FFED4144 -> FFF11A0A  sub_FFF11A0A
+  [62] FFED4148 -> FFEDE387  sub_FFEDE387
+  [63] FFED414C -> FFEDE97B  sub_FFEDE97B

@@ -1,0 +1,12 @@
+table	slot	state_cell	value	handler	role	trigger/live
+0x055BF2	0	FFBC50	0	0x055C1E	SM-A start: size FF301A -> FFB208, blocks, checksum reset	needs FFBC4F!=0; only non-zero writer is orphan 0x055B58 (no caller) -> dormant
+0x055BF2	1	FFBC50	1	0x055C7E	SM-A: read next <=1 KB of a stored picture into 0xFF5006 (sub_6EF20), sum into FFB1D4	dormant
+0x055BF2	2	FFBC50	2	0x055CEA	SM-A: send 256-B FFFF blocks to SUB (sub_B610) from 0xFF5006	dormant
+0x055BF2	3	FFBC50	3	0x055D6C	SM-A: finish (sub_ADC0), FFBC4E=0	dormant
+0x055BF2	4	FFBC50	4	0x055D8A	idle (rts)	-
+0x055C06	0	FFBC54	0	0x055D8C	SM-B start: FFB098 = FFBA46 (camera) or FFB208 (received), pointer 0xFF5806	needs FFBC51!=0; no non-zero writer of FFBC51 in the image -> dormant
+0x055C06	1	FFBC54	1	0x055DE8	SM-B: send FE00 read-back request (sub_B5CE) to SUB	dormant
+0x055C06	2	FFBC54	2	0x055DFA	idle (rts); the 0xFF reply is handled by 0x055DFC from the SCI-D receive path 0x047B66	dormant (0x055DFC returns unless FFBC54==2)
+0x055C12	0	FFBC57	0	0x055F84	SM-C start	FFBC55 set at 0x05F4A6 (sub_5F458): live, not USB
+0x055C12	1	FFBC57	1	0x055F96	SM-C: send FFBA74 bytes from [FFBC48] (=0xFF5006) as FFFF blocks	live, not USB
+0x055C12	2	FFBC57	2	0x055FF0	SM-C: done flag FFBC56=1	live, not USB

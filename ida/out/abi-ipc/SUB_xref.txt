@@ -1,0 +1,112 @@
+SUB dispatcher call chain + tables
+; xrefs TO FFEDF1D8 (sub_FFEDF1D8)
+   FFEDF037  sub_FFEDF016             bsr.w   sub_FFEDF1D8
+   (1)
+
+; xrefs TO FFEDC1F6 (sub_FFEDC1F6)
+   FFF36CA2  sub_FFF36CA2             bsr.a   sub_FFEDC1F6
+   (1)
+
+; xrefs TO FFEDF269 (sub_FFEDF269)
+   FFEDF1F8  sub_FFEDF1D8             bsr.w   sub_FFEDF269; jumptable FFEDF1F6 case 240
+   (1)
+
+; xrefs TO FFEF0385 (sub_FFEF0385)
+   FFEDC2BF  sub_FFEDC1F6             bsr.a   sub_FFEF0385
+   (1)
+
+; jpt_FFEDF1F6 raw bytes (16 entries expected)
+   bytes: 7F 4E 39 71 00 80 81 2E 3E 39 E1 00 80 81 2E 37
+
+; jpt_FFEDF290 raw bytes (12 entries expected)
+   bytes: 7F 4E 66 01 05 C5 EF FF 05 8A 2D 01
+
+; ==== sub_FFEFB268 (memcpy candidate) ====
+  FFEFB268  add     #-14h, sp, sp
+  FFEFB26B  mov.l   r1, 14h+var_4[sp]
+  FFEFB26D  mov.l   r2, 14h+var_8[sp]
+  FFEFB26F  mov.l   r3, 14h+var_C[sp]
+  FFEFB271  mov.l   14h+var_8[sp], 14h+var_14[sp]
+  FFEFB274  mov.l   14h+var_4[sp], 14h+var_10[sp]
+  FFEFB278  bra.b   loc_FFEFB292
+  FFEFB27A  mov.l   14h+var_14[sp], r1
+  FFEFB27C  mov.l   14h+var_10[sp], r2
+  FFEFB27E  mov.b   [r1], [r2]
+  FFEFB280  mov.l   14h+var_10[sp], r1
+  FFEFB282  add     #1, r1
+  FFEFB284  mov.l   r1, 14h+var_10[sp]
+  FFEFB286  mov.l   14h+var_14[sp], r1
+  FFEFB288  add     #1, r1
+  FFEFB28A  mov.l   r1, 14h+var_14[sp]
+  FFEFB28C  mov.l   14h+var_C[sp], r1
+  FFEFB28E  sub     #1, r1
+  FFEFB290  mov.l   r1, 14h+var_C[sp]
+  FFEFB292  mov.l   14h+var_C[sp], r1
+  FFEFB294  cmp     #0, r1
+  FFEFB296  bne.b   loc_FFEFB27A
+  FFEFB298  rtsd    #5
+
+; family handler entry lines
+; ---- FFEDF2E0 sub_FFEDF2E0 ----
+  FFEDF2E0  sub     #4, sp
+  FFEDF2E2  mov.b   #-1, 4+var_2[sp]
+  FFEDF2E5  mov.l   #8E46h, r14
+  FFEDF2EB  movu.b  [r14], r14
+  FFEDF2ED  cmp     #-0Fh, r14
+  FFEDF2F0  bne.b   def_FFEDF308; jumptable FFEDF308 default case, cases 2,12,14,16
+; ---- FFEDF36A sub_FFEDF36A ----
+  FFEDF36A  sub     #4, sp
+  FFEDF36C  mov.b   #-1, 4+var_2[sp]
+  FFEDF36F  mov.l   #8E46h, r14
+  FFEDF375  movu.b  [r14], r14
+  FFEDF377  cmp     #-0Eh, r14
+  FFEDF37A  bne.b   loc_FFEDF39D
+; ---- FFEDF3A7 sub_FFEDF3A7 ----
+  FFEDF3A7  sub     #4, sp
+  FFEDF3A9  mov.b   #-1, 4+var_2[sp]
+  FFEDF3AC  mov.l   #8E46h, r14
+  FFEDF3B2  movu.b  [r14], r14
+  FFEDF3B4  cmp     #-0Dh, r14
+  FFEDF3B7  bne.b   loc_FFEDF3FF
+; ---- FFEDF447 sub_FFEDF447 ----
+  FFEDF447  sub     #4, sp
+  FFEDF449  mov.b   #-1, 4+var_2[sp]
+  FFEDF44C  mov.l   #8E46h, r14
+  FFEDF452  movu.b  [r14], r14
+  FFEDF454  cmp     #-0Bh, r14
+  FFEDF457  bne.b   loc_FFEDF4AE
+; ---- FFEDF4B8 sub_FFEDF4B8 ----
+  FFEDF4B8  sub     #4, sp
+  FFEDF4BA  mov.b   #-1, 4+var_2[sp]
+  FFEDF4BD  mov.l   #8E46h, r14
+  FFEDF4C3  movu.b  [r14], r14
+  FFEDF4C5  cmp     #-0Ah, r14
+  FFEDF4C8  bne.b   loc_FFEDF534
+; ---- FFEDF53E sub_FFEDF53E ----
+  FFEDF53E  sub     #4, sp
+  FFEDF540  mov.b   #-1, 4+var_2[sp]
+  FFEDF543  mov.l   #8E46h, r14
+  FFEDF549  movu.b  [r14], r14
+  FFEDF54B  cmp     #-9, r14
+  FFEDF54E  bne.b   loc_FFEDF565
+; ---- FFEDF56F sub_FFEDF56F ----
+  FFEDF56F  sub     #4, sp
+  FFEDF571  mov.b   #-1, 4+var_2[sp]
+  FFEDF574  mov.l   #8E46h, r14
+  FFEDF57A  movu.b  [r14], r14
+  FFEDF57C  cmp     #-8, r14
+  FFEDF57F  bne.w   loc_FFEDF611
+; ---- FFEDF61B sub_FFEDF61B ----
+  FFEDF61B  sub     #4, sp
+  FFEDF61D  mov.b   #-1, 4+var_2[sp]
+  FFEDF620  mov.l   #8E46h, r14
+  FFEDF626  movu.b  [r14], r14
+  FFEDF628  cmp     #-3, r14
+  FFEDF62B  bne.b   loc_FFEDF63B
+; ---- FFEDF645 sub_FFEDF645 ----
+  FFEDF645  sub     #4, sp
+  FFEDF647  mov.b   #-1, 4+var_2[sp]
+  FFEDF64A  mov.l   #8E46h, r14
+  FFEDF650  movu.b  [r14], r14
+  FFEDF652  cmp     #-1, r14
+  FFEDF655  bne.b   loc_FFEDF66D

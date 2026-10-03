@@ -1,0 +1,920 @@
+
+;==== range 3A240-3AB80
+03A240  7a1100ff8a68     add.l   #0xFF8A68, er1
+03A246  6992             mov.w   r2, @er1
+03A248  400e             bra     loc_3A258:8
+03A24A  79090000         mov.w   #0, e1   ; <- 0x3a238
+03A24E  0a91             add.l   er1, er1
+03A250  7a1100ff8a20     add.l   #0xFF8A20, er1
+03A256  6992             mov.w   r2, @er1
+03A258  79060002         mov.w   #2, r6
+03A25C  5e03ccd0         jsr     sub_3CCD0:24
+03A260  01306d73         ldm.l   @sp+, er0-er3
+03A264  5470             rts
+
+; ---- func 3A266
+03A266  01306df0         stm.l   er0-er3, @-sp   ; <- 0x2145c
+03A26A  5e03a2fa         jsr     sub_3A2FA:24
+03A26E  5e03ab80         jsr     sub_3AB80:24
+03A272  5e03fad0         jsr     sub_3FAD0:24
+03A276  01306d73         ldm.l   @sp+, er0-er3
+03A27A  5470             rts
+
+; ---- func 3A27C
+03A27C  01306df0         stm.l   er0-er3, @-sp   ; <- 0x1f1e6,0x25164
+03A280  6e0b0004         mov.b   @(4:16,er0), r3l
+03A284  5e03a30c         jsr     loc_3A30C:24
+03A288  5e03ab80         jsr     sub_3AB80:24
+03A28C  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A292  5e03fb0c         jsr     sub_3FB0C:24
+03A296  01306d73         ldm.l   @sp+, er0-er3
+03A29A  5470             rts
+
+; ---- func 3A29C
+03A29C  01306df0         stm.l   er0-er3, @-sp   ; <- 0xe8a8,0x1bfd4,0x1c008,0x1c270,0x1e29c,0x2514a
+03A2A0  01006b80ac72     mov.l   er0, @0xFFFFAC72:16
+03A2A6  555a             bsr     sub_3A302:8
+03A2A8  5e03ab80         jsr     sub_3AB80:24
+03A2AC  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A2B2  5e03fb0c         jsr     sub_3FB0C:24
+03A2B6  01306d73         ldm.l   @sp+, er0-er3
+03A2BA  5e03df2e         jsr     sub_3DF2E:24
+03A2BE  5470             rts
+
+; ---- func 3A2C0
+03A2C0  01306df0         stm.l   er0-er3, @-sp   ; <- 0x3fedc
+03A2C4  5546             bsr     loc_3A30C:8
+03A2C6  5e03ab80         jsr     sub_3AB80:24
+03A2CA  01306d73         ldm.l   @sp+, er0-er3
+03A2CE  5470             rts
+
+; ---- func 3A2D0
+03A2D0  01306df0         stm.l   er0-er3, @-sp   ; <- 0xebb4,0x10460,0x1c258,0x1c7ba,0x1d476,0x1d5e2
+03A2D4  01006b80ac72     mov.l   er0, @0xFFFFAC72:16
+03A2DA  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A2E0  5e03fd48         jsr     sub_3FD48:24
+03A2E4  551c             bsr     sub_3A302:8
+03A2E6  554c             bsr     sub_3A334:8
+03A2E8  4706             beq     loc_3A2F0:8
+03A2EA  5516             bsr     sub_3A302:8
+03A2EC  5e03ad20         jsr     sub_3AD20:24
+03A2F0  01306d73         ldm.l   @sp+, er0-er3
+03A2F4  5e03dea8         jsr     sub_3DEA8:24
+03A2F8  5470             rts
+
+; ---- func 3A2FA
+03A2FA  7a0000001380     mov.l   #0x1380, er0   ; <- 0x3a26a
+03A300  401e             bra     loc_3A320:8
+
+; ---- func 3A302
+03A302  01006b00ac72     mov.l   @0xFFFFAC72:16, er0   ; <- 0x3a2a6,0x3a2e4,0x3a2ea
+03A308  6e0b0003         mov.b   @(3:16,er0), r3l
+03A30C  7a0000001380     mov.l   #0x1380, er0
+03A312  6a10817e7300     btst    #0, @0xFFFF817E:16
+03A318  4706             beq     loc_3A320:8
+03A31A  7a0000001500     mov.l   #0x1500, er0
+03A320  f300             mov.b   #0, r3h
+03A322  79060020         mov.w   #0x20, r6 ; ' '
+03A326  0d34             mov.w   r3, r4
+03A328  5264             mulxu.w r6, er4
+03A32A  0ac0             add.l   er4, er0
+03A32C  7a0100ffac76     mov.l   #0xFFAC76, er1
+03A332  5470             rts
+
+; ---- func 3A334
+03A334  7a0100ffac9a     mov.l   #0xFFAC9A, er1   ; <- 0x3a2e6,0x3a3a2
+03A33A  5e03ab80         jsr     sub_3AB80:24
+03A33E  fe08             mov.b   #8, r6l
+03A340  7a0000ffac76     mov.l   #0xFFAC76, er0
+03A346  7a0100ffac9a     mov.l   #0xFFAC9A, er1
+03A34C  01006d04         mov.l   @er0+, er4
+03A350  01006d15         mov.l   @er1+, er5
+03A354  1fc5             cmp.l   er4, er5
+03A356  4604             bne     locret_3A35C:8
+03A358  1a0e             dec.b   r6l
+03A35A  46f0             bne     loc_3A34C:8
+03A35C  5470             rts
+
+; ---- func 3A35E
+03A35E  01306df0         stm.l   er0-er3, @-sp   ; <- 0x1c1a4,0x1c1d2,0x1ffe2,0x7567c,0x7570e,0x75854
+03A362  555a             bsr     sub_3A3BE:8
+03A364  5e03ab80         jsr     sub_3AB80:24
+03A368  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A36E  5e03fb0c         jsr     sub_3FB0C:24
+03A372  01306d73         ldm.l   @sp+, er0-er3
+03A376  5e03df0a         jsr     sub_3DF0A:24
+03A37A  5470             rts
+
+; ---- func 3A37C
+03A37C  01306df0         stm.l   er0-er3, @-sp   ; <- 0x20008
+03A380  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A386  5e03fd48         jsr     sub_3FD48:24
+03A38A  5e03a796         jsr     sub_3A796:24
+03A38E  400e             bra     loc_3A39E:8
+
+; ---- func 3A390
+03A390  01306df0         stm.l   er0-er3, @-sp   ; <- 0xeac4,0xebda,0x1ffee,0x20016,0x756a8,0x7573a
+03A394  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A39A  5e03fd48         jsr     sub_3FD48:24
+03A39E  6df3             push.w  r3
+03A3A0  551c             bsr     sub_3A3BE:8
+03A3A2  5e03a334         jsr     sub_3A334:24
+03A3A6  470a             beq     loc_3A3B2:8
+03A3A8  6d73             pop.w   r3
+03A3AA  5512             bsr     sub_3A3BE:8
+03A3AC  5e03ad20         jsr     sub_3AD20:24
+03A3B0  4002             bra     loc_3A3B4:8
+03A3B2  6d73             pop.w   r3   ; <- 0x3a3a6
+03A3B4  01306d73         ldm.l   @sp+, er0-er3
+03A3B8  5e03de84         jsr     sub_3DE84:24
+03A3BC  5470             rts
+
+; ---- func 3A3BE
+03A3BE  7a0000001200     mov.l   #0x1200, er0   ; <- 0x3a362,0x3a3a0,0x3a3aa,0x3a8e8,0x3aa6a,0x3aa8e
+03A3C4  f300             mov.b   #0, r3h
+03A3C6  79060020         mov.w   #0x20, r6 ; ' '
+03A3CA  0d34             mov.w   r3, r4
+03A3CC  5264             mulxu.w r6, er4
+03A3CE  0ac0             add.l   er4, er0
+03A3D0  7a0100ffac76     mov.l   #0xFFAC76, er1
+03A3D6  5470             rts
+
+; ---- func 3A3D8
+03A3D8  01306df0         stm.l   er0-er3, @-sp   ; <- 0x24d84,0x24dd4
+03A3DC  552e             bsr     sub_3A40C:8
+03A3DE  7a0100ffad22     mov.l   #0xFFAD22, er1
+03A3E4  5e03ab80         jsr     sub_3AB80:24
+03A3E8  6a188ea67200     bclr    #0, @0xFFFF8EA6:16
+03A3EE  fc3a             mov.b   #0x3A, r4l ; ':'
+03A3F0  7a0500ffad22     mov.l   #0xFFAD22, er5
+03A3F6  01006b06812a     mov.l   @0xFFFF812A:16, er6
+03A3FC  5e03f36e         jsr     sub_3F36E:24
+03A400  5546             bsr     sub_3A448:8
+03A402  5e03ab80         jsr     sub_3AB80:24
+03A406  01306d73         ldm.l   @sp+, er0-er3
+03A40A  5470             rts
+
+; ---- func 3A40C
+03A40C  01006b00812a     mov.l   @0xFFFF812A:16, er0   ; <- 0x3a3dc,0x3a436
+03A412  7906003a         mov.w   #0x3A, r6 ; ':'
+03A416  0f81             mov.l   er0, er1
+03A418  7a0000000180     mov.l   #0x180, er0
+03A41E  6a10817e7300     btst    #0, @0xFFFF817E:16
+03A424  4706             beq     loc_3A42C:8
+03A426  7a0000000380     mov.l   #0x380, er0
+03A42C  5263             mulxu.w r6, er3
+03A42E  0ab0             add.l   er3, er0
+03A430  5470             rts
+
+; ---- func 3A432
+03A432  01306df0         stm.l   er0-er3, @-sp   ; <- 0x24abe,0x24b3c
+03A436  55d4             bsr     sub_3A40C:8
+03A438  5e03ad20         jsr     sub_3AD20:24
+03A43C  550a             bsr     sub_3A448:8
+03A43E  5e03ad20         jsr     sub_3AD20:24
+03A442  01306d73         ldm.l   @sp+, er0-er3
+03A446  5470             rts
+
+; ---- func 3A448
+03A448  79030007         mov.w   #7, r3   ; <- 0x3a400,0x3a43c
+03A44C  7906003a         mov.w   #0x3A, r6 ; ':'
+03A450  7a0100ffac76     mov.l   #0xFFAC76, er1
+03A456  7a0000000180     mov.l   #0x180, er0
+03A45C  6a10817e7300     btst    #0, @0xFFFF817E:16
+03A462  4706             beq     loc_3A46A:8
+03A464  7a0000000380     mov.l   #0x380, er0
+03A46A  5263             mulxu.w r6, er3
+03A46C  0ab0             add.l   er3, er0
+03A46E  79060007         mov.w   #7, r6
+03A472  5470             rts
+
+; ---- func 3A474
+03A474  79030000         mov.w   #0, r3   ; <- 0x1d5ea,0x1f622,0x2133c,0x2d0ac,0x2d16c,0x2dd22
+03A478  4058             bra     sub_3A4D2:8
+
+; ---- func 3A47A
+03A47A  79030001         mov.w   #1, r3   ; <- 0x1d5f0,0x1f62c,0x21342,0x2d0b2,0x2d172,0x2dd28
+03A47E  4052             bra     sub_3A4D2:8
+
+; ---- func 3A480
+03A480  01306df0         stm.l   er0-er3, @-sp   ; <- 0x1c17c,0x75748,0x75920,0x75af8,0x75cd0,0x75ea8
+03A484  556a             bsr     sub_3A4F0:8
+03A486  7a0100ffad22     mov.l   #0xFFAD22, er1
+03A48C  5e03ab80         jsr     sub_3AB80:24
+03A490  6a10ad5b7370     btst    #7, @0xFFFFAD5B:16
+03A496  4616             bne     loc_3A4AE:8
+03A498  01006b06812a     mov.l   @0xFFFF812A:16, er6
+03A49E  6a108ea07360     btst    #6, @0xFFFF8EA0:16
+03A4A4  4614             bne     loc_3A4BA:8
+03A4A6  6a188ea67200     bclr    #0, @0xFFFF8EA6:16
+03A4AC  400c             bra     loc_3A4BA:8
+03A4AE  7a0600ff90f0     mov.l   #0xFF90F0, er6   ; <- 0x3a496
+03A4B4  6a188ea67000     bset    #0, @0xFFFF8EA6:16
+03A4BA  fc3a             mov.b   #0x3A, r4l ; ':'
+03A4BC  7a0500ffad22     mov.l   #0xFFAD22, er5
+03A4C2  f400             mov.b   #0, r4h
+03A4C4  7bd4598f         eepmov.w
+03A4C8  0d44             mov.w   r4, r4
+03A4CA  46f8             bne     loc_3A4C4:8
+03A4CC  01306d73         ldm.l   @sp+, er0-er3
+03A4D0  5470             rts
+
+; ---- func 3A4D2
+03A4D2  01306df0         stm.l   er0-er3, @-sp   ; <- 0x23928,0x3a478,0x3a47e
+03A4D6  6df3             push.w  r3
+03A4D8  5516             bsr     sub_3A4F0:8
+03A4DA  5538             bsr     sub_3A514:8
+03A4DC  470a             beq     loc_3A4E8:8
+03A4DE  6d73             pop.w   r3
+03A4E0  550e             bsr     sub_3A4F0:8
+03A4E2  5e03ad20         jsr     sub_3AD20:24
+03A4E6  4002             bra     loc_3A4EA:8
+03A4E8  6d73             pop.w   r3   ; <- 0x3a4dc
+03A4EA  01306d73         ldm.l   @sp+, er0-er3
+03A4EE  5470             rts
+
+; ---- func 3A4F0
+03A4F0  5e010748         jsr     sub_10748:24   ; <- 0x3a484,0x3a4d8,0x3a4e0,0x3a540,0x3a550,0x3a56a
+03A4F4  7906003a         mov.w   #0x3A, r6 ; ':'
+03A4F8  0f81             mov.l   er0, er1
+03A4FA  7a0000000180     mov.l   #0x180, er0
+03A500  6a10817e7300     btst    #0, @0xFFFF817E:16
+03A506  4706             beq     loc_3A50E:8
+03A508  7a0000000380     mov.l   #0x380, er0
+03A50E  5263             mulxu.w r6, er3
+03A510  0ab0             add.l   er3, er0
+03A512  5470             rts
+
+; ---- func 3A514
+03A514  7a0100ffac9a     mov.l   #0xFFAC9A, er1   ; <- 0x3a4da,0x3a574,0x3a598
+03A51A  5e03ab80         jsr     sub_3AB80:24
+03A51E  fe1d             mov.b   #0x1D, r6l
+03A520  5e010748         jsr     sub_10748:24
+03A524  7a0100ffac9a     mov.l   #0xFFAC9A, er1
+03A52A  6d0c             mov.w   @er0+, e4
+03A52C  6d14             mov.w   @er1+, r4
+03A52E  1dc4             cmp.w   e4, r4
+03A530  4604             bne     locret_3A536:8
+03A532  1a0e             dec.b   r6l
+03A534  46f4             bne     loc_3A52A:8
+03A536  5470             rts
+
+; ---- func 3A538
+03A538  01306df0         stm.l   er0-er3, @-sp   ; <- 0x1d4de
+03A53C  79030003         mov.w   #3, r3
+03A540  55ae             bsr     sub_3A4F0:8
+03A542  01006b01812a     mov.l   @0xFFFF812A:16, er1
+03A548  5e03ab80         jsr     sub_3AB80:24
+03A54C  79030004         mov.w   #4, r3
+03A550  559e             bsr     sub_3A4F0:8
+03A552  7a0100ff90f0     mov.l   #0xFF90F0, er1
+03A558  5e03ab80         jsr     sub_3AB80:24
+03A55C  01306d73         ldm.l   @sp+, er0-er3
+03A560  5470             rts
+
+; ---- func 3A562
+03A562  01306df0         stm.l   er0-er3, @-sp   ; <- 0x1d47a
+03A566  79030003         mov.w   #3, r3
+03A56A  5e03a4f0         jsr     sub_3A4F0:24
+03A56E  01006b01812a     mov.l   @0xFFFF812A:16, er1
+03A574  559e             bsr     sub_3A514:8
+03A576  4712             beq     loc_3A58A:8
+03A578  79030003         mov.w   #3, r3
+03A57C  5e03a4f0         jsr     sub_3A4F0:24
+03A580  01006b01812a     mov.l   @0xFFFF812A:16, er1
+03A586  5e03ad20         jsr     sub_3AD20:24
+03A58A  79030004         mov.w   #4, r3
+03A58E  5e03a4f0         jsr     sub_3A4F0:24
+03A592  7a0100ff90f0     mov.l   #0xFF90F0, er1
+03A598  5e03a514         jsr     sub_3A514:24
+03A59C  4712             beq     loc_3A5B0:8
+03A59E  79030004         mov.w   #4, r3
+03A5A2  5e03a4f0         jsr     sub_3A4F0:24
+03A5A6  7a0100ff90f0     mov.l   #0xFF90F0, er1
+03A5AC  5e03ad20         jsr     sub_3AD20:24
+03A5B0  01306d73         ldm.l   @sp+, er0-er3
+03A5B4  5470             rts
+
+; ---- func 3A5B6
+03A5B6  01306df0         stm.l   er0-er3, @-sp   ; <- 0x1c108,0x1fd84
+03A5BA  5e03a6ee         jsr     sub_3A6EE:24
+03A5BE  4616             bne     loc_3A5D6:8
+03A5C0  6df6             push.w  r6
+03A5C2  5e03df1c         jsr     sub_3DF1C:24
+03A5C6  6d76             pop.w   r6
+03A5C8  5e03ab80         jsr     sub_3AB80:24
+03A5CC  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A5D2  5e03fb0c         jsr     sub_3FB0C:24
+03A5D6  01306d73         ldm.l   @sp+, er0-er3
+03A5DA  01006b00812a     mov.l   @0xFFFF812A:16, er0
+03A5E0  6a10817e7300     btst    #0, @0xFFFF817E:16
+03A5E6  460e             bne     locret_3A5F6:8
+03A5E8  6a108ea67300     btst    #0, @0xFFFF8EA6:16
+03A5EE  4706             beq     locret_3A5F6:8
+03A5F0  7a0000ff90f0     mov.l   #0xFF90F0, er0
+03A5F6  5470             rts
+
+; ---- func 3A5F8
+03A5F8  01306df0         stm.l   er0-er3, @-sp   ; <- 0x1c128
+03A5FC  5e03a6ee         jsr     sub_3A6EE:24
+03A600  4616             bne     loc_3A618:8
+03A602  6df6             push.w  r6
+03A604  5e03df1c         jsr     sub_3DF1C:24
+03A608  6d76             pop.w   r6
+03A60A  5e03ab80         jsr     sub_3AB80:24
+03A60E  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A614  5e03fb0c         jsr     sub_3FB0C:24
+03A618  01306d73         ldm.l   @sp+, er0-er3
+03A61C  01006b00812a     mov.l   @0xFFFF812A:16, er0
+03A622  6a108ea67300     btst    #0, @0xFFFF8EA6:16
+03A628  4706             beq     locret_3A630:8
+03A62A  7a0000ff90f0     mov.l   #0xFF90F0, er0
+03A630  5470             rts
+
+; ---- func 3A632
+03A632  01306df0         stm.l   er0-er3, @-sp   ; <- 0x751a8,0x7524a,0x752ec,0x7538e,0x75430
+03A636  7a0000002e80     mov.l   #0x2E80, er0
+03A63C  79060020         mov.w   #0x20, r6 ; ' '
+03A640  0d34             mov.w   r3, r4
+03A642  5264             mulxu.w r6, er4
+03A644  0ac0             add.l   er4, er0
+03A646  7a0100ffac76     mov.l   #0xFFAC76, er1
+03A64C  5e03ab80         jsr     sub_3AB80:24
+03A650  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A656  5e03fae8         jsr     sub_3FAE8:24
+03A65A  01306d73         ldm.l   @sp+, er0-er3
+03A65E  6a108ea67300     btst    #0, @0xFFFF8EA6:16
+03A664  5470             rts
+
+; ---- func 3A666
+03A666  01306df0         stm.l   er0-er3, @-sp   ; <- 0x32ab8
+03A66A  5e03a6ee         jsr     sub_3A6EE:24
+03A66E  5e03ab80         jsr     sub_3AB80:24
+03A672  01006b05ac78     mov.l   @0xFFFFAC78:16, er5
+03A678  fd00             mov.b   #0, r5l
+03A67A  792d0018         cmp.w   #0x18, e5
+03A67E  453c             bcs     loc_3A6BC:8
+03A680  a512             cmp.b   #0x12, r5h
+03A682  472e             beq     loc_3A6B2:8
+03A684  a537             cmp.b   #0x37, r5h ; '7'
+03A686  472a             beq     loc_3A6B2:8
+03A688  a562             cmp.b   #0x62, r5h ; 'b'
+03A68A  4726             beq     loc_3A6B2:8
+03A68C  a587             cmp.b   #0x87, r5h
+03A68E  4722             beq     loc_3A6B2:8
+03A690  a506             cmp.b   #6, r5h
+03A692  4722             beq     loc_3A6B6:8
+03A694  a518             cmp.b   #0x18, r5h
+03A696  4722             beq     loc_3A6BA:8
+03A698  a531             cmp.b   #0x31, r5h ; '1'
+03A69A  471a             beq     loc_3A6B6:8
+03A69C  a543             cmp.b   #0x43, r5h ; 'C'
+03A69E  471a             beq     loc_3A6BA:8
+03A6A0  a556             cmp.b   #0x56, r5h ; 'V'
+03A6A2  4712             beq     loc_3A6B6:8
+03A6A4  a568             cmp.b   #0x68, r5h ; 'h'
+03A6A6  4712             beq     loc_3A6BA:8
+03A6A8  a581             cmp.b   #0x81, r5h
+03A6AA  470a             beq     loc_3A6B6:8
+03A6AC  a593             cmp.b   #0x93, r5h
+03A6AE  470a             beq     loc_3A6BA:8
+03A6B0  400a             bra     loc_3A6BC:8
+03A6B2  fd50             mov.b   #0x50, r5l ; 'P'   ; <- 0x3a682,0x3a686,0x3a68a,0x3a68e
+03A6B4  4006             bra     loc_3A6BC:8
+03A6B6  fd25             mov.b   #0x25, r5l ; '%'   ; <- 0x3a692,0x3a69a,0x3a6a2,0x3a6aa
+03A6B8  4002             bra     loc_3A6BC:8
+03A6BA  fd75             mov.b   #0x75, r5l ; 'u'   ; <- 0x3a696,0x3a69e,0x3a6a6,0x3a6ae
+03A6BC  01006b0692c8     mov.l   @0xFFFF92C8:16, er6
+03A6C2  01006d63         mov.l   @er6+, er3
+03A6C6  7a020000000a     mov.l   #0xA, er2
+03A6CC  01006964         mov.l   @er6, er4
+03A6D0  1fc5             cmp.l   er4, er5
+03A6D2  450a             bcs     loc_3A6DE:8
+03A6D4  01006f640004     mov.l   @(4:16,er6), er4
+03A6DA  1fd4             cmp.l   er5, er4
+03A6DC  4406             bcc     loc_3A6E4:8
+03A6DE  0aa6             add.l   er2, er6
+03A6E0  1b53             dec.w   #1, r3
+03A6E2  46e8             bne     loc_3A6CC:8
+03A6E4  01306d73         ldm.l   @sp+, er0-er3
+03A6E8  6f630008         mov.w   @(8:16,er6), r3
+03A6EC  5470             rts
+
+; ---- func 3A6EE
+03A6EE  6a10aa317340     btst    #4, @0xFFFFAA31:16   ; <- 0x3a5ba,0x3a5fc,0x3a66a,0x3a71e
+03A6F4  460a             bne     loc_3A700:8
+03A6F6  5e03f1dc         jsr     sub_3F1DC:24
+03A6FA  4704             beq     loc_3A700:8
+03A6FC  5a03cefe         jmp     loc_3CEFE:24
+03A700  7a0000002e80     mov.l   #0x2E80, er0   ; <- 0x3a6f4,0x3a6fa
+03A706  79060020         mov.w   #0x20, r6 ; ' '
+03A70A  0d34             mov.w   r3, r4
+03A70C  5264             mulxu.w r6, er4
+03A70E  0ac0             add.l   er4, er0
+03A710  7a0100ffac76     mov.l   #0xFFAC76, er1
+03A716  fc00             mov.b   #0, r4l
+03A718  5470             rts
+
+; ---- func 3A71A
+03A71A  01306df0         stm.l   er0-er3, @-sp   ; <- 0x2014e
+03A71E  55ce             bsr     sub_3A6EE:8
+03A720  79060003         mov.w   #3, r6
+03A724  7a1000000002     add.l   #2, er0
+03A72A  7a1100000002     add.l   #2, er1
+03A730  5e03ab80         jsr     sub_3AB80:24
+03A734  01006b05ac78     mov.l   @0xFFFFAC78:16, er5
+03A73A  fd00             mov.b   #0, r5l
+03A73C  792d0018         cmp.w   #0x18, e5
+03A740  453c             bcs     loc_3A77E:8
+03A742  a512             cmp.b   #0x12, r5h
+03A744  472e             beq     loc_3A774:8
+03A746  a537             cmp.b   #0x37, r5h ; '7'
+03A748  472a             beq     loc_3A774:8
+03A74A  a562             cmp.b   #0x62, r5h ; 'b'
+03A74C  4726             beq     loc_3A774:8
+03A74E  a587             cmp.b   #0x87, r5h
+03A750  4722             beq     loc_3A774:8
+03A752  a506             cmp.b   #6, r5h
+03A754  4722             beq     loc_3A778:8
+03A756  a518             cmp.b   #0x18, r5h
+03A758  4722             beq     loc_3A77C:8
+03A75A  a531             cmp.b   #0x31, r5h ; '1'
+03A75C  471a             beq     loc_3A778:8
+03A75E  a543             cmp.b   #0x43, r5h ; 'C'
+03A760  471a             beq     loc_3A77C:8
+03A762  a556             cmp.b   #0x56, r5h ; 'V'
+03A764  4712             beq     loc_3A778:8
+03A766  a568             cmp.b   #0x68, r5h ; 'h'
+03A768  4712             beq     loc_3A77C:8
+03A76A  a581             cmp.b   #0x81, r5h
+03A76C  470a             beq     loc_3A778:8
+03A76E  a593             cmp.b   #0x93, r5h
+03A770  470a             beq     loc_3A77C:8
+03A772  400a             bra     loc_3A77E:8
+03A774  fd50             mov.b   #0x50, r5l ; 'P'   ; <- 0x3a744,0x3a748,0x3a74c,0x3a750
+03A776  4006             bra     loc_3A77E:8
+03A778  fd25             mov.b   #0x25, r5l ; '%'   ; <- 0x3a754,0x3a75c,0x3a764,0x3a76c
+03A77A  4002             bra     loc_3A77E:8
+03A77C  fd75             mov.b   #0x75, r5l ; 'u'   ; <- 0x3a758,0x3a760,0x3a768,0x3a770
+03A77E  01306d73         ldm.l   @sp+, er0-er3
+03A782  5470             rts
+
+; ---- func 3A784
+03A784  01306df0         stm.l   er0-er3, @-sp   ; <- 0x1fd12
+03A788  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A78E  5e03fd48         jsr     sub_3FD48:24
+03A792  5502             bsr     sub_3A796:8
+03A794  4046             bra     loc_3A7DC:8
+
+; ---- func 3A796
+03A796  6a18aa307260     bclr    #6, @0xFFFFAA30:16   ; <- 0x3a38a,0x3a792
+03A79C  79040012         mov.w   #0x12, r4
+03A7A0  7a0500ffaa96     mov.l   #0xFFAA96, er5
+03A7A6  7a0600ffac7c     mov.l   #0xFFAC7C, er6
+03A7AC  7bd4598f         eepmov.w
+03A7B0  0d44             mov.w   r4, r4
+03A7B2  46f8             bne     loc_3A7AC:8
+03A7B4  790cffff         mov.w   #0xFFFF, e4
+03A7B8  fe08             mov.b   #8, r6l
+03A7BA  7a0500ffaa98     mov.l   #0xFFAA98, er5
+03A7C0  6d54             mov.w   @er5+, r4
+03A7C2  1dc4             cmp.w   e4, r4
+03A7C4  4606             bne     locret_3A7CC:8
+03A7C6  1a0e             dec.b   r6l
+03A7C8  46f6             bne     loc_3A7C0:8
+03A7CA  4000             bra     locret_3A7CC:8
+03A7CC  5470             rts   ; <- 0x3a7c4,0x3a7ca
+
+; ---- func 3A7CE
+03A7CE  01306df0         stm.l   er0-er3, @-sp   ; <- 0xe054,0x1fd8a,0x20110
+03A7D2  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A7D8  5e03fd48         jsr     sub_3FD48:24
+03A7DC  6df3             push.w  r3
+03A7DE  7a0000002e80     mov.l   #0x2E80, er0
+03A7E4  79060020         mov.w   #0x20, r6 ; ' '
+03A7E8  0d34             mov.w   r3, r4
+03A7EA  5264             mulxu.w r6, er4
+03A7EC  0ac0             add.l   er4, er0
+03A7EE  7a0100ffac76     mov.l   #0xFFAC76, er1
+03A7F4  5e03ad20         jsr     sub_3AD20:24
+03A7F8  6d73             pop.w   r3
+03A7FA  6a0cacd5         mov.b   @0xFFFFACD5:16, r4l
+03A7FE  ecf3             and.b   #0xF3, r4l
+03A800  0cce             mov.b   r4l, r6l
+03A802  6a0cacd9         mov.b   @0xFFFFACD9:16, r4l
+03A806  ec0c             and.b   #0xC, r4l
+03A808  14ce             or.b    r4l, r6l
+03A80A  0d35             mov.w   r3, r5
+03A80C  790d0000         mov.w   #0, e5
+03A810  6ede8188         mov.b   r6l, @(-0x7E78:16,er5)
+03A814  6a8eacd4         mov.b   r6l, @0xFFFFACD4:16
+03A818  0fd0             mov.l   er5, er0
+03A81A  7a1000002940     add.l   #0x2940, er0
+03A820  7a0100ffacd4     mov.l   #0xFFACD4, er1
+03A826  79060001         mov.w   #1, r6
+03A82A  5e03ad20         jsr     sub_3AD20:24
+03A82E  01306d73         ldm.l   @sp+, er0-er3
+03A832  5e03de96         jsr     sub_3DE96:24
+03A836  5470             rts
+
+; ---- func 3A838
+03A838  01306df0         stm.l   er0-er3, @-sp   ; <- 0x75224,0x752c6,0x75368,0x7540a,0x754ac
+03A83C  7a0500ffac76     mov.l   #0xFFAC76, er5
+03A842  5e03fd48         jsr     sub_3FD48:24
+03A846  6df3             push.w  r3
+03A848  7a0000002e80     mov.l   #0x2E80, er0
+03A84E  79060020         mov.w   #0x20, r6 ; ' '
+03A852  0d34             mov.w   r3, r4
+03A854  5264             mulxu.w r6, er4
+03A856  0ac0             add.l   er4, er0
+03A858  7a0100ffac76     mov.l   #0xFFAC76, er1
+03A85E  5e03ad20         jsr     sub_3AD20:24
+03A862  6d73             pop.w   r3
+03A864  6a0eacd8         mov.b   @0xFFFFACD8:16, r6l
+03A868  0d35             mov.w   r3, r5
+03A86A  790d0000         mov.w   #0, e5
+03A86E  6ede8188         mov.b   r6l, @(-0x7E78:16,er5)
+03A872  6a8eacd4         mov.b   r6l, @0xFFFFACD4:16
+03A876  0fd0             mov.l   er5, er0
+03A878  7a1000002940     add.l   #0x2940, er0
+03A87E  7a0100ffacd4     mov.l   #0xFFACD4, er1
+03A884  79060001         mov.w   #1, r6
+03A888  5e03ad20         jsr     sub_3AD20:24
+03A88C  01306d73         ldm.l   @sp+, er0-er3
+03A890  5470             rts
+
+; ---- func 3A892
+03A892  01306df0         stm.l   er0-er3, @-sp   ; <- 0x16e04,0x1fe48,0x1ff7a
+03A896  0cce             mov.b   r4l, r6l
+03A898  5e03f1dc         jsr     sub_3F1DC:24
+03A89C  471a             beq     loc_3A8B8:8
+03A89E  ac06             cmp.b   #6, r4l
+03A8A0  473a             beq     loc_3A8DC:8
+03A8A2  ac08             cmp.b   #8, r4l
+03A8A4  4736             beq     loc_3A8DC:8
+03A8A6  7a64000000ff     and.l   #0xFF, er4
+03A8AC  1034             shll.l  er4
+03A8AE  78406b240003f1c4 mov.w   @(word_3F1C4:32,er4), r4
+03A8B6  0943             add.w   r4, r3
+03A8B8  0d35             mov.w   r3, r5
+03A8BA  790d0000         mov.w   #0, e5
+03A8BE  6ede8188         mov.b   r6l, @(-0x7E78:16,er5)
+03A8C2  6a8eacd4         mov.b   r6l, @0xFFFFACD4:16
+03A8C6  0fd0             mov.l   er5, er0
+03A8C8  7a1000002940     add.l   #0x2940, er0
+03A8CE  7a0100ffacd4     mov.l   #0xFFACD4, er1
+03A8D4  79060001         mov.w   #1, r6
+03A8D8  5e03ad20         jsr     sub_3AD20:24
+03A8DC  01306d73         ldm.l   @sp+, er0-er3
+03A8E0  5470             rts
+
+; ---- func 3A8E2
+03A8E2  01306df0         stm.l   er0-er3, @-sp   ; <- 0x19530
+03A8E6  551e             bsr     sub_3A906:8
+03A8E8  5e03a3be         jsr     sub_3A3BE:24
+03A8EC  7a1000000006     add.l   #6, er0
+03A8F2  79060012         mov.w   #0x12, r6
+03A8F6  7a0100ffaa56     mov.l   #0xFFAA56, er1
+03A8FC  5e03ad20         jsr     sub_3AD20:24
+03A900  01306d73         ldm.l   @sp+, er0-er3
+03A904  5470             rts
+
+; ---- func 3A906
+03A906  79040012         mov.w   #0x12, r4   ; <- 0x3a8e6,0x3a930,0x3a948
+03A90A  0f85             mov.l   er0, er5
+03A90C  7a1500000022     add.l   #0x22, er5 ; '"'
+03A912  7a0600ffaa56     mov.l   #0xFFAA56, er6
+03A918  7bd4598f         eepmov.w
+03A91C  0d44             mov.w   r4, r4
+03A91E  46f8             bne     loc_3A918:8
+03A920  5470             rts
+
+; ---- func 3A922
+03A922  01306df0         stm.l   er0-er3, @-sp   ; <- 0x19544
+03A926  5e03f1dc         jsr     sub_3F1DC:24
+03A92A  471c             beq     loc_3A948:8
+03A92C  ac03             cmp.b   #3, r4l
+03A92E  4612             bne     loc_3A942:8
+03A930  55d4             bsr     sub_3A906:8
+03A932  5546             bsr     sub_3A97A:8
+03A934  79060012         mov.w   #0x12, r6
+03A938  7a0100ffaa56     mov.l   #0xFFAA56, er1
+03A93E  5e03ad20         jsr     sub_3AD20:24
+03A942  01306d73         ldm.l   @sp+, er0-er3
+03A946  4030             bra     locret_3A978:8
+03A948  55bc             bsr     sub_3A906:8   ; <- 0x3a92a
+03A94A  7a0000002e80     mov.l   #0x2E80, er0
+03A950  79060020         mov.w   #0x20, r6 ; ' '
+03A954  0d34             mov.w   r3, r4
+03A956  5264             mulxu.w r6, er4
+03A958  0ac0             add.l   er4, er0
+03A95A  7a0100ffac76     mov.l   #0xFFAC76, er1
+03A960  7a1000000006     add.l   #6, er0
+03A966  79060012         mov.w   #0x12, r6
+03A96A  7a0100ffaa56     mov.l   #0xFFAA56, er1
+03A970  5e03ad20         jsr     sub_3AD20:24
+03A974  01306d73         ldm.l   @sp+, er0-er3
+03A978  5470             rts
+
+; ---- func 3A97A
+03A97A  7a0000000f80     mov.l   #0xF80, er0   ; <- 0x3a932,0x3a990
+03A980  79060012         mov.w   #0x12, r6
+03A984  0d31             mov.w   r3, r1
+03A986  5261             mulxu.w r6, er1
+03A988  0a90             add.l   er1, er0
+03A98A  5470             rts
+
+; ---- func 3A98C
+03A98C  01306df0         stm.l   er0-er3, @-sp   ; <- 0xdfdc
+03A990  55e8             bsr     sub_3A97A:8
+03A992  7a010000f6d4     mov.l   #0xF6D4, er1
+03A998  5e03ad20         jsr     sub_3AD20:24
+03A99C  01306d73         ldm.l   @sp+, er0-er3
+03A9A0  5470             rts
+
+; ---- func 3A9A2
+03A9A2  01306df0         stm.l   er0-er3, @-sp
+03A9A6  1033             shll.l  er3
+03A9A8  7a13000003e8     add.l   #0x3E8, er3
+03A9AE  7a0000002e80     mov.l   #0x2E80, er0
+03A9B4  79060020         mov.w   #0x20, r6 ; ' '
+03A9B8  0d34             mov.w   r3, r4
+03A9BA  5264             mulxu.w r6, er4
+03A9BC  0ac0             add.l   er4, er0
+03A9BE  7a0100ffac76     mov.l   #0xFFAC76, er1
+03A9C4  79060012         mov.w   #0x12, r6
+03A9C8  7a1000000006     add.l   #6, er0
+03A9CE  7a0100ffaa56     mov.l   #0xFFAA56, er1
+03A9D4  5e03ab80         jsr     sub_3AB80:24
+03A9D8  01306d73         ldm.l   @sp+, er0-er3
+03A9DC  fe04             mov.b   #4, r6l
+03A9DE  7a0500ffaa58     mov.l   #0xFFAA58, er5
+03A9E4  01006d54         mov.l   @er5+, er4
+03A9E8  7a24ffffffff     cmp.l   #0xFFFFFFFF, er4
+03A9EE  4604             bne     locret_3A9F4:8
+03A9F0  1a0e             dec.b   r6l
+03A9F2  46f0             bne     loc_3A9E4:8
+03A9F4  5470             rts
+
+; ---- func 3A9F6
+03A9F6  5e03f1dc         jsr     sub_3F1DC:24   ; <- 0x19420
+03A9FA  4668             bne     locret_3AA64:8
+
+; ---- func 3A9FC
+03A9FC  01306df0         stm.l   er0-er3, @-sp
+03AA00  7a0000002e80     mov.l   #0x2E80, er0
+03AA06  79060020         mov.w   #0x20, r6 ; ' '
+03AA0A  0d34             mov.w   r3, r4
+03AA0C  5264             mulxu.w r6, er4
+03AA0E  0ac0             add.l   er4, er0
+03AA10  7a0100ffac76     mov.l   #0xFFAC76, er1
+03AA16  79060001         mov.w   #1, r6
+03AA1A  7a1000000005     add.l   #5, er0
+03AA20  7a0100ffaa56     mov.l   #0xFFAA56, er1
+03AA26  5e03ab80         jsr     sub_3AB80:24
+03AA2A  01306d73         ldm.l   @sp+, er0-er3
+03AA2E  5e03fab2         jsr     sub_3FAB2:24
+03AA32  01306df0         stm.l   er0-er3, @-sp
+03AA36  7a0000002e80     mov.l   #0x2E80, er0
+03AA3C  79060020         mov.w   #0x20, r6 ; ' '
+03AA40  0d34             mov.w   r3, r4
+03AA42  5264             mulxu.w r6, er4
+03AA44  0ac0             add.l   er4, er0
+03AA46  7a0100ffac76     mov.l   #0xFFAC76, er1
+03AA4C  79060001         mov.w   #1, r6
+03AA50  7a1000000005     add.l   #5, er0
+03AA56  7a0100ffaa56     mov.l   #0xFFAA56, er1
+03AA5C  5e03ad20         jsr     sub_3AD20:24
+03AA60  01306d73         ldm.l   @sp+, er0-er3
+03AA64  5470             rts
+
+; ---- func 3AA66
+03AA66  01306df0         stm.l   er0-er3, @-sp   ; <- 0x19416
+03AA6A  5e03a3be         jsr     sub_3A3BE:24
+03AA6E  79060001         mov.w   #1, r6
+03AA72  7a1000000005     add.l   #5, er0
+03AA78  7a0100ffaa56     mov.l   #0xFFAA56, er1
+03AA7E  5e03ab80         jsr     sub_3AB80:24
+03AA82  01306d73         ldm.l   @sp+, er0-er3
+03AA86  5e03fab2         jsr     sub_3FAB2:24
+03AA8A  01306df0         stm.l   er0-er3, @-sp
+03AA8E  5e03a3be         jsr     sub_3A3BE:24
+03AA92  79060001         mov.w   #1, r6
+03AA96  7a1000000005     add.l   #5, er0
+03AA9C  7a0100ffaa56     mov.l   #0xFFAA56, er1
+03AAA2  5e03ad20         jsr     sub_3AD20:24
+03AAA6  01306d73         ldm.l   @sp+, er0-er3
+03AAAA  5470             rts
+
+; ---- func 3AAAC
+03AAAC  01306df0         stm.l   er0-er3, @-sp   ; <- 0x1ef56,0x207ba,0x23b90,0x23cbc
+03AAB0  6a18aa337020     bset    #2, @0xFFFFAA33:16
+03AAB6  7a66000000ff     and.l   #0xFF, er6
+03AABC  5e03ab5e         jsr     sub_3AB5E:24
+03AAC0  465e             bne     loc_3AB20:8
+03AAC2  79060003         mov.w   #3, r6
+03AAC6  7a1000000002     add.l   #2, er0
+03AACC  7a1100000002     add.l   #2, er1
+03AAD2  5e03ab80         jsr     sub_3AB80:24
+03AAD6  01006b05ac78     mov.l   @0xFFFFAC78:16, er5
+03AADC  fd00             mov.b   #0, r5l
+03AADE  792d0018         cmp.w   #0x18, e5
+03AAE2  453c             bcs     loc_3AB20:8
+03AAE4  a512             cmp.b   #0x12, r5h
+03AAE6  472e             beq     loc_3AB16:8
+03AAE8  a537             cmp.b   #0x37, r5h ; '7'
+03AAEA  472a             beq     loc_3AB16:8
+03AAEC  a562             cmp.b   #0x62, r5h ; 'b'
+03AAEE  4726             beq     loc_3AB16:8
+03AAF0  a587             cmp.b   #0x87, r5h
+03AAF2  4722             beq     loc_3AB16:8
+03AAF4  a506             cmp.b   #6, r5h
+03AAF6  4722             beq     loc_3AB1A:8
+03AAF8  a518             cmp.b   #0x18, r5h
+03AAFA  4722             beq     loc_3AB1E:8
+03AAFC  a531             cmp.b   #0x31, r5h ; '1'
+03AAFE  471a             beq     loc_3AB1A:8
+03AB00  a543             cmp.b   #0x43, r5h ; 'C'
+03AB02  471a             beq     loc_3AB1E:8
+03AB04  a556             cmp.b   #0x56, r5h ; 'V'
+03AB06  4712             beq     loc_3AB1A:8
+03AB08  a568             cmp.b   #0x68, r5h ; 'h'
+03AB0A  4712             beq     loc_3AB1E:8
+03AB0C  a581             cmp.b   #0x81, r5h
+03AB0E  470a             beq     loc_3AB1A:8
+03AB10  a593             cmp.b   #0x93, r5h
+03AB12  470a             beq     loc_3AB1E:8
+03AB14  400a             bra     loc_3AB20:8
+03AB16  fd50             mov.b   #0x50, r5l ; 'P'   ; <- 0x3aae6,0x3aaea,0x3aaee,0x3aaf2
+03AB18  4006             bra     loc_3AB20:8
+03AB1A  fd25             mov.b   #0x25, r5l ; '%'   ; <- 0x3aaf6,0x3aafe,0x3ab06,0x3ab0e
+03AB1C  4002             bra     loc_3AB20:8
+03AB1E  fd75             mov.b   #0x75, r5l ; 'u'   ; <- 0x3aafa,0x3ab02,0x3ab0a,0x3ab12
+03AB20  01006b0692c8     mov.l   @0xFFFF92C8:16, er6
+03AB26  01006d63         mov.l   @er6+, er3
+03AB2A  7a020000000a     mov.l   #0xA, er2
+03AB30  01006964         mov.l   @er6, er4
+03AB34  1fc5             cmp.l   er4, er5
+03AB36  450a             bcs     loc_3AB42:8
+03AB38  01006f640004     mov.l   @(4:16,er6), er4
+03AB3E  1fd4             cmp.l   er5, er4
+03AB40  4406             bcc     loc_3AB48:8
+03AB42  0aa6             add.l   er2, er6
+03AB44  1b53             dec.w   #1, r3
+03AB46  46e8             bne     loc_3AB30:8
+03AB48  6a18aa337220     bclr    #2, @0xFFFFAA33:16
+03AB4E  01306d73         ldm.l   @sp+, er0-er3
+03AB52  6f640008         mov.w   @(8:16,er6), r4
+03AB56  6e040058         mov.b   @(0x58:16,er0), r4h
+03AB5A  1c4c             cmp.b   r4h, r4l
+03AB5C  5470             rts
+
+; ---- func 3AB5E
+03AB5E  0cec             mov.b   r6l, r4l   ; <- 0x3aabc
+03AB60  4704             beq     loc_3AB66:8
+03AB62  5a03cefe         jmp     loc_3CEFE:24
+03AB66  7a0000002e80     mov.l   #0x2E80, er0   ; <- 0x3ab60
+03AB6C  79060020         mov.w   #0x20, r6 ; ' '
+03AB70  0d34             mov.w   r3, r4
+03AB72  5264             mulxu.w r6, er4
+03AB74  0ac0             add.l   er4, er0
+03AB76  7a0100ffac76     mov.l   #0xFFAC76, er1
+03AB7C  fc00             mov.b   #0, r4l
+03AB7E  5470             rts
+
+;==== range 3FAC0-3FB80
+03FAC0  144c             or.b    r4h, r4l
+03FAC2  6e040036         mov.b   @(0x36:16,er0), r4h
+03FAC6  e430             and.b   #0x30, r4h
+03FAC8  144c             or.b    r4h, r4l
+03FACA  6a8caa56         mov.b   r4l, @0xFFFFAA56:16
+03FACE  5470             rts
+
+; ---- func 3FAD0
+03FAD0  7a0500ffac76     mov.l   #0xFFAC76, er5   ; <- 0x3a272
+03FAD6  6e540000         mov.b   @(0:16,er5), r4h
+03FADA  6e5c0001         mov.b   @(1:16,er5), r4l
+03FADE  ec0f             and.b   #0xF, r4l
+03FAE0  6e5e001f         mov.b   @(0x1F:16,er5), r6l
+03FAE4  eef8             and.b   #0xF8, r6l
+03FAE6  5470             rts
+
+; ---- func 3FAE8
+03FAE8  6e5c001f         mov.b   @(0x1F:16,er5), r4l   ; <- 0x3a656
+03FAEC  6a188ea67200     bclr    #0, @0xFFFF8EA6:16
+03FAF2  737c             btst    #7, r4l
+03FAF4  4706             beq     loc_3FAFC:8
+03FAF6  6a188ea67000     bset    #0, @0xFFFF8EA6:16
+03FAFC  01006b00812a     mov.l   @0xFFFF812A:16, er0
+03FB02  0f86             mov.l   er0, er6
+03FB04  7a1600000012     add.l   #0x12, er6
+03FB0A  4032             bra     loc_3FB3E:8
+
+; ---- func 3FB0C
+03FB0C  6e5c001f         mov.b   @(0x1F:16,er5), r4l   ; <- 0xebb0,0x3a292,0x3a2b2,0x3a36e,0x3a5d2,0x3a614
+03FB10  737c             btst    #7, r4l
+03FB12  461e             bne     loc_3FB32:8
+03FB14  01006b00812a     mov.l   @0xFFFF812A:16, er0
+03FB1A  0f86             mov.l   er0, er6
+03FB1C  7a1600000012     add.l   #0x12, er6
+03FB22  6a10817e7300     btst    #0, @0xFFFF817E:16
+03FB28  4614             bne     loc_3FB3E:8
+03FB2A  6a188ea67200     bclr    #0, @0xFFFF8EA6:16
+03FB30  400c             bra     loc_3FB3E:8
+03FB32  7a0600ff9102     mov.l   #0xFF9102, er6   ; <- 0x3fb12
+03FB38  6a188ea67000     bset    #0, @0xFFFF8EA6:16
+03FB3E  7a0500ffac76     mov.l   #0xFFAC76, er5
+03FB44  6e5c0000         mov.b   @(0:16,er5), r4l
+03FB48  6eec0000         mov.b   r4l, @(0:16,er6)
+03FB4C  6e5c0001         mov.b   @(1:16,er5), r4l
+03FB50  ec0f             and.b   #0xF, r4l
+03FB52  6eec0002         mov.b   r4l, @(2:16,er6)
+03FB56  6e5c0001         mov.b   @(1:16,er5), r4l
+03FB5A  ec30             and.b   #0x30, r4l
+03FB5C  114c             shlr.b  #2, r4l
+03FB5E  114c             shlr.b  #2, r4l
+03FB60  6eec0003         mov.b   r4l, @(3:16,er6)
+03FB64  6e5c0001         mov.b   @(1:16,er5), r4l
+03FB68  ecc0             and.b   #0xC0, r4l
+03FB6A  12cc             rotl.b  #2, r4l
+03FB6C  6eec0007         mov.b   r4l, @(7:16,er6)
+03FB70  01006f540002     mov.l   @(2:16,er5), er4
+03FB76  fc00             mov.b   #0, r4l
+03FB78  792c0018         cmp.w   #0x18, e4
+03FB7C  453c             bcs     loc_3FBBA:8
+03FB7E  a412             cmp.b   #0x12, r4h
+
+;==== range 3D120-3D220
+03D120  2500             db
+03D122  01006b84aa3e     mov.l   er4, @0xFFFFAA3E:16
+03D128  790230d4         mov.w   #0x30D4, r2
+03D12C  5232             mulxu.w r3, er2
+03D12E  7a0500ffaa3e     mov.l   #0xFFAA3E, er5
+03D134  5e03f986         jsr     sub_3F986:24
+03D138  0aa6             add.l   er2, er6
+03D13A  5e03fa2c         jsr     sub_3FA2C:24
+03D13E  01006ba600ffac76 mov.l   er6, @0xFFAC76:32
+03D146  f608             mov.b   #8, r6h
+03D148  f402             mov.b   #2, r4h
+03D14A  fc07             mov.b   #7, r4l
+03D14C  5800009e         bra     loc_3D1EE:16
+03D150  7a0432202500     mov.l   #0x32202500, er4
+03D156  01006b84aa3e     mov.l   er4, @0xFFFFAA3E:16
+03D15C  79230006         cmp.w   #6, r3
+03D160  4510             bcs     loc_3D172:8
+03D162  79330006         sub.w   #6, r3
+03D166  7a0432225000     mov.l   #0x32225000, er4
+03D16C  01006b84aa3e     mov.l   er4, @0xFFFFAA3E:16
+03D172  790209c4         mov.w   #0x9C4, r2
+03D176  5232             mulxu.w r3, er2
+03D178  7a0500ffaa3e     mov.l   #0xFFAA3E, er5
+03D17E  5e03f986         jsr     sub_3F986:24
+03D182  0aa6             add.l   er2, er6
+03D184  5e03fa2c         jsr     sub_3FA2C:24
+03D188  01006ba600ffac76 mov.l   er6, @0xFFAC76:32
+03D190  f609             mov.b   #9, r6h
+03D192  f400             mov.b   #0, r4h
+03D194  fc07             mov.b   #7, r4l
+03D196  4056             bra     loc_3D1EE:8
+03D198  1073             shll.l  #2, er3
+03D19A  78               db
+03D19B  b0               db
+03D19C  6b25000401be     mov.w   @word_401BE:32, r5
+03D1A2  01006b85ac76     mov.l   er5, @0xFFFFAC76:16
+03D1A8  01006b85acde     mov.l   er5, @0xFFFFACDE:16
+03D1AE  7a0500ffacde     mov.l   #0xFFACDE, er5
+03D1B4  7a060003d1c6     mov.l   #unk_3D1C6, er6
+03D1BA  5e03f94c         jsr     sub_3F94C:24
+03D1BE  f60a             mov.b   #0xA, r6h
+03D1C0  f400             mov.b   #0, r4h
+03D1C2  fc03             mov.b   #3, r4l
+03D1C4  4028             bra     loc_3D1EE:8
+03D1C6  00               db
+03D1C7  40               db
+03D1C8  0000             nop
+03D1CA  0fb5             mov.l   er3, er5
+03D1CC  1075             shll.l  #2, er5
+03D1CE  78               db
+03D1CF  d0               db
+03D1D0  6b250004020e     mov.w   @word_4020E:32, r5
+03D1D6  01006b85ac76     mov.l   er5, @0xFFFFAC76:16
+03D1DC  f60b             mov.b   #0xB, r6h
+03D1DE  f400             mov.b   #0, r4h
+03D1E0  fc03             mov.b   #3, r4l
+03D1E2  ab0b             cmp.b   #0xB, r3l
+03D1E4  4508             bcs     loc_3D1EE:8
+03D1E6  ab1c             cmp.b   #0x1C, r3l
+03D1E8  4404             bcc     loc_3D1EE:8
+03D1EA  fc04             mov.b   #4, r4l
+03D1EC  4000             bra     loc_3D1EE:8
+03D1EE  6a10aa337320     btst    #2, @0xFFFFAA33:16   ; <- 0x3d0ea,0x3d14c,0x3d196,0x3d1c4,0x3d1e4,0x3d1e8
+03D1F4  4716             beq     loc_3D20C:8
+03D1F6  01006b05ac76     mov.l   @0xFFFFAC76:16, er5
+03D1FC  01006b06ac7c     mov.l   @0xFFFFAC7C:16, er6
+03D202  01006b86ac96     mov.l   er6, @0xFFFFAC96:16
+03D208  5800015a         bra     loc_3D366:16
+03D20C  7a0100ffad22     mov.l   #0xFFAD22, er1   ; <- 0x3d1f4
+03D212  6e940019         mov.b   r4h, @(0x19:16,er1)
+03D216  6e9c0014         mov.b   r4l, @(0x14:16,er1)
+03D21A  fc00             mov.b   #0, r4l
+03D21C  6e9c0012         mov.b   r4l, @(0x12:16,er1)

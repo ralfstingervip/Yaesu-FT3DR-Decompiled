@@ -1,0 +1,121 @@
+; probe 07711E in func sub_7711E [07711E-0771AE]
+; probe 0771AE: NO function
+; probe 0771E2 in func sub_771E2 [0771E2-07720E]
+
+; ==== linear decode 0x077100 .. 0x0771F0 ====
+077100 -d ee 06          mov.b   @0xFFFFEE06:16, r0l
+077102 HC 17 60          extu.l  #2, er0
+077104 HC 10 78          shll.l  #8, er0
+077106 HC 01 f0 64 01    or.l    er0, er1
+07710A HC 7a 41 00 08 20 00 or.l    #unk_82000, er1
+077110 HC 01 00 6b a1 00 ff 62 f8 mov.l   er1, @0xFF62F8:32
+077118 HC 01 00 6d 76    pop.l   er6
+07711C HC 54 35          rts/l   er2-er5
+07711E HC 01 00 6d f2    push.l  er2
+077122 HC 20 8c          mov.b   @0x8C:8, r0h
+077124 HC 72 70          bclr    #7, r0h
+077126 HC 0c 01          mov.b   r0h, r1h
+077128 HC e1 20          and.b   #0x20, r1h
+07712A HC 73 40          btst    #4, r0h
+07712C HC 47 34          beq     loc_77162:8
+07712E HC 0c 11          mov.b   r1h, r1h
+077130 HC 58 60 00 76    bne     loc_771AA:16
+077134 HC 28 8d          mov.b   @0x8D:8, r0l
+077136 HC 28 41          mov.b   @0x41:8, r0l
+077138 HC 18 88          sub.b   r0l, r0l
+07713A HC 47 10          beq     loc_7714C:8
+07713C HC 7f 8a 72 40    bclr    #4, @0x8A:8
+077140 HC 01 5d 40 70 fd 62 mov.w   #0x70, @0xFFFFFD62:16 ; 'p'
+077146 HC 6b d6 fd 54    mov.w   #6, @0xFFFFFD54:16
+07714A HC 40 5e          bra     loc_771AA:8
+07714C HC 7f 8a 70 40    bset    #4, @0x8A:8
+077150 HC 28 8c          mov.b   @0x8C:8, r0l
+077152 HC e8 e7          and.b   #0xE7, r0l
+077154 HC 38 8c          mov.b   r0l, @0x8C:8
+077156 HC 01 5d 40 60 fd 62 mov.w   #0x60, @0xFFFFFD62:16 ; '`'
+07715C HC 6b d7 fd 54    mov.w   #7, @0xFFFFFD54:16
+077160 HC 40 48          bra     loc_771AA:8
+077162 HC 73 30          btst    #3, r0h
+077164 HC 47 0c          beq     loc_77172:8
+077166 HC 0c 11          mov.b   r1h, r1h
+077168 HC 46 40          bne     loc_771AA:8
+07716A HC 28 8d          mov.b   @0x8D:8, r0l
+07716C HC 7f 8c 72 30    bclr    #3, @0x8C:8
+077170 HC 40 38          bra     loc_771AA:8
+077172 HC 20 8d          mov.b   @0x8D:8, r0h
+077174 HC 7f 8c 72 60    bclr    #6, @0x8C:8
+077178 HC 0c 11          mov.b   r1h, r1h
+07717A HC 47 06          beq     loc_77182:8
+07717C HC 28 8c          mov.b   @0x8C:8, r0l
+07717E HC e8 c7          and.b   #0xC7, r0l
+077180 HC 38 8c          mov.b   r0l, @0x8C:8
+077182 HC 7a 01 00 ff 62 c8 mov.l   #0xFF62C8, er1
+077188 HC 0c 0a          mov.b   r0h, r2l
+07718A HC 01 00 69 10    mov.l   @er1, er0
+07718E HC 68 8a          mov.b   r2l, @er0
+077190 HC 01 00 69 12    mov.l   @er1, er2
+077194 HC 01 03 69 10    mov.l   @(0xC,er1), er0
+077198 HC 1f 82          cmp.l   er0, er2
+07719A HC 45 06          bcs     loc_771A2:8
+07719C HC 01 08 21 01    mov.l   @(8,er1), @er1
+0771A0 HC 40 08          bra     loc_771AA:8
+0771A2 HC 0f 98          mov.l   #1, er0
+0771A4 HC 0a 82          add.l   er0, er2
+0771A6 HC 01 00 69 92    mov.l   er2, @er1
+0771AA HC 28 8a          mov.b   @0x8A:8, r0l
+0771AC HC 54 02          rts/l   er2
+0771AE HC 01 00 6d f2    push.l  er2 <== TAIL
+0771B2 HC 0c 9a          mov.b   r1l, r2l <== TAIL
+0771B4 HC 01 00 69 01    mov.l   @er0, er1 <== TAIL
+0771B8 HC 68 9a          mov.b   r2l, @er1 <== TAIL
+0771BA HC 01 00 69 02    mov.l   @er0, er2 <== TAIL
+0771BE HC 01 03 69 01    mov.l   @(0xC,er0), er1 <== TAIL
+0771C2 HC 1f 92          cmp.l   er1, er2 <== TAIL
+0771C4 HC 45 06          bcs     loc_771CC:8 <== TAIL
+0771C6 HC 01 08 20 00    mov.l   @(8,er0), @er0 <== TAIL
+0771CA HC 54 02          rts/l   er2 <== TAIL
+0771CC HC 0f 99          mov.l   #1, er1 <== TAIL
+0771CE HC 0a 92          add.l   er1, er2 <== TAIL
+0771D0 HC 01 00 69 82    mov.l   er2, @er0 <== TAIL
+0771D4 HC 54 02          rts/l   er2 <== TAIL
+0771D6 HC 20 8c          mov.b   @0x8C:8, r0h <== TAIL
+0771D8 HC 4a fc          bpl     loc_771D6:8 <== TAIL
+0771DA HC 38 8b          mov.b   r0l, @0x8B:8 <== TAIL
+0771DC HC 7f 8c 72 70    bclr    #7, @0x8C:8 <== TAIL
+0771E0 HC 54 70          rts <== TAIL
+0771E2 HC 1b 97          subs    #4, sp
+0771E4 HC 7a 00 00 ff 60 00 mov.l   #0xFF6000, er0
+0771EA HC 79 74 01 01 00 00 mov.w   #0x101, @er0
+0771F0 HC 79 74 11 05 c0 00 00 01 mov.w   #0x1105, @(1:16,er0)
+
+; ==== candidate rel8 source offsets (from byte-sweep) ====
+077142: item_head=077140 code=False  owning_insn[077140 sz=6]=01 5d 40 70 fd 62 | mov.w   #0x70, @0xFFFFFD62:16 ; 'p'
+           is this offset a head? False
+077158: item_head=077156 code=False  owning_insn[077156 sz=6]=01 5d 40 60 fd 62 | mov.w   #0x60, @0xFFFFFD62:16 ; '`'
+           is this offset a head? False
+077161: item_head=077160 code=False  owning_insn[077160 sz=2]=40 48 | bra     loc_771AA:8
+           is this offset a head? False
+
+; ==== XrefsTo for every address in 0x0771AE..0x0771E1 ====
+  TO 0771B2  from 0771AE (?) type=21  push.l  er2
+  TO 0771B4  from 0771B2 (?) type=21  mov.b   r1l, r2l
+  TO 0771B8  from 0771B4 (?) type=21  mov.l   @er0, er1
+  TO 0771BA  from 0771B8 (?) type=21  mov.b   r2l, @er1
+  TO 0771BE  from 0771BA (?) type=21  mov.l   @er0, er2
+  TO 0771C2  from 0771BE (?) type=21  mov.l   @(0xC,er0), er1
+  TO 0771C4  from 0771C2 (?) type=21  cmp.l   er1, er2
+  TO 0771C6  from 0771C4 (?) type=21  bcs     loc_771CC:8
+  TO 0771CA  from 0771C6 (?) type=21  mov.l   @(8,er0), @er0
+  TO 0771CC  from 0771C4 (?) type=19  bcs     loc_771CC:8
+  TO 0771CE  from 0771CC (?) type=21  mov.l   #1, er1
+  TO 0771D0  from 0771CE (?) type=21  add.l   er1, er2
+  TO 0771D4  from 0771D0 (?) type=21  mov.l   er2, @er0
+  TO 0771D6  from 0771D8 (?) type=19  bpl     loc_771D6:8
+  TO 0771D8  from 0771D6 (?) type=21  mov.b   @0x8C:8, r0h
+  TO 0771DA  from 0771D8 (?) type=21  bpl     loc_771D6:8
+  TO 0771DC  from 0771DA (?) type=21  mov.b   r0l, @0x8B:8
+  TO 0771E0  from 0771DC (?) type=21  bclr    #7, @0x8C:8
+
+; ==== refs to block entry 0x0771AE ====
+  CodeRefsTo(flow=1): []
+  DataRefsTo:         []

@@ -1,0 +1,17 @@
+claim	site	mapped_addr	bytes_or_disasm	status
+boot .data copy exists	.data EEPMOV.W	0x002152	79 04 04 AE / 7A 05 00 07 B2 A6 / 7A 06 00 FF 60 34 / 7B D4 59 8F = MOV.W#0x4AE,R4; MOV.L#0x07B2A6,ER5; MOV.L#0xFF6034,ER6; EEPMOV.W	Confirmed
+copy relocates CDC descs to RAM	reloc arithmetic	0x07B680->0xFF640E ; 0x07B711->0xFF649F	0xFF6034+(desc-0x07B2A6) matches pointer-table values exactly	Confirmed
+pointer table holds RAM images	desc ptr table	0x07B5F0	00 FF 64 0E 00 43 00 FF 64 9F = ptr 0xFF640E, ptr 0xFF649F	Confirmed
+endpoint table -> USB data regs	EP I/O table	0x07B580..0x07B5BF	embeds 00 FF EE 0C/0D/0E/18/24 (EPDR/EPSZ) + RAM size vars 0xFF6420/23	Confirmed
+boot strap selects CDC	sub_20FA	0x002200/04/06	MOV.B @0xFFFF4C,R4L; AND.B#0x7F; CMP.B#0x7D; BEQ loc_221E (held-key at power-on)	Confirmed
+strap path sets selector=1 + inits CDC	sub_20FA	0x002224/0x002234	MOV.B #1,@0xFFFF813A ; JSR @0x078106	Confirmed
+normal path selector=0 + inits stack1	sub_20FA	0x0021FA/0x002214/0x002218	MOV.B #0,@0xFFFF813A ; JSR @0x054BF8 ; JSR @0x054C44	Confirmed
+0x078106 initialises USB module	CDC init	0x07811C/0x078132/0x078154	reads IER0 0xFFEE04, IER2 0xFFEE06; BSET #2,@0xFFFFEE2D (module enable)	Confirmed
+USB ISR dispatches on selector	sub_54D50	0x054D54/0x054D58/0x054EB0	MOV.B @0xFFFF813A,R4L; BNE loc_54EA8; ... JSR @0x07827C (stack-2 ISR)	Confirmed
+stack2 service drives USB engine	svc 0x07815C / ISR 0x07827C	0x078192/0x0781A0/0x0782B6	BTST #4,@0xFFFFEE00 (IFR0); MOV.B R0L,@0xFFFFEE2C (TRG); reads copied RAM 0xFF6288/6358/63F8	Confirmed
+both stacks enable USB module	0xFFEE2D writers	0x054CA6 , 0x078154	stack1 BSET#2 @0x054CA6 ; stack2 BSET#2 @0x078154	Confirmed
+selector is a real boot latch	0xFF813A xrefs	0xFFFF813A	2 writers (0x0021FA,0x002224) + 11 readers incl 0x054D54,0x056160,0x00EE82,0x0101B2	Confirmed
+flash CDC desc has no direct ref	byte scan	0x07B680/0x07B711/0x07B69C	0 pointer hits anywhere; accessed only via RAM image	Confirmed (whole-image scan)
+stack1 desc also shows 0 IDA xref	immediate load	0x055818 <- imm@0x055136	0x055818 loaded as MOV.L #imm32 (also 0x05582A@0x055122, 0x05584A@0x055110); XrefsTo=0	Confirmed
+normal-mode personality = stack1	enumeration	VID 0x26AA PID 0x0001	class FF/01/FF vendor-specific bulk, desc 0x055818 (NOT a serial port)	Confirmed
+CDC personality = strap-only	enumeration	VID 0x26AA PID 0x0020	bDeviceClass 0x02 CDC-ACM, virtual COM; only when 0xFFFF4C strap held at power-on	Confirmed

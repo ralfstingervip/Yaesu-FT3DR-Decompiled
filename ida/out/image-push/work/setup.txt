@@ -1,0 +1,49 @@
+
+;---- func 0x55034..0x55116  sub_55034
+055034  6a 10 81 80 73 00          btst    #0, @0xFFFF8180:16                     <- 55002
+05503a  47 f6                      beq     nullsub_97:8                           
+05503c  fc 01                      mov.b   #1, r4l                                
+05503e  6a 8c 81 83                mov.b   r4l, @0xFFFF8183:16                    
+055042  01 00 6b 04 81 52          mov.l   @0xFFFF8152:16, er4                    
+055048  6b 06 81 58                mov.w   @0xFFFF8158:16, r6                     
+05504c  1d 46                      cmp.w   r4, r6                                 
+05504e  47 e2                      beq     nullsub_97:8                           
+055050  fe 08                      mov.b   #8, r6l                                
+055052  7a 05 00 ff 3d 6a          mov.l   #0xFF3D6A, er5                         
+055058  6c 4a                      mov.b   @er4+, r2l                             <- 5506c
+05505a  68 da                      mov.b   r2l, @er5                              
+05505c  0b 05                      adds    #1, er5                                
+05505e  79 24 3d 6a                cmp.w   #0x3D6A, r4                            
+055062  45 06                      bcs     loc_5506A:8                            
+055064  7a 04 00 ff 3c ea          mov.l   #0xFF3CEA, er4                         
+05506a  1a 0e                      dec.b   r6l                                    <- 55062
+05506c  46 ea                      bne     loc_55058:8                            
+05506e  01 00 6b 84 81 52          mov.l   er4, @0xFFFF8152:16                    
+055074  01 00 6b 22 00 ff 3d 6a    mov.l   @0xFF3D6A:32, er2                      
+05507c  79 2a 80 06                cmp.w   #0x8006, e2                            
+055080  47 56                      beq     loc_550D8:8                            
+055082  79 2a c1 d4                cmp.w   #0xC1D4, e2                            
+055086  47 50                      beq     loc_550D8:8                            
+055088  79 2a 41 d3                cmp.w   #0x41D3, e2                            
+05508c  47 4a                      beq     loc_550D8:8                            
+05508e  79 2a 41 d1                cmp.w   #0x41D1, e2                            
+055092  47 44                      beq     loc_550D8:8                            
+055094  79 2a 41 d2                cmp.w   #0x41D2, e2                            
+055098  47 3e                      beq     loc_550D8:8                            
+05509a  7a 01 00 05 58 fe          mov.l   #dword_558FE, er1                      
+0550a0  01 00 6b 25 00 ff 3d 6a    mov.l   @0xFF3D6A:32, er5                      
+0550a8  01 00 6b 26 00 ff 3d 6e    mov.l   @0xFF3D6E:32, er6                      
+0550b0  fc 08                      mov.b   #8, r4l                                
+0550b2  01 00 6d 12                mov.l   @er1+, er2                             <- 550ce
+0550b6  01 00 6d 13                mov.l   @er1+, er3                             
+0550ba  1f a5                      cmp.l   er2, er5                               
+0550bc  46 0e                      bne     loc_550CC:8                            
+0550be  1f b6                      cmp.l   er3, er6                               
+0550c0  46 0a                      bne     loc_550CC:8                            
+0550c2  01 00 6b 22 00 05 58 fe    mov.l   @dword_558FE:32, er2                   
+0550ca  40 0c                      bra     loc_550D8:8                            
+0550cc  1a 0c                      dec.b   r4l                                    <- 550bc,550c0
+0550ce  46 e2                      bne     loc_550B2:8                            
+0550d0  01 00 6b 22 00 ff 3d 6a    mov.l   @0xFF3D6A:32, er2                      
+0550d8  79 2a 80 06                cmp.w   #0x8006, e2                            <- 55080,55086,5508c,55092,55098,550ca
+0550dc  58 60 ff 52                bne     nullsub_97:16                          

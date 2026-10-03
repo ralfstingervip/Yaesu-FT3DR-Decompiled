@@ -1,0 +1,49 @@
+### func sub_3490@3490 3490-34E0 
+003490  7a 01 00 00 00 00                     mov.l   #0, er1
+003496  6e 1a a9 98                           mov.b   @(-0x5668:16,er1), r2l
+00349A  6e 12 a9 a0                           mov.b   @(-0x5660:16,er1), r2h
+00349E  1c a2                                 cmp.b   r2l, r2h
+0034A0  47 38                                 beq     loc_34DA:8
+0034A2  6e 9a a9 a0                           mov.b   r2l, @(-0x5660:16,er1)
+0034A6  7f 5a 72 50                           bclr    #5, @0x5A:8
+0034AA  6e 12 35 6c                           mov.b   @(0x356C:16,er1), r2h
+0034AE  10 52                                 shll.w  #2, r2
+0034B0  10 52                                 shll.w  #2, r2
+0034B2  fe 0c                                 mov.b   #0xC, r6l
+0034B4  7f 5a 72 10                           bclr    #1, @0x5A:8
+0034B8  00 00                                 nop
+0034BA  00 00                                 nop
+0034BC  10 12                                 shll.w  r2
+0034BE  7f 5a 67 00                           bst     #0, @0x5A:8
+0034C2  00 00                                 nop
+0034C4  00 00                                 nop
+0034C6  7f 5a 70 10                           bset    #1, @0x5A:8
+0034CA  1a 0e                                 dec.b   r6l
+0034CC  46 e6                                 bne     loc_34B4:8
+0034CE  7f 5a 72 00                           bclr    #0, @0x5A:8
+0034D2  7f 5a 70 50                           bset    #5, @0x5A:8
+0034D6  7f 5a 72 10                           bclr    #1, @0x5A:8
+0034DA  0a 09                                 inc.b   r1l
+0034DC  a9 08                                 cmp.b   #8, r1l
+0034DE  45 b6                                 bcs     loc_3496:8
+
+### callers 3490
+002442  t17  sub_20FA@20FA            jsr     sub_3490:24
+0025F8  t17  sub_30E0@30E0            jsr     sub_3490:24
+0026DE  t17  nmi_handler@267C         jsr     sub_3490:24
+002CCC  t17  sub_2070@2070            jsr     sub_3490:24
+00316E  t17  sub_30E0@30E0            jsr     sub_3490:24
+0038D6  t17  sub_2070@2070            jsr     sub_3490:24
+003A2E  t17  sub_2070@2070            jsr     sub_3490:24
+022790  t17  sub_22718@22718          jsr     sub_3490:24
+0227AE  t17  sub_22718@22718          jsr     sub_3490:24
+023504  t17  sub_234D2@234D2          jsr     sub_3490:24
+03268E  t17  sub_3266E@3266E          jsr     sub_3490:24
+034C52  t17  sub_34C34@34C34          jsr     sub_3490:24
+038CA6  t17  sub_38C06@38C06          jsr     sub_3490:24
+03EA82  t17  sub_3EA28@3EA28          jsr     sub_3490:24
+049338  t17  sub_492D4@492D4          jsr     sub_3490:24
+06CFA2  t17  sub_6CF8E@6CF8E          jsr     sub_3490:24
+073EA4  t17  sub_73E58@73E58          jsr     sub_3490:24
+073FB4  t17  sub_73F1E@73F1E          jsr     sub_3490:24
+074B20  t17  sub_74B08@74B08          jsr     sub_3490:24

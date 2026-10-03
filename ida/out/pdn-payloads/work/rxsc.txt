@@ -1,0 +1,62 @@
+045440  56 70                    rte                                          
+045442  6a 18 fe 92 72 70        bclr    #7, @0xFFFFFE92:16                   <- 4542c
+045448  6a 8c fe 93              mov.b   r4l, @0xFFFFFE93:16                  
+04544c  6a 04 fe 94              mov.b   @0xFFFFFE94:16, r4h                  
+045450  e4 7f                    and.b   #0x7F, r4h                           
+045452  6a 84 fe 94              mov.b   r4h, @0xFFFFFE94:16                  
+045456  6a 18 b0 4e 72 00        bclr    #0, @0xFFFFB04E:16                   
+04545c  01 10 6d 75              ldm.l   @sp+, er4-er5                        <- 4540e
+045460  56 70                    rte                                          
+
+;---- func 0x45462..0x454e2
+045462  01 10 6d f4              stm.l   er4-er5, @-sp                        <- 280,284
+045466  6a 0d fe 94              mov.b   @0xFFFFFE94:16, r5l                  
+04546a  0c d5                    mov.b   r5l, r5h                             
+04546c  ed 38                    and.b   #0x38, r5l                           
+04546e  46 56                    bne     loc_454C6:8                          
+045470  e5 87                    and.b   #0x87, r5h                           
+045472  6a 85 fe 94              mov.b   r5h, @0xFFFFFE94:16                  
+045476  6a 0d fe 95              mov.b   @0xFFFFFE95:16, r5l                  
+04547a  6a 10 81 7f 73 70        btst    #7, @0xFFFF817F:16                   
+045480  46 22                    bne     loc_454A4:8                          
+045482  01 00 6b 04 b0 3a        mov.l   @0xFFFFB03A:16, er4                  
+045488  68 cd                    mov.b   r5l, @er4                            
+04548a  0b 04                    adds    #1, er4                              
+04548c  79 24 29 c8              cmp.w   #0x29C8, r4                          
+045490  45 06                    bcs     loc_45498:8                          
+045492  7a 04 00 ff 27 c8        mov.l   #0xFF27C8, er4                       
+045498  01 00 6b 84 b0 3a        mov.l   er4, @0xFFFFB03A:16                  <- 45490
+04549e  01 10 6d 75              ldm.l   @sp+, er4-er5                        
+0454a2  56 70                    rte                                          
+0454a4  01 00 6b 04 81 36        mov.l   @0xFFFF8136:16, er4                  <- 45480
+0454aa  68 cd                    mov.b   r5l, @er4                            
+0454ac  0b 04                    adds    #1, er4                              
+0454ae  79 24 96 f8              cmp.w   #0x96F8, r4                          
+0454b2  45 06                    bcs     loc_454BA:8                          
+0454b4  7a 04 00 ff 95 f8        mov.l   #0xFF95F8, er4                       
+0454ba  01 00 6b 84 81 36        mov.l   er4, @0xFFFF8136:16                  <- 454b2
+0454c0  01 10 6d 75              ldm.l   @sp+, er4-er5                        
+0454c4  56 70                    rte                                          
+0454c6  0c 5d                    mov.b   r5h, r5l                             <- 4546e
+0454c8  ed c7                    and.b   #0xC7, r5l                           
+0454ca  6a 8d fe 94              mov.b   r5l, @0xFFFFFE94:16                  
+0454ce  0c 5d                    mov.b   r5h, r5l                             
+0454d0  ed 40                    and.b   #0x40, r5l                           
+0454d2  46 04                    bne     loc_454D8:8                          
+0454d4  e5 10                    and.b   #0x10, r5h                           
+0454d6  47 04                    beq     loc_454DC:8                          
+0454d8  6a 0d fe 95              mov.b   @0xFFFFFE95:16, r5l                  <- 454d2
+0454dc  01 10 6d 75              ldm.l   @sp+, er4-er5                        <- 454d6
+0454e0  56 70                    rte                                          
+
+;---- func 0x454e2..0x45520
+0454e2  01 10 6d f4              stm.l   er4-er5, @-sp                        <- 268
+0454e6  6b 05 b0 d4              mov.w   @0xFFFFB0D4:16, r5                   
+0454ea  17 75                    extu.l  er5                                  
+0454ec  6e 5c 95 f8              mov.b   @(-0x6A08:16,er5), r4l               
+0454f0  3c 63                    mov.b   r4l, @0x63:8                         
+0454f2  0b 55                    inc.w   #1, r5                               
+0454f4  6b 85 b0 d4              mov.w   r5, @0xFFFFB0D4:16                   
+0454f8  6b 04 b0 d2              mov.w   @0xFFFFB0D2:16, r4                   
+0454fc  1b 54                    dec.w   #1, r4                               
+0454fe  6b 84 b0 d2              mov.w   r4, @0xFFFFB0D2:16                   

@@ -1,0 +1,10 @@
+step	addr	bytes	detail
+1-post	05548e	fc 4f 6a 8c aa e0	D1-accept handler posts event 0x4F to FFAAE0 (ONLY poster of 0x4F in image)
+1-state	05549c	fc 08 6a 8c 81 83	same handler sets control-machine state FF8183 = 8
+2-consume	03835e	6a 0a aa e0	tone sequencer tick reads FFAAE0 (event id)
+2-validate	0383ac	7a 05 00 03 83 9c	sub_383A2 searches event table {4f,1e,35,5d} at 0x3839C
+2-table	03839c	4f 1e 35 5d ff	0x4F is a "restart/high-priority" beep event (one of four)
+3-play	0384c2	-	phase 0 (sub_384C2) starts tone, sets FFAAE8=1/2/3; note engine runs
+4-end	038674	fc 00 6a 8c aa e8	FFAAE8 cleared to 0 when tone script terminator (0x25) reached
+5-gate	055520	6a 0c aa e8 46 f8	USB state 8 spins: while FFAAE8!=0, return w/o status ZLP (D1 NAKed)
+5-pass	055526	fc 09 6a 8c 81 82	once FFAAE8==0: arm EP0 status ZLP, advance -> state 9 (UPLOAD)

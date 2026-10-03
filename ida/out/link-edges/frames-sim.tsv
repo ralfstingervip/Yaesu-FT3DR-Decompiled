@@ -1,0 +1,11 @@
+type	sub_builder	sub_n	sub_wire_len	sub_frame_proper	main_operative_count	main_count_basis	over_read	checksum_span_basis	outcome
+E0	FFEDD182	5	24	18	18 (byte0+0x11)	fixed FF9D2C=0x11 @04766...076E4	0	byte3(len lo)+2	validates; 6 pad skipped
+E1	FFEDD182	var(sentence)	n+19	n+13	byte3-driven (FF9D2C=byte3-1 @047BCC)	length field (recomputed idx3)	0	byte3+2 @047C46	validates; fixed 0x7F never operative
+E2	FFEDD182	2	21	15	17 (byte0+0x10)	fixed FF9D2C=0x10 @047688	+2 (into pad)	byte3+2 @047A46 (=13 B, real frame)	VALIDATES: reads 2 pad zeros; cksum span from len field covers only the 15 real bytes; 4 pad left -> skipped
+E3	FFEDD182	3	22	16	16 (byte0+0x0F)	fixed FF9D2C=0x0F @04766A	0	byte3+2	validates
+E4	FFEDD528	29	48	42	42 (byte0+0x29)	fixed FF9D2C=0x29 @04777A	0	byte0+byte... (hdr sum hi=1)	validates
+E5	FFEDD528	1	20	14	14 (byte0+0x0D)	fixed FF9D2C=0x0D @047702	0	byte3+2	validates; dest FFBB92 has NO MAIN reader (inert)
+E6	FFEDD528	1	20	14	14 (byte0+0x0D)	fixed FF9D2C=0x0D @04775C	0	byte3+2	validates; payload bit0 -> FFBB91 -> PTT key 0x17/0x18
+EA	FFEDD6FB	1	20	14	14 (byte0+0x0D)	fixed FF9D2C=0x0D @04773E	0	byte3+2	validates
+FE	FFEDD8DC	var(154+w18)	var	var	byte2:3-driven (FFBA94 @047E7C, <=0x400)	length field (recomputed idx3)	0	byte2:3+... @047EFA	validates; fixed 0xC7 never operative
+FF	FFEDC4DD->FFEDD182	264 (full blk)	283	277	byte2:3-driven (FFBC4C=len-2 @047ADC, <0x112)	length field (recomputed idx3)	0	byte2:3+2 @047B4A	validates; "273" = len field (n+9), "277" = frame proper; MAIN consumes 277

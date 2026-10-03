@@ -1,0 +1,14 @@
+link	component	status	proc	file_off	mapped_addr	evidence	verdict
+1_sample_src	on-chip S12AD0 (audio)	Confirmed	SUB RX64M	0x315648	0xFFF15648	ADCSR=0x1200 (ADIE), ADANSA0=7, ADSTRGR=0x600, ADDR at 0x89020; scan-end ISR reads 1 ch, -0x800 DC, shll #4 -> s16 mono	audio-band mono, 12-bit SAR; NOT IQ, NOT IF
+1_sample_src	on-chip S12AD1 (control)	Confirmed	SUB RX64M	0x2E15B0	0xFFEE15B0	reads ADDR +0x44/+0x46, clamp 0xFFF, mul 0x140/divu 0xFFF, avg 4 samples	housekeeping (RSSI/AGC/tune); polled single-scan, NOT streaming
+1_sample_src	on-chip A/D (H8S)	Confirmed	MAIN H8S	0x32C0	0x0032C0	ADCSR @0xFFFFFFA0 bset/btst/bclr #5/#7, data @0xFFFF90/95/96/99, 10-bit, scaled to S-meter bars	housekeeping RSSI/batt/temp; polled, NOT signal capture
+1_sample_src	direct-sampling RF ADC	Not found (whole-image SUB periph table + MAIN top-page)	-	-	-	no ADC above ~1 Msps 12-bit SAR anywhere; front-end is analog superhet	MISSING
+1_sample_src	quadrature mixer + stereo/IQ ADC	Not found (all recovered funcs)	-	-	-	audio ISR reads one selected channel; no interleaved I/Q buffer; analog IF 57.6 MHz/450 kHz	MISSING
+2_transport	DMAC ch3	Confirmed	SUB RX64M	0x332E09	0xFFF32E09	ch base 0x820C0/0x820D0, DMRSR src 0x2C via ICU 0x87205; common 0x82200	exists but wired to non-ADC source (SDHI/serial); NOT ADC->mem->USB
+2_transport	EXDMAC	Confirmed	SUB RX64M	-	0xFFEExxxx	21 refs to 0x82800/0x82810/0x8281C in sub_exdmac.asm	exists; display/memory bulk moves; not ADC/IQ
+2_transport	ADC-to-memory streaming DMA	Not found (recovered funcs)	-	-	-	audio S12AD0 moved to buffer by CPU in scan-end ISR, not DMA	absent (CPU handles the one stream)
+3_usb_engine	MAIN USB Function Module	Confirmed (BRIEF, byte-verified)	MAIN H8S	0x054xxx	0xFFEE00-0xFFEE53	IFR/IER/EPDR/EPSZ/FCLR/TRG; vec 234/235/238; full speed ~12 Mbit/s	present; a bulk-IN endpoint exists (EP2 IN bulk 64, CDC-ACM)
+3_usb_engine	SUB USB0	Confirmed dark (2 whole-image scans + this periph table: 0 refs to 0x000A0xxx)	SUB RX64M	-	0x000A0000	module-stop, never addressed	DARK; the only sample stream (SUB audio) has no USB at all
+4_firmware	any ADC/IQ -> USB IN path	Not found (MAIN+SUB recovered funcs)	-	-	-	USB IN endpoints driven by CDC-ACM/vendor serial stacks; no converter buffer feeds EPDR	MISSING (no such firmware)
+context	RF front-end	Confirmed	MAIN H8S	0x037BA0	0x037BA0	bit-banged 3-wire PLL on port 0xFFFF5D; VCO 1050-2100 MHz; LO 46.875-999.995 MHz; 1st IF 57.6 MHz; 2nd IF 450 kHz	conventional dual-conversion superhet
+context	band scope / scan	Confirmed	MAIN H8S	0x03EA28	0x03EA28	only func reaching RSSI reader (0x3466) + tune path (0x37A56) with a loop	swept-RSSI power display, NOT IQ/FFT

@@ -1,0 +1,96 @@
+--- probe 05E9E2 ---
+in_func: True  func_start=05E9E2
+flags code=True unknown=False
+xrefs_to: 0  
+  05E9E2: mov.b   #0, r3l
+  05E9E4: mov.b   #0, r3h
+  05E9E6: mov.b   @0xFFFFB0C4:16, r4l
+  05E9EA: cmp.b   #5, r4l
+  05E9EC: bcs     loc_5EA04:8
+  05E9EE: mov.b   #1, r3l
+  05E9F0: mov.b   #3, r3h
+  05E9F2: mov.b   @0xFFFF813A:16, r4h
+  05E9F6: beq     loc_5E9FC:8
+  05E9F8: mov.b   #1, r3l
+  05E9FA: mov.b   #6, r3h
+  05E9FC: cmp.b   #7, r4l
+--- probe 07390A ---
+in_func: True  func_start=073908
+flags code=True unknown=False
+xrefs_to: 3  073908(21), 07380C(17), 074576(17)
+  07390A: mov.b   #5, r4l
+  07390C: mov.l   #aAh72m, er5; "AH72M"
+  073912: mov.l   #0xFF96F8, er6
+  073918: jsr     sub_3F36E:24
+  07391C: jsr     sub_734BE:24
+  073920: mov.b   r4l, @0xFFFF96FD:16
+  073924: jsr     sub_7357A:24
+  073928: mov.l   er4, @0xFFFF96FE:16
+  07392E: rts
+  073930: jsr     sub_10748:24
+  073934: mov.b   #0, r2h
+  073936: mov.l   @0xFFFF8132:16, er4
+--- probe 078106 ---
+in_func: False  func_start=None
+flags code=True unknown=False
+xrefs_to: 1  002234(17)
+  078106: mov.l   #0xFEE010, er0
+  07810C: .byte  0xF
+  07810D: .byte 0xC9
+  07810E: .byte    1
+  07810F: .byte  0xD
+  078110: .byte    0
+  078111: .byte    0
+  078112: .byte  0xA
+  078113: .byte 0x90
+  078114: .byte 0x7A ; z
+  078115: .byte 0x20
+  078116: .byte    0
+--- probe 0738AC ---
+in_func: True  func_start=0738AC
+flags code=True unknown=False
+xrefs_to: 2  07383C(17), 07386C(17)
+  0738AC: mov.w   #0x40, r3 ; '@'
+  0738B0: mov.l   #0xFF96F8, er5
+  0738B6: bsr     sub_738CC:8
+  0738B8: mov.b   #5, r6l
+  0738BA: mov.b   @0xFFFF94B8:16, r4l
+  0738BE: bne     loc_738BA:8
+  0738C0: mov.b   #2, r4l
+  0738C2: mov.b   r4l, @0xFFFF94B8:16
+  0738C6: dec.b   r6l
+  0738C8: bne     loc_738BA:8
+  0738CA: rts
+  0738CC: mov.b   @0xFFFF812E:16, r6h
+--- probe 0738CC ---
+in_func: True  func_start=0738CC
+flags code=True unknown=False
+xrefs_to: 4  0737A8(17), 07388A(17), 0738B6(17), 073AE6(17)
+  0738CC: mov.b   @0xFFFF812E:16, r6h
+  0738D0: mov.b   @0xFFFF8131:16, r6l
+  0738D4: mov.b   @0xFFFFFE94:16, r4l
+  0738D8: and.b   #0x80, r4l
+  0738DA: beq     loc_738D4:8
+  0738DC: mov.b   @er5+, r4l
+  0738DE: mov.b   r4l, @0xFFFFFE93:16
+  0738E2: mov.b   @0xFFFFFE94:16, r4h
+  0738E6: and.b   #0x7F, r4h
+  0738E8: mov.b   r4h, @0xFFFFFE94:16
+  0738EC: cmp.b   #3, r6l
+  0738EE: bne     loc_738F2:8
+--- probe 073AB4 ---
+in_func: True  func_start=073AB4
+flags code=True unknown=False
+xrefs_to: 32  0735D0(17), 073B30(17), 073BD6(17), 073C38(17), 073C84(17), 073CB4(17), 073D3A(17), 073D72(17)
+  073AB4: mov.b   #1, r4l
+  073AB6: mov.b   r4l, @0xFFFF8130:16
+  073ABA: mov.l   #sub_73908, er1
+  073AC0: bra     loc_73ADE:8
+  073AC2: mov.b   #1, r4l
+  073AC4: mov.b   r4l, @0xFFFF8130:16
+  073AC8: mov.l   #0x73909, er1
+  073ACE: bra     loc_73ADE:8
+  073AD0: mov.l   #0xFF96F8, er1
+  073AD6: mov.b   @0xFFFF8130:16, r4l
+  073ADA: mov.b   #0, r4h
+  073ADC: bsr     sub_73AEC:8

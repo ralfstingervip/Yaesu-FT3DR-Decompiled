@@ -1,0 +1,117 @@
+doc	line	claim	expected	derived	verdict	note
+109-sub-frames-sub.md	23	raw whole-image bsr/bra (05/04/39/38) + LE32 pointers into the 5 builders	81	81	PASS	per builder calls {'sub_FFEDD182': 5, 'sub_FFEDD355': 1, 'sub_FFEDD528': 17, 'sub_FFEDD6FB': 28, 'sub_FFEDD8DC': 30}; pointers {'sub_FFEDD182': 0, 'sub_FFEDD355': 0, 'sub_FFEDD528': 0, 'sub_FFEDD6FB': 0, 'sub_FFEDD8DC': 0}
+109-sub-frames-sub.md	23	per-builder raw call counts == builders.tsv callers column (5/1/17/28/30)	{'sub_FFEDD182': 5, 'sub_FFEDD355': 1, 'sub_FFEDD528': 17, 'sub_FFEDD6FB': 28, 'sub_FFEDD8DC': 30}	{'sub_FFEDD182': 5, 'sub_FFEDD355': 1, 'sub_FFEDD528': 17, 'sub_FFEDD6FB': 28, 'sub_FFEDD8DC': 30}	PASS	
+109-sub-frames-sub.md	24	build-sites.tsv rows	101	101	PASS	
+109-sub-frames-sub.md	24	build-sites per type	{'E0': 1, 'E1': 4, 'E2': 7, 'E3': 1, 'E4': 14, 'E5': 7, 'E6': 8, 'EA': 28, 'FE': 30, 'FF': 1}	{'E0': 1, 'E1': 4, 'E2': 7, 'E3': 1, 'E4': 14, 'E5': 7, 'E6': 8, 'EA': 28, 'FE': 30, 'FF': 1}	PASS	
+109-sub-frames-sub.md	24	every build-site address decodes as bsr/bra to the first function of its via chain	[]	[]	PASS	
+109-sub-frames-sub.md	267	E5 sites	7	7	PASS	
+109-sub-frames-sub.md	268	E6 sites	8	8	PASS	
+109-sub-frames-sub.md	318	FE sites	30	30	PASS	
+109-sub-frames-sub.md	255	direct E4 at FFF38C9E is a bsr to sub_FFEDD528	('bsr.a', 4293776680)	('bsr.a', 4293776680)	PASS	
+109-sub-frames-sub.md	25	MOV.L #imm24 0x08A000 + 0x08A002 (whole SUB image)	36	36	PASS	0x08A000 x10, 0x08A002 x26
+109-sub-frames-sub.md	25	... of which inside FFEDB3DC-FFEDB8E8	36	36	PASS	
+109-sub-frames-sub.md	26	MOV.L #imm24 0x08A003	0	0	PASS	
+109-sub-frames-sub.md	26	any fb-form with bytes 03 a0 08	0	0	PASS	
+109-sub-frames-sub.md	98	0x12D44 + disp (sub_FFEDD182)	0x1B33A	0x1B33A	PASS	
+109-sub-frames-sub.md	99	0x12D44 + disp (sub_FFEDD355)	0x1BB3A	0x1BB3A	PASS	
+109-sub-frames-sub.md	100	0x12D44 + disp (sub_FFEDD528)	0x2433A	0x1C33A	FAIL	
+109-sub-frames-sub.md	101	0x12D44 + disp (sub_FFEDD6FB)	0x243BA	0x1C3BA	FAIL	
+109-sub-frames-sub.md	93	base register r14 = mov.l #12D44h in all five builders (fb e2 44 2d 01 00)	['fb e2 44 2d 01 00', 'fb e2 44 2d 01 00', 'fb e2 44 2d 01 00', 'fb e2 44 2d 01 00', 'fb e2 44 2d 01 00']	['fb e2 44 2d 01 00', 'fb e2 44 2d 01 00', 'fb e2 44 2d 01 00', 'fb e2 44 2d 01 00', 'fb e2 44 2d 01 00']	PASS	MOV.B dsp16 is unscaled, so buffer = 0x12D44 + disp: FFEDD528 -> 0x1C33A, FFEDD6FB -> 0x1C3BA, FFEDD8DC (disp 0x96F6) -> 0x1C43A
+109-sub-frames-sub.md	93	(lane table) builders.tsv FE buffer 0x2443A vs 0x12D44 + 0x96F6	0x2443A	0x1C43A	FAIL	
+109-sub-frames-sub.md	93	disp operand in the builder at FFEDD190 (builders.tsv)	c9 0e 0b f6 85	c9 0e 0b f6 85	PASS	
+109-sub-frames-sub.md	93	disp operand in the builder at FFEDD366 (builders.tsv)	c9 0e 0f f6 8d	c9 0e 0f f6 8d	PASS	
+109-sub-frames-sub.md	93	disp operand in the builder at FFEDD539 (builders.tsv)	c9 0e 0f f6 95	c9 0e 0f f6 95	PASS	
+109-sub-frames-sub.md	93	disp operand in the builder at FFEDD70C (builders.tsv)	c9 0e 0f 76 96	c9 0e 0f 76 96	PASS	
+109-sub-frames-sub.md	110	stores fa e4 f6 85 00 in FFEDD2CC..FFEDD335	6	6	PASS	FFEDD2CC FFEDD2E1 FFEDD2F6 FFEDD30B FFEDD320 FFEDD335
+109-sub-frames-sub.md	365	E0 frame length n+13 (n=5)	18	18	PASS	
+109-sub-frames-sub.md	372	E2 frame length n+13 (n=2)	15	15	PASS	
+109-sub-frames-sub.md	365	E3 frame length n+13 (n=3)	16	16	PASS	
+109-sub-frames-sub.md	365	E4 frame length n+13 (n=29)	42	42	PASS	
+109-sub-frames-sub.md	365	E5/E6/EA frame length n+13 (n=1)	14	14	PASS	
+109-sub-frames-sub.md	373	FF frame length n+13 (n=264)	277	277	PASS	
+109-sub-frames-sub.md	374	FE length: 152 header/payload bytes + 2 checksum	154	154	PASS	
+109-sub-frames-sub.md	372	MAIN count E2: bytes-after-start 0x10 + start byte (frame-types.tsv MAIN_count column; source doc 84)	17	17	PASS	frame-types.tsv: 0x10 -> 17 (mismatch by 2)
+109-sub-frames-sub.md	373	MAIN count FF: bytes-after-start 0x110 + start byte (frame-types.tsv MAIN_count column; source doc 84)	273	273	PASS	frame-types.tsv: 0x110
+109-sub-frames-sub.md	374	MAIN count E1: bytes-after-start 0x7F + start byte (frame-types.tsv MAIN_count column; source doc 84)	128	128	PASS	frame-types.tsv: 0x7F
+109-sub-frames-sub.md	374	MAIN count FE: bytes-after-start 0xC7 + start byte (frame-types.tsv MAIN_count column; source doc 84)	200	200	PASS	frame-types.tsv: 0xC7 -> 200
+109-sub-frames-sub.md	79	INTB slot 58 (RXI0) = FFED8A70+58*4	FFEDB7E7	FFEDB7E7	PASS	
+109-sub-frames-sub.md	79	INTB slot 59 (TXI0) = FFED8A70+59*4	FFEDB857	FFEDB857	PASS	
+109-sub-frames-sub.md	79	INTB slot 62 (RXI2) = FFED8A70+62*4	FFEDBBD3	FFEDBBD3	INFO	
+109-sub-frames-sub.md	79	INTB slot 63 (TXI2) = FFED8A70+63*4	FFEDBC43	FFEDBC43	INFO	
+109-sub-frames-sub.md	79	INTB slot 110 (110) = FFED8A70+110*4	FFEDBCDD	FFEDBCDD	INFO	
+109-sub-frames-sub.md	128	ICU IER address/bit for vector 135	0x87210 b7	0x87210 b7	PASS	
+109-sub-frames-sub.md	410	FFF4AEB5..FFF4AFB8 length / starts SCAN= / ends %d,FT3D,NUL	(260, b'SCAN=', b'%d\x00FT3D\x00')	(260, b'SCAN=', b'%d\x00FT3D\x00')	PASS	
+109-sub-frames-sub.md	412	bytes of FFF4AEB5..FFF4AFB8 set in mask_final2_allwf.bin (len 524288)	0	0	PASS	
+109-sub-frames-sub.md	413	tens table = 10 LE u16 pairs (i, 10*i)	[(0, 0), (1, 10), (2, 20), (3, 30), (4, 40), (5, 50), (6, 60), (7, 70), (8, 80), (9, 90)]	[(0, 0), (1, 10), (2, 20), (3, 30), (4, 40), (5, 50), (6, 60), (7, 70), (8, 80), (9, 90)]	PASS	
+109-sub-frames-sub.md	413	range length	40	40	PASS	
+109-sub-frames-sub.md	55	(info) bsr at FFEDD34F targets sub_FFEDAF2D	('bsr.a', 4293766957)	('bsr.a', 4293766957)	PASS	
+109-sub-frames-sub.md	416	builders.tsv evidence byte runs re-read (47 runs)	[]	[]	PASS	
+109-sub-frames-sub.md	416	frame-types.tsv evidence byte runs re-read (52 runs)	[]	[]	PASS	
+110-ledger-reverify-k.md	214	abs16 byte stores 6a 8X 95 6d (MAIN content)	['02F622', '03111E', '0341E4', '03421A', '03429A', '0342BE', '0342D2', '034316', '03433A', '034860', '039436']	['02F622', '03111E', '0341E4', '03421A', '03429A', '0342BE', '0342D2', '034316', '03433A', '034860', '039436']	PASS	
+110-ledger-reverify-k.md	214	each preceded by fc 02	True	True	PASS	
+110-ledger-reverify-k.md	214	word (6b 8X 95 6c/6d) or abs32 (6a aX 00 ff 95 6d / 6b aX ...) store forms	0	0	PASS	
+110-ledger-reverify-k.md	215	byte-level references to FFB0CC (abs16 6a/6b + abs32)	['002E18', '0358CA', '035A22', '035EDC', '035F86', '073B3A', '0743BC', '0743C2', '0743CC']	['002E18', '0358CA', '035A22', '035EDC', '035F86', '073B3A', '0743BC', '0743C2', '0743CC']	PASS	
+110-ledger-reverify-k.md	215	of those in final4-proven code	8	8	PASS	not proven: ['035F86']
+110-ledger-reverify-k.md	215	stores 6a 8X b0 cc	['002E18', '073B3A', '0743BC', '0743CC']	['002E18', '073B3A', '0743BC', '0743CC']	PASS	
+110-ledger-reverify-k.md	215	0x035F84 is a bra and 0x035F86 follows it	(True, '6a 10 b0 cc 73 00')	(True, '6a 10 b0 cc 73 00')	PASS	byte at 035F84 = 40 30
+110-ledger-reverify-k.md	224	jsr @0x026F08 (5e 02 6f 08)	125	125	PASS	
+110-ledger-reverify-k.md	225	jsr @0x06D052	6	6	PASS	
+110-ledger-reverify-k.md	225	each with 6a 0c 8d de 4a within 16 B before	True	True	PASS	
+110-ledger-reverify-k.md	226	fc imm 6a 8c b0 b9	19	19	PASS	
+110-ledger-reverify-k.md	227	bb c2 in MAIN content	88	88	PASS	
+110-ledger-reverify-k.md	227	6b 8X bb c2	['026F3C', '026F48', '026F6A']	['026F3C', '026F48', '026F6A']	PASS	
+110-ledger-reverify-k.md	227	79 2X 89 80	9	9	PASS	
+110-ledger-reverify-k.md	228	jsr @0x3BDAC	32	32	PASS	
+110-ledger-reverify-k.md	228	jsr @0x3BF4C	31	31	PASS	
+110-ledger-reverify-k.md	230	mov.b stores 6a 8X 80 0f/10/11	12	12	PASS	
+110-ledger-reverify-k.md	231	mov.l #0xFF800E,erN	['03955E']	['03955E']	PASS	
+110-ledger-reverify-k.md	232	jsr sub_39534 / sub_39544	(3, 3)	(3, 3)	PASS	
+110-ledger-reverify-k.md	233	mov.l #0x20,er0	['039558']	['039558']	PASS	
+110-ledger-reverify-k.md	235	jsr sub_34DC2 / 34E82 / 34E42	(13, 2, 1)	(13, 2, 1)	PASS	
+110-ledger-reverify-k.md	236	bsr 55 7c landing on 0x034E42	['034DC4']	['034DC4']	PASS	
+110-ledger-reverify-k.md	237	mov.l #0xFF92CE/D6,er5 in sub_3F4A2	4	4	PASS	
+110-ledger-reverify-k.md	238	jsr sub_32650	4	4	PASS	
+110-ledger-reverify-k.md	239	btst #4 on @(0x86,erN) (6e x 00 86 73 4c)	1	1	PASS	
+110-ledger-reverify-k.md	240	(info) bytes at the three phantom-record overrun addresses		00 0e 00 82 / 00 12 00 42 / 00 0f 00 42	INFO	
+110-ledger-reverify-k.md	240	zone tables / records (image counts) / 2+10n sum / union bytes	(99, 511, 5308, 5296)	(99, 511, 5308, 5296)	PASS	
+110-ledger-reverify-k.md	243	helper-tables.tsv: rows / distinct sites / distinct tables / slots sum	(80, 71, 79, 649)	(80, 71, 79, 649)	PASS	
+110-ledger-reverify-k.md	246	dead.tsv rows / bytes	(125, 10670)	(125, 10670)	PASS	
+110-ledger-reverify-k.md	246	merges.tsv rows / j10 / all-chunk bytes / owners	(31, 2279, 2890, 15)	(31, 2279, 2890, 15)	PASS	
+110-ledger-reverify-k.md	246	usb-scan.tsv rows	184	184	PASS	detail prefixes: {'unexplored': 73, 'data@+0': 15, 'data@+4': 85, 'code@+0': 6, 'code@+1': 5}
+111-errata-j.md	19	18 + 3 + 3 errata rows	24	24	PASS	
+111-errata-j.md	19	errata.tsv rows	24	24	PASS	
+111-errata-j.md	39	bytecheck.tsv rows / PASS	(61, 61)	(61, 61)	PASS	
+111-errata-j.md	39	bytecheck split C/K/X ids	{'C': 42, 'K': 14, 'X': 5}	{'C': 42, 'K': 14, 'X': 5}	PASS	
+111-errata-j.md	39	bytecheck.tsv byte rows re-read independently (mismatches)	[]	[]	PASS	
+111-errata-j.md	52	kwave-index.tsv rows (x2 text checks)	(23, 46)	(23, 46)	PASS	
+111-errata-j.md	77	word stores to FFBBC2 (6b 8X bb c2)	['026F3C', '026F48', '026F6A']	['026F3C', '026F48', '026F6A']	PASS	
+111-errata-j.md	148	jsr @0x026F08 sites	125	125	PASS	
+111-errata-j.md	25	corrected addresses of E01-E03, E08-E20 set in final4 proven	16	16	PASS	not proven: []
+111-errata-j.md	79	N-only rows: named=1 proven=0 (E04-E06, E22-E24)	{'E04': (1, 0), 'E05': (1, 0), 'E06': (1, 0), 'E22': (1, 0), 'E23': (1, 0), 'E24': (1, 0)}	{'E04': (1, 0), 'E05': (1, 0), 'E06': (1, 0), 'E22': (1, 0), 'E23': (1, 0), 'E24': (1, 0)}	PASS	
+111-errata-j.md	82	E07 152 B 0x0376C8-0x03775F in neither final4 mask	0	0	PASS	continuation 0x037760-0x037762: proven 0, named 3 (outside the 152 B the row is about)
+111-errata-j.md	82	ramps 0376C8-0376F9 / 0376FA-03772B / 03772C-03775F: (nondecreasing, first, last, len)	[(True, 17, 26, 50), (True, 17, 25, 50), (True, 15, 91, 52)]	[(True, 17, 26, 50), (True, 17, 25, 50), (True, 15, 91, 52)]	PASS	
+111-errata-j.md	82	ramp breaks (drops) only at 0376FA and 03772C; 5b run ends 0x037762	(['0376FA', '03772C'], '5b 5b 5b 5b')	(['0376FA', '03772C'], '5b 5b 5b 5b')	PASS	byte after the run at 0x037763 = 00
+111-errata-j.md	83	false abs24 target	0x036B84	0x036B84	PASS	
+111-errata-j.md	88	vector 110 slot address	0x1B8	0x1B8	PASS	
+111-errata-j.md	106	0x05C40A: 11 code pointers then non-pointer at 0x05C436	(11, '6A0CB0A4')	(11, '6A0CB0A4')	PASS	slot 11 bytes = 6a 0c b0 a4 (code)
+111-errata-j.md	103	0x05B310 + 0x15*4	0x5B364	0x5B364	PASS	
+111-errata-j.md	112	count of 01 00 69 d4 0b 95 at 0x05A04C..	8	8	PASS	
+111-errata-j.md	94	blocks 0-2,4-8 are 14x14 with the listed bases	{0: 37665, 1: 20513, 2: 8481, 4: 11553, 5: 8484, 6: 31009, 7: 8482, 8: 8481}	{0: 37665, 1: 20513, 2: 8481, 4: 11553, 5: 8484, 6: 31009, 7: 8482, 8: 8481}	PASS	
+111-errata-j.md	94	block 3 = (w,h,base)	(7, 14, 32)	(7, 14, 32)	PASS	
+111-errata-j.md	94	block 8 == block 2 (12 B)	True	True	PASS	
+111-errata-j.md	94	blocks 9-25 bases (except 11, 18) all 0x0020; block 11 / 18	({}, (10, 9, 35), (5, 14, 46))	({}, (10, 9, 35), (5, 14, 46))	PASS	
+111-errata-j.md	94	blocks 9-25 size range (first, last)	((14, 27), (4, 7))	((14, 27), (4, 7))	PASS	w x h of blocks 9 and 25
+111-errata-j.md	166	SUB FFED7F50 4 LE32	['00FFF0FF', '00FFF1FF', '00FFF2FF', '00FFF3FF']	['00FFF0FF', '00FFF1FF', '00FFF2FF', '00FFF3FF']	PASS	
+112-c-reconstruction.md	14	c-recon/citations.tsv rows / mismatches on re-read	(65, [])	(65, [])	PASS	
+112-c-reconstruction.md	78	FSM: state5==state1==0x055042, state10==state7==0x055306	(True, True)	(True, True)	PASS	
+112-c-reconstruction.md	78	FSM: 10 distinct handlers among 12 slots	10	10	PASS	
+112-c-reconstruction.md	70	dispatcher 0x054FF8 indexes 0x055002	78 b0 6b 26 00 05 50 02	78 b0 6b 26 00 05 50 02	PASS	
+112-c-reconstruction.md	106	overrun arithmetic: 0xFF5806+0x3FF+0x40-1, minus window end 0xFF5C05	('0xFF5C44', 63)	('0xFF5C44', 63)	PASS	
+112-c-reconstruction.md	110	report byte0 copy (6a 0c 81 84 6a 8c ee 18) sites	['054F4E', '05520A', '055336', '0557D8']	['054F4E', '05520A', '055336', '0557D8']	PASS	0x055202/0x05532E are the DASTS gates before 05520A/055336; 0557D8 lies in sub_557A2
+112-c-reconstruction.md	24	vectors 234/235/238	['054D50', '054EC2', '054CFA']	['054D50', '054EC2', '054CFA']	PASS	
+112-c-reconstruction.md	26	(info) cmp.w #req,r2 sites per request in 0x054B00-0x056100		{'8006': 6, 'c1d4': 6, '41d1': 6, '41d2': 7, '41d3': 6}	INFO	
+112-c-reconstruction.md	20	(info) line counts of the three C files (RESUME: 809)		({'l15_usb_vendor.c': 439, 'l15_tx_gate.c': 248, 'l15_keyseq.c': 122}, 809)	INFO	
+112-c-reconstruction.md	48	l15_dump.txt lines	3207	3207	PASS	
+112-c-reconstruction.md	128	delay table x10 ms	[0, 20, 50, 100, 200]	[0, 20, 50, 100, 200]	PASS	
+112-c-reconstruction.md	125	off_FC80 4 BE32	['00FC90', '00FC9C', '00FCE2', '00FCF4']	['00FC90', '00FC9C', '00FCE2', '00FCF4']	PASS	
+112-c-reconstruction.md	85	jsr @0x07827C sites	['054EB0']	['054EB0']	PASS	

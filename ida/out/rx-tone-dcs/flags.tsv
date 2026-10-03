@@ -1,0 +1,20 @@
+ram_addr	width	band	role
+0xFFFF36	byte(bitfield)	A/B	edge-seen flags: bit4 band-A (IRQ4), bit5 band-B (IRQ5); set by capture ISR path, cleared in handler
+0xFFFF8F87	byte	A	band-A tone decoder run-state: 0=idle/restart, 1=running, 2=detect latched
+0xFFFF8F88	byte	A	band-A tone decode RESULT consumed by squelch (0=undecided, 1/2=decided); read at 0x3037C/0x30464/0x3052A
+0xFFFF8F89	byte	A	band-A squelch-open latch set by consumer sub_30310
+0xFFFF8F7C	word	A	band-A in-window match down-counter
+0xFFFF8F7E	word	A	band-A attempt down-counter
+0xFFFF8F8A	word	A	band-A programmable window HIGH limit (period), from tbl 0x1880
+0xFFFF8F8C	word	A	band-A programmable window LOW limit (period), from tbl 0x1880
+0xFFFF8F8E	dword	A	band-A counter reload pair A (from tbl 0x1880)
+0xFFFF8F92	dword	A	band-A counter reload pair B (from tbl 0x1880)
+0xFFFF908F	byte	B	band-B run-state (twin of 8F87)
+0xFFFF9090	byte	B	band-B result (twin of 8F88)
+0xFFFF9084	word	B	band-B match counter (twin of 8F7C)
+0xFFFF9086	word	B	band-B attempt counter (twin of 8F7E)
+0xFFFF8FDC	6 words	A	DCS 24-bit received-codeword shift register (desc from FF8FDC)
+0xFFFF8F86	byte	A	DCS lock flag: bit0 set when a valid Golay word is matched
+0xFFFF8F96	word	A	DCS/tone TPU0 TGRA0 period source (copied to FFFFC8 by sub_2F55A); DCS=0x7440
+0xFFFF8F98	word	A	DCS confirm/hold down-counter (reload from 8F80)
+0xFFFF89BE	byte(bitfield)	A/B	RX conditioning flags; bit4 selects /2 scaling of the tone window (sub_17DA)

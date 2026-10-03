@@ -1,0 +1,27 @@
+cpu	block	address	role	detail	confidence	evidence
+MAIN	SCI_A SMR	0xFFFF88	serial mode	0x80 = clocked synchronous mode for all DSP traffic; 0x08 = async 8-N-2 in the DSP-write path	confirmed	sub_56520 0x5653A-0x5653C; sub_78222 0x78226-0x78228
+MAIN	SCI_A BRR	0xFFFF89	bit rate	0x00 in synchronous mode, so the DSP supplies the clock; 0x0C in the async path = phi/416	confirmed	sub_56520 0x5653E-0x56540; sub_78222 0x7822A-0x7822C
+MAIN	SCI_A SCR	0xFFFF8A	serial control	0x02 idle (CKE1=1, external clock), 0x12 receive, 0x52 receive+RIE, 0x22 transmit, bit7 TIE set to launch the DMA burst	confirmed	sub_56520 0x5652C/0x56548/0x56550; sub_566E4 0x56706; sub_4834E 0x483CA; sub_483D2 0x483D6
+MAIN	SCI_A TDR	0xFFFF8B	transmit data	DMA destination for every command frame; also written by the polled loop at 0x77022	confirmed	sub_4834E 0x48366-0x4836C; 0x77022
+MAIN	SCI_A SSR	0xFFFF8C	status	TDRE polled before starting DMA; flags cleared with AND 0x87	confirmed	sub_4834E 0x4834E-0x48352; sub_566E4 0x566FC-0x56700
+MAIN	SCI_A RDR	0xFFFF8D	receive data	read by the RXI handler	confirmed	sub_5615C 0x56172 and 0x561A0
+MAIN	vector 148 = 0x000250	-> sub_5615C	SCI_A ERI	error interrupt	confirmed	ida/out/dsp/main/vectors.tsv slot 148
+MAIN	vector 149 = 0x000254	-> sub_5615C	SCI_A RXI	receive interrupt, feeds the frame assembler sub_5683E	confirmed	vectors.tsv slot 149; sub_5683E reached from 0x562D2
+MAIN	vector 150 = 0x000258	-> nullsub_15	SCI_A TXI	unused, transmit is DMA driven	confirmed	vectors.tsv slot 150 -> 0x483D0 rte
+MAIN	DMAC ch0 +0x14	0xFFFC14	channel control	receive channel, 0x800001A0 enables; bit0 cleared by the transfer-end ISR	confirmed	sub_482D4 0x48318; sub_48328 0x48332-0x4833C
+MAIN	DMAC ch0 +0x18	0xFFFC18	0x200000	receive channel config	confirmed	sub_482D4 0x48306
+MAIN	DMAC ch1 +0x00	0xFFFC20	source address	the frame buffer pointer passed in ER5	confirmed	sub_4834E 0x48360
+MAIN	DMAC ch1 +0x04	0xFFFC24	destination address	0xFFFF8B, the SCI_A transmit data register	confirmed	sub_4834E 0x48366-0x4836C
+MAIN	DMAC ch1 +0x0C	0xFFFC2C	transfer count	0x20 or 0x60	confirmed	sub_4834E 0x4838E-0x483A2
+MAIN	DMAC ch1 +0x14	0xFFFC34	channel control	0x1A0 then 0x800001A0 to enable	confirmed	sub_4834E 0x48354-0x4835A and 0x483BA-0x483C0
+MAIN	DMAC request select	0xFFFD20 / 0xFFFD21	request source	0xE1 for the receive channel, 0x96 for the transmit channel	confirmed	sub_482D4 0x4830C-0x4830E; sub_4834E 0x483B4-0x483B6
+MAIN	vector 128 = 0x000200	-> sub_48328	DMAC ch0 transfer end	clears 0xFFBBE4, the receive-busy flag	confirmed	vectors.tsv slot 128
+MAIN	vector 129 = 0x000204	-> sub_483D2	DMAC ch1 transfer end	clears SCI_A TIE and 0xFFBC8C, the transmit-busy flag	confirmed	vectors.tsv slot 129
+MAIN	DSP control port	0xFFFF52	bit-addressed output	bit0 enable, bit1 tracks receive vs transmit direction, bit2, bit3 pulsed as a reset, bit4 boot/mode select	confirmed	sub_56056 0x56056-0x56070; sub_564FA 0x56506-0x5650E; sub_4834E 0x483C6; sub_5DD00 0x5DD50/0x5DD62/0x5DD76/0x5DDD4
+MAIN	DSP handshake input	0xFFFF49 bit7	status input	polled in DSP-write states 4 and 5	confirmed	sub_5DD00 0x5DDAE and 0x5DDBE
+SUB	SCI0	0x0008A000	async serial	one of exactly three SCI channels in use	confirmed	ida/out/dsp/sub/sweep_hist.tsv, whole-image sweep
+SUB	SCI2	0x0008A040	async serial		confirmed	ida/out/dsp/sub/sweep_hist.tsv
+SUB	SCI3	0x0008A060	async serial		confirmed	ida/out/dsp/sub/sweep_hist.tsv
+SUB	RSPI	0x000D0100	not referenced	no SPI peripheral is addressed anywhere in the 4 MB SUB image	not found	full linear sweep, 2,077,781 decoded instructions
+SUB	SSI / I2S	0x0008C100	not referenced	no synchronous audio serial block is addressed	not found	same sweep
+SUB	USB0	0x000A0000	not referenced	confirms the earlier negative	not found	same sweep

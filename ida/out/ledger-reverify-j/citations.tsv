@@ -1,0 +1,311 @@
+source_doc	line	address	expected	actual	pass	kind	note
+69-main-final3-seed.md	123	54D20	40 2a	40 2a	PASS	eq	
+69-main-final3-seed.md	154	3282	fc 01	fc 01	PASS	eq	
+69-main-final3-seed.md	155	3294	fc 02	fc 02	PASS	eq	
+69-main-final3-seed.md	156	32B8	fc 01	fc 01	PASS	eq	
+69-main-final3-seed.md	153	325E	6a 0b a9 e0	6a 0b a9 e0	PASS	eq	mov.b @0xa9e0:16,r3l encoding
+69-main-final3-seed.md	154	3284	6a 8c a9 e0	6a 8c a9 e0	PASS	eq	mov.b r4l,@0xa9e0:16 encoding
+69-main-final3-seed.md	155	3296	6a 8c a9 e0	6a 8c a9 e0	PASS	eq	mov.b r4l,@0xa9e0:16 encoding
+69-main-final3-seed.md	156	32BA	6a 8c a9 e0	6a 8c a9 e0	PASS	eq	mov.b r4l,@0xa9e0:16 encoding
+69-main-final3-seed.md	124	54F38	56 70	56 70	PASS	eq	rte
+69-main-final3-seed.md	160	2132	00 fe e0 00 within +0x1F	found at 2140: 00 fe e0 00	PASS	contains	mov.l #0xFEE000 inside 0x002132-0x002150
+69-main-final3-seed.md	111	28C3E	be32 0x0002A924	00 02 a9 24	PASS	be32	
+69-main-final3-seed.md	112	28C46	be32 0x00028C4A	00 02 8c 4a	PASS	be32	
+69-main-final3-seed.md	113	28C9E	be32 0x0002A9F4	00 02 a9 f4	PASS	be32	
+69-main-final3-seed.md	114	28CA6	be32 0x00028CAA	00 02 8c aa	PASS	be32	
+69-main-final3-seed.md	111	2A924	55 08 47 ?? 5e 02 9c 56 54 70	55 08 47 04 5e 02 9c 56 54 70	PASS	eq	bsr .+8 = 0x2A92E; jsr @0x29C56; rts
+69-main-final3-seed.md	113	2A9F4	55 08 47 ?? 5e 02 9c 56 54 70	55 08 47 04 5e 02 9c 56 54 70	PASS	eq	bsr .+8 = 0x2A9FE; jsr @0x29C56; rts
+69-main-final3-seed.md	112	28C4A	5e 02 a9 2e	5e 02 a9 2e	PASS	eq	jsr @0x2A92E at stub start
+69-main-final3-seed.md	112	28C4A	5e 01 a5 8c 54 70 within +0x10	found at 28C54: 5e 01 a5 8c 54 70	PASS	contains	jsr @0x1A58C; rts ending the 16-B stub
+69-main-final3-seed.md	114	28CAA	5e 02 a9 fe	5e 02 a9 fe	PASS	eq	jsr @0x2A9FE at stub start
+69-main-final3-seed.md	114	28CAA	5e 01 a5 8c 54 70 within +0x12	found at 28CB6: 5e 01 a5 8c 54 70	PASS	contains	jsr @0x1A58C; rts ending the 18-B stub
+69-main-final3-seed.md	72	28D8C	5d 60	5d 60	PASS	eq	jsr @er6
+69-main-final3-seed.md	73	28DA8	5d 60	5d 60	PASS	eq	jsr @er6
+70-dERn-dispatchers.md	52	54FF8	78 b0 6b 26 00 05 50 02 59 60	78 b0 6b 26 00 05 50 02 59 60	PASS	eq	
+70-dERn-dispatchers.md	52	28D24	01 00 6f 16 00 04	01 00 6f 16 00 04	PASS	eq	
+70-dERn-dispatchers.md	102	4E2D6	7a 05 00 04 e3 1e	7a 05 00 04 e3 1e	PASS	eq	
+70-dERn-dispatchers.md	103	4E2DC	6a 0c bb e9	6a 0c bb e9	PASS	eq	
+70-dERn-dispatchers.md	104	4E2E0	7a 64 00 00 00 ff	7a 64 00 00 00 ff	PASS	eq	
+70-dERn-dispatchers.md	105	4E2E6	7a 06 00 ff b0 5a	7a 06 00 ff b0 5a	PASS	eq	
+70-dERn-dispatchers.md	107	4E31A	5e 05 27 80	27 80 54 70	FAIL-OFFSET	eq	run found at 4E318 (delta -2)
+70-dERn-dispatchers.md	108	4E31C	54 70	54 70	PASS	eq	rts
+70-dERn-dispatchers.md	96	4ACF4	be32 0x0004E2D6	00 04 e2 d6	PASS	be32	0x04ABE4 + 68*4
+70-dERn-dispatchers.md	113	4ACF8	be32 0x0004E32E	00 04 e3 2e	PASS	be32	0x04ABE4 + 69*4
+70-dERn-dispatchers.md	95	5222A	78 b0 6b 26 00 04 ab e4	78 b0 6b 26 00 04 ab e4	PASS	eq	d32 indexed load, base 0x04ABE4
+70-dERn-dispatchers.md	95	52232	5d 60	5d 60	PASS	eq	jsr @er6
+70-dERn-dispatchers.md	115	4ACF4	be32 0x0004E2D6	00 04 e2 d6	PASS	be32	0x04AB70 slot 97
+70-dERn-dispatchers.md	115	4ADFC	be32 0x0004E2D6	00 04 e2 d6	PASS	be32	0x04AB70 slot 163
+70-dERn-dispatchers.md	115	4AE4C	be32 0x0004E2D6	00 04 e2 d6	PASS	be32	0x04AB70 slot 183
+70-dERn-dispatchers.md	115	4AB6C	5d 60	5d 60	PASS	eq	jsr @er6
+70-dERn-dispatchers.md	112	4E31E	42 61 72 6f within +0x10	found at 4E320: 42 61 72 6f	PASS	contains	"Baro" in 0x04E31E-0x04E32E
+70-dERn-dispatchers.md	112	4E31E	2d 68 50 61 within +0x10	found at 4E329: 2d 68 50 61	PASS	contains	"-hPa" in 0x04E31E-0x04E32E
+70-dERn-dispatchers.md	151	55000	59 60	59 60	PASS	eq	jmp @er6
+71-key-dispatch-028cbc.md	59	28CBC	6b 04 bb c2	6b 04 bb c2	PASS	eq	
+71-key-dispatch-028cbc.md	85	26F3C	6b 84 bb c2	6b 84 bb c2	PASS	eq	mov.w r4,@0xFFBBC2 encoding
+71-key-dispatch-028cbc.md	86	26F4A	6b 83 bb c2	bb c2 6a 18	FAIL-OFFSET	eq	mov.w r3,@0xFFBBC2 encoding (lane table also cites these bytes at 026F4A); run found at 26F48 (delta -2)
+71-key-dispatch-028cbc.md	87	26F6A	6b 84 bb c2	6b 84 bb c2	PASS	eq	mov.w r4,@0xFFBBC2 encoding
+71-key-dispatch-028cbc.md	92	6618	00 ff bb c2	00 ff bb c2	PASS	eq	
+71-key-dispatch-028cbc.md	47	1BE32	00 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 76 77 78 79 7a	00 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 76 77 78 79 7a	PASS	eq	00 then a..z
+72-main-unreached-functions.md	60	28C20	7a 01 00 02 8c 2a	7a 01 00 02 8c 2a	PASS	eq	
+72-main-unreached-functions.md	60	28C3E	00 02 a9 24	00 02 a9 24	PASS	eq	
+72-main-unreached-functions.md	60	2A924	55 08 47 04 5e 02 9c 56	55 08 47 04 5e 02 9c 56	PASS	eq	
+72-main-unreached-functions.md	61	28C82	7a 01 00 02 8c 8a	7a 01 00 02 8c 8a	PASS	eq	
+72-main-unreached-functions.md	61	28C9E	00 02 a9 f4	00 02 a9 f4	PASS	eq	
+72-main-unreached-functions.md	61	2A9F4	55 08 47 04 5e 02 9c 56	55 08 47 04 5e 02 9c 56	PASS	eq	"same stub body" as 0x02A924
+72-main-unreached-functions.md	62	65EFA	5e 06 5b 66	5e 06 5b 66	PASS	eq	
+72-main-unreached-functions.md	62	65EF8	40 36	40 36	PASS	eq	bra .+0x36 -> 0x065F30
+72-main-unreached-functions.md	62	2B3C0	00 06 5e fa within +0x24	found at 2B3D6: 00 06 5e fa	PASS	contains	table ~0x02B3C0
+72-main-unreached-functions.md	63	2B3DC	00 06 5f 00	5f 00 00 06	FAIL-OFFSET	eq	run found at 2B3DA (delta -2)
+72-main-unreached-functions.md	64	2B3E0	00 06 5f 06	5f 06 7a 06	FAIL-OFFSET	eq	run found at 2B3DE (delta -2)
+72-main-unreached-functions.md	63	65F00	5e 06 5b 86 40 ??	5e 06 5b 86 40 2a	PASS	eq	jsr @0x65B86; bra
+72-main-unreached-functions.md	64	65F06	5e 06 5b a6	5e 06 5b a6	PASS	eq	jsr @0x65BA6
+72-main-unreached-functions.md	77	7691A	5e 07 6c 0a	5e 07 6c 0a	PASS	eq	jsr @0x076C0A
+72-main-unreached-functions.md	77	76C34	5e 07 6e f8	5e 07 6e f8	PASS	eq	jsr @0x076EF8
+72-main-unreached-functions.md	77	76C56	5e 07 6f c4	5e 07 6f c4	PASS	eq	jsr @0x076FC4
+72-main-unreached-functions.md	79	7B4C4	be32 0x000769AA	00 07 69 aa	PASS	be32	byte re-read inside closed window (no decode)
+72-main-unreached-functions.md	79	7B4CE	be32 0x000768C8	00 07 68 c8	PASS	be32	byte re-read inside closed window (no decode)
+72-main-unreached-functions.md	79	7B4D8	be32 0x000769AA	00 07 69 aa	PASS	be32	byte re-read inside closed window (no decode)
+72-main-unreached-functions.md	80	7B4EC	be32 0x000768A8	00 07 68 a8	PASS	be32	byte re-read inside closed window (no decode)
+72-main-unreached-functions.md	87	44DA	373839404142	373839404142	PASS	ascii	
+72-main-unreached-functions.md	87	8352	 : TX   	 : TX   	PASS	ascii	
+72-main-unreached-functions.md	88	45308	ESU FT1D\r\n	ESU FT1D\r\n	PASS	ascii	
+72-main-unreached-functions.md	88	458D8	$GPWPL,0000.	$GPWPL,0000.	PASS	ascii	
+72-main-unreached-functions.md	89	455B8	7a 05 00 04 58 d8	7a 05 00 04 58 d8	PASS	eq	
+72-main-unreached-functions.md	89	4E012	P-Rate	P-Rate	PASS	ascii	
+72-main-unreached-functions.md	89	6796A	M01\xffM02\xff	M01\xffM02\xff	PASS	ascii	
+72-main-unreached-functions.md	90	67446	:\xffSENT:\xffD/L 	:\xffSENT:\xffD/L 	PASS	ascii	
+72-main-unreached-functions.md	90	6B69C	SEND   \xffFORW	SEND   \xffFORW	PASS	ascii	
+72-main-unreached-functions.md	90	D22C	   . Hz	   . Hz	PASS	ascii	
+72-main-unreached-functions.md	90	3619E	iiiihhhhgggg	iiiihhhhgggg	PASS	ascii	
+72-main-unreached-functions.md	91	376C8	11 11	11 11	PASS	eq	
+72-main-unreached-functions.md	91	376C8	12 12 within +0x98	found at 376CE: 12 12	PASS	contains	
+72-main-unreached-functions.md	91	376C8	non-decreasing over 152 B	11 11 11 11 .. 19 19 5b 5b	FAIL	mono	descriptor "152 B monotonic": bytes are three concatenated ascending ramps (11..1a, 11..19, 0f..5b), not one monotonic run
+72-main-unreached-functions.md	91	9B34	1c 1d 1e 1f 20	1c 1d 1e 1f 20	PASS	eq	
+72-main-unreached-functions.md	105	10B40	58 00 ff 74	58 00 ff 74	PASS	eq	bra disp16 = -0x8C (-140)
+72-main-unreached-functions.md	108	78570	02 36 02	02 36 02	PASS	eq	BE24 0x023602 (byte re-read inside closed window)
+72-main-unreached-functions.md	110	6DBE0	54 70	54 70	PASS	eq	
+72-main-unreached-functions.md	110	61C54	5e 06 db e0	5e 06 db e0	PASS	eq	abs24 jsr match
+72-main-unreached-functions.md	110	669DA	5e 06 db e0	5e 06 db e0	PASS	eq	abs24 jsr match
+72-main-unreached-functions.md	129	74342	5a 03 6b 84	6b 84 96 f8	FAIL-OFFSET	eq	"5A" opcode of the false abs24 match ->0x036B84, inside the immediate of mov.w #0x5A03; run found at 74340 (delta -2)
+72-main-unreached-functions.md	130	36B84	1d 1d	1d 1d	PASS	eq	
+72-main-unreached-functions.md	130	1CFD3	be32 0x00014C6A	00 01 4c 6a	PASS	be32	
+72-main-unreached-functions.md	131	1CFD2	58 00	58 00	PASS	eq	bra disp16
+73-usb-status-byte0.md	89	393DC	6a 8b 81 84	6a 8b 81 84	PASS	eq	mov.b r3l,@0xFF8184
+73-usb-status-byte0.md	90	39460	fc 01 6a 8c 81 84	fc 01 6a 8c 81 84	PASS	eq	mov.b #1,r4l; mov.b r4l,@0xFF8184 (store at 0x039462)
+73-usb-status-byte0.md	91	55494	fc 01 6a 8c 81 84	fc 01 6a 8c 81 84	PASS	eq	mov.b #1,r4l; mov.b r4l,@0xFF8184 (store at 0x055496)
+73-usb-status-byte0.md	92	557A2	fc 01 6a 8c 81 84	fc 01 6a 8c 81 84	PASS	eq	mov.b #1,r4l; mov.b r4l,@0xFF8184 (store at 0x0557A4)
+73-usb-status-byte0.md	93	54C64	01 00 6b 84 81 84	01 00 6b 84 81 84	PASS	eq	mov.l er4,@0xFF8184 (form cited in Method)
+73-usb-status-byte0.md	94	54F1E	01 00 6b 84 81 84	6b 84 81 84 7a 04	FAIL-OFFSET	eq	mov.l er4,@0xFF8184 (form cited in Method); run found at 54F1C (delta -2)
+73-usb-status-byte0.md	95	5601E	01 00 6b 84 81 84	6b 84 81 84 7a 04	FAIL-OFFSET	eq	mov.l er4,@0xFF8184 (form cited in Method); run found at 5601C (delta -2)
+73-usb-status-byte0.md	97	5520A	6a 0? 81 84	6a 0c 81 84	PASS	eq	byte read of FF8184
+73-usb-status-byte0.md	97	55336	6a 0? 81 84	6a 0c 81 84	PASS	eq	byte read of FF8184
+73-usb-status-byte0.md	97	557D8	6a 0? 81 84	6a 0c 81 84	PASS	eq	byte read of FF8184
+73-usb-status-byte0.md	98	551DA	6b 0? 81 84	6b 04 81 84	PASS	eq	word read of FF8184
+73-usb-status-byte0.md	98	55306	6b 0? 81 84	6b 04 81 84	PASS	eq	word read of FF8184
+73-usb-status-byte0.md	98	557A8	6b 0? 81 84	6b 04 81 84	PASS	eq	word read of FF8184
+73-usb-status-byte0.md	99	54F4E	6a 0? 81 84	6a 0c 81 84	PASS	eq	byte read of FF8184
+73-usb-status-byte0.md	130	54FEC	6a 0? 81 83	6a 0b 81 83	PASS	eq	read of FF8183
+73-usb-status-byte0.md	35	5512A	6a 0? 81 83	6a 0c 81 83	PASS	eq	read of FF8183
+73-usb-status-byte0.md	35	54E30	6a 0? 81 83	6a 0c 81 83	PASS	eq	read of FF8183
+73-usb-status-byte0.md	77	5523A	fc 40	fc 40	PASS	eq	mov.b #0x40
+74-usb-key14-tone4f.md	80	FDFE	fc 14	fc 14	PASS	eq	
+74-usb-key14-tone4f.md	81	FE00	6a 8c a9 ed	6a 8c a9 ed	PASS	eq	
+74-usb-key14-tone4f.md	33	3839C	4f 1e 35 5d ff	4f 1e 35 5d ff	PASS	eq	
+74-usb-key14-tone4f.md	151	5548E	fc 4f 6a 8c aa e0	fc 4f 6a 8c aa e0	PASS	eq	
+74-usb-key14-tone4f.md	152	5549C	fc 08 6a 8c 81 83	6a 8c 81 83 5e 05	FAIL-OFFSET	eq	run found at 5549A (delta -2)
+74-usb-key14-tone4f.md	154	3835E	6a 0a aa e0	6a 0a aa e0	PASS	eq	
+74-usb-key14-tone4f.md	158	38674	fc 00 6a 8c aa e8	6a 8c aa e8 6a 18	FAIL-OFFSET	eq	run found at 38672 (delta -2)
+74-usb-key14-tone4f.md	158	38760	fc 00 6a 8c aa e8 within +0x8	found at 38760: fc 00 6a 8c aa e8	PASS	contains	FFAAE8 := 0 store at 0x038762
+74-usb-key14-tone4f.md	160	55520	6a 0c aa e8 46 f8	6a 0c aa e8 46 f8	PASS	eq	
+74-usb-key14-tone4f.md	38	55520	6a 0c aa e8 46 f8	6a 0c aa e8 46 f8	PASS	eq	
+74-usb-key14-tone4f.md	161	55526	fc 09	fc 09	PASS	eq	
+74-usb-key14-tone4f.md	71	FB9E	5e 00 fd c8	5e 00 fd c8	PASS	eq	jsr @0x00FDC8
+74-usb-key14-tone4f.md	72	FBA2	6a 0c a9 ed	6a 0c a9 ed	PASS	eq	mov.b @0xFFA9ED,r4l
+74-usb-key14-tone4f.md	105	6F640	2e 6a 70 67 within +0x8	found at 6F642: 2e 6a 70 67	PASS	contains	".jpg"
+74-usb-key14-tone4f.md	95	6F5D0	6a 10 8e a0 73 60	6a 10 8e a0 73 60	PASS	eq	btst #6,@0xFF8EA0
+74-usb-key14-tone4f.md	131	6FDF0	6a 8? ba 32	6a 8c ba 32	PASS	eq	store to FFBA32
+74-usb-key14-tone4f.md	88	FBC8	fb 09 18 bc within +0x18	found at FBD4: fb 09 18 bc	PASS	contains	mov.b #9,r3l; sub.b r3l,r4l (the -9 remap)
+75-usb-registers-ram.md	66	54C7C	fc 00	fc 00	PASS	eq	
+75-usb-registers-ram.md	67	54C7E	6a 8c ee 08	6a 8c ee 08	PASS	eq	
+75-usb-registers-ram.md	68	54C82	fc 07	fc 07	PASS	eq	
+75-usb-registers-ram.md	69	54C84	6a 8c ee 09	6a 8c ee 09	PASS	eq	
+75-usb-registers-ram.md	70	54C88	fc 1f	fc 1f	PASS	eq	
+75-usb-registers-ram.md	71	54C8A	6a 8c ee 0a	6a 8c ee 0a	PASS	eq	
+75-usb-registers-ram.md	72	54C8E	00 00 00 00 00 00	00 00 00 00 00 00	PASS	eq	
+75-usb-registers-ram.md	73	54C94	fc 8d	fc 8d	PASS	eq	
+75-usb-registers-ram.md	74	54C96	6a 8c ee 04	6a 8c ee 04	PASS	eq	
+75-usb-registers-ram.md	77	54CA6	6a 18 ee 2d 70 20	6a 18 ee 2d 70 20	PASS	eq	
+75-usb-registers-ram.md	99	54D1E	46 2c	46 2c	PASS	eq	
+75-usb-registers-ram.md	100	54D20	40 2a	40 2a	PASS	eq	
+75-usb-registers-ram.md	75	54C9A	fc 03 6a 8c ee 05	fc 03 6a 8c ee 05	PASS	eq	IER1 = 3 (tail bytes per mnemonic)
+75-usb-registers-ram.md	76	54CA0	fc 18 6a 8c ee 06	fc 18 6a 8c ee 06	PASS	eq	IER2 = 0x18 (tail bytes per mnemonic)
+75-usb-registers-ram.md	101	54D22	fc 08 6a 8c ee 2f	fc 08 6a 8c ee 2f	PASS	eq	
+75-usb-registers-ram.md	102	54D28	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00	PASS	eq	15 nops; they occupy 0x054D28-0x054D45 (label in doc is 054d24..054d44)
+75-usb-registers-ram.md	103	54D46	fc 00 6a 8c ee 2f	fc 00 6a 8c ee 2f	PASS	eq	
+75-usb-registers-ram.md	142	54CCA	6a 8c ee 2e	6a 8c ee 2e	PASS	eq	store EE2E
+75-usb-registers-ram.md	143	54CD0	6a 8c ee 2f	6a 8c ee 2f	PASS	eq	store EE2F (init)
+75-usb-registers-ram.md	143	54D24	6a 8c ee 2f	6a 8c ee 2f	PASS	eq	store EE2F (dead)
+75-usb-registers-ram.md	143	54D48	6a 8c ee 2f	6a 8c ee 2f	PASS	eq	store EE2F (dead)
+75-usb-registers-ram.md	144	54CDC	6a 8c ee 44	6a 8c ee 44	PASS	eq	store EE44
+75-usb-registers-ram.md	145	22C0	6a 8? ee 50	6a 8c ee 50	PASS	eq	store EE50 (boot)
+75-usb-registers-ram.md	145	2748	6a 8a ee 50	6a 8a ee 50	PASS	eq	mov.b r2l,@EE50 (NMI)
+75-usb-registers-ram.md	145	27FC	6a 8a ee 50	6a 8a ee 50	PASS	eq	mov.b r2l,@EE50 (NMI)
+75-usb-registers-ram.md	146	22BA	6a 8? ee 51	6a 8c ee 51	PASS	eq	store EE51 (boot)
+75-usb-registers-ram.md	147	446C4	6a 18 ee 53 70 10	6a 18 ee 53 70 10	PASS	eq	bset #1,@0xFFEE53
+75-usb-registers-ram.md	172	55678	6b 05 ba 6c	6b 05 ba 6c	PASS	eq	mov.w @0xFFBA6C,r5
+75-usb-registers-ram.md	173	5567E	7a 15 00 ff 58 06	7a 15 00 ff 58 06	PASS	eq	add.l #0xFF5806,er5
+75-usb-registers-ram.md	174	55684	6a 0c ee 10	6a 0c ee 10	PASS	eq	
+75-usb-registers-ram.md	175	55688	68 dc	68 dc	PASS	eq	
+75-usb-registers-ram.md	176	5568E	46 f4	46 f4	PASS	eq	bne -> 0x055684
+75-usb-registers-ram.md	178	5569E	79 25 04 00	79 25 04 00	PASS	eq	
+75-usb-registers-ram.md	179	556A2	45 1c	45 1c	PASS	eq	bcs -> 0x0556C0
+76-dsp-tpu-tick.md	67	2482	fc 21 6a 8c fe f0	fc 21 6a 8c fe f0	PASS	eq	
+76-dsp-tpu-tick.md	68	2488	fc c0 6a 8c fe f1	fc c0 6a 8c fe f1	PASS	eq	
+76-dsp-tpu-tick.md	69	248E	fc 00 6a 8c fe f2	fc 00 6a 8c fe f2	PASS	eq	
+76-dsp-tpu-tick.md	70	2494	fc 41 6a 8c fe f4	fc 41 6a 8c fe f4	PASS	eq	
+76-dsp-tpu-tick.md	71	249A	79 04 00 00 6b 84 fe f6	79 04 00 00 6b 84 fe f6	PASS	eq	
+76-dsp-tpu-tick.md	72	24A2	79 04 4e 20 6b 84 fe f8	79 04 4e 20 6b 84 fe f8	PASS	eq	
+76-dsp-tpu-tick.md	73	24AA	fc 20 3c bc	fc 20 3c bc	PASS	eq	
+76-dsp-tpu-tick.md	74	24AE	fc 00 3c bd	fc 00 3c bd	PASS	eq	
+76-dsp-tpu-tick.md	28	1B8	00 00 2a 30	00 00 2a 30	PASS	eq	
+76-dsp-tpu-tick.md	117	1B8	00 00 2a 30	00 00 2a 30	PASS	eq	
+76-dsp-tpu-tick.md	123	2A32	6a 18 fe f5 72 00	6a 18 fe f5 72 00	PASS	eq	
+76-dsp-tpu-tick.md	124	2A38	6a 0c 94 b8 47 06 1a 0c 6a 8c 94 b8	6a 0c 94 b8 47 06 1a 0c 6a 8c 94 b8	PASS	eq	
+76-dsp-tpu-tick.md	126	2A5A	56 70	94 ba	FAIL-OFFSET	eq	listed as "rts"; 56 70 encodes rte; run found at 2A5E (delta +4)
+76-dsp-tpu-tick.md	130	108	00 05 61 c2	00 05 61 c2	PASS	eq	
+76-dsp-tpu-tick.md	134	30B8	5e 05 62 72	5e 05 62 72	PASS	eq	
+76-dsp-tpu-tick.md	143	22F6	fc 00 3c f0	fc 00 3c f0	PASS	eq	
+76-dsp-tpu-tick.md	144	22FA	fc c0 3c f1	fc c0 3c f1	PASS	eq	
+76-dsp-tpu-tick.md	145	2304	fc 40 3c f4	fc 40 3c f4	PASS	eq	
+76-dsp-tpu-tick.md	152	5B8A0	7e bc 73 30	7e bc 73 30	PASS	eq	
+76-dsp-tpu-tick.md	153	5B8A4	47 20	47 20	PASS	eq	
+76-dsp-tpu-tick.md	154	5B8A6	2c f5	2c f5	PASS	eq	
+76-dsp-tpu-tick.md	155	5B8A8	6b 0c ff f6	6b 0c ff f6	PASS	eq	
+76-dsp-tpu-tick.md	156	5B8AC	79 2c 89 80	79 2c 89 80	PASS	eq	
+76-dsp-tpu-tick.md	157	5B8B0	44 06	44 06	PASS	eq	
+76-dsp-tpu-tick.md	158	5B8B2	73 4c	73 4c	PASS	eq	
+76-dsp-tpu-tick.md	172	56776	79 04 00 00 3c f0 6b 84 ff f6	3c f0 6b 84 ff f6 2c f5 73 4c	FAIL-OFFSET	eq	restart write; run found at 56772 (delta -4)
+76-dsp-tpu-tick.md	172	56826	79 04 00 00 3c f0 6b 84 ff f6	3c f0 6b 84 ff f6 2c f5 73 4c	FAIL-OFFSET	eq	restart write; run found at 56822 (delta -4)
+76-dsp-tpu-tick.md	172	56950	79 04 00 00 3c f0 6b 84 ff f6	3c f0 6b 84 ff f6 2c f5 73 4c	FAIL-OFFSET	eq	restart write; run found at 5694C (delta -4)
+76-dsp-tpu-tick.md	93	2484	6a 8c fe f0	6a 8c fe f0	PASS	eq	
+76-dsp-tpu-tick.md	94	24A2	79 04 4e 20	79 04 4e 20	PASS	eq	
+76-dsp-tpu-tick.md	235	20FC	79 0? 01 11 6b 8? fd c4	79 04 01 11 6b 84 fd c4	PASS	eq	mov.w #0x0111; mov.w ->@0xFFFDC4
+77-dsp-tx-sources.md	155	F9A8	39 2a 2a 00 28 04 30 60 3f 6f 19 19	39 2a 2a 00 28 04 30 60 3f 6f 19 19	PASS	eq	
+77-dsp-tx-sources.md	70	34984	7e 4d 73 30	7e 4d 73 30	PASS	eq	btst #3,@0xFFFF4D:8
+77-dsp-tx-sources.md	74	34A6A	5e 03 58 72	5e 03 58 72	PASS	eq	
+77-dsp-tx-sources.md	69	3497C	6a 0? 95 6d	6a 0c 95 6d	PASS	eq	
+77-dsp-tx-sources.md	92	359C8	5e 05 a2 f8	5e 05 a2 f8	PASS	eq	jsr @0x05A2F8
+77-dsp-tx-sources.md	93	359A8	5e 05 a2 8a	5e 05 a2 8a	PASS	eq	jsr @0x05A28A
+77-dsp-tx-sources.md	94	3596A	5e 05 a1 be	5e 05 a1 be	PASS	eq	jsr @0x05A1BE
+77-dsp-tx-sources.md	199	358CA	6a 10 b0 cc	6a 10 b0 cc	PASS	eq	bit test on B0CC
+77-dsp-tx-sources.md	199	358D4	6a 10 aa d4	6a 10 aa d4	PASS	eq	bit test on AAD4
+77-dsp-tx-sources.md	100	3594C	fc 02 6a 8c b0 c7	fc 02 6a 8c b0 c7	PASS	eq	mov.b #2 -> @B0C7
+77-dsp-tx-sources.md	99	5A224	fc 0b within +0xC	found at 5A22A: fc 0b	PASS	contains	0x0B immediate in 0x05A224..+12
+77-dsp-tx-sources.md	92	5C40A	1c 03	00 05 b4 e4 00 05 b5 22	N/A	na	05C40A holds BE32 step pointers (0x05B4E4, 0x05B522, ...); "1C 03" is opcode notation, not a byte run at this address
+78-sub-merge-dead.md	95	FFF13DEC	3e 01 00	3e 01 00	PASS	eq	
+78-sub-merge-dead.md	96	FFF13EE8	2a 19	2a 19	PASS	eq	bgt.b +0x19 -> FFF13F01
+78-sub-merge-dead.md	97	FFF13EFF	2e 17	2e 17	PASS	eq	bra.b +0x17 -> FFF13F16
+78-sub-merge-dead.md	106	FFEF05E9	2e 53	2e 53	PASS	eq	bra.b +0x53 -> FFEF063C
+78-sub-merge-dead.md	109	FFF2A6F7	39 14 00	39 14 00	PASS	eq	bsr.w +0x14 -> FFF2A70B
+78-sub-merge-dead.md	157	FFEDC459	fb e2 44 2d 01 00	fb e2 44 2d 01 00	PASS	eq	
+78-sub-merge-dead.md	158	FFEDC45F	fa e5 7c 4f 00	fa e5 7c 4f 00	PASS	eq	immediately after the mov.l
+78-sub-merge-dead.md	162	FFF3753A	f0 e1 within +0x60	found at FFF3754F: f0 e1	PASS	contains	FFF3753A family body
+78-sub-merge-dead.md	162	FFF3753A	fb ee 12 38 08 within +0x60	found at FFF3753A: fb ee 12 38 08	PASS	contains	imm24 0x083812 -> r14
+78-sub-merge-dead.md	162	FFF3753A	fb ee 00 c1 08 within +0x60	found at FFF3754A: fb ee 00 c1 08	PASS	contains	imm24 0x08C100 -> r14
+78-sub-merge-dead.md	163	FFF3753A	fb ee 04 00 08 within +0x60	found at FFF37558: fb ee 04 00 08	PASS	contains	imm24 0x080004 -> r14
+78-sub-merge-dead.md	163	FFF3753A	fa e9 fd 01 03 a5 within +0x60	found at FFF3755D: fa e9 fd 01 03 a5	PASS	contains	mov.w #0xA503,3FAh[r14]
+79-sub-icon-glyph-fields.md	167	FFED7F60	le32 0x0080003F	3f 00 80 00	PASS	le32	geometry record 0 field 0
+79-sub-icon-glyph-fields.md	167	FFED7F8C	le32 0x00FF003F	3f 00 ff 00	PASS	le32	geometry record 1 field 0
+79-sub-icon-glyph-fields.md	163	FFF362F7	ff ff 7d within +0x27	found at FFF362F9: ff ff 7d	PASS	contains	imm 0x7DFFFF in FFF362F7-FFF3631D
+79-sub-icon-glyph-fields.md	163	FFF362F7	fb e2 60 7f ed ff within +0x27	found at FFF36301: fb e2 60 7f ed ff	PASS	contains	mov.l #FFED7F60
+80-settings-49.md	66	CE40	02 03 04 05 06 07 08 09 01 0f 00	02 03 04 05 06 07 08 09 0a 01 0f	FAIL	eq	
+80-settings-49.md	24	1935E	79 01 00 aa 5a	5a 03 cc bc 79	FAIL-OFFSET	eq	stub start for n=0xAA; run found at 1935A (delta -4)
+80-settings-49.md	108	192A8	79 01 00 17 5a 03 cc bc	79 01 00 17 5a 03 cc bc	PASS	eq	
+80-settings-49.md	144	192A0	79 01 00 16 5a	79 01 00 16 5a	PASS	eq	mov.w #0x16,r1; jmp
+80-settings-49.md	145	19352	79 01 00 a9 5a	79 01 00 a9 5a	PASS	eq	mov.w #0xA9,r1; jmp
+80-settings-49.md	145	1935A	79 01 00 aa 5a	79 01 00 aa 5a	PASS	eq	mov.w #0xAA,r1; jmp
+80-settings-49.md	114	E678	6a 8? 89 ca	6a 8c 89 ca	PASS	eq	store to FF89CA
+81-ledger-reverify.md	44	55684	6a 0c ee 10	6a 0c ee 10	PASS	eq	
+81-ledger-reverify.md	44	554A4	7a 04 00 ff 58 06	7a 04 00 ff 58 06	PASS	eq	
+81-ledger-reverify.md	45	54C1C	24 28 80 00 02	24 28 80 00 02	PASS	eq	
+81-ledger-reverify.md	45	56B58	6a 0b b1 02	6a 0b b1 02	PASS	eq	
+81-ledger-reverify.md	45	5F4B0	7a 04 00 ff 50 06	7a 04 00 ff 50 06	PASS	eq	
+81-ledger-reverify.md	46	28D0C	01 00 6f 16 00 00 5d 60	01 00 6f 16 00 00 5d 60	PASS	eq	
+81-ledger-reverify.md	46	326A	01 00 6f 36 32 72 59 60	01 00 6f 36 32 72 59 60	PASS	eq	
+81-ledger-reverify.md	47	3272	00 00 32 7e 00 00 32 8a 00 00 32 9c	00 00 32 7e 00 00 32 8a 00 00 32 9c	PASS	eq	
+81-ledger-reverify.md	47	FFED7990	5b f0 f0 ff	5b f0 f0 ff	PASS	eq	
+81-ledger-reverify.md	48	FFF0F05B	60 40 60 40 f8 05	60 40 60 40 f8 05	PASS	eq	
+81-ledger-reverify.md	48	FFEDFFFD	fb e2 d4 cd 01 00	fb e2 d4 cd 01 00	PASS	eq	
+81-ledger-reverify.md	53	178F0	7a 01 00 01 a0 84	7a 01 00 01 a0 84	PASS	eq	
+81-ledger-reverify.md	53	15224	5d 10	5d 10	PASS	eq	
+81-ledger-reverify.md	118	5567E	7a 15 00 ff 58 06	7a 15 00 ff 58 06	PASS	eq	
+81-ledger-reverify.md	119	55520	6a 0c aa e8 46 f8	6a 0c aa e8 46 f8	PASS	eq	
+81-ledger-reverify.md	49	FFF4A4E6	Connected\x00	Connected\x00	PASS	ascii	
+81-ledger-reverify.md	57	28C3E	be32 0x0002A924	00 02 a9 24	PASS	be32	
+81-ledger-reverify.md	57	28C42	be32 0x0003FFA0	00 03 ff a0	PASS	be32	
+81-ledger-reverify.md	57	28C46	be32 0x00028C4A	00 02 8c 4a	PASS	be32	
+81-ledger-reverify.md	57	28C9E	be32 0x0002A9F4	00 02 a9 f4	PASS	be32	
+81-ledger-reverify.md	57	28CA2	be32 0x0003FFA0	00 03 ff a0	PASS	be32	
+81-ledger-reverify.md	57	28CA6	be32 0x00028CAA	00 02 8c aa	PASS	be32	
+82-eeprom-verify.md	65	3BDB4	6a 18 fb a4 70 00	6a 18 fb a4 70 00	PASS	eq	
+82-eeprom-verify.md	66	3BDCE	6a 18 fb a4 70 10	6a 18 fb a4 70 10	PASS	eq	
+82-eeprom-verify.md	66	3BDE8	6a 18 fb a4 72 00	6a 18 fb a4 72 00	PASS	eq	
+82-eeprom-verify.md	66	3BE02	6a 18 fb a4 72 10	6a 18 fb a4 72 10	PASS	eq	
+82-eeprom-verify.md	68	3BE4E	6a 10 fb a0	6a 10 fb a0	PASS	eq	
+82-eeprom-verify.md	69	3BE84	6a 8a fb a8	6a 8a fb a8	PASS	eq	
+82-eeprom-verify.md	70	3C3E2	6a 18 fb a4 67 00	6a 18 fb a4 67 00	PASS	eq	
+82-eeprom-verify.md	73	3C3AC	fd a2	fd a2	PASS	eq	
+82-eeprom-verify.md	73	3BE1C	fd a3	fd a3	PASS	eq	
+82-eeprom-verify.md	90	33536	7f 5c 72 70	7f 5c 72 70	PASS	eq	
+82-eeprom-verify.md	91	335BC	7f 5c 70 70	7f 5c 70 70	PASS	eq	
+82-eeprom-verify.md	93	33554	7f 5a 67 00	7f 5a 67 00	PASS	eq	
+82-eeprom-verify.md	94	335A4	7e 4a 77 00	7e 4a 77 00	PASS	eq	
+82-eeprom-verify.md	96	33580	6a 8c fb 8a	6a 8c fb 8a	PASS	eq	
+82-eeprom-verify.md	96	335D0	6a 8c fb 8a	6a 8c fb 8a	PASS	eq	
+82-eeprom-verify.md	99	335B8	6b 83 bc 68	6b 83 bc 68	PASS	eq	
+82-eeprom-verify.md	104	77DB2	5e 03 35 32	5e 03 35 32	PASS	eq	
+82-eeprom-verify.md	106	77DF6	5e 03 35 32	5e 03 35 32	PASS	eq	
+82-eeprom-verify.md	146	3C996	58 60	58 60	PASS	eq	
+82-eeprom-verify.md	115	5E96A	6a 04 8d d8	6a 04 8d d8	PASS	eq	
+82-eeprom-verify.md	116	5E96E	6a 0c 8d d9	6a 0c 8d d9	PASS	eq	
+82-eeprom-verify.md	117	5E972	0d 4c	0d 4c	PASS	eq	
+82-eeprom-verify.md	118	5E974	6a 10 8e a0 73 60	6a 10 8e a0 73 60	PASS	eq	
+82-eeprom-verify.md	119	5E97A	47 0a	47 0a	PASS	eq	
+82-eeprom-verify.md	120	5E97C	6a 04 8e d8	6a 04 8e d8	PASS	eq	
+82-eeprom-verify.md	121	5E980	6a 0c 8e d9	6a 0c 8e d9	PASS	eq	
+82-eeprom-verify.md	122	5E984	40 08	40 08	PASS	eq	
+82-eeprom-verify.md	123	5E986	6a 04 8e d6	6a 04 8e d6	PASS	eq	
+82-eeprom-verify.md	124	5E98A	6a 0c 8e d7	6a 0c 8e d7	PASS	eq	
+82-eeprom-verify.md	125	5E98E	01 00 6b 84 b0 5a	01 00 6b 84 b0 5a	PASS	eq	
+82-eeprom-verify.md	126	5E994	79 0b f3 65	79 0b f3 65	PASS	eq	
+82-eeprom-verify.md	127	5E998	5e 00 99 22	5e 00 99 22	PASS	eq	
+82-eeprom-verify.md	138	7910	be32 0x0005E96A	00 05 e9 6a	PASS	be32	
+RESUME-FULL.md	122	1B8	00 00 2a 30	00 00 2a 30	PASS	eq	bytes continue on next line
+RESUME-FULL.md	166	3C3AC	fd a2	fd a2	PASS	eq	address from doc 82
+RESUME-FULL.md	166	3BE1C	fd a3	fd a3	PASS	eq	address from doc 82
+RESUME-FULL.md	29	52232	5d 60	5d 60	PASS	eq	
+RESUME-FULL.md	30	4E31C	54 70	54 70	PASS	eq	
+RESUME-FULL.md	29	4ACF4	be32 0x0004E2D6	00 04 e2 d6	PASS	be32	
+RESUME-FULL.md	102	FBC8	fb 09 18 bc within +0x18	found at FBD4: fb 09 18 bc	PASS	contains	
+RESUME-FULL.md	100	FDFE	fc 14	fc 14	PASS	eq	the only injector
+RESUME-FULL.md	120	24A2	79 04 4e 20	79 04 4e 20	PASS	eq	
+RESUME-FULL.md	119	2482	fc 21 6a 8c fe f0	fc 21 6a 8c fe f0	PASS	eq	
+76-dsp-tpu-tick.md	186	565FA	79 2c 89 80	79 2c 89 80	PASS	eq	guard-sites.tsv row (doc 76 Findings 4)
+76-dsp-tpu-tick.md	186	56650	79 2c 89 80	79 2c 89 80	PASS	eq	guard-sites.tsv row (doc 76 Findings 4)
+76-dsp-tpu-tick.md	186	5A1CA	79 2c 89 80	79 2c 89 80	PASS	eq	guard-sites.tsv row (doc 76 Findings 4)
+76-dsp-tpu-tick.md	186	5A25C	79 2c 89 80	79 2c 89 80	PASS	eq	guard-sites.tsv row (doc 76 Findings 4)
+76-dsp-tpu-tick.md	186	5A296	79 2c 89 80	79 2c 89 80	PASS	eq	guard-sites.tsv row (doc 76 Findings 4)
+76-dsp-tpu-tick.md	186	5A304	79 2c 89 80	79 2c 89 80	PASS	eq	guard-sites.tsv row (doc 76 Findings 4)
+76-dsp-tpu-tick.md	186	5A352	79 2c 89 80	79 2c 89 80	PASS	eq	guard-sites.tsv row (doc 76 Findings 4)
+76-dsp-tpu-tick.md	186	5B8AC	79 2c 89 80	79 2c 89 80	PASS	eq	guard-sites.tsv row (doc 76 Findings 4)
+76-dsp-tpu-tick.md	186	5B8E4	79 2c 89 80	79 2c 89 80	PASS	eq	guard-sites.tsv row (doc 76 Findings 4)
+71-key-dispatch-028cbc.md	97	28452	n=5; X 0..319; Y [31,59][61,89][91,119][121,149][151,179]; idx 1..5	n=5; X [(0, 319)]; Y [(31, 59), (61, 89), (91, 119), (121, 149), (151, 179)]; idx [1, 2, 3, 4, 5]	PASS	lut	zone table decode
+71-key-dispatch-028cbc.md	98	2706C	n=4; Y [128,180]; X [14,64][94,144][174,224][254,304]; idx 10..13	n=4; Y [(128, 180)]; X [(14, 64), (94, 144), (174, 224), (254, 304)]; idx [10, 11, 12, 13]	PASS	lut	zone table decode
+71-key-dispatch-028cbc.md	99	27274	n=19; indices 30..45 plus 3 [others]	n=19; idx [3, 4, 5, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]	PASS	lut	zone table decode; "plus 3" read as three further zones (indices 3/4/5)
+71-key-dispatch-028cbc.md	96	nine LUTs	max X 0x13F (319), max Y 0xEE (238)	max X 0x13F, max Y 0xEE, min Y 0x1F, 66 zones	PASS	lut	all nine zone tables
+79-sub-icon-glyph-fields.md	19	FFED55E0	223 kind=2 (bmp_desc in FFECE55C-FFED3F6C); 30 kind=0; 1 stray	kind histogram {0: 30, 2: 223, 1095062017: 1}; kind=2 with desc in range 223	PASS	table	254 x 28 B icon records
+79-sub-icon-glyph-fields.md	129	FFED4644	block8==block2; blocks 9-25 base 0x0020; blocks 0-7 incl 0x2121/0x5021/0x9321	base codes 0-8: ['0x9321', '0x5021', '0x2121', '0x20', '0x2d21', '0x2124', '0x7921', '0x2122', '0x2121']; 9-25 all 0x20: False; b8==b2: True	FAIL	table	26 x 12 B font blocks; prose descriptor only: block 3 is 7x14 base 0x0020, blocks 11/18 have base 0x0023/0x002E (lane font_blocks.tsv agrees with image)
+79-sub-icon-glyph-fields.md	145	FFED49E0	first base_code 0x2422; +2 always 0; ascending	first 0x2422; rsvd all 0: True; ascending: True	PASS	table	45 x 8 B glyph_tbl8
+79-sub-icon-glyph-fields.md	168	FFED7F60	field 7 == 1 for records 2..12	field7 = [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]	PASS	table	13 x 44 B geometry records
+80-settings-49.md	45	19A9E	no exit slot targets 0x192A0/0x192A8/0x19352/0x1935A	hits=[]	PASS	table	206 BE16 exit offsets
+80-settings-49.md	46	19A9E	id 0x2B->0x19290 then id 0x3E->0x192B0, nothing in between	index 0x1D->0x19290, index 0x30->0x192B0 (index+0x0E = 0x2B/0x3E); targets strictly between: []	PASS	table	id numbering = table index + 0x0E (bias not independently verified)

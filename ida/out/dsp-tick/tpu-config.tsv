@@ -1,0 +1,18 @@
+channel	reg	addr	value	file_off	bytes	decode	meaning
+TPU5	TCR	0xFFFEF0	0x21	0x002482	fc 21 6a 8c fe f0	mov.b #0x21,r4l ; mov.b r4l,@0xFFFEF0:16	CCLR=001 clear-on-TGRA; CKEG=00; TPSC=001 = Pphi/4
+TPU5	TMDR	0xFFFEF1	0xC0	0x002488	fc c0 6a 8c fe f1	mov.b #0xC0,r4l ; mov.b r4l,@0xFFFEF1:16	MD=0000 normal; bits7:6 reserved=11
+TPU5	TIOR	0xFFFEF2	0x00	0x00248E	fc 00 6a 8c fe f2	mov.b #0,r4l ; mov.b r4l,@0xFFFEF2:16	no pin output compare
+TPU5	TIER	0xFFFEF4	0x41	0x002494	fc 41 6a 8c fe f4	mov.b #0x41,r4l ; mov.b r4l,@0xFFFEF4:16	TGIEA=1 (TGRA match IRQ enabled); bit6 set
+TPU5	TCNT	0xFFFEF6	0x0000	0x00249A	79 04 00 00 6b 84 fe f6	mov.w #0,r4 ; mov.w r4,@0xFFFEF6:16	counter preset 0
+TPU5	TGRA	0xFFFEF8	0x4E20	0x0024A2	79 04 4e 20 6b 84 fe f8	mov.w #0x4E20,r4 ; mov.w r4,@0xFFFEF8:16	compare value 20000
+shared	TSTR	0xFFFFBC	0x20	0x0024AA	fc 20 3c bc	mov.b #0x20,r4l ; mov.b r4l,@0xFFBC:8	start bit5 -> TPU5 running
+shared	TSYR	0xFFFFBD	0x00	0x0024AE	fc 00 3c bd	mov.b #0,r4l ; mov.b r4l,@0xFFBD:8	no channel sync
+TPU3(guard)	TCR	0xFFFFF0	0x00	0x0022F6	fc 00 3c f0	mov.b #0,r4l ; mov.b r4l,@0xFFF0:8	CCLR=000 no clear (free run); TPSC=000 = Pphi/1
+TPU3(guard)	TMDR	0xFFFFF1	0xC0	0x0022FA	fc c0 3c f1	mov.b #0xC0,r4l ; mov.b r4l,@0xFFF1:8	MD=0000 normal
+TPU3(guard)	TIER	0xFFFFF4	0x40	0x002304	fc 40 3c f4	mov.b #0x40,r4l ; mov.b r4l,@0xFFF4:8	TGIEA=0 (no TGRA IRQ); polled, not interrupt-driven
+TPU3(guard)	TCR-restart	0xFFFFF0	0x00	0x056776	79 04 00 00 3c f0	mov.w #0,r4 ; mov.b r4l,@0xFFF0:8	re-asserts Pphi/1 at timeout restart
+TPU3(guard)	TCR-restart	0xFFFFF0	0x00	0x056826	79 04 00 00 3c f0	mov.w #0,r4 ; mov.b r4l,@0xFFF0:8	re-asserts Pphi/1 at timeout restart
+TPU3(guard)	TCR-restart	0xFFFFF0	0x00	0x056950	79 04 00 00 3c f0	mov.w #0,r4 ; mov.b r4l,@0xFFF0:8	re-asserts Pphi/1 at timeout restart
+note	TCR5-writes	0xFFFEF0	-	-	6a 8c fe f0	only ONE store in image (0x002484)	prescaler never changed after init
+note	TGRA5-writes	0xFFFEF8	-	-	79 04 4e 20	only ONE occurrence as instruction (0x0024A2)	compare value never changed after init
+note	TCRf0-writes	0xFFFFF0	-	-	3c f0	four stores (0x022F8,0x56776,0x56826,0x56950) all value 0x00	guard prescaler always Pphi/1

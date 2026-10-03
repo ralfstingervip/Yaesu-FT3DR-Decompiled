@@ -1,0 +1,8 @@
+class_FEF963	validator	letters_FEF964_and_length_check	store	letter_cell	notes
+]	sub_058060	A<0x5C B<0x6E C=0x19 E=0x23 F<0x40D L<0x40D M=0x60 P=0x51 Q=0x81 R=0x93 T=0x91 V=0x60 0=0x1A a=0x11 v=0x28 m=0x28 G<0x5D H<0x6F S=0x86 U=0x98 D<0x40D	FF0BF4 len / FF0BF6 data when [8DDE]>=0; FF1440 / FF1442 when [8DDE]<0; P goes to FF07A4 / FF07A6	B267 or B3FA	letter table 0x42CC; M V a v m also register the caller via 0x05D382/0x05D3BA
+N	sub_057FC0	b<0x40D c=0x50 d=0x62 e=0x0E; first-frame length preset at 0x05892E from rx[8..16]	FF07A4 len / FF07A6 data	B259	letter table 0x41CC; the largest RX message (up to 1037 B)
+G	sub_058440	c=8 d=0x1A e=0x84 f=0x96 g=0x44 h=0x56 i<0x3F2 0=0x1C r<0x172 R<0x181 s<0x181	FF1440 len / FF1442 data (g and h go to FF07A4)	B3FA (B3FB=9)	letter table 0x43CC
+"	sub_058616	a or b, length<0x15	none; caller registration via 0x05D382; if [B3F9] then sub_058538 builds a G reply into FF1440	-	-
+^	loc_05863A	a b c d (table 0x40CC maps a,b to V and c,d to D), length<0x65	none; caller registration via 0x05D382	-	-
+(all)	sub_058E6E	destination filter: CM=0 dest equals '**********' (0x59B44); CM=3 dest equals own callsign FFA8DA; CM=1 dest[5..9] alphanumeric	-	-	runs before every store
+(host-link)	sub_05EA3A	[B3E0]!=0	FEFD72 copy (len+0x42); B3D7 b2	-	relays the message toward the SCI-A host path

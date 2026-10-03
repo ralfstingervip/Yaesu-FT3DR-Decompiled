@@ -1,0 +1,96 @@
+=== 015260  func=015260-01529C  crefs=015FC4,015FF4,016218,016588,016674,01686A,016AAA,016B08,0174D6,0177B4,01792A,017AA2,01861E,019C40,019C94,05E57C,05E802  drefs=
+  015260  01006df5             push.l  er5
+  015264  fc00                 mov.b   #0, r4l
+  015266  01006d75             pop.l   er5
+  01526A  7a0200000000         mov.l   #0, er2
+  015270  6a0aad68             mov.b   @0xFFFFAD68:16, r2l
+  015274  4606                 bne     loc_1527C:8
+  015276  5e014e04             jsr     loc_14E04:24
+  01527A  401e                 bra     locret_1529A:8
+  01527C  6a0cad9d             mov.b   @0xFFFFAD9D:16, r4l
+  015280  4706                 beq     loc_15288:8
+  015282  01006956             mov.l   @er5, er6
+  015286  400a                 bra     loc_15292:8
+  015288  1072                 shll.l  #2, er2
+  01528A  0aa5                 add.l   er2, er5
+  01528C  01006956             mov.l   @er5, er6
+  015290  4708                 beq     locret_1529A:8
+  015292  5d60                 jsr     @er6
+  015294  4004                 bra     locret_1529A:8
+  015296  01006d75             pop.l   er5
+  01529A  5470                 rts
+=== 053384  func=053384-0533F6  crefs=05364C,053658  drefs=
+  053384  fd00                 mov.b   #0, r5l
+  053386  6a8db08d             mov.b   r5l, @0xFFFFB08D:16
+  05338A  7a0300000000         mov.l   #0, er3
+  053390  fa00                 mov.b   #0, r2l
+  053392  7a62000000ff         and.l   #0xFF, er2
+  053398  1072                 shll.l  #2, er2
+  05339A  0ac2                 add.l   er4, er2
+  05339C  6a0cbbe8             mov.b   @0xFFFFBBE8:16, r4l
+  0533A0  7a050002c3cf         mov.l   #asc_2C3CF, er5; "                                       "...
+  0533A6  7a0600ffb05a         mov.l   #0xFFB05A, er6
+  0533AC  f400                 mov.b   #0, r4h
+  0533AE  7bd4598f             eepmov.w
+  0533B2  0d44                 mov.w   r4, r4
+  0533B4  46f8                 bne     loc_533AE:8
+  0533B6  01006d25             mov.l   @er2+, er5
+  0533BA  4730                 beq     loc_533EC:8
+  0533BC  01106df2             stm.l   er2-er3, @-sp
+  0533C0  01006b83b050         mov.l   er3, @0xFFFFB050:16
+  0533C6  5d50                 jsr     @er5
+  0533C8  6a0cbbe8             mov.b   @0xFFFFBBE8:16, r4l
+  0533CC  7a0500ffb05a         mov.l   #0xFFB05A, er5
+  0533D2  01006b06bc2c         mov.l   @0xFFFFBC2C:16, er6
+  0533D8  f400                 mov.b   #0, r4h
+  0533DA  7bd4598f             eepmov.w
+  0533DE  0d44                 mov.w   r4, r4
+  0533E0  46f8                 bne     loc_533DA:8
+  0533E2  01006b86bc2c         mov.l   er6, @0xFFFFBC2C:16
+  0533E8  01106d73             ldm.l   @sp+, er2-er3
+  0533EC  0b53                 inc.w   #1, r3
+  0533EE  79230005             cmp.w   #5, r3
+  0533F2  45a8                 bcs     loc_5339C:8
+  0533F4  5470                 rts
+=== 0286A6  func=0286A6-0286CA  crefs=029B4C,029D6E,029D78,029D82,029D8C,029D96,029DA0,029DAA,029DB4,029DBE,02B06A,02B074  drefs=
+  0286A6  6b04bbc2             mov.w   @0xFFFFBBC2:16, r4
+  0286AA  79240017             cmp.w   #0x17, r4
+  0286AE  4414                 bcc     loc_286C4:8
+  0286B0  1b54                 dec.w   #1, r4
+  0286B2  4b10                 bmi     loc_286C4:8
+  0286B4  790c0000             mov.w   #0, e4
+  0286B8  1074                 shll.l  #2, er4
+  0286BA  0ac6                 add.l   er4, er6
+  0286BC  01006966             mov.l   @er6, er6
+  0286C0  5d60                 jsr     @er6
+  0286C2  4004                 bra     locret_286C8:8
+  0286C4  5e03ffa0             jsr     sub_3FFA0:24
+  0286C8  5470                 rts
+=== 0285CE  func=0285CE-0285F2  crefs=02872C,028A6A,029072,029170  drefs=
+  0285CE  6b04bbc2             mov.w   @0xFFFFBBC2:16, r4
+  0285D2  79240007             cmp.w   #7, r4
+  0285D6  4414                 bcc     loc_285EC:8
+  0285D8  1b54                 dec.w   #1, r4
+  0285DA  4b10                 bmi     loc_285EC:8
+  0285DC  790c0000             mov.w   #0, e4
+  0285E0  1074                 shll.l  #2, er4
+  0285E2  0ac6                 add.l   er4, er6
+  0285E4  01006966             mov.l   @er6, er6
+  0285E8  5d60                 jsr     @er6
+  0285EA  4004                 bra     locret_285F0:8
+  0285EC  5e03ffa0             jsr     sub_3FFA0:24
+  0285F0  5470                 rts
+=== 0285AA  func=0285AA-0285CE  crefs=02AC0E,02ACB8,02B292,02B49E,02B89A,02B8B8,02B8F8,02B902,02B90C  drefs=
+  0285AA  6b04bbc2             mov.w   @0xFFFFBBC2:16, r4
+  0285AE  79240006             cmp.w   #6, r4
+  0285B2  4414                 bcc     loc_285C8:8
+  0285B4  1b54                 dec.w   #1, r4
+  0285B6  4b10                 bmi     loc_285C8:8
+  0285B8  790c0000             mov.w   #0, e4
+  0285BC  1074                 shll.l  #2, er4
+  0285BE  0ac6                 add.l   er4, er6
+  0285C0  01006966             mov.l   @er6, er6
+  0285C4  5d60                 jsr     @er6
+  0285C6  4004                 bra     locret_285CC:8
+  0285C8  5e03ffa0             jsr     sub_3FFA0:24
+  0285CC  5470                 rts

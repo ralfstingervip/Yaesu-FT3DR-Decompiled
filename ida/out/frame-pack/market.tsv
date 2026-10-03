@@ -1,0 +1,60 @@
+# Lane H12 - destination (market) byte FF800F and its companions, MAIN ver 1.02 EXP (H8SX, base 0).
+# FF800F = destination index 0..7 (EEPROM 0x21 per pc-02); FF8010 = sub-variant 0/1 (EEPROM 0x22); FF8011 = port 0xFFFF4E bit 2 sampled at boot (sub_DDE4).
+# Clone-header name table 0x68A8 (sub_6864): index = dest + 0 / 8 / 16 -> " F1 "," A1 "," B1 "," C1 "," D1 "," H1 ","*** ","HAM " (suffix 1/2/3).
+# status: C = Confirmed (insn read), I = Inferred, U = Unknown. "noop" = conditional branch to the next instruction (no effect).
+kind	site	function	test	effect	status
+source	0x00DE0A	sub_DDFE	virgin/invalid EEPROM (DEFA loop 0x80 tries, cmp word F010; 0xDF2C)	FF800F=2, FF8010=1, FF8011=port bit	C
+source	0x00DDE4	sub_DDE4	reads bit 2 of @0x4E:8 (=0xFFFF4E) until two reads agree, r3l tries	returns bit in r5l; stored to FF8011 at 0xDE1A, 0xDF46 (on change)	C
+source	0x0236E2	editor commit (no static xref; screen 0xE8)	AD95 cycled 0..7 (tbl 0x23686 = 00 07 00ff ad95) if FF8011!=0, else only 2<->3 (tbl 0x2368C = 02 03 00ff ad95)	FF800F=AD95, FF8010=AD96 (forced 0 for dest 6/7 when FF8011!=0); sub_39544 (EEPROM write); jmp 0xDBD8 (warm restart)	C (editor role I)
+source	0x010288	sub_10276	boot-hold table 0x10216 index 7 (port value 0x73) -> handler ptr 0x10242[7]=0x1026E; gate sub_23410 (opening-message fields FF8955/FF8958/FF895C vs ROM constant 0x23442) and FF8EA7.b7 clear	copies FF800F/FF8010 to edit vars AD95/AD96, screen @(1,er0)=0xE8	C (path), I (purpose)
+source	0x0740F6	sub_740E2	r1h<8, r1l<2 (reached from 0x740D8, no static xref)	FF800F=r1h, FF8010=r1l (0 for dest 6/7); sub_39544; jmp 0xDBC4 restart	C (caller U)
+const	0x0734BE	sub_734BE	none	returns 2 -> "EXP" from "USA JPN EXP " at 0x06BE28 (0x6BD7C add.l #0x6BE28); used in clone header 0xFEE016 and BACKUP ID byte 5 (0x737E2)	C
+pred	0x03ECB8	sub_3ECB8	Z iff FF800F==0	22 callers	C
+pred	0x03ECD4	sub_3ECD4	Z iff FF800F==1	6 callers	C
+pred	0x03ECDE	sub_3ECDE	r4l=0 (Z) iff 2<=FF800F<=4	callers 22230 2225C 22294 2F782 2F95C 2F99E 31252 31404 31446 3D2CC 3FE68 (purpose U)	C
+pred	0x03ECC4	sub_3ECC4	Z iff FF800F in {0,6}	no xref (dead)	C
+pred	0x03F386	sub_3F386	index = 4*FF800F (+FF8010+FF8011 if FF8010!=0)	callers 1C2BA 1C360 1C394 1D268 3F3B4 3F4EC 3F546 74ABE 75096	C
+gate	0x00E7F8	sub_DEFA (factory defaults)	btst FF800F,@0xF6C2 (=0x3F: dest 0..5)	bset FF89C0.b7, FF89BE.b3	C
+gate	0x00E80E	sub_DEFA	FF800F!=0	FF8BC9 (TIME ZONE)=0x1A (UTC 00:00; JPN default stays 0x2C = +09:00), FF89BA=6, bset FF89BE.b7 (SCAN WIDTH default BAND), bset FF89C0.b2,b1, bset FF89C2.b1 (LANGUAGE=English), bclr FF89C2.b5, FF8D8E=1	C
+gate	0x00E844	sub_DEFA	FF800F in 2..4	bset FF89C0.b0	C
+gate	0x00E440	sub_DEFA	index FF800F	FF8D96 = BCD [0xF958+4d] (145.78/146.55/145.375 MHz...), FF8D92 = [0xF978+d], FF8D9A = [0xF980+4d] (438.98/446.5/433.45...), FF8D93 = [0xF9A0+d]	C
+gate	0x00E8EA	sub_E8AE (called 0xDCDE in reset)	FF800F!=0	record +0x11 of FF8EE0/FF8FE8/FF90F0 (FF8EF1/FF8FF9/FF9101) = 3, else 6	C
+gate	0x00E9E0	sub_E9CC (band plan)	FF800F!=0	segment 2 start 50.0 MHz instead of 51.0 MHz	C
+gate	0x00EA14	sub_E9CC	FF800F!=0	segment 8 start 222.0 MHz instead of 380.0 MHz	C
+gate	0x00EA92	sub_EA92	index FF800F	BCD tables 0xF022 (76/88 MHz), 0xF042, 0xF062 (175.75/174), 0xF082 (481.75/470) per destination	C
+gate	0x00EAD2	sub_EAD2	index FF800F	tables 0xF6A2 / 0xF682 (segment 9 / 6 lower edges)	C
+gate	0x00EAB8	sub_EAB0	FF800F!=1 and not 817E.b0	adds extra segment via sub_EAD2	C
+gate	0x00EBC0	sub_EAD2	FF800F==1 and band 6/9	skips sub_3A390	C
+gate	0x00EBE2	sub_EBE0	FF800F!=0	value 0x0C instead of 8 (packed record +0x1B)	C
+gate	0x01E652	sub_1E646	dest 0/6 vs 1/5 vs other	frequency tables 0x20BB4 / 0x20BE0 / 0x20BFC, 0x20C18 / 0x20C24 (fixed-mode segments, +0x39 b3)	C
+gate	0x01E6EE	sub_1E6E2	dest 0/6 vs 1/5 vs other	step tables 0x40D2C / 0x40F92 / 0x4116C (fixed-step segments, +0x39 b4)	C
+gate	0x01E59E	sub_1E59E	FF800F==0	band 8 check via sub_32650	C
+gate	0x01E5F6	sub_1E5F6	FF800F==0 and table 0x20D50	record +0x16=1, +0x17=8	C
+gate	0x01E620	sub_1E620	FF800F==0 and table 0x20D50	record +0x16=0	C
+gate	0x016FAC	sub_16F82 (menu cycle of record +0x16)	FF800F!=0	value 5 skipped	C
+gate	0x01D24C	sub_1D220	FF800F!=0	alternative cycle table 0x1D2BA (skips 3/5/8 handling)	C
+gate	0x01D2C0	sub_1D2C0	FF800F==0	checks [FF8122]+0x11==6	C
+gate	0x014F96	sub_14F8E	FF800F==0	value 0x8F re-cycled	C
+gate	0x01A370	(no func)	FF800F==0	AD97 branch at 0x1A378	C
+gate	0x010D66	sub_10CC4	FF800F!=0	extra sub_328DA check	C
+gate	0x02FB00	sub_2FAEC	FF800F==0 and mode 5	FF811A=0x1784, record +0x93=7	C
+gate	0x0315A8	sub_31594	FF800F==0 and mode 5	FF811E=0x1F54, record +0x93=7	C
+gate	0x0328A6	sub_328A6	FF800F!=0	band-2 check (sub_2EAEE, record +5==2)	C
+gate	0x032650	sub_32650	FF800F==0, r3l in {8,0xB}, FF8011==0	alternate return	C
+gate	0x032BDC	sub_32BDC	index FF800F	FF92C8 = ptr table 0x32BFA	C
+gate	0x035776	(no func)	index FF800F	byte table 0x357C4	C
+gate	0x063C7A	sub_63C16	FF800F!=0	bset FFB963.b0, FFB421=4	C
+gate	0x02CE8A	sub_2CE6A	FF800F==1	noop (bne to next insn 0x2CE90)	C
+gate	0x033250	sub_331DC	FF800F==1	FFBC6C=1	C
+gate	0x01E524	sub_1E506	FF800F==1	noop (bne 0x1E52A = next insn)	C
+gate	0x03F56E	sub_3F522	FF800F==1	noop (bne 0x3F574 = next insn); then table 0xF5D2 (blocked-range pointer array, doc 12)	C
+gate	0x00EAA8	sub_EAA8	FF800F==0	noop (beq to next insn)	C
+gate	0x01D40E	sub_1D40E	FF800F==6 or FF8010!=0	feature path; else 0x1D51C	C
+gate	0x01D618	(no func)	FF800F==6 or FF8010!=0	sub_33DC8 path	C
+gate	0x02136A	sub_21332	FF800F==6 or FF8010!=0	sub_213BE path	C
+gate	0x03F4A2	sub_3F4A2	FF800F in {0,6} or FF8011==0	tables 0xF0AE/0xF0BE else 0xF672 into FF92CE/FF92D6	C
+gate	0x07516A	sub_75160 (clone load)	switch FF800F 1/2/3/4..	destination-specific record conversion	C
+gate	0x075554	sub_75554 (clone load)	switch FF800F 1/2/3/4..	destination-specific record conversion	C
+check	0x07357A	sub_7357A	returns FF800F/8010/8011	BACKUP.dat ID check bytes 6-9 (pc-02)	C
+name	0x006864	sub_6864	FF800F,FF8010,FF8011	3-char code from 0x68A8 -> clone header 0xFEE019	C
+sub	0x007C26	sub_7C20	none	frame+6 (FF3D7A -> SUB 0x8C53) is the constant 2; no destination byte reaches the SUB in the F3xx header	C

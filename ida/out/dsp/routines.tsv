@@ -1,0 +1,41 @@
+cpu	name	address	role
+MAIN	sub_56492	0x00056492	enter the DSP link: state 0xFFB0A6 = 1, timer 0xFF9552 = 0x0A, bset bit0 of 0xFFFF52
+MAIN	sub_564B2	0x000564B2	DSP power-on / reset: 0xFFB0A2 = 0x80, field at 0xFFFD6A = 0x10, set bit2 of 0xFFFB90 and 0xFFFF34, clear bit2 of 0xFFFF36
+MAIN	sub_564FA	0x000564FA	after the reset delay: bset bits 1, 2, 3 of 0xFFFF52, restart the timer, state = 2
+MAIN	sub_56520	0x00056520	SCI_A synchronous init: SCR=0x02, SMR=0x80, BRR=0x00, clear SSR, SCR=0x12, then SCR |= RIE; state = 4
+MAIN	sub_56056	0x00056056	DSP shutdown: clear every 0xFFFF52 bit, clear bit4 of 0xFFFF59, reset all link state
+MAIN	sub_565C0 / sub_565EE / sub_56626	0x000565C0	idle and timeout states; the TIME OUT:3sec! path
+MAIN	sub_566E4	0x000566E4	transmit a command frame: SCR=0x22, 0xFFBC8C=1, ER5 = @0xFFB13A, jsr sub_4834E, spin until done, state = 5
+MAIN	sub_5678E	0x0005678E	transmit the ACK/NAK frame from 0xFFB1A0 the same way, state = 7
+MAIN	sub_56732 / sub_567DC	0x00056732	switch back to receive: clear SSR flags, SCR=0x12, SCR |= RIE, state = 1
+MAIN	sub_4834E	0x0004834E	DMA transmit engine: wait TDRE, program DMAC ch1 (source = ER5, dest = 0xFFFF8B, count 0x20 or 0x60), set SCI_A TIE
+MAIN	sub_482D4	0x000482D4	DMA receive channel setup, ch0
+MAIN	sub_5615C	0x0005615C	SCI_A ERI/RXI interrupt handler, vectors 148 and 149
+MAIN	sub_5683E	0x0005683E	frame assembler and receive dispatcher: accumulates into 0xFFB0E0, verifies the trailing checksum, dispatches on the opcode
+MAIN	sub_56A94	0x00056A94	voice / data frame handler for opcodes 0xA6-0xAB and 0xB6-0xBB
+MAIN	sub_58FA2	0x00058FA2	finalise and queue a command frame: length from buf[0], 0xFFB13A = 0xFFB13E, compute and store the checksum
+MAIN	sub_58F86	0x00058F86	send the canned VER? packet at ROM 0x5901E; reached only through the request table at 0x5A3CE, index 0
+MAIN	sub_58F94	0x00058F94	send the canned STOP ENCODE packet at ROM 0x5903E
+MAIN	sub_58F2A	0x00058F2A	build the ACK frame, opcode 0x20, in 0xFFB1A0
+MAIN	sub_58EE6	0x00058EE6	build the NAK frame, opcode 0x10, in 0xFFB1A0
+MAIN	request table	0x0005A3CE	32-bit table of packet builders indexed by 0xFFB0B6 x 4; entry 0 = sub_58F86 VER?, entry 9 = sub_58F94 STOP ENCODE
+MAIN	state table	0x0005645C	32-bit table of link states indexed by 0xFFB0A6 x 4: 0x56490, sub_564FA, sub_56520, 0x565BC, 0x565BE, sub_565C0, sub_565C0, 0x566C2, sub_566C4, sub_566E4, sub_56732, sub_5678E, sub_567DC
+MAIN	trace string table	0x0005AE32	string pointer table for the CPU>DSP / DSP>CPU ASCII trace, loaded at 0x56420
+MAIN	sub_5A482	0x0005A482	ACK/NAK trace formatter, reads 0xFFB1A0
+MAIN	CPU>DSP trace formatter	0x0005A506	full command switch at 0x5A53E
+MAIN	DSP>CPU trace formatter	0x0005A7F2	full response switch at 0x5A82A
+MAIN	sub_5A0B4 / sub_5A0C0	0x0005A0B4	opcode 0x15 table upload, subtype 0x01 = 18 records, subtype 0x11 = 6 records
+MAIN	sub_5DCDA	0x0005DCDA	DSP WRITE MODE entry: 0xFFB0C4 = 1, bset bit0 of 0xFFFF52
+MAIN	sub_5DD00	0x0005DD00	DSP WRITE MODE state machine 0xFFB0C4 = 0..7: reset pulse on 0xFFFF52 bit3, boot bit4, sub_78222 async reconfig, handshake on 0xFFFF49 bit7, then sub_7815C
+MAIN	sub_103C0	0x000103C0	mode entry that clears 0xFFB0C4 and dispatches mode code 0xEE through sub_3FF10
+MAIN	sub_5E9E2	0x0005E9E2	maps 0xFFB0C4 to the progress pair shown on the SUB screen: (0,0), (1,3), (1,6), (2,0x0A)
+MAIN	sub_78222 / sub_7823C / sub_78256	0x00078222	reconfigure SCI_A to async 8-N-2, BRR 0x0C, SCR 0x70
+MAIN	sub_7815C	0x0007815C	queue pump for the generic serial engine whose control block is at 0xFF6288; drains one queue to the DSP SCI
+MAIN	polled TX loop	0x0007701E	wait SSR.TDRE, write 0xFFFF8B, clear TDRE; up to 0x40 bytes per call
+MAIN	sub_74310	0x00074310	sends the DSP version to SUB as inter-processor message id 0x5A, length 3, payload = the word at 0xFFB0DC
+MAIN	sub_74364	0x00074364	inter-processor message id 0x5B, length 4, 3 bytes from 0xFF813F
+MAIN	version gate	0x0005B0CC	cmp.w #0x041E against the DSP version word at 0xFFB0DC; two different command sets depending on the DSP firmware
+SUB	sub_FFF00ED1	0xFFF00ED1	version screen: formats bytes 0x21..0x29 of the shared status block at SUB RAM 0x00008C4D into Main Ver., Sub Ver. and DSP Ver.
+SUB	sub_FFF0DE56	0xFFF0DE56	the ---DSP WRITE MODE---- screen; reads bytes 0x20 and 0x21 of 0x00008C4D as the progress state
+SUB	template strings	0xFFF487EC	Main Ver.  :  .    / Sub  Ver.  :  .    / DSP  Ver.  :  .     at 0xFFF487EC, 0xFFF48800, 0xFFF48814
+SUB	DSP write strings	0xFFF4ACF8	---DSP WRITE MODE----, Push DISP Key! 0xFFF4AD0E, Loading... 0xFFF4AD1D, Complete 0xFFF4AD28, FIRM ERROR 0xFFF4AB44

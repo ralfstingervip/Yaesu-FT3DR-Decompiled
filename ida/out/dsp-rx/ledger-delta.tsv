@@ -1,0 +1,9 @@
+term	delta_bytes	range	reason	in_h9_reached_insns	note
+MAIN named/typed	0	-	no bytes retyped or added	-	497,139 unchanged
+MAIN proven	0	-	no new reached code; nothing demoted	-	365,570 unchanged
+correction: seed function head 0x056BF8 sits 2 B inside jump-table slot 27	0	056BF8-056BFA	true start is 0x056BFA; the 2 bytes are named either as table or as code	no	named mask is a byte union, so no double count
+unreferenced helper (blank CSD1 and rx+7)	0	056BFA-056C2C	no jsr/jmp abs24, BE32 pointer, bsr/bra/bcc 8/16 to it anywhere in 0x000000-0x080000	no	already outside proven
+dead re-check of radio ID list	0	056FFE-057006	no branch lands on 0x056FFE	no	already outside proven
+unreferenced copy FF1440/FF0BF6 to FF07A4	0	05841E-058440	no reference of any form	no	already outside proven
+unreached fragment	0	058670-058674	no reference	no	already outside proven
+ASCII table "00".."23"	0	058398-0583C8	data, read via @(0x58398,er4) at 0x05831A	no	not code

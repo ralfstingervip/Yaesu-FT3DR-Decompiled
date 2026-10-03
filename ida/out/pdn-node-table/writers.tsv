@@ -1,0 +1,8 @@
+addr	func	op	value_written	conditions	evidence
+# FF97FC is the node-command index into off_74472. Whole-image scan (0..0x80000, closed window skipped): exactly 3 references total, 1 write, 2 reads.
+0x073A70	sub_73A54	mov.b r4l,@0xFFFF97FC:16	command_byte - 0x30	parser phase FF97FE==4 (ready); r2h==0 (valid data byte); 0x30<=byte<0x60 ('0'..'_'); byte=='0' OR FF8004>=2 (remote mode). Sets FF97FB=0, FF97FE=1.	073A58 cmp.b #0x30 / 073A5E cmp.b #0x60 / 073A62 mov.b @FF8004 cmp #2 bcs / 073A6C-6E sub.b #0x30 / 073A70 store
+# --- readers (not writers) ---
+0x073996	sub_73992	mov.b @0xFFFF97FC:16,r4l	(read) index byte_74532[idx] to get expected arg length; 0xFF = variable	073996 read / 0739A0 mov.b @(byte_74532,er4)
+0x073A28	sub_739FA	mov.b @0xFFFF97FC:16,r3l	(read) shll.l #2 then mov.l @(off_74472,er3),er6 ; jsr @er6 = dispatch handler	073A28 read / 073A32 shll.l #2 / 073A34 mov.l @(off_74472) / 073A3C jsr @er6
+# --- related state bytes (parser context, same engine) ---
+# FF97FB = arg-byte counter (reset 0 by sub_73A54); FF97FD = received arg length (set by sub_73992); FF97FE = parse phase, jump table off_73974[FF97FE] (0 idle,1 arglen,2 collect,3 dispatch,4 accept-cmd)

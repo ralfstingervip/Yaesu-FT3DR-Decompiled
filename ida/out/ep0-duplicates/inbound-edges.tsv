@@ -1,0 +1,10 @@
+edge_class	external_into_range	evidence
+flow/fall-through	0	0x076ADC rts/l er4-er6 ends live block; no fall-through; IDA 89 crefs into range all internal
+rel8 Bcc/BSR	0	byte-scan hits 076C19/076C23 are mid-instruction (dispatcher a8-cmp bytes), IDA records no cref
+rel16 Bcc	0	no instruction-aligned rel16 into range from outside
+bsr16	0	none found
+abs24 jsr (0x5E)	0	whole-image scan: zero 5E-targets into range
+abs24 jmp (0x5A)	0	whole-image scan: zero 5A-targets into range
+BE32 pointer	0 to entry	no BE32==0x00076ADE or 0x00076B20 anywhere; mid-body hits (076B84 etc.) are operand-straddle coincidences
+BE24 pointer	0 to entry	no BE24 to either entry; mid-body/table-straddle coincidences only (e.g. 0351A0 is a 16-bit offset table)
+handler-record table +6 (0x07B4B4)	0	six pointers target 0784BE/0769AA/0768C8/0769AA/0767BE/0768A8 (verify.py), none in range

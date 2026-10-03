@@ -1,0 +1,32 @@
+cell	size	role	writers	readers	status
+FF813A	1	personality selector (0 vendor 26AA:0001, 1 CDC 26AA:0020)	0x0021FA (=0), 0x002224 (=1)	12 readers (0x002BE2, 0x002C06, 0x0037EA, 0x00380C, 0x00392C, 0x003950, 0x00DCC4, 0x00EE82, 0x0101B2, 0x054D54, 0x056160, 0x05E9F2) incl. 0x054D54 ISR, 0x002BE2/0x0037EA/0x00392C control poll, 0x002C06 image block	Confirmed
+FF8180	1	USB event flags: b0 VBUS present, b1 IFR2 seen, b2 EP3 sent, b3 EP0 IN done, b4 EP0 OUT received, b5 suspend, b6 bus reset, b7 configuration done	ISRs	b0: 0x055034, 0x039168, 0x0391B2; b3/b4: control states; b1,b2,b5,b6,b7: no reader	Confirmed
+FF8181	1	b0 = short (9-byte) configuration already sent	0x055116; cleared 0x054C4C, 0x054F04, 0x056004	0x0550F2	Confirmed
+FF8182	1	state to enter after the current status stage	control handlers	0x0551B8, 0x0551D0	Confirmed
+FF8183	1	control state 0..11 (table 0x055002)	0x054C52, 0x054EF0, 0x054F0A, 0x05503E, 0x055160, 0x0551A6, 0x0551BC, 0x0551D4, 0x05549C, 0x0554C6, 0x0554FE, 0x055534, 0x055632, 0x055782, 0x05600A	0x054FEC, 0x05512A, 0x054E30	Confirmed
+FF8184	1	EP3 report byte 0: 0 or 1 only	0x054C64/0x054F1C/0x05601C (dword 0x0100FFFF -> 1), 0x055496 (=1, D1), 0x0557A4 (=1), 0x039462 (=1), 0x0393DC (=r3l, 0 or 1)	EP3 report builders	Confirmed (values); meaning Inferred: 1 = radio idle / SP SEL bit set, 0 = TX-state bits 0x2C or RX audio active
+FF8185	1	last byte 0 sent on EP3; 0xFF forces a resend	EP3 builders, 0x055620 and 0x055770 (=0xFF after D2)	EP3 builders	Confirmed
+FF8186	2	last bytes 1-2 sent on EP3 (SIZE, quality code)	EP3 builders	EP3 builders	Confirmed
+FF8152/FF8156	4+4	SETUP ring read / write pointers over 0xFF3CEA-0xFF3D69 (16 x 8 bytes, no overflow check)	ISR 0x054DCC (write), handlers (read)	-	Confirmed
+FF3D6A	8	current SETUP packet copy (wire order)	handlers	compare chains; 0xFF3D6C = wValueL, 0xFF3D6E = wIndexL	Confirmed
+FF3C6A	0x80	EP0 OUT data landing buffer	0x054E02	none (byte scan: only 0x054CEA init and 0x054DFA)	Confirmed
+FFB094/FFB09E	1+4	EP0 IN remaining count / source pointer	0x055144, ISR	ISR 0x054E64	Confirmed
+FFB095	1	D4 reply byte	0x0552F6	sent by sub_55144	Confirmed
+FFB096	1	D3 value (wValueL)	0x0554EC	0x00FDC8 only	Confirmed
+FFB097	1	D3 edge-detector state 0..2	0x00FDF4, 0x00FE06, 0x00FE12	0x00FDCC	Confirmed
+FFB098	4	image bytes still to forward to SUB	0x05544E, 0x0559EA, SM-B	0x0559DE, 0x0559F4, 0x055B28	Confirmed
+FFB09C	2	ceil(size/64) packet count	0x05546E	none	Confirmed
+FFBA46/FFBA6E	4+4	image size (record) / bytes still expected on EP1	0x055454/0x05545A; 0x05566A	0x055DB6 / 0x055600, 0x055662	Confirmed
+FFBA6C	2	write index in the 1 KB window	0x055476, 0x055696, 0x0556AC	0x055678	Confirmed
+FFBA72	1	discard flag (D1 refused)	0x05543A (=0), 0x0554B4 (=1)	0x055670	Confirmed
+FFBA73	1	D2-before-all-bytes counter	0x05560E	none	Confirmed
+FF94C0	1	transmit state (non-zero while a TX request is active; 1 started, 2 refused)	12 writers: 0x022542, 0x022550 (sub_2244C PTT start), 0x0226D8, 0x0226F2, 0x02285A, 0x0228A2, 0x022912, 0x022CD4, 0x02302C, 0x030266, 0x031CF8, 0x035E8A	107 read instructions incl. D1 gate 0x055414	Confirmed (meaning Inferred from sub_2244C)
+FF89C1 b3	bit	KEY LOCK on	0x01CF0A bnot (LOCK key), loader 0x00E666	D1 gate 0x05541E, TX inhibit 0x022562, key scan 0x00FED0	Confirmed (doc 49)
+FF89AB	1	LOCK type 0..6 = KEY, DIAL, KEY&DIAL, PTT, KEY&PTT, DIAL&PTT, ALL (F388, default 2)	0x00E5E4, 0x045252	D1 gate tests b0 (0 = type locks keys); TX inhibit tests >=3	Confirmed bytes; list mapping Inferred (SUB list 0xFFF48FD9 + consistent use)
+FF2EC9	1	picture operation in progress	0x06F514 (sub_6F512 = 1, called by D1), 0x06F692, 0x05F30C, 0x05F6A6 (=1); 0x055618 (D2), 0x065692, 0x065F8A, 0x06A86E, 0x06F372 (=0)	D1 gate 0x055430, key 0x14 handler 0x06F5EE, 0x055B58 (orphan), 0x05EE1A, 0x05F2C4	Confirmed
+FFAAE0	1	tone/UI event mailbox (D1 posts 0x4F; read-back error 0x1D)	many	sequencer sub_3835E	Inferred
+FFAAE8	1	tone/event sequencer state (jump table 0x038380)	0x038340, 0x0383EA, 0x03840A, 0x0384DC, 0x038576, 0x03857E, 0x038674, 0x038736, 0x038762	0x055520 (holds D1 status stage), 0x0394A8, 0x010628, 0x0340F6, 0x0346D2, 0x035D36	Confirmed (meaning Inferred)
+FF89CD	1	USB CAMERA QUALITY 0..2 (LOW/NORMAL/HIGH)	loader 0x00E63C (default 0), block save 0x019374	D4 and EP3 code	Confirmed bytes; naming Inferred (F3D0 sender 0x00594C order + 3 values)
+FF89CE	1	USB CAMERA SIZE 0..1 (320*240 / 160*120)	loader 0x00E642 (default 0)	EP3 byte 1	Confirmed bytes; naming Inferred
+FF89CF	1	(read at 0x0550FE and discarded)	loader 0x00E648 (default 1)	0x0550FE only	Confirmed
+FF89C5 b1	bit	USB CAMERA SP SEL	-	0x00595A sender, 0x03935A byte-0 logic, 0x039154/0x03919E port 0x59 b2	Confirmed bytes; naming per doc 45

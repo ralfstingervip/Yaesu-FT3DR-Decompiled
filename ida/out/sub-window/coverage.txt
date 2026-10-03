@@ -1,0 +1,30 @@
+Lane 4 SUB code window -- FINAL coverage (head/tail-correct byte count)
+database SUB_WINDOW; window FFED0000-FFF50000 = 524288 bytes
+
+KEY CORRECTION: is_code() flags only instruction HEADs. Prior 29.4%%/154162
+figure (SUB_VEC and my pass1-3) counted heads only. Below uses item sizes.
+
+== whole-window true byte classification ==
+instruction bytes (heads+tails)  467289 (89.1%)
+data-item bytes                  4446 (0.8%)
+truly-undefined (FF_UNK)         52553 (10.0%)
+  of which 0xFF pad 6734, 0x00 pad 22011
+
+== function classification (instruction BYTES, tails included) ==
+reached-by-xref     1602 funcs   297232 instr bytes
+validated-by-body   2248 funcs   141068 instr bytes  (2248 w/ prologue, 188 with purpose)
+rejected            413 funcs   8089 instr bytes
+VALIDATED TOTAL     3850 funcs   438300 instr bytes  <-- numerator
+
+== instruction-byte denominator ==
+window total                    524288
+  -proved data FFED0000-FFED3F6C   16236  bitmap-descriptor-table-tail
+  -proved data FFED3F6C-FFED5800    6292  UI-layout-tables
+  -proved data FFED5800-FFED8A70   12912  zero-heavy-tables
+  -proved data FFED8A70-FFED8E70    1024  INTB-vector-table
+  -proved data FFF48000-FFF4C000   16384  string-pool
+proved data total               52848
+instruction-byte denominator    471440  (window - proved data)
+  numerator/denominator = 438300/471440 = 93.0%
+  all-instr-bytes/denom = 467289/471440 = 99.1%
+  numerator/full-window = 438300/524288 = 83.6%

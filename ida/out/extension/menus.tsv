@@ -1,0 +1,33 @@
+kind	group	table_ea	labels_ea	row_count	rows_shown	rows_hidden	name	gate	evidence
+header	0	FFED74E8	FFC3DD55	0	0	0	(category-name base, 1-based)	-	menus-l6r-groups.tsv:2
+group	1	FFED74F0	FFC3DF4D	9	9	0	DISPLAY	-	menus-l6r-groups.tsv:3
+group	2	FFED74F8	FFC3E001	3	3	0	TX/RX	-	menus-l6r-groups.tsv:4
+group	3	FFED7500	FFC3E03D	6	6	0	MEMORY	-	menus-l6r-groups.tsv:5
+group	4	FFED7508	FFC3E0B5	14	13 or 14	1 conditional (WX ALERT)	SIGNALING	count-1 when byte 0x8C53 (0x8C4D+6)==0 (FFF09623-FFF0963C)	menus-l6r-groups.tsv:6; menus-sub1-funcs.txt:27-42
+group	5	FFED7510	FFC3E1CD	6	6	0	SCAN	-	menus-l6r-groups.tsv:7
+group	6	FFED7518	FFC3E245	2	2	0	GM	-	menus-l6r-groups.tsv:8
+group	7	FFED7520	FFC3E26D	5	5	0	WIRES-X	-	menus-l6r-groups.tsv:9
+group	8	FFED7528	FFC3E2D1	22	22	0	CONFIG	-	menus-l6r-groups.tsv:10
+group	9	FFED7530	FFC3E489	28	28	0	APRS	-	menus-l6r-groups.tsv:11
+group	10	FFED7538	FFC3E6B9	4	4	0	SD CARD	-	menus-l6r-groups.tsv:12
+group	11	FFED7540	FFC3E709	4	4	1 (RAM DISPLAY)	OPTION	count+1 when 0x8E4D bit7 (read FFF09602); MAIN bound 5/4 on 0xFF89C4.4 (2998A-29994)	menus-l6r-groups.tsv:13; menus-sub1-funcs.txt:10-26; menus-main2-funcs.txt:788-791
+group	12	FFED7548	FFC3E76D	1	1	0	CALLSIGN	-	menus-l6r-groups.tsv:14
+spare	13	FFED7550	00000000	0	0	0	(empty {0,NULL})	MAIN jt entry 12 exists, gated by 0xFF89C4.3 (14B04/14B08)	menus-l6r-groups.tsv:15; menus-main2-funcs.txt:697-699; menus-l6r-main.tsv:14
+spare	14	FFED7558	00000000	0	0	0	(empty {0,NULL})	no MAIN jt entry (jt has 13 entries 0..12)	menus-l6r-groups.tsv:16
+spare	15	FFED7560	00000000	0	0	0	(empty {0,NULL})	-	menus-l6r-groups.tsv:17
+spare	16	FFED7568	00000000	0	0	0	(empty {0,NULL})	-	menus-l6r-groups.tsv:18
+spare	17	FFED7570	00000000	0	0	0	(empty {0,NULL})	-	menus-l6r-groups.tsv:19
+spare	18	FFED7578	00000000	0	0	0	(empty {0,NULL})	-	menus-l6r-groups.tsv:20
+spare	19	FFED7580	00000000	0	0	0	(empty {0,NULL})	-	menus-l6r-groups.tsv:21
+spare	20	FFED7588	00000000	0	0	0	(empty {0,NULL})	-	menus-l6r-groups.tsv:22
+group	21	FFED7590	FFC3E781	3	3	0	TX/RX>MODE	-	menus-l6r-groups.tsv:23
+group	22	FFED7598	FFC3E7BD	4	4	0	TX/RX>DIGITAL	-	menus-l6r-groups.tsv:24
+group	23	FFED75A0	FFC3E80D	5	5	0	TX/RX>AUDIO	-	menus-l6r-groups.tsv:25
+limit	24	FFED75A8	-	-	-	-	(not a group: list-screen fn table 75A8)	group>=0x18 clamped to 1 at FFF0919B	menus-l6r-groups.tsv:26; menus-sub1-funcs.txt:63
+spare	title-len 13..20	FFC3DF42-FFC3DF49	-	-	-	-	title-length bytes all 00 for empty slots	indexed by frame+0x20 at FFF08A17 / FFF08CA6	menus-l6r-groups.tsv:27; menus-sub2-funcs.txt:1488-1500
+spare	MAIN jt 12	009742	-	-	-	-	-> 0x969C (top=1,cursor=0; same target as entry 11 CALLSIGN)	sub_14AF4 0xFF89C4.3	menus-l6r-main.tsv:14; menus-main1-funcs.txt:296
+count	sub_FFF095E3	FFF095E3	-	-	-	-	per-group row count: table byte + RAM DISPLAY (+1, g=0x0B) - WX ALERT (-1, g=4)	0x8E4D.7 / 0x8C53	menus-sub1-funcs.txt:1-47
+count	sub_2992A	02992A	-	-	-	-	MAIN per-group cursor upper bounds; OPTION 5, dec to 4 when 0xFF89C4.4 clear	0xFF89C4.4	menus-main2-funcs.txt:762-793
+count	scroll 9746	009746	-	-	-	-	top-row byte per cursor: max(1,cursor-4), 36 bytes read; used by jt entries 0,3,7,8	-	menus-l6r-main.tsv:16; menus-main1-funcs.txt:269
+count	jt 9712	009712	-	13	-	-	F301 list-frame per-group cursor source; index = 0x8F2E (group-1)	-	menus-l6r-main.tsv:2-14; menus-main1-funcs.txt:226-238
+count	title 13px	FFC3DF35	-	24	-	-	x=(320-13*len[+13 if odd])/2	-	menus-sub2-funcs.txt:1488-1500

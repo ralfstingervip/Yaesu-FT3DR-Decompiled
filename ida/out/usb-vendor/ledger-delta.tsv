@@ -1,0 +1,6 @@
+term	start	end	bytes	in_H9_proven	in_H9_named	overlap_orphan-screens	overlap_indirect-cb	overlap_suspect-tables	applied	note
+MAIN proven code, H9 baseline	-	-	365570	-	-	-	-	-	-	docs/deep/47
+proposed demotion: vec238 block after bra at 0x054D20	054D22	054D4C	42	42	yes (code)	0	0	0	NO	no branch, call, BE32 pointer or abs24 jump reaches 0x054D22 (whole-image byte scan); proven only through H9 addend A (fnindex), which H9's rule does not demote
+proposed demotion: vec235 EP3 block after rte at 0x054F38	054F3A	054F88	78	78	yes (code)	0	0	0	NO	same; IER1 = 0x03 also leaves the IFR1 b2 source disabled
+MAIN proven code if applied	-	-	-120	-	-	-	-	-	NO	365570 - 120 = 365450 (or I8's 365752 - 120 = 365632); named/typed 497139 unchanged (well-formed code stays typed)
+MAIN named/typed	-	-	0	-	-	-	-	-	-	no new bytes; descriptor bytes 0x05585E-0x055861 are false code heads in MAIN_FINAL (09 02 / 20 00) but are typed either way

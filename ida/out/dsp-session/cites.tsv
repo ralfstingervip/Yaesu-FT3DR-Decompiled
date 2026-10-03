@@ -1,0 +1,74 @@
+id	addr	expect_hex	claim
+T1	0001B8	00 00 2a 30	vector 110 -> 0x002A30 (tick ISR)
+T2	002482	fc 21 6a 8c fe f0 fc c0 6a 8c fe f1 fc 00 6a 8c fe f2 fc 41 6a 8c fe f4	TCR=0x21 TMDR=0xC0 TIOR=0 TIER=0x41 on channel 0xFFFEF0
+T3	00249A	79 04 00 00 6b 84 fe f6 79 04 4e 20 6b 84 fe f8 fc 20 3c bc fc 00 3c bd	TCNT=0, TGRA=0x4E20, TSTR(FFFFBC)=0x20, TSYR(FFFFBD)=0
+T4	002A30	6d f4 6a 18 fe f5 72 00 6a 0c 94 b8 47 06 1a 0c 6a 8c 94 b8	ISR clears TSR.b0 and decrements FF94B8
+T5	003576	6a 0c 94 b8 46 f8 fc 02 6a 8c 94 b8 79 06 00 58 7a 05 00 ff 95 36	fast tier: FF94B8 reload 2, 0x58 byte timers from FF9536
+T6	0035C4	6a 0c 95 34 1a 0c 6a 8c 95 34 46 74 fc 0a 6a 8c 95 34 79 06 00 24 7a 05 00 ff 95 8e	slow tier every 10 fast ticks: 0x24 byte timers from FF958E
+T7	003618	6a 0c 95 35 1a 0c 6a 8c 95 35 46 20 fc 0a	third tier every 10 slow ticks
+T8	0030B4	5e 02 d8 cc 5e 05 62 72	main loop calls the DSP tick 0x056272 every pass
+T9	0020FC	79 04 01 11 6b 84 fd c4	SCKCR(FFFDC4)=0x0111 (not decoded)
+T10	0022F6	fc 00 3c f0	TCR of the 0xFFFFF0 channel = 0x00
+D1	01054A	5e 01 03 10 5e 04 52 c6 f4 ff 40 0a	entry A: FF8DDE candidate 0xFF
+D2	010556	5e 01 03 10 5e 04 52 c6 f4 01	entry B: FF8DDE candidate 0x01
+D3	010578	6a 0c 8d de 47 02 f4 00 6a 84 8d de	toggle: store 0 if already set, else the candidate
+D4	01058A	5e 01 9a 4c 6a 0c 8d de 46 0a 5e 04 52 ac 5e 04 51 86	re-init SCI-A (0x045186) after the change
+D5	0105AE	6a 0c 8d de 47 08 fc 00 6a 8c 8d de 55 ce	clear-if-set, called by the other mode entries
+D6	00E514	fc 00 6a 8c 8d de fc 00 6a 8c 8d df fc 00 6a 8c 8d e0	defaults routine clears FF8DDE..FF8DE0
+D7	010266	00 01 05 56 00 01 05 4a	only references to the two setters: slots inside 0x10100-0x102C0 (out of scope)
+D8	008A94	6a 0c 8d de 4a 26 7a 05 00 00 8a 70	negative value -> label at 0x8A70
+D9	008A70	00 00 57 49 52 45 53 2d 58 20 50 44 4e	"WIRES-X PDN"
+D10	008AE4	79 04 00 12 7a 05 00 00 8a 82	positive value -> label at 0x8A82
+D11	008A82	00 00 57 49 52 45 53 2d 58 20 4e 4f 44 45	"WIRES-X NODE"
+D12	0081B6	6a 0c 8d de 47 1a 79 04 00 0a 7a 05 00 00 82 64	nonzero -> "WIRES-X" line
+D13	05B7E6	6a 0c 8d de 4a 0c fc 00 6a 10 b3 d9 77 00 67 fc 0c cc 46 10	sign test idiom: 0xFF is active only while B3D9.b0==0; 1 is always active
+A1	0569B6	ac 9c 47 22 ac 9e 47 16	9C and 9E branches in the RX assembler
+A2	0569D4	6a 18 b1 2d 70 70 40 6e 6a 18 b1 2d 70 00	9E sets B12D.b7, 9C sets B12D.b0
+A3	059CCE	6a 18 b1 2d 72 00	0x19 builder clears B12D.b0
+A4	059D26	6a 18 b1 2d 72 00	0x09 builder clears B12D.b0
+A5	059D86	6a 18 b1 2d 72 00	059D2E clears B12D.b0
+A6	05B898	6a 18 b1 2d 72 00	session step consumes B12D.b0
+A7	05BC3C	6a 18 b1 2d 72 70	session step consumes B12D.b7
+A8	05B814	6a 18 b1 2d 72 70	TX start clears a stale B12D.b7
+B1	05993C	6a 2c 00 ff 0b f6	header builder reads FF0BF6 (host-link arm only)
+B2	0597FC	6a 0c 8d de 4a 0c fc 00 6a 10 b3 d9 77 00 67 fc 0c cc 58 60 01 02	host-link gate in front of B1
+B3	05B04A	fc 24 6a ac 00 ff 0b f6	init step 12 writes 0x24 when FF8DDE!=0
+B4	06C7F4	6a ab 00 ff 0b f6	host packet field writer of FF0BF6
+B5	059956	6a 2c 00 ff 0b f8 6a 8c b1 41 6a 2c 00 ff 0b f9 6a 8c b1 42	FF0BF8 -> [3], FF0BF9 -> [4]
+C1	05714A	fb 31 5e 06 c2 00	tag '1' (CSD1 state)
+C2	05732C	fb 32 5e 06 c2 00	tag '2' (CSD2 state)
+C3	0577DA	fb 33 5e 06 c2 00	tag '3' (CSD3 state)
+C4	06C20E	6a 0c b3 e0 47 ea	sub_06C200 needs FFB3E0!=0 (link up)
+C5	06C24A	6a ab 00 fe eb 28 79 04 00 06 7a 05 00 ff b0 e1 7a 06 00 ff b3 be	tag -> FEEB28; rx[1..6] -> FFB3BE
+C6	06C296	79 04 00 14 7a 05 00 ff b0 e7 7a 06 00 fe eb 14	rx[7..26] -> FEEB14 (20 B)
+C7	06C290	6a ab 00 fe eb 29	mode character -> FEEB29
+C8	06B73A	fc 01 6a 8c b3 e0	FFB3E0=1 when the second host handler is installed
+C9	058794	6a 0c 8d de 47 2e 4a 26	message relay gate: 0 -> local dispatch, positive -> relay
+C10	05EAA6	7a 05 00 fe f9 20 7a 06 00 fe fd 72	sub_05EA3A copies from FEF920 to FEFD72
+C11	05EA3A	6a 0c b3 e0 58 70 00 86	sub_05EA3A also needs FFB3E0!=0
+P1	05B810	7f 52 72 20	TX start clears P3DR.b2
+P2	05BC7C	7f 52 70 20	TX end sets P3DR.b2
+P3	05BF30	7f 52 70 20	TX end (data sessions) sets P3DR.b2
+S1	0563DA	78 b0 6b 26 00 05 b3 10	B0BE dispatch through 0x05B310
+S2	0563A8	78 b0 6b 26 00 05 eb d2	BB94 dispatch through 0x05EBD2
+S3	05AF7C	78 b0 6b 26 00 05 af 92	init dispatch through 0x05AF92
+S4	05C19A	78 b0 6b 26 00 05 c2 00	B0BE=0x17 dispatch reads 0x05C200, not 0x05C1A4
+S5	05A39C	6a 8c b0 bd 6a 0c b0 b7 6a 8c b0 be	request: B0BD=1, B0BE=B0B7
+S6	05A214	fc 10 6a 8c b0 b7 fc 03 6a 8c b1 1e	B0C7==3 -> code 0x10, DT 3
+S7	05A22A	fc 0b 6a 8c b0 b7 fc 02 6a 8c b1 1e	B0C7==2 -> code 0x0B, DT 2
+S8	05A240	fc 02 6a 8c b0 b7 fc 00 6a 8c b1 1e	otherwise -> code 0x02, DT 0
+S9	05A2E8	fc 0a 6a 8c b0 b7 fc 01 6a 8c b1 1e	data message -> code 0x0A, DT 1
+S10	05A32E	fc 15 6a 8c b0 b7	code 0x15
+S11	06CF4A	fc 16 6a 8c b0 b7	code 0x16
+S12	06D08A	fc 17 6a 8c b0 b7 6a 8c b0 be	code 0x17
+S13	0560EE	fc 01 6a 8c b0 b7 fc 00 6a 8c b0 bc 6a 8c b0 bd 6a 8c b0 be	power-off: B0B7=1, B0BC=B0BD=B0BE=0
+N1	05A55A	ac 18 47 48	trace formatter: opcode 0x18 -> 0x05AF10
+N2	05AF10	43 50 55 3e 44 53 50 3a 20 53 54 4f 50 20 45 4e 43 4f 44 45	"CPU>DSP: STOP ENCODE"
+N3	05A55E	ac 1a 47 4c	opcode 0x1A -> RX ENABLE/DISABLE strings
+N4	05A5AE	6e 5c 00 01 46 08 7a 03 00 05 ae d6	[1]==0 -> "RX ENABLE"
+N5	05A74C	6e 5c 00 01 46 08 7a 03 00 05 ae fc	1D [1]==0 -> "MUTE OFF"
+D14	017822	6a 0c 8d de 47 06 5e 03 ff a0	node mode refuses the 32 re-send request
+D15	0358BE	6a 0c b3 db 6a 8c b0 c7	host-link TX DT source FFB3DB -> B0C7
+D16	06C826	6a 8c b3 db	host F packet writes FFB3DB
+B6	0581BC	7a 06 00 ff 0b f6	] store pointer load of FF0BF6
+C12	0587C2	5e 05 ea 3a 40 4e	relay replaces local dispatch

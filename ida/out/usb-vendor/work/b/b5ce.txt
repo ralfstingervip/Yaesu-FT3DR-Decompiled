@@ -1,0 +1,59 @@
+
+;---- func 0xb5ce..0xb610  sub_B5CE
+00b5ce C fc 01                          mov.b   #1, r4l                                    <- 55dee
+00b5d0 C 6a 8c bb e5                    mov.b   r4l, @0xFFFFBBE5:16                        
+00b5d4 C 79 04 00 12                    mov.w   #0x12, r4                                  
+00b5d8 C 6b a4 00 ff 3d 72              mov.w   r4, @0xFF3D72:32                           
+00b5de C 79 04 fe 00                    mov.w   #0xFE00, r4                                
+00b5e2 C 6b a4 00 ff 3d 74              mov.w   r4, @0xFF3D74:32                           
+00b5e8 C 79 04 00 08                    mov.w   #8, r4                                     
+00b5ec C 6b a4 00 ff 3d 76              mov.w   r4, @0xFF3D76:32                           
+00b5f2 C 6b 04 bc 40                    mov.w   @0xFFFFBC40:16, r4                         
+00b5f6 C 0b 54                          inc.w   #1, r4                                     
+00b5f8 C 6b 84 bc 40                    mov.w   r4, @0xFFFFBC40:16                         
+00b5fc C 6b a4 00 ff 3d 7a              mov.w   r4, @0xFF3D7A:32                           
+00b602 C 6b 04 bc 42                    mov.w   @0xFFFFBC42:16, r4                         
+00b606 C 6b a4 00 ff 3d 7c              mov.w   r4, @0xFF3D7C:32                           
+00b60c C 58 00 00 a6                    bra     sub_B6B6:16                                
+
+;---- func 0xb610..0xb6b6  sub_B610
+00b610 C 01 00 6d f5                    push.l  er5                                        <- 559da,55a06,55d32,55fde
+00b614 C 6a 0c bb e4                    mov.b   @0xFFFFBBE4:16, r4l                        <- b618
+00b618 C 46 fa                          bne     loc_B614:8                                 
+00b61a C fc 01                          mov.b   #1, r4l                                    
+00b61c C 6a 8c bb e5                    mov.b   r4l, @0xFFFFBBE5:16                        
+00b620 C 6b 04 bc 3e                    mov.w   @0xFFFFBC3E:16, r4                         
+00b624 C 79 24 01 00                    cmp.w   #0x100, r4                                 
+00b628 C 45 20                          bcs     loc_B64A:8                                 
+00b62a C 79 04 01 16                    mov.w   #0x116, r4                                 
+00b62e C 6b a4 00 ff 3d 72              mov.w   r4, @0xFF3D72:32                           
+00b634 C 79 04 ff ff                    mov.w   #0xFFFF, r4                                
+00b638 C 6b a4 00 ff 3d 74              mov.w   r4, @0xFF3D74:32                           
+00b63e C 79 04 01 0c                    mov.w   #0x10C, r4                                 
+00b642 C 6b a4 00 ff 3d 76              mov.w   r4, @0xFF3D76:32                           
+00b648 C 40 1e                          bra     loc_B668:8                                 
+00b64a C 79 14 00 16                    add.w   #0x16, r4                                  <- b628
+00b64e C 6b a4 00 ff 3d 72              mov.w   r4, @0xFF3D72:32                           
+00b654 C 79 0c ff ff                    mov.w   #0xFFFF, e4                                
+00b658 C 6b ac 00 ff 3d 74              mov.w   e4, @0xFF3D74:32                           
+00b65e C 79 34 00 0a                    sub.w   #0xA, r4                                   
+00b662 C 6b a4 00 ff 3d 76              mov.w   r4, @0xFF3D76:32                           
+00b668 C 6b 04 bc 40                    mov.w   @0xFFFFBC40:16, r4                         <- b648
+00b66c C 0b 54                          inc.w   #1, r4                                     
+00b66e C 6b 84 bc 40                    mov.w   r4, @0xFFFFBC40:16                         
+00b672 C 6b a4 00 ff 3d 7a              mov.w   r4, @0xFF3D7A:32                           
+00b678 C 6b 04 bc 42                    mov.w   @0xFFFFBC42:16, r4                         
+00b67c C 6b a4 00 ff 3d 7c              mov.w   r4, @0xFF3D7C:32                           
+00b682 C 01 00 6d 75                    pop.l   er5                                        
+00b686 C 01 00 6b 02 bc 44              mov.l   @0xFFFFBC44:16, er2                        
+00b68c C 6b 03 bc 3e                    mov.w   @0xFFFFBC3E:16, r3                         
+00b690 C 7a 04 00 00 00 00              mov.l   #0, er4                                    
+00b696 C 7a 06 00 ff 3d 82              mov.l   #0xFF3D82, er6                             
+00b69c C 6c 5c                          mov.b   @er5+, r4l                                 <- b6a6
+00b69e C 0a c2                          add.l   er4, er2                                   
+00b6a0 C 68 ec                          mov.b   r4l, @er6                                  
+00b6a2 C 0b 06                          adds    #1, er6                                    
+00b6a4 C 1b 53                          dec.w   #1, r3                                     
+00b6a6 C 46 f4                          bne     loc_B69C:8                                 
+00b6a8 C 01 00 6b a2 00 ff 3d 7e        mov.l   er2, @0xFF3D7E:32                          
+00b6b0 C 01 00 6b 82 bc 44              mov.l   er2, @0xFFFFBC44:16                        

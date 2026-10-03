@@ -1,0 +1,22 @@
+
+;---- func 0x6864..0x68a8
+006864  6a 0c 80 0f              mov.b   @0xFFFF800F:16, r4l                  <- 6bd94
+006868  6a 8c ad 95              mov.b   r4l, @0xFFFFAD95:16                  
+00686c  6a 0c 80 10              mov.b   @0xFFFF8010:16, r4l                  
+006870  6a 8c ad 96              mov.b   r4l, @0xFFFFAD96:16                  
+006874  fd 00                    mov.b   #0, r5l                              
+006876  6a 0c ad 95              mov.b   @0xFFFFAD95:16, r4l                  
+00687a  ac 06                    cmp.b   #6, r4l                              
+00687c  47 14                    beq     loc_6892:8                           
+00687e  ac 07                    cmp.b   #7, r4l                              
+006880  47 10                    beq     loc_6892:8                           
+006882  6a 0c ad 96              mov.b   @0xFFFFAD96:16, r4l                  
+006886  47 0a                    beq     loc_6892:8                           
+006888  fd 10                    mov.b   #0x10, r5l                           
+00688a  6a 0c 80 11              mov.b   @0xFFFF8011:16, r4l                  
+00688e  46 02                    bne     loc_6892:8                           
+006890  fd 08                    mov.b   #8, r5l                              
+006892  6a 0c ad 95              mov.b   @0xFFFFAD95:16, r4l                  <- 687c,6880,6886,688e
+006896  08 cd                    add.b   r4l, r5l                             
+006898  10 4d                    shll.b  #2, r5l                              
+00689a  7a 65 00 00 00 ff        and.l   #0xFF, er5                           

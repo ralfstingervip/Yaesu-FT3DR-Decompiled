@@ -1,0 +1,27 @@
+processor h8
+reset 00002092
+  00002092  mov.l   #0xFF7F00, sp
+  00002098  bclr    #5, @0xFFFFAA31:16
+  0000209E  mov.b   #0, r4l
+  000020A0  mov.b   r4l, @0xFFFF8004:16
+  000020A4  jsr     sub_20FA:24
+  000020A8  bsr     sub_20D8:8
+  000020AA  bne     loc_20B0:8
+  000020AC  jmp     loc_DC5A:24
+  000020B0  mov.b   @0xFFFF8002:16, r4l
+  000020B4  cmp.b   #0xC8, r4l
+  000020B6  beq     loc_20C0:8
+  000020B8  mov.w   #0, r4
+  000020BC  mov.w   r4, @0xFFFFFBCE:16
+  000020C0  bclr    #5, @0xFFFF817F:16
+  000020C6  jsr     sub_3466:24
+  000020CA  bcs     loc_20D0:8
+  000020CC  jsr     sub_3E9FC:24
+  000020D0  bclr    #6, @0xFFFFFF5A:8
+  000020D4  jmp     loc_27AE:24
+  000020D8  mov.b   #5, r6l
+  000020DA  jsr     sub_246C:24
+  000020DE  dec.b   r6l
+  000020E0  bne     loc_20DA:8
+  000020E2  bsr     sub_20EA:8
+immediate hits 0

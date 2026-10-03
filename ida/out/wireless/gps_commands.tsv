@@ -1,0 +1,21 @@
+command	string_addr	file_off	reached_via	mtk_meaning	note
+$PMTK313,1	FFF483E8	3483E8	fixed init, off_FFED4288[0]	enable SBAS satellite search	sent unconditionally at GPS bring-up, state var 0x1CC68 == 0
+$PMTK314,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0	FFF483F3	3483F3	fixed init, off_FFED4288[1]	set NMEA sentence output rates	field order GLL,RMC,VTG,GGA,GSA,GSV,GRS,GST,...: RMC/VTG/GGA/GSA/GSV enabled every fix, GLL and all others off
+$PMTK225,0	FFF48422	348422	fixed init, off_FFED4288[2]	set periodic mode = 0 (fully powered, no periodic standby)
+$PMTK286,1	FFF4842D	34842D	fixed init, off_FFED4288[3]	enable AIC (active interference cancellation)
+(empty)	FFF48438	348438	off_FFED4288[4]	no command	index-0 slot of the datum option array
+$PMTK330,0	FFF48439	348439	datum array idx1	set datum = 0 (WGS84)	menu-selected, state var 0x1CC6C
+$PMTK330,1	FFF48444	348444	datum array idx2	set datum = 1
+$PMTK330,2	FFF4844F	34844F	datum array idx3	set datum = 2
+$PMTK330,212	FFF4845A	34845A	datum array idx4	set datum = 212	Tokyo-family datum index
+$PMTK330,213	FFF48467	348467	datum array idx5	set datum = 213	Tokyo-family datum index
+(empty)	FFF48438	348438	off_FFED42B0[0]	no command	index-0 slot of the static-navigation array
+$PMTK386,0.6	FFF48474	348474	static-nav array idx1	static navigation speed threshold 0.6 m/s	menu-selected ("PINNING"), state var 0x1CC78
+$PMTK386,1.0	FFF48481	348481	static-nav array idx2	static navigation speed threshold 1.0 m/s
+(empty)	FFF48438	348438	off_FFED42BC[0]	no command	index-0 slot of the DGPS array
+$PMTK301,0	FFF4848E	34848E	DGPS array idx1	DGPS correction source = none	menu "DGPS    :", state var 0x1CC84
+$PMTK301,1	FFF48499	348499	DGPS array idx2	DGPS correction source = RTCM
+$PMTK301,2	FFF484A4	3484A4	DGPS array idx3	DGPS correction source = WAAS/SBAS
+$PMTK103	FFC00112	000112	sub_FFEE0D4D at FFEE0E95	cold start (no ephemeris/almanac/position/time reuse)	issued on a forced restart
+$PMTK102	FFC0011B	00011B	sub_FFEE0D4D at FFEE0EE0	warm start (no ephemeris reuse)
+$PMTK001	FFC00124	000124	sub_FFEE103B at FFEE106A	ACK sentence from the module	the firmware compares the first 8 received bytes with "$PMTK001" and only then advances the setup state machine

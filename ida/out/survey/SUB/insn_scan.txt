@@ -1,0 +1,19 @@
+processor rx
+reset FFC00000
+  FFC00000  mvtc    #6A8FCh, usp
+  FFC00007  mvtc    #6B8FCh, isp
+  FFC0000E  mov.l   #off_FFFFFF80, r14
+  FFC00014  mvtc    r14, extb
+  FFC00017  mov.l   #off_FFED8A70, r14
+  FFC0001D  mvtc    r14, intb
+  FFC00020  mov.l   #100h, r14
+  FFC00024  mvtc    r14, fpsw
+  FFC00027  bsr.a   sub_FFF45DBC
+  FFC0002B  nop
+  FFC0002C  mov.l   #10000h, r14
+  FFC00031  mvtc    r14, psw
+  FFC00034  mov.l   #0, r1
+  FFC00036  bsr.a   sub_FFF36C53
+  FFC0003A  brk
+  FFC0003B  rts
+immediate hits 0

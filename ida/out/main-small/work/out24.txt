@@ -1,0 +1,23 @@
+### func sub_11050@11050 11050-11082 
+011050  6e 0c 00 9b                           mov.b   @(0x9B:16,er0), r4l
+011054  73 1c                                 btst    #1, r4l
+011056  46 08                                 bne     loc_11060:8
+011058  6e 0c 00 92                           mov.b   @(0x92:16,er0), r4l
+01105C  73 1c                                 btst    #1, r4l
+01105E  47 20                                 beq     locret_11080:8
+011060  6e 0c 00 92                           mov.b   @(0x92:16,er0), r4l
+011064  72 1c                                 bclr    #1, r4l
+011066  6e 8c 00 92                           mov.b   r4l, @(0x92:16,er0)
+01106A  6e 0c 00 9b                           mov.b   @(0x9B:16,er0), r4l
+01106E  72 1c                                 bclr    #1, r4l
+011070  6e 8c 00 9b                           mov.b   r4l, @(0x9B:16,er0)
+011074  6a 0c aa e0                           mov.b   @0xFFFFAAE0:16, r4l
+011078  46 06                                 bne     locret_11080:8
+01107A  fc ff                                 mov.b   #0xFF, r4l
+01107C  6a 8c aa e0                           mov.b   r4l, @0xFFFFAAE0:16
+011080  54 70                                 rts
+
+### func sub_10BDC@10BDC 10BDC-10BE8 
+010BDC  fc 1e                                 mov.b   #0x1E, r4l
+010BDE  6a 8c 95 93                           mov.b   r4l, @0xFFFF9593:16
+010BE2  6a 18 aa 30 70 10                     bset    #1, @0xFFFFAA30:16

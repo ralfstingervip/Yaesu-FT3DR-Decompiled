@@ -1,0 +1,33 @@
+# M4 lane: 29 proven-but-unreached runs with start>=0x058000, classified. Owner-side read-only.
+# inbound = any-form inbound edge whole-image (rel8/rel16/bsr16/abs24/BE32ptr), with (addr,kind,reached?) of the SOURCE.
+# addend = which H9 analyze.py proven mask sets the bytes (A=validated fnindex x is_code; RC=recovered-code run; D=F1 row; G1A=binutils tier-A).
+start	end_excl	len	in_window	addend	class	reached_bytes	inbound_edges	note	first_bytes
+05C8DC	05C9B6	218	0	A	DEAD	0	none	WIRES-X reply-string switch arms; all bra->05C9B6, skipped by 05C8D8 bra; no inbound	6a03b11ffb5d6ba3
+05CF34	05CF3C	8	0	A	SPLIT-TAIL	0	none	proven boundary mid mov.l of dead B0B9 jmp@er6 dispatcher at 05CF22 (05CF20 bra skips it; no inbound)	6b260005d0285960
+0605C6	0605D2	12	0	A	DEAD	0	none	case arm after 0605C4 bra->0605F4; no inbound	fc016a8cb26e5e06
+062808	062814	12	0	A	DEAD	0	none	WIRES-X switch arms jsr@66FB4/jsr@67250; after 062806 bra->6281E; no inbound; fn has no indirect jmp	5e066fb440105e06
+0628FE	062902	4	0	A	DEAD	0	none	arm jsr@66FAA after 0628FC bra->062902; no inbound	5e066faa54706a0c
+064EDE	064EE2	4	0	A	DEAD	0	none	lone bra.w arm after 064EDA bra; no inbound	580000927a0200ff
+064EFE	064F06	8	0	A	DEAD	0	none	arm jsr@64BD0 after 064EFA bra; no inbound	5e064bd05800006e
+06691E	066922	4	0	A	DEAD	0	none	arm jsr@1FA22;rts after 06691C bra; no inbound	5e01fa2254706a10
+06723A	067246	12	0	A	DEAD	0	none	WIRES-X switch arm jsr@66FB4 after 067236 bra; no inbound; fn has no indirect jmp	5e066fb45800000c
+06AB1C	06AB3C	32	0	A	DEAD	0	none	WIRES-X switch arms jsr@66FB4/67250/6726A/66FAA/66FBE after 06AB18 bra->06AB5A; no inbound; fn has no indirect jmp	5e066fb458000036
+06ADF6	06AE14	30	0	A	DEAD	0	none	WIRES-X switch arms (twin of 06AB1C) after 06ADF2 bra->06AE14; no inbound; fn has no indirect jmp	5e066fb458000016
+06BC56	06BC8C	54	0	A	DEAD	0	none	reply-digit builder block after 06BC54 bra->06BCBE; no inbound	6e0c0090ac02472e
+06BE52	06BE6E	28	0	A	DEAD	0	none	alt-length copy 0x4A from FEE000 after 06BE50 bra->06BE6E; no inbound	7904004a7a0500ff
+06CCE8	06CCEC	4	0	A	DEAD	0	06CCC0(rel8,r0)	jsr@3FFA0 reached only from unreached 06CCC0 bne (06CCE6 bra skips it); no live inbound	5e03ffa054700001
+070DAA	070DBA	16	0	A	DEAD	0	none	dead selector chain after 070DA8 bra->070DBA; no inbound	79230101470a1c3b
+070DD6	070E2A	84	0	A	DEAD	0	070DB2(rel8,r0)	3 arms (ptrs 72DD8/72E6E/72F04) reached only from dead 070DAA selector; no inbound	6a18ba3070707904
+078106	07810C	6	1	RC	WINDOW-ONLY	6	002234(abs24,r1)	gated USB personality; boot jsr@78106 on (FFFF4C&7F)==7D (doc95)	7a0000fee0100fc9
+07815C	0781A4	72	1	RC	WINDOW-ONLY	72	05DD12(abs24,r1)	polled service; jsr@7815c only when FFB0C4>=5 (DSP-WRITE gate, doc95)	01006df27a0200ff
+0781AA	0781C4	26	1	RC	WINDOW-ONLY	26	07817A(rel8,r1);078190(rel8,r1);078198(rel8,r1)	service body, intra-window branch targets (doc95)	01006f2100540100
+078222	07823C	26	1	A	WINDOW-ONLY	26	05DD9E(abs24,r1)	SCI-C async init; jsr@78222 from DSP-WRITE gate 05DD9E (doc95)	1888388af8083888
+078260	078268	8	1	RC	WINDOW-ONLY	8	07845E(abs24,r1)	burst to FFEE32; jsr@78260 from 07845E (doc95)	0d0819110d004712
+07827A	07827C	2	1	A	WINDOW-ONLY	2	078266(rel8,r1)	ISR demux tail; intra-window (doc95)	547001306df20100
+078334	07833C	8	1	RC	WINDOW-ONLY	0	076844(abs24,r0);0768A2(abs24,r0);076916(abs24,r0);0769E6(abs24,r0);076B46(abs24,r0)	ring fill; reached via jsr @er5 ring dispatch (doc95)	01206df40f950f84
+07837C	078384	8	1	RC	WINDOW-ONLY	8	0768BC(abs24,r1);076944(abs24,r0);076AD8(abs24,r0);076B1A(abs24,r0)	ring drain; jsr@7837c from 0768BC (doc95)	01206df40f960f84
+0783DA	0783EE	20	1	RC	WINDOW-ONLY	0	076A08(abs24,r0);076B6A(abs24,r0)	ring move; reached via jsr @er5 (doc95)	01206df40f940f86
+07842E	078440	18	1	RC	WINDOW-ONLY	0	none	big-endian u16 helper (doc95)	01006df20f826e09
+078442	078448	6	1	RC	WINDOW-ONLY	0	076D84(abs24,r0);076DE0(abs24,r0);076E3C(abs24,r0);076E9C(abs24,r0);076F54(abs24,r0);078421(rel8,r0)	little-endian u16 helper (doc95)	01006df20f820f99
+07845A	078462	8	1	RC	WINDOW-ONLY	8	078150(abs24,r1);078212(abs24,r0)	IER/ISR arm; jsr@7845a from 078150/078212 (doc95)	790000325e078260
+078508	078514	12	1	RC	WINDOW-ONLY	0	076F30(abs24,r0)	queue init; jsr@78508 from 076F30 (doc95)	7a0100fee0087a00

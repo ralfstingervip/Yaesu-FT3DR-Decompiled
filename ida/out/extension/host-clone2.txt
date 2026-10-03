@@ -1,0 +1,240 @@
+
+======== clone_setup_and_ack (073AB4..073B40) ========
+---- sub_73AB4 ----
+073AB4 C FC 01                         mov.b   #1, r4l
+073AB6 C 6A 8C 81 30                   mov.b   r4l, @0xFFFF8130:16
+073ABA C 7A 01 00 07 39 08             mov.l   #sub_73908, er1
+073AC0 C 40 1C                         bra     loc_73ADE:8
+073AC2 C FC 01                         mov.b   #1, r4l
+073AC4 C 6A 8C 81 30                   mov.b   r4l, @0xFFFF8130:16
+073AC8 C 7A 01 00 07 39 09             mov.l   #0x73909, er1
+073ACE C 40 0E                         bra     loc_73ADE:8
+073AD0 C 7A 01 00 FF 96 F8             mov.l   #0xFF96F8, er1
+073AD6 C 6A 0C 81 30                   mov.b   @0xFFFF8130:16, r4l
+073ADA C F4 00                         mov.b   #0, r4h
+073ADC C 55 0E                         bsr     sub_73AEC:8
+073ADE C 6A 0B 81 30                   mov.b   @0xFFFF8130:16, r3l
+073AE2 C F3 00                         mov.b   #0, r3h
+073AE4 C 0F 95                         mov.l   er1, er5
+073AE6 C 5E 07 38 CC                   jsr     sub_738CC:24
+073AEA C 54 70                         rts
+---- sub_73AEC ----
+073AEC C FB 00                         mov.b   #0, r3l
+073AEE C 1B 54                         dec.w   #1, r4
+073AF0 C 0F 96                         mov.l   er1, er6
+073AF2 C 6C 63                         mov.b   @er6+, r3h
+073AF4 C 08 3B                         add.b   r3h, r3l
+073AF6 C 1B 54                         dec.w   #1, r4
+073AF8 C 46 F8                         bne     loc_73AF2:8
+073AFA C 68 EB                         mov.b   r3l, @er6
+073AFC C 54 70                         rts
+---- sub_73AFE ----
+073AFE C FC 02                         mov.b   #2, r4l
+073B00 C 6A 8C 80 04                   mov.b   r4l, @0xFFFF8004:16
+073B04 C 6A 18 AA 35 70 10             bset    #1, @0xFFFFAA35:16
+073B0A C 6A 18 89 C0 72 70             bclr    #7, @0xFFFF89C0:16
+073B10 C FC 01                         mov.b   #1, r4l
+073B12 C 6A 8C 80 10                   mov.b   r4l, @0xFFFF8010:16
+073B16 C 6A 8C 80 11                   mov.b   r4l, @0xFFFF8011:16
+073B1A C 6A 18 8A BE 72 60             bclr    #6, @0xFFFF8ABE:16
+073B20 C FC 01                         mov.b   #1, r4l
+073B22 C 6A 8C 94 FE                   mov.b   r4l, @0xFFFF94FE:16
+073B26 C 5E 00 2D 7C                   jsr     sub_2D7C:24
+073B2A C 6A 18 81 7E 70 10             bset    #1, @0xFFFF817E:16
+073B30 C 55 82                         bsr     sub_73AB4:8
+073B32 C FC 00                         mov.b   #0, r4l
+073B34 C 6A 8C 89 BA                   mov.b   r4l, @0xFFFF89BA:16
+073B38 C FC 00                         mov.b   #0, r4l
+073B3A C 6A 8C B0 CC                   mov.b   r4l, @0xFFFFB0CC:16
+073B3E C 6A 0C 8D 26                   mov.b   @0xFFFF8D26:16, r4l
+
+======== clone_id_helpers (0734BE..073540) ========
+---- sub_734BE ----
+0734BE C FC 02                         mov.b   #2, r4l
+0734C0 C 54 70                         rts
+---- sub_734C2 ----
+0734C2 C 55 30                         bsr     sub_734F4:8
+0734C4 C FC 00                         mov.b   #0, r4l
+0734C6 C 6A 8C FE 92                   mov.b   r4l, @0xFFFFFE92:16
+0734CA C 6A 18 FB 95 70 10             bset    #1, @0xFFFFFB95:16
+0734D0 C 6A 8C FE 90                   mov.b   r4l, @0xFFFFFE90:16
+0734D4 C FC 0C                         mov.b   #0xC, r4l
+0734D6 C 6A 8C FE 91                   mov.b   r4l, @0xFFFFFE91:16
+0734DA C FC 00                         mov.b   #0, r4l
+0734DC C 6A 8C 81 31                   mov.b   r4l, @0xFFFF8131:16
+0734E0 C FC 30                         mov.b   #0x30, r4l ; '0'
+0734E2 C 6A 8C FE 92                   mov.b   r4l, @0xFFFFFE92:16
+0734E6 C 00 00                         nop
+0734E8 C 00 00                         nop
+0734EA C 00 00                         nop
+0734EC C 6A 18 FE 92 70 60             bset    #6, @0xFFFFFE92:16
+0734F2 C 54 70                         rts
+---- sub_734F4 ----
+0734F4 C 6A 18 81 7F 70 70             bset    #7, @0xFFFF817F:16
+0734FA C 6A 18 AA 35 70 00             bset    #0, @0xFFFFAA35:16
+073500 C 7A 04 00 FF 95 F8             mov.l   #0xFF95F8, er4
+073506 C 01 00 6B 84 81 32             mov.l   er4, @0xFFFF8132:16
+07350C C 01 00 6B 84 81 36             mov.l   er4, @0xFFFF8136:16
+073512 C 6A 18 81 7B 70 50             bset    #5, @0xFFFF817B:16
+073518 C 5E 03 7A 56                   jsr     sub_37A56:24
+07351C C 54 70                         rts
+---- sub_7351E ----
+07351E C 6A 0C 80 04                   mov.b   @0xFFFF8004:16, r4l
+073522 C 47 54                         beq     locret_73578:8
+073524 C AC 03                         cmp.b   #3, r4l
+073526 C 46 18                         bne     sub_73540:8
+073528 C 55 16                         bsr     sub_73540:8
+07352A C 00 00                         nop
+07352C C 00 00                         nop
+07352E C 00 00                         nop
+073530 C 00 00                         nop
+073532 C 00 00                         nop
+073534 C 00 00                         nop
+073536 C 00 00                         nop
+073538 C 00 00                         nop
+07353A C 5E 07 3A FE                   jsr     sub_73AFE:24
+07353E C 40 38                         bra     locret_73578:8
+
+======== clone_send_cleanup (0734C2..0734F4) ========
+---- sub_734C2 ----
+0734C2 C 55 30                         bsr     sub_734F4:8
+0734C4 C FC 00                         mov.b   #0, r4l
+0734C6 C 6A 8C FE 92                   mov.b   r4l, @0xFFFFFE92:16
+0734CA C 6A 18 FB 95 70 10             bset    #1, @0xFFFFFB95:16
+0734D0 C 6A 8C FE 90                   mov.b   r4l, @0xFFFFFE90:16
+0734D4 C FC 0C                         mov.b   #0xC, r4l
+0734D6 C 6A 8C FE 91                   mov.b   r4l, @0xFFFFFE91:16
+0734DA C FC 00                         mov.b   #0, r4l
+0734DC C 6A 8C 81 31                   mov.b   r4l, @0xFFFF8131:16
+0734E0 C FC 30                         mov.b   #0x30, r4l ; '0'
+0734E2 C 6A 8C FE 92                   mov.b   r4l, @0xFFFFFE92:16
+0734E6 C 00 00                         nop
+0734E8 C 00 00                         nop
+0734EA C 00 00                         nop
+0734EC C 6A 18 FE 92 70 60             bset    #6, @0xFFFFFE92:16
+0734F2 C 54 70                         rts
+
+======== clone_pre (07351E..073540) ========
+---- sub_7351E ----
+07351E C 6A 0C 80 04                   mov.b   @0xFFFF8004:16, r4l
+073522 C 47 54                         beq     locret_73578:8
+073524 C AC 03                         cmp.b   #3, r4l
+073526 C 46 18                         bne     sub_73540:8
+073528 C 55 16                         bsr     sub_73540:8
+07352A C 00 00                         nop
+07352C C 00 00                         nop
+07352E C 00 00                         nop
+073530 C 00 00                         nop
+073532 C 00 00                         nop
+073534 C 00 00                         nop
+073536 C 00 00                         nop
+073538 C 00 00                         nop
+07353A C 5E 07 3A FE                   jsr     sub_73AFE:24
+07353E C 40 38                         bra     locret_73578:8
+
+======== clone_direction_dispatch (02AD08..02AD40) ========
+---- sub_2AD08 ----
+02AD08 C AC E4                         cmp.b   #0xE4, r4l
+02AD0A C 6B 03 BB C2                   mov.w   @0xFFFFBBC2:16, r3
+02AD0E C 1B 53                         dec.w   #1, r3
+02AD10 C 46 06                         bne     loc_2AD18:8
+02AD12 C 5E 07 35 8E                   jsr     sub_7358E:24
+02AD16 C 40 04                         bra     locret_2AD1C:8
+02AD18 C 5E 07 37 FC                   jsr     sub_737FC:24
+02AD1C C 54 70                         rts
+02AD1E C 6B 04 BB C2                   mov.w   @0xFFFFBBC2:16, r4
+02AD22 C 79 24 00 01                   cmp.w   #1, r4
+02AD26 C 47 1C                         beq     loc_2AD44:8
+02AD28 C 79 24 00 02                   cmp.w   #2, r4
+02AD2C C 46 36                         bne     loc_2AD64:8
+02AD2E C FB 02                         mov.b   #2, r3l
+02AD30 C 6A 0C BB E2                   mov.b   @0xFFFFBBE2:16, r4l
+02AD34 C AC 02                         cmp.b   #2, r4l
+02AD36 C 46 22                         bne     loc_2AD5A:8
+02AD38 C FC 00                         mov.b   #0, r4l
+02AD3A C 6A 8C BB E1                   mov.b   r4l, @0xFFFFBBE1:16
+02AD3E C 5E 06 9D 3C                   jsr     sub_69D3C:24
+
+FUNC 073AB4: sub_73AB4 .. 073AEC
+    caller 0735D0 t17
+    caller 073B30 t17
+    caller 073BD6 t17
+    caller 073C38 t17
+    caller 073C84 t17
+    caller 073CB4 t17
+    caller 073D3A t17
+    caller 073D72 t17
+    caller 073E14 t17
+    caller 073E4C t17
+    caller 073EA8 t17
+    caller 073ED6 t17
+    caller 073F0C t17
+    caller 073FB8 t17
+    caller 073FDE t17
+    caller 074004 t17
+    caller 07401E t17
+    caller 074044 t17
+    caller 074054 t17
+    caller 07406A t17
+    caller 0740CC t17
+    caller 074128 t17
+    caller 074150 t17
+    caller 0741EA t17
+    caller 074212 t17
+    caller 074242 t17
+    caller 07427A t17
+    caller 074292 t17
+    caller 0742B6 t17
+    caller 07430A t17
+    caller 0743D4 t17
+    caller 074466 t17
+
+FUNC 073AFE: sub_73AFE .. 073B62
+    caller 07353A t17
+
+FUNC 0734C2: sub_734C2 .. 0734F4
+    caller 010516 t17
+    caller 07388E t17
+
+FUNC 0734BE: sub_734BE .. 0734C2
+    caller 06BD6E t17
+    caller 0737E6 t17
+    caller 07391C t17
+    caller 073B7A t17
+
+FUNC 07357A: sub_7357A .. 07358E
+    caller 0737F4 t17
+    caller 073924 t17
+
+FUNC 0734F4: sub_734F4 .. 07351E
+    caller 0734C2 t17
+    caller 073540 t17
+
+FUNC 07351E: sub_7351E .. 073540
+    caller 002B36 t17
+
+XREFS clone_timeout_tick 00FF94B8 : 0
+XREFS clone_timeout_tick FFFF94B8 : 8
+    from 002A38 (in sub_2A30) t3  mov.b   @0xFFFF94B8:16, r4l
+    from 002A40 (in sub_2A30) t2  mov.b   r4l, @0xFFFF94B8:16
+    from 003576 (in sub_3576) t3  mov.b   @0xFFFF94B8:16, r4l
+    from 00357E (in sub_3576) t2  mov.b   r4l, @0xFFFF94B8:16
+    from 07375E (in sub_7374A) t3  mov.b   @0xFFFF94B8:16, r4l
+    from 073766 (in sub_7374A) t2  mov.b   r4l, @0xFFFF94B8:16
+    from 0738BA (in sub_738AC) t3  mov.b   @0xFFFF94B8:16, r4l
+    from 0738C2 (in sub_738AC) t2  mov.b   r4l, @0xFFFF94B8:16
+
+XREFS clone_progress_seg 00FFA9DD : 0
+XREFS clone_progress_seg FFFFA9DD : 12
+    from 008524 (in sub_84C4) t3  mov.b   @0xFFFFA9DD:16, r4l
+    from 0085B2 (in sub_856C) t3  mov.b   @0xFFFFA9DD:16, r4l
+    from 03EAAC (in sub_3EA28) t2  mov.b   r4l, @0xFFFFA9DD:16
+    from 03EB12 (in sub_3EA28) t2  mov.b   r4l, @0xFFFFA9DD:16
+    from 03EBC2 (in sub_3EA28) t2  mov.b   r3h, @0xFFFFA9DD:16
+    from 03EBDE (in sub_3EBD6) t3  mov.b   @0xFFFFA9DD:16, r4l
+    from 03EBF4 (in sub_3EBD6) t3  mov.b   @0xFFFFA9DD:16, r4l
+    from 03EBFA (in sub_3EBD6) t2  mov.b   r4l, @0xFFFFA9DD:16
+    from 03EC28 (in sub_3EC06) t3  mov.b   @0xFFFFA9DD:16, r4l
+    from 03EC30 (in sub_3EC06) t2  mov.b   r3h, @0xFFFFA9DD:16
+    from 07369E (in sub_73686) t2  mov.b   r4l, @0xFFFFA9DD:16
+    from 0736CE (in sub_736B6) t2  mov.b   r4l, @0xFFFFA9DD:16

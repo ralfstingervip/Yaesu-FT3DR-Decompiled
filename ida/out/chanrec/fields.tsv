@@ -1,0 +1,47 @@
+# Lane F8 - FT3DR ver 1.02 MAIN channel/operating-record field map (H8S, base 0, big-endian).
+# Unpack sub_3FB0C: er5 = packed record (@0xFFAC76), er6 = working = [0xFF812A]+0x12.
+# Readers use er0 = [0xFF812A] (record base), so reader offset = unpack er6-offset + 0x12.
+# working_off below is the er0-relative offset actually read by reader_addr (reads @(working_off,er0)).
+# status: C=Confirmed (bytes/insn read)  I=Inferred  U=Unknown  NF=Not found(scope stated)
+# A/B slots: slot A = [0xFF812A]+0x12 (main/A band); slot B = 0xFF90F0+0x12 = 0xFF9102 (sub/B band).
+packed_off	bits	working_off	meaning	reader_addr	status	evidence
++0x00	b0-7	+0x12	per-record operating FLAGS byte (NOT a channel number); copied whole; sub-bits below	0052E4	C	unpack 3FB44 mov.b @(0,er5)/3FB48 mov.b ->@(0,er6); 61 refs to @(0x12,er0)
++0x00	b0-1	+0x12.0-1	2-bit sub-field (written by sub_EC42)	00EC56	C	EC56-EC5E: and#0xFC / or r4h / store @(0x12,er0)
++0x00	b2-3	+0x12.2-3	2-bit sub-field (written by sub_EC20)	00EC34	C	EC34-EC3C: and#0xF3 / or r4h / store @(0x12,er0)
++0x00	b4	+0x12.4	RF band/path flag: copied (inverted) to output port 0xFF52 bit5; selects PLL tables unk_30C3E/unk_30C86	0160E6	C	0160E6 bld#4,r4l / bist#5,@0xFFFF52; sub_2F87C 02F880 btst#4 -> table; toggled 0160DC bnot#4
++0x00	b5	+0x12.5	on-screen on/off = F321; also halves RF level (shlr) in sub_354E4 family (ATT-like)	0052E8	C	52E4-52F2 bld#5->F321; 03552C btst#5 then shlr r6l (sub_354E4/35550/3559C/35608/35834); toggled 016600 bnot#5
++0x00	b6	+0x12.6	"custom STEP valid" gate (gates use of +0x14 step)	01DF7E	C	1DF7E btst#6->read +0x14; sub_1DCA6 01DCB6 bset#6 after writing +0x14; bclr 01E05C/023294
++0x00	b7	+0x12.7	flag (set in sub_19xxx/sub_1F866, cleared in sub_3293A)	019526	I	019526/01953A bset#7; 032960 bclr#7
++0x01	b0-3	+0x14	STEP index (F391)	00581C	C	[doc23] unpack 3FB50 and#0xF->er6+2; sub_580C 5816 reads +0x14 -> F391
++0x01	b4-5	+0x15	RPT SHIFT (F38E)	005708	C	[doc23] unpack 3FB5A->er6+3; sub_5702 reads +0x15 -> F38E
++0x01	b6-7	+0x19	RX MODE (F322)	00571E	C	[doc23] unpack 3FB68 and#0xC0 rotl#2->er6+7; sub_5714/sub_9D82 reads +0x19 -> F322
++0x02..+0x04	24b	+0x1A	RX frequency (3-byte BCD; low byte +0x05 is a separate sub-byte, zeroed here)	-	C	unpack 3FB70 mov.l @(2,er5); 3FB76 clear r4l; 3FBBA store @(8,er6)=er0+0x1A
++0x05	b0-3	+0x16	4-bit index, band-remapped via tables 0x3C70/3C7C/3C88/3C94 -> F34A (tone/squelch-code group)	0057F8	I	unpack 3FBC4 and#0xF->er6+4; sub_3EFEE 3F000 reads +0x16, 3F00A @(0x3C94,er4); sub_57F8 ->F34A
++0x05	b4-5	+0x36.4-5	per-band MODE sub-value (live mirror A:[0xFF8EB3]/B:[0xFF8EC2]); drives modulation-icon render	01CBF4	C	unpack 3FBDA and#0x30->er6+0x24; sub_1CBE6 01CBF4 r5l=(0x36&0x30)>>4; repack sub_1CC62 uses [8EB3]
++0x05	b6-7	+0x13	2-bit field -> F400	00597E	C	unpack 3FBCE and#0xC0 rotl#2->er6+1; sub_597E reads +0x13 -> F400
++0x06..+0x17	18B	+0x22..+0x33	name/tag or packed aux block (word @+0x06, longs @+0x08/+0x0C/+0x10/+0x14)	-	C	unpack 3FBE0/3FBE8/3FBF4/3FC00/3FC0C copy into er6+0x10..0x21
++0x18..+0x1A	24b	+0x1E	TX/offset frequency (3-byte; low byte +0x1B separate)	-	C	unpack 3FC18 mov.l @(0x18,er5); 3FC1E clear r4l; 3FC62 store @(0xC,er6)=er0+0x1E
++0x1B	b0-7	+0x17	byte copied whole	005846	C	unpack 3FC68->er6+5; sub_9CB2 path reads +0x17 at 5846
++0x1C	b0-7	+0x18	byte copied whole	-	C	unpack 3FC70->er6+6
++0x1D	b0-4	+0x34	PR FREQUENCY (F346)	005A10	C	[doc23] unpack 3FC7C and#0x1F->er6+0x22; sub at 5A0C reads +0x34 -> F346
++0x1D	b5-7	+0x35	DCS INVERSION (F342)	005142	C	[doc23] unpack 3FC86 and#0xE0 rotl->er6+0x23; sub_5142 reads +0x35 -> F342
++0x1E	b0-3	+0x37	SQL S-METER (F348)	0056F8	C	[doc23] unpack 3FC94 and#0xF->er6+0x25; sub_56F4 reads +0x37 -> F348
++0x1E	b4-5	+0x36.0-1	2-bit field -> F395 (paired with [0xFF89C7])	0052CC	C	unpack 3FC9A and#0x30 shlr>>2 ->er6+0x24 b0-1; sub_52CC and#3 -> F395
++0x1E	b6-7	+0x36.6-7	per-band MODE group (value+2 in 2..5; live mirror A:[0xFF8EB6]/B:[0xFF8EC5]); selects modulation-icon group	01CBE6	C	unpack 3FCAA and#0xC0->er6+0x24 b6-7; sub_1CBE6 01CBE6 r5h=((0x36&0xC0)>>6)+2; repack sub_1CC62 uses [8EB6]
++0x1F	b7(sel)	(dest slot)	destination-slot select: 1=slot B (0xFF9102, +sets 0x8EA6.0); 0=slot A ([0xFF812A]+0x12). A/B = main/sub band	03FB10	C	3FB10 btst#7; 3FB32 er6=0xFF9102 & bset#0,@0x8EA6; sub_EAD2 EB62 =0x98 if er0==0xFF90F0 else 0x18; sub_3A5F8 redirects er0->0xFF90F0 when 8EA6.0 set
++0x1F	b0-2	+0x38	3-bit per-band field -> F340 high byte (paired w/ [0xFF8995]); also consumed by PLL/mode (sub_2E610,sub_31A20..)	004EB4	C	unpack 3FCBA and#7->er6+0x26; 04EB4 reads +0x38 -> F340 via sub_9792
++0x1F	b3-7	+0x39	GATE / band-capability byte (bits below); low 3 bits forced 0	005716	C	unpack 3FCC4 and#0xF8->er6+0x27 (=er0+0x39); 50 code refs to @(0x39,er0)
++0x1F	b3	+0x39.3	FIXED-RX-MODE flag: forces RX MODE display=2 (=AM, air-band); gates freq@+0x1A	005716	I	5716 btst#3 -> r3l stays #2; sub_16BC0 16BE8 bset#3; sub_1E63E 1E642 btst#3->use +0x1A; band-plan sub_EAD2 +0x1F=0x18 (108MHz bound in sub_E9CC)
++0x1F	b4	+0x39.4	FIXED-STEP flag: forces STEP display=0x0C; selects tuning tables unk_170F8/170FE,unk_1E07C,[AE8C]	00580E	I	580E btst#4 -> r3l stays #0x0C; sub_1700A 17084 bset#4; sub_1E6D4 1E6DE btst#4->use +0x1A
++0x1F	b5	+0x39.5	on-screen on/off = F320; propagates to RF/DSP bits 0x8173.4 and 0x8176.1	004E70	C	4E70 bld#5->F320; sub_2F8E6 2F8F2 bld#5/bst#4,@0x8173; sub_3138E 3139A bld#5/bst#1,@0x8176; toggled 015F56
++0x1F	b6	+0x39.6	not referenced individually (reserved/unused)	-	NF	no btst/bld/bset/bclr/bnot/bst on @(0x39,er0) bit6 across all 50 refs in 0..0x80000
++0x1F	b7	+0x39.7	A/B record-slot flag (same bit as dest-slot select); cleared on commit & on clone-load	01F1CE	C	1F1D2 btst#7; sub_3D022 3D352 bclr#7; clone sub_75114 75118 bclr#7
+# ---- 0xFF89C4 persisted settings flag byte (doc23 Open #4); EEPROM 0x624 / BACKUP.dat 0x4E4; default 5 ----
+0xFF89C4	b0	-	never read or written as an individual bit	-	NF	scope: all code heads 0..0x80000 (IDA) + whole-image raw scan; only whole-byte init(=5)/restore & 0xFF8920 block copy touch it
+0xFF89C4	b1	-	toggled 16446 bnot#1; read btst#1 17996/1655E/3E792/48D08/48D5C/49C30	017996	C	known doc23
+0xFF89C4	b2	-	toggled 1644E bnot#2 (no btst/bld reader found)	-	C	toggler only at 1644E
+0xFF89C4	b3	-	toggled 1645E bnot#3; read btst#3 14AB8/14AD0/14B08/174A4/1F360	014B08	C	known doc23
+0xFF89C4	b4	-	toggled 16456 bnot#4; read bld/btst#4 7C62/14EF2/2998C/1505A + ~20 more	007C62	C	known doc23
+0xFF89C4	b5	-	never read or written as an individual bit	-	NF	scope as bit0; default value 5 leaves b5=0
+0xFF89C4	b6	-	never read or written as an individual bit	-	NF	scope as bit0; default value 5 leaves b6=0
+0xFF89C4	b7	-	never read or written as an individual bit	-	NF	scope as bit0; default value 5 leaves b7=0

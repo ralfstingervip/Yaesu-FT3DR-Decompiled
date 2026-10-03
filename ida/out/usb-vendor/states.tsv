@@ -1,0 +1,13 @@
+state	table_slot	handler	waits_for	accepts	next	notes
+0	0x055002	0x055034	FF8180.0 (VBUS present)	-	1	entered on reset (0x054C52) and on every VBUS change (0x054EF0)
+1	0x055006	0x055042	SETUP in ring	80 06 type 1/2	2 (data), latch 5	first device request answered with 8 bytes
+2	0x05500A	0x055196	FF8180.3 (EP0 IN complete)	-	3	IN data stage pumped by ISR IFR0 b0 (8 bytes per packet from [FFB09E])
+3	0x05500E	0x0551AA	FF8180.4 (EP0 OUT packet = status ZLP)	-	latched next (FF8182)	
+4	0x055012	0x0551C2	FF8180.3 (ZLP sent)	-	latched next	used as status stage of D1/D2/D3; ZLP sent by IFR0 b1 handler 0x054E30
+5	0x055016	0x055042	SETUP	80 06 type 1/2	2, latch 5 or 6	device descriptor now 18 bytes; 32-byte config moves to 6
+6	0x05501A	0x0551DA	SETUP; EP3 report check each poll	C1 D4 only	2, latch 7	'configured'. D4 is mandatory before any D1/D3
+7	0x05501E	0x055306	SETUP; EP3 report check	41 D3, 41 D1	D3: 4 latch 7; D1 ok: 8; D1 refused: 4 latch 11	
+8	0x055022	0x055520	FFAAE8 == 0	-	4, latch 9	holds the D1 status stage while the tone/event sequencer is busy
+9	0x055026	0x055552	IFR0 b6 (EP1 full) or SETUP	EP1 data, 41 D2	D2: 4 latch 10	no EP3 report check in this state
+10	0x05502A	0x055306	same as 7	41 D3, 41 D1	as 7	next image
+11	0x05502E	0x0556C8	IFR0 b6 or SETUP	EP1 data (discarded), 41 D2	D2: 4 latch 10	after a refused D1

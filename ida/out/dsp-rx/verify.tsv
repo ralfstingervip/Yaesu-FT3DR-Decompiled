@@ -1,0 +1,68 @@
+addr	len	bytes_in_image	expected	ok	meaning
+056b58	4	6a 0b b1 02	6a 0b b1 02	yes	mov.b @B102,r3l (state index)
+056b5c	6	7a 63 00 00 00 ff	7a 63 00 00 00 ff	yes	and.l #0xFF,er3 (only bound: zero-extend)
+056b62	2	10 73	10 73	yes	shll.l #2,er3
+056b64	10	78 b0 6b 26 00 05 6b 8a 59 60	78 b0 6b 26 00 05 6b 8a 59 60	yes	mov.l @(0x56B8A,er3),er6 ; jmp @er6
+056b1a	8	78 40 6a 2c 00 05 6b 6e	78 40 6a 2c 00 05 6b 6e	yes	flag table 0x56B6E[B102]
+056b6e	28	00 01 01 00 01 01 01 01 01 00 01 01 01 01 01 00 01 01 01 00 01 01 01 01 00 01 01 01	00 01 01 00 01 01 01 01 01 00 01 01 01 01 01 00 01 01 01 00 01 01 01 01 00 01 01 01	yes	28 A6-resync flags
+056a94	6	01 00 6b 02 b0 e0	01 00 6b 02 b0 e0	yes	mov.l @rx[0..3],er2
+056a9c	4	e9 c0 ea 03	e9 c0 ea 03	yes	r1l=rx[1]&0xC0 (FI), r2l=rx[3]&3 (DT)
+056f06	12	6a 0c b0 e1 ec 30 11 4c 11 4c ac 02	6a 0c b0 e1 ec 30 11 4c 11 4c ac 02	yes	(rx[1]&0x30)>>4 must == 2
+056f14	4	6a 8c b1 10	6a 8c b1 10	yes	sole writer of B110 (value 2)
+056fde	8	6a 0c b0 e4 ec 7f ac 7f	6a 0c b0 e4 ec 7f ac 7f	yes	DG-ID: rx[4]&0x7F vs 0x7F
+056ffe	6	0d 4b 5e 05 6c be	0d 4b 5e 05 6c be	yes	dead DP-ID check (no xref)
+057130	12	7a 05 00 ff b0 e1 7a 06 00 fe f9 20	7a 05 00 ff b0 e1 7a 06 00 fe f9 20	yes	A6 copy src rx+1 dst FEF920 (26 B)
+057312	12	7a 05 00 ff b0 e7 7a 06 00 fe f9 3a	7a 05 00 ff b0 e7 7a 06 00 fe f9 3a	yes	A7 copy rx+7 -> FEF93A (20 B)
+0577c0	12	7a 05 00 ff b0 e7 7a 06 00 fe f9 4e	7a 05 00 ff b0 e7 7a 06 00 fe f9 4e	yes	A8 copy rx+7 -> FEF94E (20 B)
+0586c0	2	fc 14	fc 14	yes	A9 V/D1: 20 B per frame
+058c4e	2	fc 0a	fc 0a	yes	AA V/D2: 10 B per frame
+0586a2	4	eb 0f ab 06	eb 0f ab 06	yes	V/D1 frame count nibble < 6
+0588cc	4	eb 0f ab 0e	eb 0f ab 0e	yes	Data FR frame count nibble < 0x0E
+058c30	4	eb 0f ab 03	eb 0f ab 03	yes	V/D2 frame count nibble < 3
+05892e	6	6a 0c b0 e8 ac 4e	6a 0c b0 e8 ac 4e	yes	Data FR first frame: rx[8]=='N'
+058962	4	79 04 04 00	79 04 04 00	yes	'Nb' default length 0x400
+058e80	6	7a 05 00 05 9b 44	7a 05 00 05 9b 44	yes	group dest compare ROM 0x59B44
+059b44	10	2a 2a 2a 2a 2a 2a 2a 2a 2a 2a	2a 2a 2a 2a 2a 2a 2a 2a 2a 2a	yes	'**********' ALL
+058ea0	6	7a 05 00 ff a8 da	7a 05 00 ff a8 da	yes	individual dest compare own callsign FFA8DA
+058e66	7	00 22 61 5f 30 03 08	00 22 61 5f 30 03 08	yes	canned voice-end message
+05803e	6	6b a4 00 ff 07 a4	6b a4 00 ff 07 a4	yes	'N' class store length FF07A4
+0581b0	6	6b a4 00 ff 0b f4	6b a4 00 ff 0b f4	yes	']' class store length FF0BF4
+058516	6	6b a4 00 ff 14 40	6b a4 00 ff 14 40	yes	'G' class store length FF1440
+05eaac	6	7a 06 00 fe fd 72	7a 06 00 fe fd 72	yes	host-link copy dst FEFD72
+055e06	16	79 04 01 18 7a 05 00 ff 98 00 7a 06 00 ff 14 89	79 04 01 18 7a 05 00 ff 98 00 7a 06 00 ff 14 89	yes	0x55DFC copies 0x118 B FF9800->FF1489
+05a856	4	ac ab 47 6c	ac ab 47 6c	yes	trace: AB -> TERM RX
+05a874	4	ac bb 47 4e	ac bb 47 4e	yes	trace: BB -> TERM RX
+056c46	16	79 04 00 10 7a 05 00 ff b0 ec 7a 06 00 ff 47 06	79 04 00 10 7a 05 00 ff b0 ec 7a 06 00 ff 47 06	yes	DP-ID capture rx+12 16 B -> FF4706
+0569be	20	ac a6 58 50 00 86 ac ac 58 50 00 84 ac b6 45 7c ac bc 45 7c	ac a6 58 50 00 86 ac ac 58 50 00 84 ac b6 45 7c ac bc 45 7c	yes	no-ACK for A6-AB / B6-BB
+05af34	22	44 53 50 3e 43 50 55 3a 20 44 41 54 41 20 54 45 58 54 20 53 45 54	DSP>CPU: DATA TEXT SET	yes	string
+05af4c	16	44 53 50 3e 43 50 55 3a 20 54 45 52 4d 20 54 58	DSP>CPU: TERM TX	yes	string
+05af5e	16	44 53 50 3e 43 50 55 3a 20 54 45 52 4d 20 52 58	DSP>CPU: TERM RX	yes	string
+056b8a	4	00 05 6e e4	state 0 -> 056ee4	yes	jump table slot
+056b8e	4	00 05 72 f2	state 1 -> 0572f2	yes	jump table slot
+056b92	4	00 05 73 66	state 2 -> 057366	yes	jump table slot
+056b96	4	00 05 76 02	state 3 -> 057602	yes	jump table slot
+056b9a	4	00 05 76 c0	state 4 -> 0576c0	yes	jump table slot
+056b9e	4	00 05 77 72	state 5 -> 057772	yes	jump table slot
+056ba2	4	00 05 86 78	state 6 -> 058678	yes	jump table slot
+056ba6	4	00 05 74 7a	state 7 -> 05747a	yes	jump table slot
+056baa	4	00 05 74 ee	state 8 -> 0574ee	yes	jump table slot
+056bae	4	00 05 7b 2c	state 9 -> 057b2c	yes	jump table slot
+056bb2	4	00 05 7c 06	state 10 -> 057c06	yes	jump table slot
+056bb6	4	00 05 7c d4	state 11 -> 057cd4	yes	jump table slot
+056bba	4	00 05 8c 06	state 12 -> 058c06	yes	jump table slot
+056bbe	4	00 05 73 b6	state 13 -> 0573b6	yes	jump table slot
+056bc2	4	00 05 74 2a	state 14 -> 05742a	yes	jump table slot
+056bc6	4	00 05 78 14	state 15 -> 057814	yes	jump table slot
+056bca	4	00 05 78 d2	state 16 -> 0578d2	yes	jump table slot
+056bce	4	00 05 79 84	state 17 -> 057984	yes	jump table slot
+056bd2	4	00 05 88 74	state 18 -> 058874	yes	jump table slot
+056bd6	4	00 05 7a 26	state 19 -> 057a26	yes	jump table slot
+056bda	4	00 05 7a 88	state 20 -> 057a88	yes	jump table slot
+056bde	4	00 05 7a e2	state 21 -> 057ae2	yes	jump table slot
+056be2	4	00 05 75 3e	state 22 -> 05753e	yes	jump table slot
+056be6	4	00 05 75 b2	state 23 -> 0575b2	yes	jump table slot
+056bea	4	00 05 7d 92	state 24 -> 057d92	yes	jump table slot
+056bee	4	00 05 7e 5c	state 25 -> 057e5c	yes	jump table slot
+056bf2	4	00 05 7f 1a	state 26 -> 057f1a	yes	jump table slot
+056bf6	4	00 05 8c 06	state 27 -> 058c06	yes	jump table slot
+-	-	-	B102 writers=79	-	0x00:33; 0x01:1; 0x0a:2; 0x0b:1; 0x0c:4; 0x0d:1; 0x0f:2; 0x10:2; 0x11:1; 0x12:7; 0x13:1; 0x14:1; 0x15:1; 0x16:1; 0x18:6; 0x19:2; 0x1a:1; 0x03:2; 0x04:2; 0x05:1; 0x06:4; 0x07:1; 0x09:2

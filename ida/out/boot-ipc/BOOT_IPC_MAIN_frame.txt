@@ -1,0 +1,132 @@
+job BOOT_IPC_MAIN suffix frame
+; ==== sub_B6B6  0000B6B6-0000B7EE ====
+0000B6B6  mov.w   @0xFF3D72:32, r2
+0000B6BC  beq     loc_B7DC:16
+0000B6C0  btst    #0, @0xFFFFBC2B:16
+0000B6C6  beq     loc_B6EC:8
+0000B6C8  bset    #0, @0xFFFFBC2B:16
+0000B6CE  bclr    #0, @0xFFFFBC2B:16
+0000B6D4  mov.w   #0x120, r4
+0000B6D8  mov.l   #0xFF3D72, er5
+0000B6DE  mov.l   #0xFF95F8, er6
+0000B6E4  eepmov.w
+0000B6E8  mov.w   r4, r4
+0000B6EA  bne     loc_B6E4:8
+0000B6EC  mov.w   @0xFF3D74:32, r4
+0000B6F2  cmp.w   #0xFC00, r4
+0000B6F6  beq     loc_B718:8
+0000B6F8  cmp.w   #0xF3D5, r4
+0000B6FC  beq     loc_B718:8
+0000B6FE  cmp.w   #0xFE00, r4
+0000B702  bcc     loc_B718:8
+0000B704  mov.b   #0, r3l
+0000B706  mov.b   @0xFF3D87:32, r4l
+0000B70C  cmp.b   #3, r4l
+0000B70E  bne     loc_B712:8
+0000B710  mov.b   #1, r3l
+0000B712  mov.b   r3l, @0xFF3D8E:32
+0000B718  mov.w   #0, r3
+0000B71C  mov.w   #0, r4
+0000B720  mov.b   #4, r6l
+0000B722  mov.l   #0xFF3D74, er5
+0000B728  mov.b   @er5+, r4l
+0000B72A  add.w   r4, r3
+0000B72C  dec.b   r6l
+0000B72E  bne     loc_B728:8
+0000B730  mov.b   r3h, @0xFF3D78:32
+0000B736  mov.b   r3l, @0xFF3D79:32
+0000B73C  sub.w   #8, r2
+0000B740  mov.w   #0, e2
+0000B744  mov.w   #0, r3
+0000B748  mov.w   #0, r4
+0000B74C  mov.w   r2, r6
+0000B74E  mov.l   #0xFF3D74, er5
+0000B754  mov.b   @er5+, r4l
+0000B756  add.w   r4, r3
+0000B758  dec.w   #1, r6
+0000B75A  bne     loc_B754:8
+0000B75C  add.l   #0xFF3D74, er2
+0000B762  mov.b   r3h, @er2
+0000B764  adds    #1, er2
+0000B766  mov.b   r3l, @er2
+0000B768  adds    #1, er2
+0000B76A  mov.b   #0, r4l
+0000B76C  mov.b   #6, r6l
+0000B76E  mov.b   r4l, @er2
+0000B770  adds    #1, er2
+0000B772  dec.b   r6l
+0000B774  bne     loc_B76E:8
+0000B776  mov.b   @0xFFFFBBE5:16, r4l
+0000B77A  bne     loc_B79C:8
+0000B77C  mov.w   @0xFF3D72:32, r3
+0000B782  mov.l   #0xFF3D74, er5
+0000B788  mov.l   #0xFF4176, er6
+0000B78E  mov.b   @er5+, r4h
+0000B790  mov.b   @er6+, r4l
+0000B792  cmp.b   r4h, r4l
+0000B794  bne     loc_B79C:8
+0000B796  dec.w   #1, r3
+0000B798  bne     loc_B78E:8
+0000B79A  bra     loc_B7DC:8
+0000B79C  mov.b   #0, r4l
+0000B79E  mov.b   r4l, @0xFFFFBBE5:16
+0000B7A2  mov.w   @0xFF3D72:32, r4
+0000B7A8  mov.w   r4, @0xFF4174:32
+0000B7AE  mov.l   #0xFF3D74, er5
+0000B7B4  mov.l   #0xFF4176, er6
+0000B7BA  eepmov.w
+0000B7BE  mov.w   r4, r4
+0000B7C0  bne     loc_B7BA:8
+0000B7C2  mov.b   #1, r4l
+0000B7C4  mov.b   r4l, @0xFFFFBBE4:16
+0000B7C8  mov.w   @0xFF4174:32, r3
+0000B7CE  mov.w   #0, e3
+0000B7D2  mov.l   #0xFF4176, er5
+0000B7D8  jsr     sub_482D4:24
+0000B7DC  mov.w   #0, r4
+0000B7E0  mov.w   r4, @0xFF3D72:32
+0000B7E6  bclr    #1, @0xFFFF817E:16
+0000B7EC  rts
+
+; ==== sub_44A70  00044A70-00044AC8 ====
+00044A70  stm.l   er4-er5, @-sp
+00044A74  mov.b   @0xFFFFF614:16, r5l
+00044A78  mov.b   r5l, r5h
+00044A7A  and.b   #0x38, r5l
+00044A7C  bne     loc_44AAC:8
+00044A7E  and.b   #0x87, r5h
+00044A80  mov.b   r5h, @0xFFFFF614:16
+00044A84  mov.b   @0xFFFFF615:16, r5l
+00044A88  mov.l   @0xFFFF8146:16, er4
+00044A8E  mov.b   r5l, @er4
+00044A90  adds    #1, er4
+00044A92  cmp.l   #0xFF3C6B, er4
+00044A98  bcs     loc_44AA0:8
+00044A9A  mov.l   #0xFF306A, er4
+00044AA0  mov.l   er4, @0xFFFF8146:16
+00044AA6  ldm.l   @sp+, er4-er5
+00044AAA  rte
+00044AAC  mov.b   r5h, r5l
+00044AAE  and.b   #0xC7, r5l
+00044AB0  mov.b   r5l, @0xFFFFF614:16
+00044AB4  mov.b   r5h, r5l
+00044AB6  and.b   #0x40, r5l
+00044AB8  bne     loc_44ABE:8
+00044ABA  and.b   #0x10, r5h
+00044ABC  beq     loc_44AC2:8
+00044ABE  mov.b   @0xFFFFF615:16, r5l
+00044AC2  ldm.l   @sp+, er4-er5
+00044AC6  rte
+
+; ==== xrefs TO 0000B6B6 ====
+  0000487C  ?                             jsr     sub_B6B6:24
+  00005668  sub_5634                      jsr     sub_B6B6:24
+  0000699C  sub_698C                      jsr     sub_B6B6:24
+  00007FF0  sub_7FCE                      jsr     sub_B6B6:24
+  0000852A  sub_84C4                      jsr     sub_B6B6:24
+  0000AEA2  sub_AE3C                      bra     sub_B6B6:16
+  0000AF6C  sub_AF06                      bra     sub_B6B6:16
+  0000AFBE  sub_AF94                      bra     sub_B6B6:16
+  0000D56C  sub_D53A                      jsr     sub_B6B6:24
+; (9 xrefs)
+

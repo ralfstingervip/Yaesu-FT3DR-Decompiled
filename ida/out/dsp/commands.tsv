@@ -1,0 +1,43 @@
+dir	opcode	payload	meaning	confidence	evidence
+CPU>DSP	0x06		frame type, DSP answers 0xA6	confirmed	trace switch MAIN 0x5A540 cmp.b #6
+CPU>DSP	0x07		frame type, DSP answers 0xA7	confirmed	MAIN 0x5A546
+CPU>DSP	0x08		frame type, DSP answers 0xA8	confirmed	MAIN 0x5A54C
+CPU>DSP	0x09	byte1 from 0xFFB122	frame type, DSP answers 0xA9	confirmed	MAIN 0x5A552 -> 0x5A5C4
+CPU>DSP	0x0A	byte1 from 0xFFB122	frame type, DSP answers 0xAA	confirmed	MAIN 0x5A556 -> 0x5A5C4
+CPU>DSP	0x0B	0x00 or 0x01, digit in the low nibble of the next byte	DTMF; trace prints ' DTMF  O' or ' DTMF  S' plus the digit	confirmed	MAIN 0x5A56E -> 0x5A762; builders 0x59F94 (0B 00) and 0x5A034 (0B 01); DTMF digit table ROM 0x456C = 0123456789ABCD*#-
+CPU>DSP	0x0C-0x0E		96-byte frames when MAIN RAM 0xFF8DDE != 0, otherwise 32	confirmed	MAIN 0x48386-0x4838C and 0x58FC6-0x58FCC
+CPU>DSP	0x10	byte1 = the rejected opcode	NAK from the CPU, sent when a received frame fails its checksum	confirmed	sub_58EE6 0x58F22, called from 0x56A52
+CPU>DSP	0x11	7 words of payload	control; also emitted as 0x31	confirmed	MAIN 0x5A574 -> 0x5A6C6; builder 0x590AA in sub_5905E
+CPU>DSP	0x12	2 words, byte1 carries bit fields	control; byte1 built from 0xFFB11E and 0xFFB0AA bits	confirmed	MAIN 0x5A562 -> 0x5A6CC; builder sub_59240 0x59286-0x592A4
+CPU>DSP	0x15	byte1 = 0x01 (18 records) or 0x11 (6 records), then N x 5 bytes	96-byte table upload: callsign / ID list from MAIN RAM 0xFF4576 (0x01) or 0xFF4696 (0x11); blank-record default is ROM 0x4C14 (spaces)	confirmed	sub_5A0B4 0x5A0B4, sub_5A0C0 0x5A0C0, body 0x5A17E-0x5A1B8; gated on the DSP version at 0x5B0CC
+CPU>DSP	0x16		96-byte frame	confirmed	MAIN 0x5A580 -> 0x5A9FC; builder sub_594FA 0x594FA cmp.b #0x16
+CPU>DSP	0x18	byte1 = 0	STOP ENCODE	confirmed	MAIN 0x5A55A -> string 0x5AF10; canned ROM packet 0x5903E; sender sub_58F94 called from 0x5BC24
+CPU>DSP	0x19		96-byte frame	confirmed	MAIN 0x5A57A -> 0x5AAD6
+CPU>DSP	0x1A	byte1 = 0 -> RX ENABLE, byte1 != 0 -> RX DISABLE	receiver enable / disable	confirmed	MAIN 0x5A55E -> 0x5A5AE, strings 0x5AED6 and 0x5AEC0; builders 0x59DD8 (1A 00) and 0x59E56 (1A 01)
+CPU>DSP	0x1C	byte1 from 0xFFB0B8	DATA TEXT SET, DSP answers 0x9C	confirmed	builder 0x5A082 in sub_5A040; response handled at 0x569B6
+CPU>DSP	0x1D	byte1 = 0 -> MUTE OFF, byte1 != 0 -> MUTE ON	audio mute	confirmed	MAIN 0x5A568 -> 0x5A74C, strings 0x5AEFC and 0x5AEEA; builders 0x59EF6 (1D 00) and 0x59EA6 (1D 01)
+CPU>DSP	0x1F	byte1 = 0x00 or 0x02	VER? - query the DSP firmware version, DSP answers 0x9F	confirmed	MAIN 0x5A598 -> string 0x5AF26; canned ROM packet 0x5901E = 1F 02; builder 0x5BBAA = 1F 00
+CPU>DSP	0x20	byte1 = the acknowledged opcode	ACK from the CPU	confirmed	sub_58F2A 0x58F66; trace test 0x5A4B8 cmp.b #0x20 -> ' Ack'
+CPU>DSP	0x31		variant of 0x11, same trace handler	confirmed	MAIN 0x5A592 -> 0x5A6C6; builder 0x5EB2E
+CPU>DSP	0x32		variant of 0x12, same trace handler	confirmed	MAIN 0x5A58C -> 0x5A6CC; builder 0x5EBA4
+DSP>CPU	0x90	byte1 = the rejected opcode	NAK: clears request bit6 and sets retry bit4 of 0xFFB0A4	confirmed	MAIN 0x569B2 -> 0x569E4; trace 0x5A878 -> ' Nak'
+DSP>CPU	0x9A		handled only when 0xFF8DDE != 0: sets bit0 of 0xFFB3D5	confirmed	MAIN 0x5698C-0x5699A
+DSP>CPU	0x9C		DATA TEXT SET -> bit0 of 0xFFB12D	confirmed	MAIN 0x569B6 -> 0x569DC; string 0x5AF34
+DSP>CPU	0x9E		TERM TX -> bit7 of 0xFFB12D	confirmed	MAIN 0x569BA -> 0x569D4; string 0x5AF4C
+DSP>CPU	0x9F	payload[0..1] = version word	VER response, stored as a word at MAIN RAM 0xFFB0DC and forwarded to SUB	confirmed	MAIN 0x569AA -> 0x56A04-0x56A0C; trace dumps 4 bytes at 0x5A884
+DSP>CPU	0xA0	byte1 = the acknowledged opcode	ACK: clears bit6 and sets bit5 of 0xFFB0A4	confirmed	MAIN 0x569AE -> 0x569F4; trace 0x5A82C -> ' Ack'
+DSP>CPU	0xA6		data / voice frame, handled by sub_56A94, no ACK returned	confirmed	MAIN 0x569BE-0x569C6; sub_56A94 0x56AD6
+DSP>CPU	0xA7		data / voice frame, no ACK	confirmed	MAIN 0x569BE-0x569C6
+DSP>CPU	0xA8		data / voice frame, no ACK	confirmed	trace 0x5A83C -> 0x5A948
+DSP>CPU	0xA9		data / voice frame, no ACK	confirmed	trace 0x5A842 -> 0x5ABD8
+DSP>CPU	0xAA		data / voice frame, no ACK	confirmed	trace 0x5A848 -> 0x5ABD8
+DSP>CPU	0xAB		TERM RX, no ACK	confirmed	trace 0x5A856 -> string 0x5AF5E; sub_56A94 0x56ADE
+DSP>CPU	0xB6		data / voice frame, no ACK	confirmed	MAIN 0x569CA-0x569D0; sub_56A94 0x56ADA
+DSP>CPU	0xB7		data / voice frame, no ACK	confirmed	trace 0x5A85E
+DSP>CPU	0xB8		data / voice frame, no ACK	confirmed	trace 0x5A862 -> 0x5A948
+DSP>CPU	0xB9		data / voice frame, no ACK	confirmed	trace 0x5A868 -> 0x5ABD8
+DSP>CPU	0xBA		data / voice frame, no ACK	confirmed	trace 0x5A86E -> 0x5ABD8
+DSP>CPU	0xBB		TERM RX, no ACK	confirmed	trace 0x5A874 -> string 0x5AF5E; sub_56A94 0x56AE2
+rule	-		opcodes 0xA6-0xAB and 0xB6-0xBB are processed without an ACK; every other DSP>CPU opcode gets ACK 0x20 first	confirmed	MAIN 0x569BE-0x569D2, loc_56A4A / loc_56A4E
+rule	-		response opcode = command opcode + 0xA0 for 0x06-0x0B and 0x16-0x1B; the 0x9x group (0x90, 0x9A, 0x9C, 0x9E, 0x9F) is command + 0x80	inferred	pairing of the two trace switches at 0x5A53E and 0x5A82A
+rule	-		a received frame whose trailing checksum does not match the running sum triggers NAK 0x10	confirmed	MAIN 0x56976-0x56982 -> 0x56A52 -> sub_58EE6

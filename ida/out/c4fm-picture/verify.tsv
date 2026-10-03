@@ -1,0 +1,21 @@
+addr	img	len	bytes	claim
+055e06	MAIN	20	79 04 01 18 7a 05 00 ff 98 00 7a 06 00 ff 14 89 7b d4 59 8f	EEPMOV setup+op: mov.w #0x118,r4 / mov.l #FF9800,er5 / mov.l #FF1489,er6 / eepmov.w(7b d4 59 8f) => src=0xFF9800 dst=0xFF1489 (I4 right, I1 reversed)
+055e9e	MAIN	12	7a 05 00 ff 98 13 01 00 6b 06 bc 48	reverse payload copy: src 0xFF9813 -> dst *0xFFBC48
+05f458	MAIN	10	f9 62 6b 29 00 ff 07 ee 5e 05	data-block handler entry: mov.b #'b',r1l ; load blk# 0xFF07EE
+05f480	MAIN	6	7a 02 00 ff 50 06	block dest er2 = 0xFF5006
+05f4b0	MAIN	12	7a 04 00 ff 50 06 01 00 6b 84 bc 48	er4=0xFF5006 -> @0xFFBC48 (FFFF push source)
+05f4a4	MAIN	4	fc 01 6a 8c	set 0xFFBC55=1 (trigger RX push machine)
+055bca	MAIN	8	6a 0a bc 55 47 0c fc 00	dispatcher reads 0xFFBC55; clears, dispatches 0xFFBC57
+055c12	MAIN	12	00 05 5f 84 00 05 5f 96 00 05 5f f0	off_55C12 = {sub_55F84, sub_55F96, sub_55FF0}
+055fde	MAIN	4	5e 00 b6 10	sub_55F96: jsr sub_B610 (FFFF push of received block)
+05f3f4	MAIN	10	01 00 6b 04 b2 08 47 0c 79 05	picture size @0xFFB208 ; #0x400 divxu block-count
+05f408	MAIN	4	6a 8c b2 5a	block count -> 0xFFB25A
+0710f8	MAIN	18	fc 01 6a 8c ba 9e fc 04 6a 8c ba 9f fc 05 6a 8c ba a0	SD save: op1->0xFFBA9E, param4->0xFFBA9F, dir5->0xFFBAA0
+00d554	MAIN	6	79 0c fc 00 6b ac	SD transport opcode 0xFC00
+055a70	MAIN	8	fc 03 6a 8c bc 52 5e 07	save_rx: 0xFFBC52=3 ; jsr sub_710C4
+02acd2	MAIN	10	6a 18 ba 81 70 10 5e 05 5a 70	UI confirm: bset #1 0xFFBA81 ; jsr sub_55A70
+06a976	MAIN	4	2e 6a 70 67	".jpg" literal
+ffedc517	SUB	4	00 10 0e 07	SUB FFFF handler writes 0x070E1000 (00 10 0e 07)
+fff3cbf5	SUB	4	00 10 0e 07	sub_FFF3CAD0 SD-file reader into 0x070E1000
+fff4ad9d	SUB	8	50 48 4f 54 4f 00 49 3a	string local tree, not in this repo
+fff4ad93	SUB	9	51 53 4f 4c 4f 47 00 49 3a	string local tree, not in this repo

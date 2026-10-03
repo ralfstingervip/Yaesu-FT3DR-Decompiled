@@ -1,0 +1,24 @@
+# proposals only; masks/seeds NOT edited by this lane
+start	end_excl	len	class	evidence
+050D5E	050D7E	32	DEAD	only inbound = bsr from UNPROVEN 050CFE/050D16 (dead callers); 0 proven CF/ptr/fallthrough
+051108	051144	60	DEAD	sole caller 054BBA jsr (inside the already-demoted 054AE2-054BF8 run); pred 051106 rts; no other inbound
+0526A2	0526BC	26	DEAD	only inbound = bsr from UNPROVEN 052696/0526F0; 0 proven inbound
+052A14	052A34	32	SPLIT-TAIL	tail of handler-loop fn 052A00-052A32 (mov.l @er2+,er5; jsr @er5 x3); head 052A00-052A12 UNPROVEN, 0 callers; pred 052A12 add.l (fall from unproven)
+05343C	053496	90	SPLIT-TAIL	tail of menu/eepmov+jsr @er5 fn ~053420; head 053420-05343A UNPROVEN; pred 05343A add.l (fall from unproven)
+0534C0	05351A	90	SPLIT-TAIL	near-identical sibling of 05343C; head UNPROVEN; pred 0534BE add.l (fall from unproven)
+056CBE	056CCA	12	DEAD	unreferenced fn; pred 056CBC rts(STOP); 0 inbound of any kind
+0591F8	059234	60	DEAD	only inbound = bsr from UNPROVEN 0591D8..0591F4 (dead callers); 0 proven inbound
+05E2E6	05E306	32	DEAD	only inbound = bsr from UNPROVEN 05E2DC; 0 proven inbound
+0620A6	0620B8	18	DEAD	vestigial er5-handler: 062054 mov.l #0x620A6,er5; jsr @0x61d8c, but 0x61d8c never reads/stores/calls er5; no other inbound
+062178	062186	14	DEAD	vestigial er5-handler, 4 load sites (062162/062962/062A40/066C74) -> jsr @0x61d8c; er5 unused (overwritten at 062972); no table ptr, no abs jsr, no fallthrough
+062722	062730	14	DEAD	vestigial er5-handler: 0626F0/062710 mov.l #0x62722,er5; jsr @0x61d8c; er5 ignored
+0645A4	064622	126	SPLIT-TAIL	tail; pred 0645A0 mov.b @0xb26f (UNPROVEN, fall-in); head unproven; interior 'ptrs' @01D33E/01D360 are mid-instruction false positives
+066924	066966	66	DEAD	unreferenced fn (btst @0xa9ee/@0xb39f, jsr 0x1fa22/0x1fa26); pred 066922 rts(STOP); 0 inbound
+067128	06712A	2	DEAD	vestigial er5 rts-stub; 0670EE/06710A mov.l #0x67128,er5; jsr @0x61d8c/@0x61e4a; neither (nor 0x67a0e) uses er5
+067522	067524	2	DEAD	lone rts after time-format fn 067502-067520; pred 067520 rts; 0 inbound
+068CB2	068CC6	20	DEAD	unreferenced fn (sets @0x9d3c=1,@0x8eb2=0,@0x9d3f=4); pred 068CB0 rts(STOP); 0 inbound
+# --- DATA-MISTYPED (retype as data; also removes from proven) ---
+05C600	05C602	2	DATA-MISTYPED	0xFFFF constant; loaded as er5 data ptr by mov.l #0x5C600,er5 at 05C57C/05C5F4 then passed to iterators 0x5c9d6/0x5c780; pred 05C5FE rts
+065A88	065A8C	4	DATA-MISTYPED	ASCII '312\0' (33 31 32 00); referenced as data by indexed table load near 065982; pred 065A86 rts
+073908	07390A	2	DATA-MISTYPED	2-byte data in the 0x0739xx-0x074xxx table cluster; loaded as er1 ptr at 073ABA with odd-address sibling 0x73909 (mov.l #0x73909,er1) -> cannot be code; pred 073906 rts
+074310	074322	18	DATA-MISTYPED	data block (bytes 00 00 41 48 30 36 30 4d ...) copied by eepmov.w from er5=0x74310 to RAM @0xff8956 (0742F2 mov.l #0x74310,er5; 0742F8 mov.l #0xff8956,er6; 0742FE eepmov.w); pred 07430E rts

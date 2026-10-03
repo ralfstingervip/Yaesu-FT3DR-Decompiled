@@ -1,0 +1,14 @@
+figure	item	bytes	evidence	byte_mask_argument
+headline	H10 SUB window code (base, sub-phase\ledger-delta.tsv)	464166	H8 464,058 + H10 +108	mask = raw\h10fix\mask_fix.bin (464,157, byte-identical rerun of h10_phase.py) + H8 hand pair FFEDFFFD-FFEE0005 (9)
+headline	FFEDFFFD pair now decoded by IDA (segment split moved to FFEDAB4C)	0	FFEDFFFD `fb e2 d4 cd 01 00` mov.l #1CDD4,r14 ; FFEE0003 `f8 e6 01`	already in the base as H8's hand-decoded 9 B; now a DB head, not a hand count
+headline	FFF2A7FC: 2nd byte of dead `2e 7e` bra.b at FFF2A7FB	-1	FFF2A7EE `20 0f` beq.b -> FFF2A7FD; FFF2A7F9 `a0 09 2e 7e a9 8c 72 41 0c 10`; lane-4 head FFF2A7FC `7e a9` is out of phase	byte is in mask_fix (vbytes of lane-4 body FFF2A7FC); true instruction starts at FFF2A7FB in dead orphan FFF2A6D1, so it is no longer a validated instruction byte; mask-diff.tsv row 'headline vs H10 FIX'
+headline	49 wave-2 `60 40` entries are pointer-table targets (H10 -98 reversed)	+98	e.g. FFF0F05B `60 40 60 40 f8 05`, slot FFED7990 = `5b f0 f0 ff`; all 49 slots aligned LE32 in FFED7990..FFED7E8C (w2-pointer-entries.tsv)	exactly the 98 bytes H10 deducted (raw\h10fix\fix_lost.tsv); 0 of them in mask_fix; credited under H8 tier-2 rule (aligned data site, target outside data, decodes to a stop)
+headline	RESULT	464263	464166 - 1 + 98	counts.txt 'headline + 49 pointer-reached w2 entries'; recount of the DB alone gives 464,165 before the +98
+reach-only	H10 reach-only companion (base)	454630		raw\h10fix\mask_reach_only.bin
+reach-only	FFEDFFFD..FFEE003B reached by flow once the pair decodes	+62	9 B pair + lane-4 body FFEE0006..FFEE003B (53 B) entered by fall-through from FFEE0003	0 of these 62 bytes are in mask_reach_only; all 62 are in the headline mask
+reach-only	49 wave-2 pointer entries as roots, and the lane-4 bodies they fall into	+2770	98 B entries + 2,672 B of lane-4 'body' functions (14 runs, mask-diff.tsv 'reach-only+w2ptr')	disjoint from the base reach mask by construction (mask-diff '+' rows); all inside headline+w2 mask
+reach-only	RESULT	457462	454630 + 62 + 2770	counts.txt
+all-well-formed	base	467999		524,288 - 56,289 typed
+all-well-formed	RESULT (DB code bytes outside the typed mask)	467999	DB SUB_FINAL: 468,012 code bytes in window, 13 of them FFF4B077 inside the published pool (kept typed)	0 delta: the -1 and +98 move bytes between credited and residue, both stay code
+code+typed	base	520455	464,166 + 56,289
+code+typed	RESULT	520552	464,263 + 56,289	typed mask unchanged (56,289); headline delta +97

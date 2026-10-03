@@ -1,0 +1,12 @@
+Lane 4 -- characterization of still-undefined bytes in the code band
+bands: 0xFFEDB000-0xFFF48000 and 0xFFF4C000-0xFFF50000
+
+total undefined in band   293316 bytes  (163502 runs)
+  pointer-table dwords    0 bytes  (0 runs of >=4 code pointers -> DATA: switch/jump/vtable)
+  runs w/ fully-valid decode 237437 bytes (probable code, no static flow-stop reached)
+  runs w/ invalid opcodes    55879 bytes (probable const/data pool)
+
+note: pointer-table bytes overlap the run buckets; they are the strongest
+proof of DATA within the undefined remainder.
+
+sample pointer-table runs (addr, dword_count):

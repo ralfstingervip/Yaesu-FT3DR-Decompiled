@@ -1,0 +1,21 @@
+addr	hex	dest	source	saved	label
+0x00de0a	6a 8c 80 0f	FF800F	r4l after immediate 2	RAM, then saved by the 0xDCE2 caller	sub_DDFE
+0x00de10	6a 8c 80 10	FF8010	r4l after immediate 1	RAM, then saved by the 0xDCE2 caller	sub_DDFE
+0x00de1a	6a 8d 80 11	FF8011	r5l from sub_DDE4, unconditional	RAM, then saved by the 0xDCE2 caller	sub_DDFE
+0x00df46	6a 8d 80 11	FF8011	r5l when the two samples agreed and the value differs	RAM, then saved by 0xDCE2	sub_DEFA
+0x0236e2	6a 8c 80 0f	FF800F	r4l = FFAD95	saved by jsr sub_39544 at 0x236EA	sub_236B8
+0x0236e6	6a 8b 80 10	FF8010	r3l, forced 0 when FF8011!=0 and destination is 6 or 7	saved by jsr sub_39544 at 0x236EA	sub_236B8
+0x073b12	6a 8c 80 10	FF8010	r4l after immediate 1	RAM only	sub_73AFE
+0x073b16	6a 8c 80 11	FF8011	r4l after immediate 1	RAM only	sub_73AFE
+0x073ba0	6a 8c 80 10	FF8010	r4l after immediate 1, after a block reload	RAM only	sub_73B6C
+0x073ba4	6a 8c 80 11	FF8011	r4l after immediate 1, after a block reload	RAM only	sub_73B6C
+0x0740f6	6a 81 80 0f	FF800F	r1h, the high byte of the word at FF96FA	saved by jsr sub_39544 at 0x740FE	sub_740E2
+0x0740fa	6a 8b 80 10	FF8010	r3l, 0 when r1h is 6 or 7, else r1l	saved by jsr sub_39544 at 0x740FE	sub_740E2
+0x03ac52	68 9c	FF800E-FF8015	each EEPROM byte, er1 starting at FF800E	load of EEPROM 0x20 for 8 bytes	sub_3AB80 via sub_39534
+0x03955e	7a 01 00 ff 80 0e	pointer	mov.l #0xFF800E, er1 with er0=0x20 and r6=8	arms load and save	sub_39554
+0x00dc8c	5e 03 95 34	block	jsr sub_39534 on the TAIS path	loads EEPROM 0x21-0x23	boot
+0x00dcd6	5e 03 95 34	block	jsr sub_39534 on the non-TAIS path	loads EEPROM 0x21-0x23	boot
+0x073b6c	5e 03 95 34	block	jsr sub_39534	reloads EEPROM 0x21-0x23, then RAM-forces 10 and 11	sub_73B6C
+0x00dce2	5e 03 95 44	block	jsr sub_39544	saves EEPROM 0x20-0x27	boot
+0x0236ea	5e 03 95 44	block	jsr sub_39544	saves EEPROM 0x20-0x27	sub_236B8
+0x0740fe	5e 03 95 44	block	jsr sub_39544	saves EEPROM 0x20-0x27	sub_740E2

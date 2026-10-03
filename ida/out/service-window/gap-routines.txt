@@ -1,0 +1,64 @@
+
+; ---- from 0781C6 ----
+0781C6  7a 01 00 fe e0 10         mov.l #0xfee010,er1
+0781CC  0f c8                     mov.l #0x4,er0
+0781CE  01 0d 01 00               mov.l #0x0,@er1
+0781D2  0a 81                     add.l er0,er1
+0781D4  7a 21 00 fe e2 0c         cmp.l #0xfee20c,er1
+0781DA  43 f2                     bls .-14 (0x781ce)
+0781DC  54 70                     rts 
+
+; ---- from 0781DE ----
+0781DE  6a 09 ee 04               mov.b @0xee04:16,r1l
+0781E2  17 61                     extu.l #2,er1
+0781E4  03 98 10 31               shll.l #0x18,er1
+0781E8  6a 08 ee 05               mov.b @0xee05:16,r0l
+0781EC  17 60                     extu.l #2,er0
+0781EE  10 f8                     shll.l #16,er0
+0781F0  01 f0 64 01               or.l er0,er1
+0781F4  6a 08 ee 06               mov.b @0xee06:16,r0l
+0781F8  17 60                     extu.l #2,er0
+0781FA  10 78                     shll.l #8,er0
+
+; ---- from 078256 ----
+078256  f8 08                     mov.b #0x8,r0l
+078258  38 88                     mov.b r0l,@0x88:8
+07825A  f8 0c                     mov.b #0xc,r0l
+07825C  38 89                     mov.b r0l,@0x89:8
+07825E  54 70                     rts 
+
+; ---- from 0784BE ----
+0784BE  7a 01 00 fe e0 08         mov.l #0xfee008,er1
+0784C4  7a 00 00 ff 62 88         mov.l #0xff6288,er0
+0784CA  01 01 69 81               mov.l er1,@(0x4:2,er0)
+0784CE  01 00 69 81               mov.l er1,@er0
+0784D2  f9 10                     mov.b #0x10,r1l
+0784D4  01 00 6f 81 00 54         mov.l er1,@(0x54:16,er0)
+0784DA  01 00 6f 81 00 50         mov.l er1,@(0x50:16,er0)
+0784E0  f1 e1                     mov.b #0xe1,r1h
+0784E2  01 00 6f 81 00 44         mov.l er1,@(0x44:16,er0)
+0784E8  01 00 6f 81 00 40         mov.l er1,@(0x40:16,er0)
+0784EE  6a f1 00 ff 62 40         mov.b #0x1,@0xff6240:32
+0784F4  6b f0 00 ff 63 f8         mov.w #0x0,@0xff63f8:32
+0784FA  01 7d 40 7f ee 00         mov.b #0x7f,@0xee00:16
+078500  01 7d 40 73 ee 28         mov.b #0x73,@0xee28:16
+078506  54 70                     rts 
+
+; ---- image references (BE24 after 5A/5E, or BE32) ----
+0781C6  NONE
+0781DE  NONE
+0781FC  NONE
+07821E  jsr/jmp@076A8E, jsr/jmp@076BF2
+078256  NONE
+07823C  jsr/jmp@076A88, jsr/jmp@076BEA
+078334  jsr/jmp@076844, jsr/jmp@0768A2, jsr/jmp@076916, jsr/jmp@0769E6, jsr/jmp@076B46
+0783DA  jsr/jmp@076A08, jsr/jmp@076B6A
+07842E  NONE
+078442  jsr/jmp@076D84, jsr/jmp@076DE0, jsr/jmp@076E3C, jsr/jmp@076E9C, jsr/jmp@076F54
+0784BE  be32@07B4BA
+078508  jsr/jmp@076F30
+078260  jsr/jmp@07845E
+07845A  jsr/jmp@078150, jsr/jmp@078212
+
+; ---- relative branch opcodes in 070000-078106 targeting the window ----
+rel_hits 0

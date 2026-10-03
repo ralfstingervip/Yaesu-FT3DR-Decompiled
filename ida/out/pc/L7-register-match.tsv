@@ -1,0 +1,267 @@
+ea24	image_hits	code_hits	n_functions	mnemonics	H8SX1668R_name	A_H8SX1668R_1668M	B_H8SX1658R_1658M	C_H8S2456_2456R_2454	C_name	notes
+FFEE00	13	13	3	mov.b:12,btst:1	IFR0	Y	Y	N		USB IFR0; read by vector 234 (USBINTN2) sub_54D50
+FFEE01	8	8	2	mov.b:8	IFR1	Y	Y	N		USB IFR1; vector 235 (USBINTN3) sub_54EC2
+FFEE02	9	9	3	mov.b:9	IFR2	Y	Y	N		USB IFR2; vectors 235/238
+FFEE04	4	4	4	mov.b:4	IER0	Y	Y	N		USB IER0=0x8D then 0x8F (sub_54C44, sub_55620)
+FFEE05	3	3	3	mov.b:3	IER1	Y	Y	N		
+FFEE06	3	3	3	mov.b:3	IER2	Y	Y	N		
+FFEE08	1	1	1	mov.b:1	ISR0	Y	Y	N		USB ISR0=0x00 -> all IFR0 sources on USBINTN2 = vector 234
+FFEE09	1	1	1	mov.b:1	ISR1	Y	Y	N		USB ISR1=0x07 -> IFR1 b0-2 on USBINTN3 = vector 235
+FFEE0A	1	1	1	mov.b:1	ISR2	Y	Y	N		USB ISR2=0x1F -> IFR2 b0-4 on USBINTN3 = vector 235
+FFEE0C	2	2	2	mov.b:2	EPDR0i	Y	Y	N		
+FFEE0D	1	1	1	mov.b:1	EPDR0o	Y	Y	N		
+FFEE0E	1	1	1	mov.b:1	EPDR0s	Y	Y	N		EPDR0s SETUP FIFO, 8-byte read
+FFEE10	1	1	1	mov.b:1	EPDR1	Y	Y	N		
+FFEE18	6	6	2	mov.b:6	EPDR3	Y	Y	N		
+FFEE24	1	1	1	mov.b:1	EPSZ0o	Y	Y	N		
+FFEE25	1	1	1	mov.b:1	EPSZ1	Y	Y	N		
+FFEE27	1	1	1	mov.b:1	DASTS	Y	Y	N		
+FFEE28	2	2	2	mov.b:2	FCLR	Y	Y	N		FCLR=0x73 (FIFO clear)
+FFEE2A	1	1	1	mov.b:1	EPSTL	Y	Y	N		
+FFEE2C	8	8	5	mov.b:8	TRG	Y	Y	N		TRG packet trigger
+FFEE2D	6	6	6	bset:3,bclr:2,mov.b:1	DMA	Y	Y	N		USB 'DMA' register; bset #2 = PULLUP_E (D+ pull-up via PM4) at 0x54CA6/0x78154/0x78216 = USB attach
+FFEE2E	1	1	1	mov.b:1	CVR	Y	Y	N		
+FFEE2F	3	3	2	mov.b:3	CTLR	Y	Y	N		CTLR 0x08 = RSME (remote-wakeup resume) then 0x00; vector 238 = USB resume
+FFEE32	1	1	1	mov.b:1	EPIR	Y	Y	N		EPIR endpoint-information FIFO, 50 bytes from 0x54C12
+FFEE44	1	1	1	mov.b:1	TRNTREG0	Y	Y	N		
+FFEE50	3	3	2	mov.b:3	PMDDR	Y	Y	N		PMDDR (port M) = 0 at 0x22C0
+FFEE51	1	1	1	mov.b:1	PMDR	Y	Y	N		PMDR = 0 at 0x22BA
+FFEE53	1	1	1	bset:1	PMICR	Y	Y	N		PMICR bit1 = PM1/RxD6 input buffer, set just before SCI_6 init (0x446C4)
+FFF610	1	1	1	mov.b:1	SMR_6	Y	Y	N		SCI_6 SMR=0 (SUB IPC link, 'SCI-D')
+FFF611	1	1	1	mov.b:1	BRR_6	Y	Y	N		SCI_6 BRR=0 -> 16MHz/32 = 500000 bit/s
+FFF612	5	5	3	mov.b:2,bset:2,bclr:1	SCR_6	Y	Y	N		
+FFF613	1	1	1	mov.b:1	TDR_6	Y	Y	N		SCI_6 TDR = DMAC ch0 destination; DMRSR_0=0xE1=225=TXI6
+FFF614	8	8	3	mov.b:8	SSR_6	Y	Y	N		
+FFF615	2	2	1	mov.b:2	RDR_6	Y	Y	N		
+FFFB80	3	3	2	mov.b:3	P1DDR	Y	Y	Y	EPSZ0o	
+FFFB81	3	3	2	mov.b:3	P2DDR	Y	Y	Y	EPSZ1	
+FFFB82	3	3	2	mov.b:3	P3DDR	Y	N	N		P3DDR - port 3 absent on 120-pin H8SX/1658R
+FFFB85	3	3	2	mov.b:3	P6DDR	Y	Y	N		
+FFFB89	2	2	2	mov.b:2	PADDR	Y	Y	Y	DASTS1	
+FFFB8A	5	5	3	mov.b:5	PBDDR	Y	Y	N		
+FFFB8B	3	3	2	mov.b:3	PCDDR	Y	N	N		PCDDR - port C absent on 120-pin H8SX/1658R
+FFFB8C	3	3	2	mov.b:3	PDDDR	Y	Y	N		
+FFFB8D	11	11	6	mov.b:11	PEDDR	Y	Y	N		
+FFFB8E	4	4	3	mov.b:4	PFDDR	Y	Y	N		
+FFFB90	19	19	10	mov.b:18,bset:1	P1ICR	Y	Y	Y	TRG0	P1ICR; bset #1 (P11/RxD2) at 0x45572 before SCI_2 init
+FFFB91	1	1	1	bset:1	P2ICR	Y	Y	Y	TRG1	P2ICR; bset #5 (P25/RxD1) at 0x5DD98
+FFFB95	8	8	6	mov.b:4,bset:4	P6ICR	Y	Y	N		P6ICR; bset #1 (P61/RxD4) at 0x4518C before SCI_4 (DATA jack) init
+FFFBA0	11	11	11	mov.b:9,bld:2	PORTH	Y	Y	Y	EPSTL0	
+FFFBA4	336	336	22	bclr:140,bset:120,bst:72,mov.b:2,btst:2	PHDR	Y	Y	N		PHDR port H data, 336 bit ops (21 funcs)
+FFFBA5	43	43	21	mov.b:21,bset:9,bclr:6,bst:4,btst:3	PIDR	Y	Y	N		
+FFFBA8	26	26	14	mov.b:26	PHDDR	Y	Y	N		
+FFFBA9	3	3	2	mov.b:3	PIDDR	Y	Y	Y	STLSR1	
+FFFBB4	2	2	2	mov.b:2	PDPCR	Y	Y	Y	CVR	
+FFFBB5	2	2	2	mov.b:2	PEPCR	Y	Y	N		
+FFFBB6	3	3	3	mov.b:3	PFPCR	Y	Y	N		
+FFFBB8	3	3	2	mov.b:3	PHPCR	Y	Y	Y	CTLR	
+FFFBB9	2	2	2	mov.b:2	PIPCR	Y	Y	N		
+FFFBBC	1	1	1	mov.b:1	P2ODR	Y	Y	N		
+FFFBBD	2	2	2	mov.b:2	PFODR	Y	Y	N		
+FFFBC2	2	2	2	mov.b:2	PFCR2	Y	Y	N		
+FFFBC6	2	2	2	mov.b:2	PFCR6	Y	Y	N		
+FFFBCB	2	2	2	mov.b:2	PFCRB	Y	Y	N		
+FFFBCC	2	2	2	mov.b:2	PFCRC	Y	Y	N		
+FFFBCD	2	2	2	mov.b:2	PFCRD	Y	Y	N		PFCRD=0 (PCJKE=0: ports D/E, not J/K)
+FFFBCE	5	5	3	mov.w:5	SSIER	Y	Y	N		SSIER (software-standby release IRQ enable), word writes
+FFFC00	1	1	1	mov.l:1	DSAR_0	Y	Y	N		
+FFFC04	1	1	1	mov.l:1	DDAR_0	Y	Y	N		
+FFFC0C	1	1	1	mov.l:1	DTCR_0	Y	Y	N		
+FFFC14	4	4	2	mov.l:4	DMDR_0	Y	Y	N		DMDR_0 = 0x800001A0 (bit31 DTE) - H8SX DMAC geometry
+FFFC18	1	1	1	mov.l:1	DACR_0	Y	Y	N		
+FFFC20	1	1	1	mov.l:1	DSAR_1	Y	Y	N		
+FFFC24	1	1	1	mov.l:1	DDAR_1	Y	Y	N		
+FFFC2C	2	2	1	mov.l:2	DTCR_1	Y	Y	N		
+FFFC34	4	4	2	mov.l:4	DMDR_1	Y	Y	N		
+FFFC38	1	1	1	mov.l:1	DACR_1	Y	Y	N		
+FFFC40	1	1	1	mov.l:1	DSAR_2	Y	Y	N		
+FFFC44	1	1	1	mov.l:1	DDAR_2	Y	Y	N		
+FFFC4C	1	1	1	mov.l:1	DTCR_2	Y	Y	N		
+FFFC54	4	4	2	mov.l:4	DMDR_2	Y	Y	N		
+FFFC58	1	1	1	mov.l:1	DACR_2	Y	Y	N		
+FFFD20	1	1	1	mov.b:1	DMRSR_0	Y	Y	Y	TCR_11	DMRSR_0 = 0xE1 (vector 225 TXI6) at 0x4830E
+FFFD21	1	1	1	mov.b:1	DMRSR_1	Y	Y	Y	TMDR_11	DMRSR_1 = 0x96 (vector 150 TXI1) at 0x483B6
+FFFD22	1	1	1	mov.b:1	DMRSR_2	Y	Y	Y	TIOR_11	DMRSR_2 = 0xA2 (vector 162 TXI4) at 0x6B96E
+FFFD68	5	5	3	mov.w:5	ISCRH	Y	Y	Y	ICCRA_2	ISCRH (IRQ15-8 sense); vectors 74/75 = IRQ10/IRQ11
+FFFD6A	13	13	7	mov.w:13	ISCRL	Y	Y	Y	ICMR_2	ISCRL (IRQ7-0 sense)
+FFFDC2	2	2	2	mov.w:2	SYSCR	Y	Y	N		SYSCR=0xD103 at 0x212A
+FFFDC4	3	3	3	mov.w:3	SCKCR	Y	Y	N		SCKCR=0x0111 at 0x2100: ICK=PCK=BCK=001 -> x1 with MD_CLK=1, EXTAL 16MHz -> I=P=B=16MHz, USB=EXTALx3=48MHz
+FFFDC6	1	1	1	mov.w:1	SBYCR	Y	Y	N		SBYCR=0x8E00 in NMI power-down path 0x281E
+FFFDC8	6	6	4	mov.w:6	MSTPCRA	Y	Y	N		MSTPCRA=0x5CD4: DMAC,TMR0-3,D/A,A/D0,TPU0-11 on; EXDMAC,DTC off
+FFFDCA	6	6	4	mov.w:6	MSTPCRB	Y	Y	N		MSTPCRB=0xE8FF: SCI_0,1,2,4 on; PPG0,IIC off
+FFFDCC	6	6	4	mov.w:6	MSTPCRC	Y	Y	N		MSTPCRC=0xB700: SCI_6,USB,RAM0-7 (incl. RAM6/5 = FEE000-FF1FFF, 56KB parts only) on; SCI_5,TMR4-7,CRC,A/D1,PPG1 off
+FFFE70	1	1	1	mov.b:1	DPSBYCR	Y	Y	N		DPSBYCR=0x31 in NMI path
+FFFE90	6	6	4	mov.b:6	SMR_4	Y	Y	Y	TCR_4	SCI_4 SMR=0 (DATA jack, 'SCI-A')
+FFFE91	4	4	3	mov.b:4	BRR_4	Y	Y	Y	TMDR_4	SCI_4 BRR = table 0x452C2 {0x67,0x33,0x19,0x0C}[FF8C27] -> 4800/9600/19200/38400; fixed 0x0C (38400) alt mode
+FFFE92	17	17	8	mov.b:9,bset:6,bclr:2	SCR_4	Y	Y	Y	TIOR_4	
+FFFE93	4	4	3	mov.b:4	TDR_4	Y	Y	N		SCI_4 TDR = DMAC ch2 destination; DMRSR_2=0xA2=TXI4
+FFFE94	19	19	7	mov.b:19	SSR_4	Y	Y	Y	TIER_4	
+FFFE95	2	2	1	mov.b:2	RDR_4	Y	Y	Y	TSR_4	
+FFFEC0	1	1	1	mov.b:1	TCR_2	Y	Y	Y	ABWCR	
+FFFEC1	1	1	1	mov.b:1	TCR_3	Y	Y	Y	ASTCR	
+FFFEC2	1	1	1	mov.b:1	TCSR_2	Y	Y	Y	WTCRAH	
+FFFEC3	10	10	5	mov.b:10	TCSR_3	Y	Y	Y	WTCRAL	
+FFFEC4	1	1	1	mov.w:1	TCORA_2	Y	Y	Y	WTCRBH	TCORA_2/3 word access (TMR_2/3 cascaded)
+FFFEC8	1	1	1	mov.w:1	TCNT_2	Y	Y	Y		
+FFFECA	1	1	1	mov.b:1	TCCR_2	Y	Y	Y	BROMCRH	
+FFFECB	1	1	1	mov.b:1	TCCR_3	Y	Y	Y	BROMCRL	
+FFFEE0	1	1	1	mov.b:1	TCR_4	Y	Y	Y	MAR_0AH	
+FFFEE1	1	1	1	mov.b:1	TMDR_4	Y	Y	N		
+FFFEE2	1	1	1	mov.b:1	TIOR_4	Y	Y	Y	MAR_0AL	
+FFFEE4	1	1	1	mov.b:1	TIER_4	Y	Y	Y	IOAR_0A	
+FFFEE5	6	6	2	mov.b:6	TSR_4	Y	Y	N		TSR_4; cleared by IRQ2 handler 0x561C2 (vector 66)
+FFFEE6	1	1	1	mov.w:1	TCNT_4	Y	Y	Y	ETCR_0A	
+FFFEF0	1	1	1	mov.b:1	TCR_5	Y	Y	Y	MAR_1AH	
+FFFEF1	1	1	1	mov.b:1	TMDR_5	Y	Y	N		
+FFFEF2	1	1	1	mov.b:1	TIOR_5	Y	Y	Y	MAR_1AL	
+FFFEF4	1	1	1	mov.b:1	TIER_5	Y	Y	Y	IOAR_1A	
+FFFEF5	1	1	1	bclr:1	TSR_5	Y	Y	N		TSR_5; vector 110 = TGI5A
+FFFEF6	1	1	1	mov.w:1	TCNT_5	Y	Y	Y	ETCR_1A	
+FFFEF8	1	1	1	mov.w:1	TGRA_5	Y	Y	Y	MAR_1BH	
+FFFF00	16	2	10	mov.b:16		N	N	N		
+FFFF02	1	1	1	mov.b:1		N	N	N		
+FFFF03	1	0	1	mov.b:1		N	N	N		all hits are mis-decoded data/ASCII
+FFFF06	3	0	2	mov.b:3		N	N	N		all hits are mis-decoded data/ASCII
+FFFF07	3	1	2	mov.b:3		N	N	N		
+FFFF13	1	1	1	mov.b:1		N	N	N		
+FFFF18	1	0	1	mov.b:1		N	N	N		all hits are mis-decoded data/ASCII
+FFFF20	101	3	29	mov.b:101	DTCERA	Y	Y	Y	DMAWER	mostly mis-decoded ASCII spaces; DTC is module-stopped
+FFFF21	3	2	3	mov.b:3		N	N	Y	DMATCR	
+FFFF22	5	1	3	mov.b:5	DTCERB	Y	Y	Y	DMACR_0A	
+FFFF23	2	0	2	mov.b:2		N	N	Y	DMACR_0B	all hits are mis-decoded data/ASCII
+FFFF27	1	0	1	mov.b:1		N	N	Y	DMABCRL	all hits are mis-decoded data/ASCII
+FFFF29	6	1	3	mov.b:6		N	N	Y	DTCERB	
+FFFF2A	2	0	1	mov.b:2	DTCERF	Y	Y	Y	DTCERC	all hits are mis-decoded data/ASCII
+FFFF2D	51	0	10	mov.b:51		N	N	Y	DTCERF	all hits are mis-decoded data/ASCII
+FFFF2E	19	0	3	mov.b:19		N	N	Y	DTCERG	all hits are mis-decoded data/ASCII
+FFFF2F	1	1	1	mov.b:1		N	N	Y	DTCERH	
+FFFF30	32	1	7	mov.b:32	DTCCR	Y	Y	Y	DTVECR	
+FFFF31	29	1	7	mov.b:29		N	N	Y	INTCR	
+FFFF32	21	2	8	mov.b:21	INTCR	Y	Y	Y	IER	INTCR=0 at 0x2130
+FFFF33	21	0	6	mov.b:21	CPUPCR	Y	Y	N		all hits are mis-decoded data/ASCII
+FFFF34	32	16	13	mov.w:16,mov.b:16	IER	Y	Y	Y	ISR	IER=0x0480 (IRQ10,IRQ7) at 0x23DE; 0x0808/0x0008 (IRQ11,IRQ3) in sub_284E
+FFFF35	26	2	8	mov.b:26		N	N	N		
+FFFF36	38	25	18	mov.w:25,mov.b:13	ISR	Y	Y	N		ISR (IRQ status) read-modify-write
+FFFF37	12	0	3	mov.b:12		N	N	N		all hits are mis-decoded data/ASCII
+FFFF38	11	0	4	mov.b:11		N	N	N		all hits are mis-decoded data/ASCII
+FFFF39	13	0	4	mov.b:13		N	N	N		all hits are mis-decoded data/ASCII
+FFFF3A	6	0	5	mov.b:6		N	N	Y	SBYCR	all hits are mis-decoded data/ASCII
+FFFF3B	25	0	1	mov.b:25		N	N	Y	SCKCR	all hits are mis-decoded data/ASCII
+FFFF3D	8	0	1	mov.b:8		N	N	Y	SYSCR	all hits are mis-decoded data/ASCII
+FFFF3E	9	0	1	mov.b:9		N	N	Y	MDCR	all hits are mis-decoded data/ASCII
+FFFF3F	1	0	1	mov.b:1		N	N	N		all hits are mis-decoded data/ASCII
+FFFF40	3	3	3	mov.b:3	PORT1	Y	Y	Y	MSTPCRH	
+FFFF41	9	3	7	mov.b:7,btst:2	PORT2	Y	Y	Y	MSTPCRL	
+FFFF42	4	3	2	btst:3,mov.b:1	PORT3	Y	N	Y	EXMSTPCRH	
+FFFF43	3	0	2	mov.b:3		N	N	Y	EXMSTPCRL	all hits are mis-decoded data/ASCII
+FFFF44	2	0	2	mov.b:2	PORT5	Y	Y	N		all hits are mis-decoded data/ASCII
+FFFF45	4	2	4	mov.b:3,bld:1	PORT6	Y	Y	Y	PLLCR	
+FFFF46	1	0	1	mov.b:1		N	N	Y	PCR	all hits are mis-decoded data/ASCII
+FFFF47	1	0	1	mov.b:1		N	N	Y	PMR	all hits are mis-decoded data/ASCII
+FFFF48	3	1	3	mov.b:3		N	N	Y	NDERH	
+FFFF49	5	4	4	btst:4,mov.b:1	PORTA	Y	Y	Y	NDERL	
+FFFF4A	2	1	2	mov.b:1,bld:1	PORTB	Y	Y	Y	PODRH	
+FFFF4B	1	0	1	mov.b:1	PORTC	Y	N	Y	PODRL	all hits are mis-decoded data/ASCII
+FFFF4C	3	1	3	mov.b:3	PORTD	Y	Y	Y	NDRHH	
+FFFF4D	10	9	10	btst:7,mov.b:2,bld:1	PORTE	Y	Y	Y	NDRLH	
+FFFF4E	10	7	9	mov.b:5,btst:3,bld:2	PORTF	Y	Y	Y	NDRHL	
+FFFF4F	1	0	1	mov.b:1		N	N	Y	NDRLL	all hits are mis-decoded data/ASCII
+FFFF50	6	3	5	mov.b:4,bclr:2	P1DR	Y	Y	Y	PORT1	
+FFFF51	2	1	2	mov.b:2	P2DR	Y	Y	Y	PORT2	
+FFFF52	32	29	18	bset:13,bclr:13,mov.b:4,bst:1,btst:1	P3DR	Y	N	Y	PORT3	P3DR (DSP reset/boot line per doc-09) - port 3 absent on 1658R
+FFFF53	2	0	2	mov.b:2		N	N	Y	PORT4	all hits are mis-decoded data/ASCII
+FFFF54	2	0	2	mov.b:2		N	N	Y	PORT5	all hits are mis-decoded data/ASCII
+FFFF55	2	1	2	mov.b:2	P6DR	Y	Y	Y	PORT6	
+FFFF56	2	0	2	mov.b:2		N	N	N		all hits are mis-decoded data/ASCII
+FFFF57	2	0	2	mov.b:2		N	N	Y	PORT8	all hits are mis-decoded data/ASCII
+FFFF58	1	0	1	mov.b:1		N	N	Y	PORT9	all hits are mis-decoded data/ASCII
+FFFF59	15	14	11	bclr:7,bset:4,mov.b:2,btst:1,bist:1	PADR	Y	Y	Y	PORTA	
+FFFF5A	75	74	14	bclr:39,bset:27,bst:7,mov.b:2	PBDR	Y	Y	Y	PORTB	
+FFFF5B	33	33	15	bset:13,bclr:8,mov.b:7,btst:5	PCDR	Y	N	Y	PORTC	PCDR - port C absent on 1658R
+FFFF5C	6	6	4	bset:3,bclr:2,mov.b:1	PDDR	Y	Y	Y	PORTD	
+FFFF5D	48	46	18	bclr:24,bset:16,mov.b:4,bst:4	PEDR	Y	Y	Y	PORTE	
+FFFF5E	2	2	2	mov.b:2	PFDR	Y	Y	Y	PORTF	
+FFFF60	2	2	2	mov.b:2	SMR_2	Y	Y	Y	P1DR	SCI_2 SMR ('SCI-B')
+FFFF61	4	1	4	mov.b:4	BRR_2	Y	Y	Y	P2DR	SCI_2 BRR=0x0C -> 38400
+FFFF62	6	5	4	mov.b:4,bclr:1,bset:1	SCR_2	Y	Y	Y	P3DR	
+FFFF63	2	1	2	mov.b:2	TDR_2	Y	Y	N		
+FFFF64	10	2	4	mov.b:10	SSR_2	Y	Y	Y	P5DR	
+FFFF65	4	0	3	mov.b:4	RDR_2	Y	Y	Y	P6DR	all hits are mis-decoded data/ASCII
+FFFF66	1	0	1	mov.b:1	SCMR_2	Y	Y	N		all hits are mis-decoded data/ASCII
+FFFF67	1	0	1	mov.b:1		N	N	Y	P8DR	all hits are mis-decoded data/ASCII
+FFFF68	6	5	6	mov.b:6	DADR0	Y	Y	N		DADR0=0x7F at 0x235A
+FFFF69	8	6	8	mov.b:8	DADR1	Y	Y	Y	PADR	DADR1=0x7F at 0x2356
+FFFF6A	6	4	5	mov.b:6	DACR01	Y	Y	Y	PBDR	
+FFFF6B	2	1	2	mov.b:2		N	N	Y	PCDR	write 0x03 at 0x2352 (sub_20FA) to an address not listed in the H8SX/1668R table - unexplained, single site
+FFFF6C	1	0	1	mov.b:1		N	N	Y	PDDR	all hits are mis-decoded data/ASCII
+FFFF6D	1	0	1	mov.b:1		N	N	Y	PEDR	all hits are mis-decoded data/ASCII
+FFFF6E	2	0	2	mov.b:2		N	N	Y	PFDR	all hits are mis-decoded data/ASCII
+FFFF6F	1	0	1	mov.b:1		N	N	Y	PGDR	all hits are mis-decoded data/ASCII
+FFFF70	2	1	2	mov.b:2		N	N	Y	PORTH	
+FFFF71	1	0	1	mov.b:1		N	N	Y	PORTJ	all hits are mis-decoded data/ASCII
+FFFF72	2	0	2	mov.b:2		N	N	Y	PHDR	all hits are mis-decoded data/ASCII
+FFFF73	1	0	1	mov.b:1		N	N	Y	PJDR	all hits are mis-decoded data/ASCII
+FFFF74	1	0	1	mov.b:1		N	N	Y	PHDDR	all hits are mis-decoded data/ASCII
+FFFF75	1	0	1	mov.b:1		N	N	Y	PJDDR	all hits are mis-decoded data/ASCII
+FFFF76	1	0	1	mov.b:1	PCR	Y	Y	N		all hits are mis-decoded data/ASCII
+FFFF77	1	0	1	mov.b:1	PMR	Y	Y	N		all hits are mis-decoded data/ASCII
+FFFF78	1	0	1	mov.b:1	NDERH	Y	Y	Y	SMR_0	all hits are mis-decoded data/ASCII
+FFFF79	1	0	1	mov.b:1	NDERL	Y	Y	Y	BRR_0	all hits are mis-decoded data/ASCII
+FFFF7A	1	0	1	mov.b:1	PODRH	Y	Y	Y	SCR_0	all hits are mis-decoded data/ASCII
+FFFF81	1	0	1	mov.b:1	BRR_0	Y	Y	Y	BRR_1	all hits are mis-decoded data/ASCII
+FFFF88	2	2	2	mov.b:2	SMR_1	Y	Y	Y	SMR_2	SCI_1 SMR ('SCI-C', DSP)
+FFFF89	2	2	2	mov.b:2	BRR_1	Y	Y	Y	BRR_2	
+FFFF8A	6	6	4	mov.b:4,bset:1,bclr:1	SCR_1	Y	Y	Y	SCR_2	
+FFFF8C	4	2	2	mov.b:4	SSR_1	Y	Y	Y	SSR_2	
+FFFF8D	2	1	1	mov.b:2	RDR_1	Y	Y	Y	RDR_2	
+FFFF90	3	3	3	mov.b:3	ADDRA_0	Y	Y	Y	ADDRA_0	
+FFFF91	1	0	1	mov.b:1		N	N	N		all hits are mis-decoded data/ASCII
+FFFF94	1	1	1	mov.b:1	ADDRC_0	Y	Y	Y	ADDRC_0	
+FFFF96	1	1	1	mov.b:1	ADDRD_0	Y	Y	Y	ADDRD_0	
+FFFF98	1	1	1	mov.b:1	ADDRE_0	Y	Y	Y	ADDRE_0	
+FFFF9A	1	1	1	mov.b:1	ADDRF_0	Y	Y	Y	ADDRF_0	
+FFFF9C	1	1	1	mov.b:1	ADDRG_0	Y	Y	Y	ADDRG_0	
+FFFFA0	26	26	4	mov.b:8,bset:6,btst:6,bclr:6	ADCSR_0	Y	Y	Y	ADCSR_0	ADCSR_0 (polled A/D)
+FFFFA1	2	2	2	mov.b:2	ADCR_0	Y	Y	Y	ADCR_0	
+FFFFB0	1	0	1	mov.b:1	TCR_0	Y	Y	Y	TCR_0	all hits are mis-decoded data/ASCII
+FFFFB1	1	0	1	mov.b:1	TCR_1	Y	Y	Y	TCR_1	all hits are mis-decoded data/ASCII
+FFFFB2	1	1	1	mov.b:1	TCSR_0	Y	Y	Y	TCSR_0	
+FFFFB8	1	1	1	mov.b:1	TCNT_0	Y	Y	Y	TCNT_0	
+FFFFBC	27	27	19	bclr:13,btst:8,bset:5,mov.b:1	TSTR	Y	Y	Y	TCSR	TSTR (TPU start) - H8S/2456 has TSTR at FFFFC0
+FFFFBD	1	1	1	mov.b:1	TSYR	Y	Y	Y	RSTCSR	
+FFFFC0	4	4	3	mov.b:4	TCR_0	Y	Y	Y	TSTR	
+FFFFC1	1	1	1	mov.b:1	TMDR_0	Y	Y	Y	TSYR	
+FFFFC2	4	2	2	mov.b:4	TIORH_0	Y	Y	N		
+FFFFC3	1	1	1	mov.b:1	TIORL_0	Y	Y	N		
+FFFFC4	3	3	3	mov.b:1,bclr:1,bset:1	TIER_0	Y	Y	N		
+FFFFC5	3	2	2	mov.b:2,bclr:1	TSR_0	Y	Y	N		TSR_0; vector 88 = TGI0A
+FFFFC6	4	4	3	mov.w:4	TCNT_0	Y	Y	N		
+FFFFC8	2	2	2	mov.w:1,mov.b:1	TGRA_0	Y	Y	Y	PFCR3	
+FFFFCA	4	2	1	mov.b:4	TGRB_0	Y	Y	Y	PFCR5	
+FFFFCE	1	1	1	mov.b:1	TGRD_0	Y	Y	N		
+FFFFD0	2	2	2	mov.b:2	TCR_1	Y	Y	Y	TCR_0	
+FFFFD1	1	1	1	mov.b:1	TMDR_1	Y	Y	Y	TMDR_0	
+FFFFD2	1	1	1	mov.b:1	TIOR_1	Y	Y	Y	TIORH_0	
+FFFFD4	3	3	3	mov.b:1,bclr:1,bset:1	TIER_1	Y	Y	Y	TIER_0	
+FFFFD5	1	1	1	bclr:1	TSR_1	Y	Y	Y	TSR_0	TSR_1; vector 93 = TGI1A
+FFFFD6	2	2	2	mov.w:1,mov.b:1	TCNT_1	Y	Y	Y	TCNT_0	
+FFFFD8	1	1	1	mov.w:1	TGRA_1	Y	Y	Y	TGRA_0	
+FFFFDE	1	1	1	mov.b:1		N	N	Y	TGRD_0	
+FFFFE0	4	4	3	mov.b:4	TCR_2	Y	Y	Y	TCR_1	
+FFFFE1	1	1	1	mov.b:1	TMDR_2	Y	Y	Y	TMDR_1	
+FFFFE2	1	1	1	mov.b:1	TIOR_2	Y	Y	Y	TIOR_1	
+FFFFE4	3	3	3	mov.b:1,bclr:1,bset:1	TIER_2	Y	Y	Y	TIER_1	
+FFFFE5	3	2	2	mov.b:2,bclr:1	TSR_2	Y	Y	Y	TSR_1	TSR_2; vector 97 = TGI2A
+FFFFE6	4	4	3	mov.w:4	TCNT_2	Y	Y	Y	TCNT_1	
+FFFFE8	1	1	1	mov.w:1	TGRA_2	Y	Y	Y	TGRA_1	
+FFFFF0	1	1	1	mov.b:1	TCR_3	Y	Y	Y	TCR_2	
+FFFFF1	1	1	1	mov.b:1	TMDR_3	Y	Y	Y	TMDR_2	
+FFFFF2	1	1	1	mov.b:1	TIORH_3	Y	Y	Y	TIOR_2	
+FFFFF3	1	1	1	mov.b:1	TIORL_3	Y	Y	N		
+FFFFF4	1	1	1	mov.b:1	TIER_3	Y	Y	Y	TIER_2	
+FFFFF5	18	0	6	mov.b:18	TSR_3	Y	Y	Y	TSR_2	all hits are mis-decoded data/ASCII
+FFFFF6	6	6	6	mov.w:6	TCNT_3	Y	Y	Y	TCNT_2	
+FFFFF9	1	0	1	mov.b:1		N	N	N		all hits are mis-decoded data/ASCII
+FFFFFF	19	0	7	mov.b:19		N	N	N		all hits are mis-decoded data/ASCII
+RAM FEE000-FF1FFF	BSS clear from 0xFEE000 (0x2138); 103 refs				on-chip RAM 6/5	Y (56KB)	Y (56KB)	N (H8S/2456 RAM FF0000- ,<=64KB, different map)		only 56KB parts map RAM here
+ROM 000000-07B753	content 505,172 B; image 1,048,576 B				user MAT	Y (1MB)	Y (1MB)	N (256KB max)		exceeds every 512KB-or-smaller part

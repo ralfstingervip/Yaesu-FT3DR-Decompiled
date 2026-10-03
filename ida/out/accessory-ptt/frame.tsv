@@ -1,0 +1,30 @@
+section	offset_or_type	field	value_or_rule	main_check_or_dest	sub_source	status
+layout	+0	type (start byte)	E0 E1 E2 E3 E4 E5 E6 EA FE FF	sub_4761E switch 0x047622..0x047656; zero bytes ignored (0x04761E 0c ac 47 d8)	sub_FFEDD528 [0]=r1 (0xFFEDD539) / sub_FFEDD182	Confirmed
+layout	+1	sub byte	0 (E0: pen <2)	idx1 cmp #0 (E6 0x048174)	r2 (all E5/E6 sites mov.l #0,r2)	Confirmed
+layout	+2..+3	length L (BE)	payload n + 9	idx2 cmp #0, idx3 cmp #L (E6 0x048168 aa 0a)	len+9 at 0xFFEDD549 b8 89 62 91	Confirmed
+layout	+4..+5	header sum (BE)	sum of +0..+3	0x048148..0x04815C	0xFFEDD567..0xFFEDD5A3	Confirmed
+layout	+6..+8	constant	01 02 00	copied only for E0/E3 (FF9806..08 -> FF813F)	0xFFEDD5AE/5B9/5C4	Confirmed
+layout	+9..+10	echo word	SUB RAM 0x1B20C/0x1B20D (12D44+84C8/84C9); K2: echoed MAIN->SUB opcode	not read by E6 handler	0xFFEDD5CF/0xFFEDD5DB	Confirmed bytes; meaning per doc 84
+layout	+11..+L+1	payload	n = L-9 bytes	handler-specific (FF980B = first payload byte)	copied from caller buffer (0x10369 for E4/E5/E6)	Confirmed
+layout	+L+2..+L+3	frame sum (BE)	sum of +0..+L+1	0x0481C0..0x0481DC (E6)	0xFFEDD612..0xFFEDD65D	Confirmed
+layout	+L+4..+L+9	pad	00 x6	skipped by state 1 (zero bytes)	0xFFEDD668..0xFFEDD6DB	Confirmed
+layout	buffer	extent	FF9800..FF9910 (FF frame: 1+0x110 bytes)	count 0x110 at 0x0476A6	-	Confirmed
+type	E0	touch (doc 84)	L=0x0E n=5; count 0x11; state 2	sub_47792: 18 B FF9800->FFBBC8 (0x047864)	sub_FFEDC3BD	Confirmed (doc 84)
+type	E1	GPS NMEA relay	count 0x7F then FFBBE6 more; state 3	sub_47B7C/sub_47BF6: eepmov FF980B->FF9800, +0x0A; matches PGGA/PRMC/PGSA/PVTG (0x047CA0..)	sub_FFEDC2E1	Confirmed; GPS label from '$GPRMC'/'$GPGGA' templates 0x0463E8/0x04642E
+type	E2	status word	L=0x0B n=2; count 0x10; state 6	sub_4799A: FF980B:0C -> FFBC60 (0x047A5A)	sub_FFEDC493	Confirmed
+type	E3	acknowledge	L=0x0C n=3; count 0x0F; state 4	sub_478AA: FF9806..08 -> FF813F (0x04796E)	sub_FFEDC429	Confirmed
+type	E4	Bluetooth record, 29 B	L=0x26 n=29; hdr-sum hi = 01; count 0x29; state 9	sub_4802E: BA92.b2; 29 B FF980B -> FFBB71 (0x0480EE)	0xFFF38AEA (sub_FFF389E7), 0xFFF38C9E (sub_FFF38BDA)	Confirmed bytes; content Inferred (BT cluster)
+type	E5	Bluetooth link state byte	L=0x0A n=1; count 0x0D; state 0x0B	sub_481FE: BA92.b4; FF980B -> FFBB92 (0x0482C8); no reader of FFBB92 found	7 sites 0xFFF37FEC..0xFFF39516 (payload 0/1, state word 12CBA)	Confirmed bytes; reader Not found (operand scan 0..0x80000)
+type	E6	ACCESSORY PTT (Bluetooth headset)	L=0x0A n=1; count 0x0D; state 0x0A	sub_4811E: BA92.b3; FF980B -> FFBB91 (0x0481E8) -> sub_FD22	8 sites; key path sub_FFF39216 (RXAT=CKPD=200)	Confirmed
+type	EA	one byte -> FFBAD7	L=0x0A n=1; count 0x0D; state 8	sub_47F4E: BA92.b1; FF980B -> FFBAD7; reader sub_7055E	not traced	Confirmed bytes
+type	FE	199-byte block	count 0xC7; state 7	sub_47E2C: BA92.b0	not traced	Confirmed bytes
+type	FF	block read-back	count 0x110 (FFBC4C); state 5	sub_47A7E; readers sub_55DFC/sub_55EB2 (docs 53/63)	sub_FFEDC4DD	Confirmed (docs 51/63)
+E6	+0	type	E6	0x04812C aa e6	0xFFF39281 75 41 e6	Confirmed
+E6	+1	sub	00	0x048174 aa 00	r2=0 (66 02)	Confirmed
+E6	+2..+3	L	00 0A	0x04816E aa 00 / 0x048168 aa 0a	n=1	Confirmed
+E6	+4..+5	hdr sum	00 F0	0x048162 aa 00; sum check 0x048158	computed	Confirmed (value derived)
+E6	+6..+8	const	01 02 00	not checked by E6 handler	fixed	Confirmed
+E6	+9..+10	echo	1B20C/1B20D	not read	SUB RAM	Confirmed
+E6	+11 (FF980B)	PTT byte	bit0: 1 = key (raw 0x17), 0 = unkey (raw 0x18); bits 1..7 ignored (and.b #1 at 0x00FD34)	FFBB91 -> sub_FD22	0x10369[0] = 1 (0xFFF39261) or 0 (0xFFF39395)	Confirmed
+E6	+12..+13	frame sum	sum +0..+11	0x0481D6	computed	Confirmed
+E6	+14..+19	pad	00 x6	ignored	0xFFEDD668..	Confirmed

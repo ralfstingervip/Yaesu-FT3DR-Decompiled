@@ -1,0 +1,25 @@
+image	file_offset	addr	kind	artifact	referenced	what_it_tells_us
+SUB	0x3484B0	0xFFF484B0	rtos/library string	ENV1=temp01	ptr from 0x2D9994	Renesas CC-RX low-level I/O sample (lowsrc.c) environment list is linked in
+SUB	0x3484BC	0xFFF484BC	rtos/library string	ENV2=temp02	table-adjacent	same env_list array, second entry
+SUB	0x3484C8	0xFFF484C8	rtos/library string	ENV9=end	table-adjacent	env_list terminator, verbatim from the Renesas sample
+SUB	0x3484D1	0xFFF484D1	library file path	local tree, not in this repo	ptr from 0x2E17B8, 0x2E18B4	lowsrc.c name_list[]: stdio is compiled in, so a charput()/charget() character hook exists
+SUB	0x3484DC	0xFFF484DC	library file path	local tree, not in this repo	table-adjacent	lowsrc.c name_list[] entry 2
+SUB	0x3484E8	0xFFF484E8	library file path	local tree, not in this repo	table-adjacent	lowsrc.c name_list[] entry 3
+SUB	0x34AE2A	0xFFF4AE2A	filesystem literal	RRaA / rrAa	table-adjacent	FAT32 FSInfo signatures: a full FAT driver, not a minimal reader
+SUB	0x3E8CB	0xFFC3E8CB	filesystem literal	NO NAME    FAT16	table-adjacent	FAT16 boot-sector template, i.e. the firmware can format a volume
+SUB	0x34AE14	0xFFF4AE14	filesystem literal	EXFAT FAT32 FAT12 FAT16	table-adjacent	filesystem-type name table
+SUB	0x34B04A	0xFFF4B04A	library literal	false / true	table-adjacent	C++ or a bool-printing formatter in the CC-RX runtime
+SUB	0x34B022	0xFFF4B022	library literal	0123456789abcdef / 0123456789ABCDEF	table-adjacent	printf %x digit tables from the CC-RX standard library
+SUB	0x3483E8	0xFFF483E8	vendor protocol	$PMTK313,1 .. $PMTK386,1.0 (17 commands)	ptr array at 0x2D4288	GPS receiver is a MediaTek MT33xx class part: PMTK is MediaTek's proprietary command set
+MAIN	0x7B272	0x0007B272	USB descriptor	04 03 09 04 (STRING desc 0, LANGID 0x0409)	ptr from 0x07B5FC	a USB string-descriptor chain built to the USB spec
+MAIN	0x7B276	0x0007B276	USB descriptor	bLength 0x10 STRING "Renesas"	ptr from 0x07B602	iManufacturer never changed from the Renesas sample default
+MAIN	0x7B286	0x0007B286	USB descriptor	bLength 0x1A STRING "000000000000"	ptr from 0x07B60E	iSerialNumber is the sample placeholder, 12 ASCII zeros
+MAIN	0x7B699	0x0007B699	USB boilerplate	MANUFACTURER:ACME Manufacturing;COMMAND SET:PCL,MPL;MODEL:LaserBeam ?;COMMENT:Anything you like;ACTIVE COMMAND SET:PCL;	no pointer anywhere	verbatim IEEE-1284 device-ID example from the USB Printer Class spec / Renesas USB sample: unmodified vendor sample code shipped in the image
+MAIN	0x6C538	0x0006C538	build stamp	01 'V' "0030" "FT3D ... 20180418 0 ... 0C01" 04	ptr from 0x06BD44	clone-file version record: model FT3D, build date 2018-04-18
+MAIN	0x6C572	0x0006C572	build stamp	01 'V' "0020" "FT2D    JPN     Ver0202 20180418" 04	NO POINTER ANYWHERE	FT2D clone header left in the template table: names the predecessor model, its region JPN and its firmware Ver 02.02
+MAIN	0x4B182	0x0004B182	product identity	00 07 "APY03D"	table-adjacent	the registered APRS tocall for the FT3D (APY01D=FT1D, APY02D=FT2D), length-prefixed for the AX.25 destination field
+MAIN	0x6BE26	0x0006BE26	destination names	"USA " "JPN " "EXP "	table-adjacent	three market names on a 4-byte stride, read next to RAM 0xFFB05D/0xFFB05E/0xFFB060
+MAIN	0x5AE1C	0x0005AE1C	debug facility	CPU>DSP: / DSP>CPU: prefixes + 13 messages	ptr, many sites	a shipped ASCII trace of the MAIN-to-DSP link
+MAIN	0x437BE	0x000437BE	protocol data	APRS symbol-name table (3544 bytes)	table-adjacent	full APRS symbol set incl. "Yaesu Radios", "Kenwood HT", "EchoLink", "IRLP"
+MAIN	0x4C32C	0x0004C32C	protocol data	APRS MIC-E device table, 9-byte stride, 17 entries	ptr from 0x04C2AA	receive-side decode of the SENDER's radio model; includes Kenwood TH-D7/TM-D700/TM-D710/TH-D72/TH-D74, so it is not lineage evidence
+BOTH	0x79C9D / 0x3BDB3	-	shared data	identical 273-byte and 402-byte JIS index blobs in both images	table-adjacent	the same kanji index table was compiled into both the H8S and the RX build

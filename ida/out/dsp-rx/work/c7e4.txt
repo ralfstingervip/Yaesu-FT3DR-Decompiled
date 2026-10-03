@@ -1,0 +1,36 @@
+
+;---- func 0xc7e4..0xc814
+00c7e4  79 04 00 0c              mov.w   #0xC, r4                             <- 520f2,5215e,521ca,521f0
+00c7e8  7a 05 00 ff b0 5a        mov.l   #0xFFB05A, er5                       
+00c7ee  01 00 6b 06 bc 2c        mov.l   @0xFFFFBC2C:16, er6                  
+00c7f4  7a 16 00 00 00 04        add.l   #4, er6                              
+00c7fa  7b d4 59 8f              eepmov.w                                     <- c800
+00c7fe  0d 44                    mov.w   r4, r4                               
+00c800  46 f8                    bne     loc_C7FA:8                           
+00c802  01 00 6b 06 bc 2c        mov.l   @0xFFFFBC2C:16, er6                  
+00c808  7a 16 00 00 00 00        add.l   #0, er6                              
+00c80e  fc 02                    mov.b   #2, r4l                              
+00c810  68 ec                    mov.b   r4l, @er6                            
+00c812  54 70                    rts                                          
+
+;---- func 0xc814..0xc8bc
+00c814  6a 10 ac 09 73 10        btst    #1, @0xFFFFAC09:16                   <- 725a
+00c81a  46 50                    bne     loc_C86C:8                           
+00c81c  7a 05 00 00 c8 bc        mov.l   #0xC8BC, er5                         
+00c822  6d 54                    mov.w   @er5+, r4                            
+00c824  01 00 6b 06 bc 2c        mov.l   @0xFFFFBC2C:16, er6                  
+00c82a  7a 16 00 00 00 04        add.l   #4, er6                              
+00c830  7b d4 59 8f              eepmov.w                                     <- c836
+00c834  0d 44                    mov.w   r4, r4                               
+00c836  46 f8                    bne     loc_C830:8                           
+00c838  01 00 6b 06 bc 2c        mov.l   @0xFFFFBC2C:16, er6                  
+00c83e  7a 16 00 00 00 04        add.l   #4, er6                              
+00c844  0f e1                    mov.l   er6, er1                             
+00c846  6a 0d ac 07              mov.b   @0xFFFFAC07:16, r5l                  
+00c84a  f5 00                    mov.b   #0, r5h                              
+00c84c  0a 0d                    inc.b   r5l                                  
+00c84e  1b 06                    subs    #1, er6                              
+00c850  5e 00 d2 4c              jsr     sub_D24C:24                          
+00c854  6a 0c ac 08              mov.b   @0xFFFFAC08:16, r4l                  
+00c858  7a 64 00 00 00 ff        and.l   #0xFF, er4                           
+00c85e  78 40 6a 2c 00 00 c8 d4  mov.b   @(0xC8D4:32,er4), r4l                

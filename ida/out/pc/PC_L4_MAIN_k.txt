@@ -1,0 +1,105 @@
+job PC_L4_MAIN k
+; ==== linear 00010E50-00010F10 ====
+00010E50  mov.l   #unk_115EC, er5
+00010E54  mov.b   @(5:16,er0), r3l
+00010E58  cmp.b   #2, r3l
+00010E5A  bne     loc_10E92:8
+00010E5C  jsr     sub_3F1F2:24
+00010E60  bmi     loc_10E92:8
+00010E62  beq     loc_10E76:8
+00010E64  mov.l   #unk_11784, er5
+00010E6A  bsr     sub_10EA0:8
+00010E6C  beq     loc_10E9C:8
+00010E6E  mov.l   #unk_117C8, er5
+00010E74  bra     loc_10E9C:8
+00010E76  jsr     sub_4906:24
+00010E7A  bne     loc_10E92:8
+00010E7C  mov.l   #unk_1276C, er5
+00010E82  bra     loc_10E9C:8
+00010E84  mov.b   #0xFF, r4l
+00010E86  mov.b   r4l, @0xFFFFAAE0:16
+00010E8A  mov.b   #2, r4l
+00010E8C  mov.b   r4l, @0xFFFF8F89:16
+00010E90  bra     locret_10E9E:8
+00010E92  mov.w   #0x44, r6 ; 'D'
+00010E96  mov.b   #0, r3h
+00010E98  mulxu.w r6, er3
+00010E9A  add.l   er3, er5
+00010E9C  mov.b   #0, r4l
+00010E9E  rts
+00010EA0  mov.b   @(0x5A:16,er0), r4l
+00010EA4  btst    #1, r4l
+00010EA6  beq     loc_10EB0:8
+00010EA8  mov.b   @(0x54:16,er0), r4l
+00010EAC  cmp.b   #0, r4l
+00010EAE  beq     loc_10EB4:8
+00010EB0  mov.b   #0, r4l
+00010EB2  bra     locret_10EB6:8
+00010EB4  mov.b   #1, r4l
+00010EB6  rts
+00010EB8  btst    #5, @0xFFFFBBF1:16
+00010EBE  beq     loc_10ED0:8
+00010EC0  mov.b   @0xFFFFA9ED:16, r4l
+00010EC4  cmp.b   #0xA, r4l
+00010EC6  bne     loc_10ED0:8
+00010EC8  mov.l   #unk_14818, er5
+00010ECE  bra     locret_10EEE:8
+00010ED0  dec.b   r3l
+00010ED2  and.l   #0xFF, er3
+00010ED8  shll.l  er3
+00010EDA  mov.w   @(word_1208C:32,er3), r5
+00010EE2  and.l   #0xFFFF, er5
+00010EE8  add.l   #unk_125D4, er5
+00010EEE  rts
+00010EF0  mov.b   @0xFFFF8DDE:16, r4l
+00010EF4  bpl     loc_10F08:8
+00010EF6  cmp.b   #1, r3l
+00010EF8  bne     loc_10F08:8
+00010EFA  mov.l   #unk_12048, er5
+00010F00  mov.b   @0xFFFFA9F9:16, r4l
+00010F04  beq     loc_10F9A:16
+00010F08  mov.l   #unk_11F7C, er5
+00010F0E  mov.b   @0xFFFFA9F9:16, r4l
+00010F0F  mov.b   @0xFFFFA9F9:16, r4l
+
+; ==== linear 00010FA0-00011010 ====
+00010FA0  mov.b   #0, r3h
+00010FA2  mulxu.w r6, er3
+00010FA4  add.l   er3, er5
+00010FA6  rts
+00010FA8  mov.b   @0xFFFF8DDE:16, r4l
+00010FAC  beq     loc_10FEC:8
+00010FAE  bmi     loc_10FE0:8
+00010FB0  mov.l   #unk_11894, er5
+00010FB6  btst    #7, @0xFFFF8DE0:16
+00010FBC  beq     locret_11036:8
+00010FBE  mov.l   #unk_118D8, er5
+00010FC4  mov.b   @(1:16,er0), r4l
+00010FC8  cmp.b   #0x40, r4l ; '@'
+00010FCA  beq     loc_10FD8:8
+00010FCC  cmp.b   #0x28, r4l ; '('
+00010FCE  bne     locret_11036:8
+00010FD0  mov.l   #unk_12948, er5
+00010FD6  bra     locret_11036:8
+00010FD8  mov.l   #unk_12CBC, er5
+00010FDE  bra     locret_11036:8
+00010FE0  cmp.b   #2, r3l
+00010FE2  beq     loc_10FEC:8
+00010FE4  mov.l   #unk_1191C, er5
+00010FEA  bra     locret_11036:8
+00010FEC  cmp.b   #1, r3l
+00010FEE  bne     loc_11024:8
+00010FF0  mov.b   #0xC, r5l
+00010FF2  mov.b   @(1:16,er0), r5h
+00010FF6  mov.l   #sub_11038, er6
+00010FFC  mov.w   @er6+, r3
+00010FFE  cmp.b   r3h, r5h
+00011000  beq     loc_11024:8
+00011002  dec.b   r5l
+00011004  bne     loc_10FFC:8
+00011006  mov.b   #4, r3l
+00011008  mov.b   @0xFFFFAAD1:16, r4l
+0001100C  and.b   #0xC, r4l
+0001100E  bne     loc_11024:8
+0001100F  bne     loc_11024:8
+

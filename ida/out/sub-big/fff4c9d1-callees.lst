@@ -1,0 +1,267 @@
+; ==================================================================
+; CALLEE FFF46457   FFF46457 .. FFF4645A  (3 bytes)
+; ==================================================================
+FFF46457  7e 21                     abs     r1
+FFF46459  02                        rts
+; ---- range stats: code heads 2, data items 0, undef items 0 ----
+
+; xrefsTo FFF46457: FFF4C9FD, FFF4DEA7
+
+; ==================================================================
+; CALLEE FFF455A0   FFF455A0 .. FFF455A7  (7 bytes)
+; ==================================================================
+FFF455A0  ef 1e                     mov.l   r1, r14
+FFF455A2  7f 8f                     smovf
+FFF455A4  ef e1                     mov.l   r14, r1
+FFF455A6  02                        rts
+; ---- range stats: code heads 4, data items 0, undef items 0 ----
+
+; xrefsTo FFF455A0: FFF14FB7, FFF15C52, FFF15CC7, FFF4D402, FFF4D71F, FFF4DB38, FFF4DE73
+
+; ==================================================================
+; CALLEE FFF46267   FFF46267 .. FFF46457  (496 bytes)
+; ==================================================================
+FFF46267  60 c0                     sub     #0Ch, sp
+FFF46269  66 06                     mov.l   #0, r6
+FFF4626B  ef 37                     mov.l   r3, r7
+FFF4626D  ef 1d                     mov.l   r1, r13
+FFF4626F  a0 82                     mov.l   r2, 0Ch+var_4[sp]
+FFF46271  58 1c                     movu.b  [r1], r12
+FFF46273  71 1b 01                  add     #1, r1, r11
+FFF46276  fb 22 20 ea c3 ff         mov.l   #unk_FFC3EA20, r2
+FFF4627C  fe c2 ce                  movu.b  [r2, r12], r14
+FFF4627F  7c 6e                     btst    #6, r14
+FFF46281  20 19                     beq.b   loc_FFF4629A
+FFF46283  ef b1                     mov.l   r11, r1
+FFF46285  ef d2                     mov.l   r13, r2
+FFF46287  05 83 0a 00               bsr.a   sub_FFF46D0A
+FFF4628B  62 16                     add     #1, r6
+FFF4628D  61 01                     cmp     #0, r1
+FFF4628F  ef b1                     mov.l   r11, r1
+FFF46291  20 e0                     beq.b   loc_FFF46271
+FFF46293  66 0c                     mov.l   #0, r12
+FFF46295  ef c1                     mov.l   r12, r1
+FFF46297  3f 6d 0b                  rtsd    #2Ch, r6-r13 ; ','
+FFF4629A  75 5c 2b                  cmp     #2Bh, r12 ; '+'
+FFF4629D  20 0c                     beq.b   loc_FFF462A9
+FFF4629F  75 5c 2d                  cmp     #2Dh, r12 ; '-'
+FFF462A2  17                        beq.s   loc_FFF462A9
+FFF462A3  66 06                     mov.l   #0, r6
+FFF462A5  a0 0e                     mov.l   r6, 0Ch+var_8[sp]
+FFF462A7  2e 1c                     bra.b   loc_FFF462C3
+FFF462A9  4b d6                     add     r13, r6
+FFF462AB  62 16                     add     #1, r6
+FFF462AD  ef 61                     mov.l   r6, r1
+FFF462AF  ef d2                     mov.l   r13, r2
+FFF462B1  05 59 0a 00               bsr.a   sub_FFF46D0A
+FFF462B5  75 5c 2d                  cmp     #2Dh, r12 ; '-'
+FFF462B8  fc db 20                  sceq.l  r2
+FFF462BB  61 01                     cmp     #0, r1
+FFF462BD  a0 0a                     mov.l   r2, 0Ch+var_8[sp]
+FFF462BF  21 d4                     bne.b   loc_FFF46293
+FFF462C1  ef 61                     mov.l   r6, r1
+FFF462C3  61 07                     cmp     #0, r7
+FFF462C5  ef 16                     mov.l   r1, r6
+FFF462C7  21 45                     bne.b   loc_FFF4630C
+FFF462C9  58 6e                     movu.b  [r6], r14
+FFF462CB  66 a7                     mov.l   #0Ah, r7
+FFF462CD  75 5e 30                  cmp     #30h, r14 ; '0'
+FFF462D0  21 73                     bne.b   loc_FFF46343
+FFF462D2  71 6c 01                  add     #1, r6, r12
+FFF462D5  ef c1                     mov.l   r12, r1
+FFF462D7  ef d2                     mov.l   r13, r2
+FFF462D9  05 31 0a 00               bsr.a   sub_FFF46D0A
+FFF462DD  61 01                     cmp     #0, r1
+FFF462DF  21 b4                     bne.b   loc_FFF46293
+FFF462E1  b0 6f                     movu.b  1[r6], r7
+FFF462E3  fb 12 20 ea c3 ff         mov.l   #unk_FFC3EA20, r1
+FFF462E9  fe c1 7e                  movu.b  [r1, r7], r14
+FFF462EC  7c 0e                     btst    #0, r14
+FFF462EE  14                        beq.s   loc_FFF462F2
+FFF462EF  71 77 20                  add     #20h, r7, r7 ; ' '
+FFF462F2  75 57 78                  cmp     #78h, r7 ; 'x'
+FFF462F5  66 87                     mov.l   #8, r7
+FFF462F7  21 4a                     bne.b   loc_FFF46341
+FFF462F9  62 26                     add     #2, r6
+FFF462FB  ef 61                     mov.l   r6, r1
+FFF462FD  ef d2                     mov.l   r13, r2
+FFF462FF  05 0b 0a 00               bsr.a   sub_FFF46D0A
+FFF46303  61 01                     cmp     #0, r1
+FFF46305  75 47 10                  mov.l   #10h, r7
+FFF46308  21 8b                     bne.b   loc_FFF46293
+FFF4630A  2e 39                     bra.b   loc_FFF46343
+FFF4630C  75 57 10                  cmp     #10h, r7
+FFF4630F  21 34                     bne.b   loc_FFF46343
+FFF46311  58 6e                     movu.b  [r6], r14
+FFF46313  75 5e 30                  cmp     #30h, r14 ; '0'
+FFF46316  21 2d                     bne.b   loc_FFF46343
+FFF46318  b0 69                     movu.b  1[r6], r1
+FFF4631A  71 6c 01                  add     #1, r6, r12
+FFF4631D  fb 22 20 ea c3 ff         mov.l   #unk_FFC3EA20, r2
+FFF46323  fe c2 1e                  movu.b  [r2, r1], r14
+FFF46326  7c 0e                     btst    #0, r14
+FFF46328  14                        beq.s   loc_FFF4632C
+FFF46329  71 11 20                  add     #20h, r1, r1 ; ' '
+FFF4632C  75 51 78                  cmp     #78h, r1 ; 'x'
+FFF4632F  1d                        bne.s   loc_FFF46334
+FFF46330  62 26                     add     #2, r6
+FFF46332  ef 6c                     mov.l   r6, r12
+FFF46334  ef c1                     mov.l   r12, r1
+FFF46336  ef d2                     mov.l   r13, r2
+FFF46338  05 d2 09 00               bsr.a   sub_FFF46D0A
+FFF4633C  61 01                     cmp     #0, r1
+FFF4633E  3b 55 ff                  bne.w   loc_FFF46293
+FFF46341  ef c6                     mov.l   r12, r6
+FFF46343  71 7e fe                  add     #-2, r7, r14
+FFF46346  75 5e 22                  cmp     #22h, r14 ; '"'
+FFF46349  25 05                     bleu.b  loc_FFF4634E
+FFF4634B  38 ff 00                  bra.w   loc_FFF4644A
+FFF4634E  61 b7                     cmp     #0Bh, r7
+FFF46350  29 06                     blt.b   loc_FFF46356
+FFF46352  71 7e 56                  add     #56h, r7, r14 ; 'V'
+FFF46355  0c                        bra.s   loc_FFF46359
+FFF46356  71 7e 2f                  add     #2Fh, r7, r14 ; '/'
+FFF46359  58 6f                     movu.b  [r6], r15
+FFF4635B  fb 12 20 ea c3 ff         mov.l   #unk_FFC3EA20, r1
+FFF46361  fe cf 15                  movu.b  [r15, r1], r5
+FFF46364  fd 74 c5 07               tst     #7, r5
+FFF46368  21 12                     bne.b   loc_FFF4637A
+FFF4636A  66 0c                     mov.l   #0, r12
+FFF4636C  a8 81                     mov.l   0Ch+var_4[sp], r1
+FFF4636E  61 01                     cmp     #0, r1
+FFF46370  3a 25 ff                  beq.w   loc_FFF46295
+FFF46373  a8 81                     mov.l   0Ch+var_4[sp], r1
+FFF46375  e3 16                     mov.l   r6, [r1]
+FFF46377  38 1e ff                  bra.w   loc_FFF46295
+FFF4637A  7c 05                     btst    #0, r5
+FFF4637C  14                        beq.s   loc_FFF46380
+FFF4637D  71 ff 20                  add     #20h, r15, r15 ; ' '
+FFF46380  5b ec                     movu.b  r14, r12
+FFF46382  47 cf                     cmp     r12, r15
+FFF46384  e3 0c                     mov.l   r12, 0Ch+var_C[sp]
+FFF46386  2a e4                     bgt.b   loc_FFF4636A
+FFF46388  66 0b                     mov.l   #0, r11
+FFF4638A  ef 6c                     mov.l   r6, r12
+FFF4638C  58 ce                     movu.b  [r12], r14
+FFF4638E  62 1c                     add     #1, r12
+FFF46390  75 5e 30                  cmp     #30h, r14 ; '0'
+FFF46393  21 13                     bne.b   loc_FFF463A6
+FFF46395  ef c1                     mov.l   r12, r1
+FFF46397  ef d2                     mov.l   r13, r2
+FFF46399  05 71 09 00               bsr.a   sub_FFF46D0A
+FFF4639D  62 1b                     add     #1, r11
+FFF4639F  61 01                     cmp     #0, r1
+FFF463A1  3b f2 fe                  bne.w   loc_FFF46293
+FFF463A4  2e e8                     bra.b   loc_FFF4638C
+FFF463A6  ed 0c 01                  mov.l   0Ch+var_8[sp], r12
+FFF463A9  66 09                     mov.l   #0, r9
+FFF463AB  ef 98                     mov.l   r9, r8
+FFF463AD  70 ca ff ff ff 7f         add     #7FFFFFFFh, r12, r10
+FFF463B3  ef 9c                     mov.l   r9, r12
+FFF463B5  ff 2e 9b                  add     r9, r11, r14
+FFF463B8  fb 12 20 ea c3 ff         mov.l   #unk_FFC3EA20, r1
+FFF463BE  fe c6 ef                  movu.b  [r6, r14], r15
+FFF463C1  4b 6e                     add     r6, r14
+FFF463C3  fe cf 15                  movu.b  [r15, r1], r5
+FFF463C6  fd 74 c5 07               tst     #7, r5
+FFF463CA  20 52                     beq.b   loc_FFF4641C
+FFF463CC  7c 05                     btst    #0, r5
+FFF463CE  ef f5                     mov.l   r15, r5
+FFF463D0  14                        beq.s   loc_FFF463D4
+FFF463D1  71 f5 20                  add     #20h, r15, r5 ; ' '
+FFF463D4  06 84 05                  cmp     [sp].l, r5
+FFF463D7  2a 45                     bgt.b   loc_FFF4641C
+FFF463D9  61 08                     cmp     #0, r8
+FFF463DB  21 2d                     bne.b   loc_FFF46408
+FFF463DD  fb e2 20 ea c3 ff         mov.l   #unk_FFC3EA20, r14
+FFF463E3  fe ce fe                  movu.b  [r14, r15], r14
+FFF463E6  7c 2e                     btst    #2, r14
+FFF463E8  21 0c                     bne.b   loc_FFF463F4
+FFF463EA  7c 0e                     btst    #0, r14
+FFF463EC  14                        beq.s   loc_FFF463F0
+FFF463ED  71 ff 20                  add     #20h, r15, r15 ; ' '
+FFF463F0  71 ff a9                  add     #-57h, r15, r15
+FFF463F3  0c                        bra.s   loc_FFF463F7
+FFF463F4  71 ff d0                  add     #-30h, r15, r15
+FFF463F7  ff 0e fa                  sub     r15, r10, r14
+FFF463FA  fc 27 7e                  divu    r7, r14
+FFF463FD  47 ec                     cmp     r14, r12
+FFF463FF  25 05                     bleu.b  loc_FFF46404
+FFF46401  66 18                     mov.l   #1, r8
+FFF46403  0d                        bra.s   loc_FFF46408
+FFF46404  4f 7c                     mul     r7, r12
+FFF46406  4b fc                     add     r15, r12
+FFF46408  62 19                     add     #1, r9
+FFF4640A  ff 21 9b                  add     r9, r11, r1
+FFF4640D  4b 61                     add     r6, r1
+FFF4640F  ef d2                     mov.l   r13, r2
+FFF46411  05 f9 08 00               bsr.a   sub_FFF46D0A
+FFF46415  61 01                     cmp     #0, r1
+FFF46417  3b 7c fe                  bne.w   loc_FFF46293
+FFF4641A  2e 9b                     bra.b   loc_FFF463B5
+FFF4641C  61 08                     cmp     #0, r8
+FFF4641E  21 10                     bne.b   loc_FFF4642E
+FFF46420  a8 0e                     mov.l   0Ch+var_8[sp], r6
+FFF46422  61 06                     cmp     #0, r6
+FFF46424  1e                        bne.s   loc_FFF4642A
+FFF46425  ef e6                     mov.l   r14, r6
+FFF46427  38 45 ff                  bra.w   loc_FFF4636C
+FFF4642A  7e 1c                     neg     r12
+FFF4642C  2e f9                     bra.b   loc_FFF46425
+FFF4642E  fb 62 10 85 06 00         mov.l   #68510h, r6
+FFF46434  fb c2 ff ff ff 7f         mov.l   #7FFFFFFFh, r12
+FFF4643A  f8 66 22                  mov.l   #22h, [r6] ; '"'
+FFF4643D  a8 0e                     mov.l   0Ch+var_8[sp], r6
+FFF4643F  61 06                     cmp     #0, r6
+FFF46441  fd 70 fc 00 00 00 80      stnz    #80000000h, r12
+FFF46448  2e dd                     bra.b   loc_FFF46425
+FFF4644A  fb c2 10 85 06 00         mov.l   #68510h, r12
+FFF46450  f8 ca b0 04               mov.l   #4B0h, [r12]
+FFF46454  38 16 ff                  bra.w   loc_FFF4636A
+; ---- range stats: code heads 197, data items 0, undef items 0 ----
+
+; xrefsTo FFF46267: FFF46265
+
+; ==================================================================
+; CALLEE FFF4557D   FFF4557D .. FFF455A0  (35 bytes)
+; ==================================================================
+FFF4557D  61 03                     cmp     #0, r3
+FFF4557F  66 0e                     mov.l   #0, r14
+FFF45581  1c                        bne.s   loc_FFF45585
+FFF45582  66 01                     mov.l   #0, r1
+FFF45584  02                        rts
+FFF45585  47 3e                     cmp     r3, r14
+FFF45587  22 0e                     bgeu.b  loc_FFF45595
+FFF45589  fd 38 1f                  movu.b  [r1+], r15
+FFF4558C  62 1e                     add     #1, r14
+FFF4558E  fd 38 25                  movu.b  [r2+], r5
+FFF45591  47 5f                     cmp     r5, r15
+FFF45593  20 f2                     beq.b   loc_FFF45585
+FFF45595  fb e6 ff                  mov.l   #-1, r14
+FFF45598  60 12                     sub     #1, r2
+FFF4559A  fe c1 e1                  movu.b  [r1, r14], r1
+FFF4559D  40 21                     sub     [r2], r1
+FFF4559F  02                        rts
+; ---- range stats: code heads 17, data items 0, undef items 0 ----
+
+; xrefsTo FFF4557D: FFF23DD4, FFF23DEF, FFF23E0A, FFF23E25, FFF23E61, FFF23E7C, FFF23EEB, FFF23F06, FFF23F21, FFF23F3C
+
+; ==================================================================
+; CALLEE FFF46D0A   FFF46D0A .. FFF46D28  (30 bytes)
+; ==================================================================
+FFF46D0A  58 1e                     movu.b  [r1], r14
+FFF46D0C  61 0e                     cmp     #0, r14
+FFF46D0E  20 17                     beq.b   loc_FFF46D25
+FFF46D10  43 21                     sub     r2, r1
+FFF46D12  76 01 00 02               cmp     #200h, r1
+FFF46D16  29 0f                     blt.b   loc_FFF46D25
+FFF46D18  fb e2 10 85 06 00         mov.l   #68510h, r14
+FFF46D1E  66 11                     mov.l   #1, r1
+FFF46D20  f8 ea 50 04               mov.l   #450h, [r14]
+FFF46D24  02                        rts
+FFF46D25  66 01                     mov.l   #0, r1
+FFF46D27  02                        rts
+; ---- range stats: code heads 12, data items 0, undef items 0 ----
+
+; xrefsTo FFF46D0A: FFF46287, FFF462B1, FFF462D9, FFF462FF, FFF46338, FFF46399, FFF46411
+

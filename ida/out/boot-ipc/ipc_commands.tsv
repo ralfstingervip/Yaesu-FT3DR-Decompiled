@@ -1,0 +1,23 @@
+opcode_or_family	direction	builder_or_handler	length	meaning	confidence	evidence
+0xF000	MAIN->SUB	sub_7FCE	40	periodic state/status frame (param 0x1E); fills via sub_7C20	inferred	sub_7FCE dumped
+0xF001-0xF00B	MAIN->SUB	various (0x4844 dispatch)	-	F00x family (12 opcodes) - primary VFO/receiver state group	inferred (family)	opcodes_main_to_sub.tsv
+0xF007	MAIN->SUB	sub_84C4	42	state frame with rolling counter (0xFF3D94++) + byte from 0xFFA9DD	confirmed builder	sub_84C4 dumped
+0xF100-0xF115	MAIN->SUB	various	-	F1xx family (16 opcodes)	inferred (family)	opcodes_main_to_sub.tsv
+0xF200,0xF280	MAIN->SUB	various	-	F2xx family (2 opcodes)	inferred (family)	opcodes_main_to_sub.tsv
+0xF300-0xF3D6	MAIN->SUB	various (largest family, 36 opcodes)	-	F3xx family - display/menu/UI content group (most numerous)	inferred (family)	opcodes_main_to_sub.tsv
+0xF3D5	MAIN->SUB	special-cased	-	special opcode (branch in sub_B6B6 header check, with 0xFC00/0xFE00)	confirmed special	sub_B6B6 0xB6F8
+0xF401-0xF403	MAIN->SUB	various	-	F4xx family (3 opcodes)	inferred (family)	opcodes_main_to_sub.tsv
+0xF500-0xF518	MAIN->SUB	various	-	F5xx family (13 opcodes)	inferred (family)	opcodes_main_to_sub.tsv
+0xF600-0xF640	MAIN->SUB	various incl sub_AE3C/AF06/AF94	~100	F6xx family (10 opcodes) - memory-channel/name records	partly confirmed	sub_AE3C(F630)/AF06(F631)/AF94(F632) build from tables 0xC540/0xC572
+0xF630	MAIN->SUB	sub_AE3C	104	memory/channel record (param 0x5E); builds from 0xC540 via sub_B516	confirmed builder	sub_AE3C dumped
+0xF631	MAIN->SUB	sub_AF06	100	memory/channel record (param 0x5A); builds from 0xC540	confirmed builder	sub_AF06 dumped
+0xF632	MAIN->SUB	sub_AF94	-	memory/channel record; builds from 0xC572	confirmed builder	sub_AF94 dumped
+0xF701,0xF703	MAIN->SUB	various	-	F7xx family (2 opcodes)	inferred (family)	opcodes_main_to_sub.tsv
+0xF800-0xF824	MAIN->SUB	various	-	F8xx family (13 opcodes)	inferred (family)	opcodes_main_to_sub.tsv
+0xFC00	MAIN->SUB	sub_D53A	variable (len=0xFFBA86+8)	BULK transfer (special-cased in sub_B6B6); large variable frame - candidate for settings/memory bulk block; fills via sub_71196	confirmed builder, meaning inferred	sub_D53A dumped
+0xFD00	MAIN->SUB	-	-	special bulk-class opcode	inferred	opcodes_main_to_sub.tsv
+0xFE00	MAIN->SUB	special-cased	-	special opcode (>=0xFE00 branch in sub_B6B6)	confirmed special	sub_B6B6 0xB6FE
+settings_block	MAIN->SUB (+restore SUB->MAIN)	applied on SUB by sub_FFEF4142	~254	the ~254-byte configuration block: MAIN is the master, SUB stores it at 0x8E46 and applies via shadow 0x8C4D; carries market flag 0x8C53 and RAM-DISPLAY enable bit7 of 0x8E4D	confirmed on SUB side (MENU), transfer inferred over this link	MENU 08-menu doc; SUB has no NV store
+version_report	MAIN->SUB	-	-	MAIN's own version + DSP version (obtained via CPU>DSP:VER? -> 0xFFB0DC) reach SUB's version screen (0x8C4D+0x27..+0x29) over the SCI-D link (SUB's only MAIN connection), within the status stream. NOTE: the 0x5A(DSP)/0x5B(MAIN) 'version messages' built at sub_74310/74364 are transmitted by sub_738CC over the EXTERNAL SCI-A data jack (CAT/clone ID response), NOT over the SUB link - correcting doc-06 which misrouted them.	inferred (SCI-D carriage); SUB template 0xFFF487EC, digits 0x8C4D+0x27; sub_738CC->0xFFFE93 confirmed external
+external_CAT	MAIN<->PC (SCI-A 0xFFFE90)	-	-	external control API on the data jack, separate from the SUB link: ASCII/binary interpreter sub_06B77E (9-byte header, 0x04 EOT, additive cksum 0xFFB3DC), can soft-reset MAIN (jmp loc_2050) and DMA-dump RAM from 0xFEE000; ID/version responses 'AH72M'/0x5A/0x5B via sub_738CC; DSP debug trace (CPU>DSP:/DSP>CPU:) via sub_453A0 gated 0xFF8C26.7/0xFF8C28.	sub_06B77E/738CC/453A0 dumped; see 10-host-usb-protocol for host side
+key/touch events	SUB->MAIN	MAIN RXI ring 0xFF306A consumer	-	SUB reports user input to MAIN (SUB is the UI/display processor)	inferred (architecture)	sub_44A70 RX ring; not fully traced

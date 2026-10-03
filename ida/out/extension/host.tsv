@@ -1,0 +1,42 @@
+#	Lane 7 host-surface extension map. MAIN = FT3D_MAIN_ver102_EXP.bin, H8SX/1668R, big-endian, base 0.
+#	addr = mapped CPU addr = file offset (0xFFxxxx = on-chip RAM/SFR). tag: B=byte-confirmed, I=inferred.
+surface	addr	symbol	item	finding	tag
+clone	0x2AD08	sub_2AD08	direction dispatch	reads 0xFFBBC2; ==1 -> sub_7358E (receive), else sub_737FC (send)	B
+clone	0x73540	sub_73540	SCI init	SCI_4: BRR 0xFFFE91=0x19 (19200), SMR/SCR=0, 0xFF8004=1 -> 19200 8N1 polled	B
+clone	0x7358E	sub_7358E	clone RECEIVE	writes EEPROM 0x140..0xFFFF then 0x10100..0x1FFFF; on success reboots (jmp 0x2050)	B
+clone	0x737FC	sub_737FC	clone SEND	header, wait ACK 0x06, 0x3FB+0x3FC blocks of 64, 1 trailer byte	B
+clone	0x736E6	sub_736E6	header recv	waits UNBOUNDED for sync byte 'A'(0x41), then reads 10-byte header	B
+clone	0x737C8	sub_737C8	ID check	compares "AH72M"(0x738A2), version byte (=2, sub_734BE), region dword (sub_7357A)	B
+clone	0x7390A	sub_7390A	header build	writes "AH72M"+ver+region to 0xFF96F8 (10 bytes)	B
+clone	0x7374A	sub_7374A	block/byte recv	per-byte timeout 0x4B0 counts of tick 0xFF94B8; sums bytes to 0xFF812E when state 1/2	B
+clone	0x737A8	sub_737A8	hdr TX + ACK wait	transmits header once, then loops waiting for byte 0x06, per-byte timeout	B
+clone	0x738CC	sub_738CC	SCI byte TX	only writer of TDR 0xFFFE93/SSR 0xFFFE94; adds byte to sum 0xFF812E when state==3	B
+clone	0x738AC	sub_738AC	64B block TX	transmits 64 bytes via sub_738CC	B
+clone	0x73686	sub_73686	progress bar	writes 1-5 to 0xFFA9DD (display segment), sets 0xFF817E.1; NOT a wire ACK	B
+clone	0x736B6	sub_736B6	progress bar	writes 6-10 to 0xFFA9DD (display segment); NOT a wire ACK	B
+clone	0x73AB4	sub_73AB4	ctrl-byte TX	entry sends ACK byte 0x06 (byte at 0x73908) once, from receive at 0x735D0	B
+clone	0x73AC2	sub_73AB4+0xE	NAK	alt entry sends NAK byte 0x15 (byte at 0x73909); used by extended clone variants only	B
+clone	0xFF812E	-	recv checksum	8-bit mod-256 sum of header+data; compared to trailer byte in 0xFF812F	B
+clone	0xFF812F	-	recv trailer	single received trailer byte = expected 8-bit sum	B
+clone	-	-	32-bit sum	receive does NOT check any 32-bit sum (unlike BACKUP.dat restore); 8-bit only	B
+node	0x6BAC8	sub_6BAC8	data-phase dispatch	inline cmp-chain on 0xFF1AC9; letters B,C,E,F,N,S,V,W; default 0x6BB04 ignores unknown	B
+node	0x6BB18	loc_6BB18	S command	'S' handler entry (TX-related); existence + address only	B
+node	0x25EAE	sub_25EAE	M parser	parses M payload from 0xFF1AC8+ into VFO struct + 0xFFB3xx	B
+node	0x25D72	sub_25D72	M applier	writes RAM VFO struct only (er0-relative); NO EEPROM-write call in path	B
+node	0xFF1AE5	M p23	M field 1	'0'/'1' -> VFO+0x12 bit5 (mode A only)	B
+node	0xFF1AE6	M p24	M field 2	0-3 -> VFO+0x16 (mode A only; likely TX power)	B
+node	0xFF1AED	M field	M field 3	'0'/'1' bit0 -> 0xFFB3D3 (node-protocol var, not VFO)	B
+node	0xFF1AEE	M field	M field 4	2 hex nibbles, <0x80 -> 0xFFB3D4 (node-protocol var)	B
+node	0xFF1AF0	M field	M field 5	0-3 -> VFO+0x13 via table 0x2613A (likely operating mode)	B
+node	0x3F522	sub_3F522	freq gate	frequency-plausibility gate on 0xFF817E.0	B
+node	-	-	M -> EEPROM	M path writes RAM VFO only; persistence relies on normal settings save (not exercised)	I
+usb	0x054FEC	-	poll dispatch	reads 0xFF8183, x4, indexes 12-entry state table 0x055002 (gate 0xFF813A==0)	B
+usb	0x055002	-	state table	12-entry jump table for USB device state machine	B
+usb	0x055590	-	SETUP classify	compares bmReqType:bReq word: 0x8006,0xC1D4,0x41D1,0x41D2,0x41D3	B
+usb	0x0558FE	-	SETUP templates	8-byte canonical SETUP template table (chapter-9 fallback matcher)	B
+usb	0x0554E6	sub_554E6	D3 handler	0x41D3 OUT: SETUP wValueL (0xFF3D6C) -> 0xFFB096; ACKs status stage	B
+usb	0xFFB096	-	D3 target	single param byte set by D3; consumed at 0x00FDC8; no memory/flash reach	B
+usb	0xFF8184	-	USB work var	USB state-machine working dword (ISR sub_54EC2, state handlers, EP3 builder sub_557A2); not a camera command set	B
+usb	0x055414	-	D1 handler	0x41D1 OUT: start JPEG, 24-bit length -> packet count	B
+usb	0x0555F4	-	D2 handler	0x41D2 OUT: end/commit frame; bumps 0xFFBA73	B
+usb	0x0552D8	-	D4 handler	0xC1D4 IN: returns 1 status byte (size/quality)	B

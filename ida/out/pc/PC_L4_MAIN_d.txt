@@ -1,0 +1,175 @@
+job PC_L4_MAIN d
+; ==== sub_6B84 00006B84-00006C32 ====
+00006B84  mov.b   @0xFFFFA9F9:16, r4l
+00006B88  cmp.b   #9, r4l
+00006B8A  beq     loc_6B9C:8
+00006B8C  cmp.b   #0xA, r4l
+00006B8E  bne     loc_6BFE:16
+00006B92  mov.b   #0, r3h
+00006B94  mov.b   #2, r3l
+00006B96  jsr     sub_CC8C:24
+00006B9A  bra     locret_6BFC:8
+00006B9C  mov.b   @0xFFFF94C1:16, r4l
+00006BA0  cmp.b   #1, r4l
+00006BA2  beq     locret_6BFC:8
+00006BA4  mov.b   @0xFFFFB2C7:16, r4l
+00006BA8  cmp.b   #0x31, r4l ; '1'
+00006BAA  bne     loc_6BBA:8
+00006BAC  btst    #0, @0xFFFFB26B:16
+00006BB2  bne     loc_6BBA:8
+00006BB4  mov.b   #0, r3h
+00006BB6  mov.b   #7, r3l
+00006BB8  bra     loc_6BF8:8
+00006BBA  mov.b   @0xFFFF8DDE:16, r4l
+00006BBE  bpl     loc_6BD6:8
+00006BC0  mov.b   @0xFFFFB2A5:16, r4l
+00006BC4  beq     loc_6BD6:8
+00006BC6  mov.b   @0xFFFFB3E5:16, r4l
+00006BCA  beq     loc_6BD6:8
+00006BCC  btst    #7, @0xFFFF8DE0:16
+00006BD2  beq     loc_6BE2:8
+00006BD4  bra     locret_6BFC:8
+00006BD6  mov.b   #0, r3h
+00006BD8  mov.b   #0, r3l
+00006BDA  btst    #0, @0xFFFFB26B:16
+00006BE0  beq     loc_6BF8:8
+00006BE2  mov.b   #1, r3h
+00006BE4  mov.b   @0xFFFF8D90:16, r3l
+00006BE8  mov.b   @0xFFFF8DDE:16, r4l
+00006BEC  bpl     loc_6BF8:8
+00006BEE  mov.b   #0, r3l
+00006BF0  btst    #7, @0xFFFF8DE0:16
+00006BF6  bne     locret_6BFC:8
+00006BF8  jsr     sub_CC8C:24
+00006BFC  rts
+00006BFE  mov.w   #0, r4
+00006C02  bld     #6, @0xFFFF8EA0:16
+00006C08  bst     #0, r4h
+00006C0A  bld     #0, @0xFFFF817E:16
+00006C10  bst     #0, r4l
+00006C12  cmp.b   r4h, r4l
+00006C14  bne     loc_6C26:8
+00006C16  mov.b   @0xFFFF94C1:16, r4l
+00006C1A  cmp.b   #2, r4l
+00006C1C  beq     loc_6C82:8
+00006C1E  cmp.b   #4, r4l
+00006C20  beq     loc_6C82:8
+00006C22  cmp.b   #3, r4l
+00006C24  beq     loc_6C7C:8
+00006C26  mov.b   @(5:16,er0), r3l
+00006C2A  and.l   #0xFF, er3
+00006C30  shll.l  #2, er3
+00006C7C  jsr     sub_4C2A:24
+00006C80  bra     locret_6C9C:8
+00006C82  jsr     sub_4B00:24
+00006C86  mov.b   @(0:16,er0), r4l
+00006C8A  cmp.b   #0xB, r4l
+00006C8C  beq     loc_6C98:8
+00006C8E  cmp.b   #0xA, r4l
+00006C90  bne     locret_6C9C:8
+00006C92  jsr     sub_4D84:24
+00006C96  bra     locret_6C9C:8
+00006C98  jsr     sub_4D40:24
+00006C9C  rts
+
+; ==== linear 00006BD0-00006C60 ====
+00006BD0  btst    #7, @0xFFFF8DE0:16
+00006BD2  beq     loc_6BE2:8
+00006BD4  bra     locret_6BFC:8
+00006BD6  mov.b   #0, r3h
+00006BD8  mov.b   #0, r3l
+00006BDA  btst    #0, @0xFFFFB26B:16
+00006BE0  beq     loc_6BF8:8
+00006BE2  mov.b   #1, r3h
+00006BE4  mov.b   @0xFFFF8D90:16, r3l
+00006BE8  mov.b   @0xFFFF8DDE:16, r4l
+00006BEC  bpl     loc_6BF8:8
+00006BEE  mov.b   #0, r3l
+00006BF0  btst    #7, @0xFFFF8DE0:16
+00006BF6  bne     locret_6BFC:8
+00006BF8  jsr     sub_CC8C:24
+00006BFC  rts
+00006BFE  mov.w   #0, r4
+00006C02  bld     #6, @0xFFFF8EA0:16
+00006C08  bst     #0, r4h
+00006C0A  bld     #0, @0xFFFF817E:16
+00006C10  bst     #0, r4l
+00006C12  cmp.b   r4h, r4l
+00006C14  bne     loc_6C26:8
+00006C16  mov.b   @0xFFFF94C1:16, r4l
+00006C1A  cmp.b   #2, r4l
+00006C1C  beq     loc_6C82:8
+00006C1E  cmp.b   #4, r4l
+00006C20  beq     loc_6C82:8
+00006C22  cmp.b   #3, r4l
+00006C24  beq     loc_6C7C:8
+00006C26  mov.b   @(5:16,er0), r3l
+00006C2A  and.l   #0xFF, er3
+00006C30  shll.l  #2, er3
+00006C31  shll.l  #2, er3
+00006C32  .byte 0x78 ; x
+00006C33  .byte 0xB0
+00006C34  .byte 0x6B ; k
+00006C35  .byte 0x26 ; &
+00006C36  .byte    0
+00006C37  .byte    0
+00006C38  .byte 0x78 ; x
+00006C39  .byte 0x14
+00006C3A  .byte 0xFB
+00006C3B  .byte    0
+00006C3C  .byte 0x5D ; ]
+00006C3D  .byte 0x60 ; `
+00006C3E  .byte 0x6E ; n
+00006C3F  .byte  0xC
+00006C40  .byte    0
+00006C41  .byte    1
+00006C42  .byte 0x47 ; G
+00006C43  .byte 0x58 ; X
+00006C44  .byte 0xAC
+00006C45  .byte  0xC
+00006C46  .byte 0x45 ; E
+00006C47  .byte 0x1A
+00006C48  .byte 0x47 ; G
+00006C49  .byte 0x52 ; R
+00006C4A  .byte 0xAC
+00006C4B  .byte  0xD
+00006C4C  .byte 0x47 ; G
+00006C4D  .byte 0x4E ; N
+00006C4E  .byte 0xAC
+00006C4F  .byte 0xD8
+00006C50  .byte 0x47 ; G
+00006C51  .byte 0x10
+00006C52  .byte 0xAC
+00006C53  .byte 0xD9
+00006C54  .byte 0x47 ; G
+00006C55  .byte  0xC
+00006C56  .byte 0xAC
+00006C57  .byte 0xDA
+00006C58  .byte 0x47 ; G
+00006C59  .byte    8
+00006C5A  .byte 0xAC
+00006C5B  .byte 0xDB
+00006C5C  .byte 0x47 ; G
+00006C5D  .byte    4
+00006C5E  .byte 0xAC
+00006C5F  .byte 0xDC
+
+; ==== linear 00002B30-00002B60 ====
+00002B30  mov.b   #0xC9, r4l
+00002B32  jsr     sub_394D2:24
+00002B36  jsr     sub_7351E:24
+00002B3A  jsr     sub_2DCE:24
+00002B3E  jsr     sub_2D7C:24
+00002B42  mov.b   #0xA, r4l
+00002B44  mov.b   r4l, @0xFFFF9534:16
+00002B48  mov.b   r4l, @0xFFFF9535:16
+00002B4C  mov.b   #0x32, r4l ; '2'
+00002B4E  mov.b   r4l, @0xFFFF9561:16
+00002B52  jsr     loc_10168:24
+00002B56  beq     loc_2B60:8
+00002B58  jsr     sub_30E0:24
+00002B5C  jsr     sub_31E2:24
+00002B5D  jsr     sub_31E2:24
+00002B5E  jsr     sub_31E2:24
+00002B5F  jsr     sub_31E2:24
+

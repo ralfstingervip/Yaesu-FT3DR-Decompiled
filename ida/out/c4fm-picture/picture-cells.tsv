@@ -1,0 +1,29 @@
+cell	role	evidence_addr
+0xFEF962	DSP-RX data-message accumulator (<=1040 B)	0x057102 (I4)
+0xFF07A4	N-class message store	0x058040/0x058426
+0xFF1440	G-class message store	0x05841E/0x058558
+0xFF07ED..	N-store payload: picture header fields	0x05F356/0x05F37A
+0xFF07F2	N-store payload: picture data block body	0x05F47A
+0xFF5006	1024-B received/stored picture block staging (FFFF push source)	0x05F480/0x055CB6
+0xFF5406	SD-file read / TX pack staging	0x05FA30/0x071826
+0xFF5806	USB camera bulk-OUT buffer (I1 doc53)	0x055680
+0xFF9800	SUB->MAIN reverse SCI-D frame receive buffer	0x055E0A/0x055E9E
+0xFF1489	scratch copy of reverse frame header (EEPMOV dest)	0x055E10
+0xFFB1D4	32-bit running checksum over picture bytes	0x05F49E/0x055CD0
+0xFFB1DE	sender radio ID (5 B)	0x05F3AA
+0xFFB208	picture size (u32)	0x05F3F4/0x0710C4
+0xFFB20E/B22A/B23C	received-pic date / GPS position / ASCII date (QSOPCTDIR src)	pc-06 S5 (filled via N-store copies)
+0xFFB259	current picture message letter	0x05F33A
+0xFFB25A	picture block count = ceil(size/0x400)	0x05F408/0x055C54
+0xFFB263	picture-transfer sub-state (hdr=1,data=3/4,end=6,ack=8)	0x05F3F0/0x05F4CA
+0xFFBC40/42/44	FFFF frame block#, total, 32b running sum	0x055B3C-0x055B4C
+0xFFBC48	FFFF-push source pointer (0xFF5806 cam / 0xFF5006 rx)	0x05F4B6/0x055D06
+0xFFBC50	SD-read/view push state machine index	0x055B8C
+0xFFBC52	save source type: 2=camera, 3=received	0x055A44/0x055A72
+0xFFBC53	FFFF push remaining-block countdown	0x055DCE
+0xFFBC54	reverse-readback state machine index	0x055DFC/0x055BB4
+0xFFBC55/57	received-block push trigger / sub-state	0x05F4A6/0x055BCA
+0xFFBA30	SD request state machine (bit7=pending)	0x0710DE
+0xFFBA9E	SD op (1=create,2=append,0xA,0xB,...)	0x0710F8
+0xFFBA9F	SD param (4 = data from SUB 0x070E1000)	0x0710FE
+0xFFBAA0	SD dir index (5 = PHOTO)	0x071104

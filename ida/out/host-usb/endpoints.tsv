@@ -1,0 +1,44 @@
+#	HOST-USB: USB transport layer of the FT3DR/DE ver 1.02 updater chain.
+#	Evidence is RComms.dll (x86 PE, 163,840 bytes, SHA-256 09631ae5bb856bbe4e1fbfdb39a005b9d513abe2d896635c562363eb8443fb58),
+#	image base 0x10000000, Hex-Rays output in ida\out\host-usb\RComms\decomp.c.
+#	NOTE: nothing here is a kernel-level USB descriptor read. RComms talks to the
+#	HmseUsb.sys kernel driver through DeviceIoControl + ReadFile/WriteFile; the
+#	driver owns the pipes. Endpoint ADDRESSES below are the ones RComms requests
+#	by descriptor value for the E8a PIDs; for PID_0025 no reassignment is sent and
+#	the driver's existing pipe assignment is read back instead.
+layer	item	value	evidence_addr	status	note
+device_node	CreateFileA name	\\.\HmseUsb%d  (instance 0..19)	1000ABF0 E8A_USB::OpenInstance	confirmed	sprintf then CreateFileA; format string at 0x10022928
+device_node	dwDesiredAccess	0xC0000000 GENERIC_READ|GENERIC_WRITE	1000ABF0	confirmed
+device_node	dwShareMode	0 (exclusive)	1000ABF0	confirmed
+device_node	dwCreationDisposition	3 OPEN_EXISTING	1000ABF0	confirmed
+device_node	dwFlagsAndAttributes	0x60000080 = FILE_FLAG_OVERLAPPED|FILE_FLAG_NO_BUFFERING|FILE_ATTRIBUTE_NORMAL	1000ABF0	confirmed	all transfers are overlapped
+device_node	alt path form	\\?\USB#Vid_%.4x&Pid_%.4x#%s#{a5dcbf10-6530-11d2-901f-00c04fb951ed}	1000A030 / string 0x1002288C	confirmed	GUID_DEVINTERFACE_USB_DEVICE; used by OpenPortID
+enumeration	registry key	HKLM\SYSTEM\CurrentControlSet\Services\HmseUsb\Enum	1000A060 / 1000A130 / string 0x100228D8	confirmed	SetupAPI is NOT imported; enumeration is via the driver's own Enum key
+driver_model	interface	custom kernel driver, not WinUSB, not CDC/serial	INF HmseUsb_Service_Inst	confirmed	ServiceType=1 SERVICE_KERNEL_DRIVER, StartType=3 demand
+ioctl	0x80002000	GET DEVICE DESCRIPTOR, out 0x12 bytes	1000B1A0 E8A_USB::GetDeviceDescriptor	confirmed	DeviceType 0x8000, Function 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS
+ioctl	0x80002004	GET CONFIGURATION DESCRIPTOR, out 0xFF bytes	1000B210 E8A_USB::GetConfigDescriptor	confirmed	Function 0x801
+ioctl	0x80002008	GET / SET ASSIGNED PIPES, 2 bytes each way	1000AEA0 E8A_USB::GetDeviceDetails	confirmed	Function 0x802; in = requested pipe indices, out = actual
+ioctl	0x80002010	SET PROTOCOL, in 8 bytes out 1 byte	1000AF80 E8A_USB::SetProtocol	confirmed	Function 0x804; in[0]=0x40, in[6:7]=protocol, in[7]hi=1
+ioctl	wrapper	DeviceIoControl with a manual-reset event, ERROR_IO_PENDING + 1000 ms wait	1000A240	confirmed
+pipe_table	table address	0x1001DE8C, two 6-byte _VPIPE records	1000AB40 / 1000AEA0	confirmed	bytes 33 82 81 02 83 00 | 36 82 81 02 84 00
+pipe_table	record 0	idProduct 0x8233 -> EP 0x81, EP 0x02, EP 0x83	0x1001DE8C	confirmed	E8a class emulator
+pipe_table	record 1	idProduct 0x8236 -> EP 0x81, EP 0x02, EP 0x84	0x1001DE92	confirmed	E8a
+endpoint	0x81	BULK IN, endpoint 1	0x1001DE8E / 0x1001DE94	confirmed	primary read pipe; index stored in st_assigned_pipes[0]
+endpoint	0x02	BULK OUT, endpoint 2	0x1001DE8F / 0x1001DE95	confirmed	primary write pipe; index stored in st_assigned_pipes[1]
+endpoint	0x83 / 0x84	third IN pipe (status / AUD trace)	0x1001DE90 / 0x1001DE96	confirmed	index stored at object offset 82948
+endpoint	PID_0025 case	NOT reassigned; driver's existing assignment is read back with IOCTL 0x80002008	1000AEA0 LABEL_9	confirmed	PID 0x0025 is absent from the _VPIPE table, so GetPipeReAssignment is skipped
+packet_size	source	wMaxPacketSize is read from the live configuration descriptor, offset +4 of each endpoint descriptor	1000B3A0 E8A_USB::GetEndpointPacketSizes	confirmed	stored at object +8518 (IN) and +8520 (OUT)
+packet_size	read rounding	ReadFile length is rounded UP to a multiple of the IN pipe wMaxPacketSize	1000A8F0 E8A_USB::Read	confirmed	v10 = v8 + mps - v8 % mps
+packet_size	E8a command frame	64 bytes per transfer, fixed	1000C5F0 ULE_ReadMemory / 10011130 ProgDownload	confirmed	E8A_USB::Write(..., 0x40u, ...)
+transfer	read	ReadFile(h, buf, len, ..., OVERLAPPED)	1000A8F0 / 1000A360	confirmed	no IOCTL; raw pipe read
+transfer	write	WriteFile(h, buf, len, ..., OVERLAPPED)	1000AA30 / 1000A390	confirmed	no IOCTL; raw pipe write
+timeout	library I/O	WaitForSingleObject(..., 1000 * SetTimeout_value) -> seconds	1000A8F0 / 1000AA30	confirmed	SetTimeout at 1000A500 stores the value at object +0
+timeout	updater setting	SetTimeout_RE(2000)	UPD_MAIN 4048A0	confirmed	2000 passed to RFP_USB_VB.SetTimeout_RE
+timeout	E8a write ack poll	3000 ms (0xBB8), status re-poll 200 ms (0xC8)	1000C5F0 / 100118A0	confirmed
+timeout	E8a program read	60000 ms (0xEA60)	10011130 ProgDownload	confirmed
+timeout	SetProtocol re-enumeration	1000 ms wait, then 50 retries x 100 ms Sleep	1000AF80	confirmed
+serial_alt	device name	\\.\COM<n> for n >= 10, plain COM<n> below	UPD_MAIN 408860	confirmed	the alternative (non-USB) transport in the same EXE
+serial_alt	CreateFileA flags	0xC0000000 / share 0 / OPEN_EXISTING / 0x80 (no overlapped)	UPD_MAIN 408860	confirmed
+serial_alt	line settings used	19200 baud, 8 data bits, no parity, 1 stop bit	UPD_MAIN 4048A0 -> 408860 -> 408570	confirmed	sub_408860(port, 19200, 0, 8, 0)
+serial_alt	SetupComm buffers	2000 in, 2000 out	UPD_MAIN 408860	confirmed
+serial_alt	COMMTIMEOUTS	RdInterval 50, RdTotalConst 50, RdTotalMult 50, WrTotalConst 50, WrTotalMult 500	UPD_MAIN 408860	confirmed

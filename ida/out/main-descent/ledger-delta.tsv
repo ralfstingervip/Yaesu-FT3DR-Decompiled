@@ -1,0 +1,15 @@
+term	delta_bytes	value	source	note
+MAIN proven code, H1		375469	recount/recount.tsv MAIN_proven_H1	A 248,628 + RC 99,888 + D 19,734 + G1A 7,219
+double count: doc-33 28 B inside A	-28		offline/masks.py	H1 used published A (249,098-470); A as a byte mask is 248,600: the 28 B are typed runs, not is_code
+double count: RC x G1 tier A	-224		offline/masks.py	0x02F2E0-0x02F35E (126 B) and 0x030E00-0x030E62 (98 B) are in both the recovered-code runs and G1's ATTR_A tier-A bytes
+RC recovered-code bytes not reached (demoted)	-17080		demoted.tsv addend=RC	excludes 237 B H1 already removed (odd-head data) and the closed window
+D F1 row bytes not reached (demoted)	-624		demoted.tsv addend=D	H2 entry-move prefixes, 2-B mid-insn prefixes, weak proofs not re-proven, H2 data-table rows
+reached bytes in no proven addend (new)	8057		reached.tsv kind=new-proven	includes H3 PROVEN-PTR 598 B, H5 F00A 72 B, 5,864 B of F1 residual rows, 1,502 B typed 'parameter table'
+MAIN proven code, H9		365570	offline/analyze.py (asserted = byte union)	72.29% of 505,684 content; 94.10% of H1's 388,490 decodable
+MAIN named/typed, H1		492708	recount/recount.tsv	byte union of A,B,D,E,F,H masks reproduces 492,708 exactly
+leaves named: RC_junk	-1096		demoted.tsv named_after=leaves	RC junk -> 'other'; demoted D code with no proof and D junk are unvalidated function bytes (not credited, like F1 residual)
+leaves named: D_code-structural	-547		demoted.tsv named_after=leaves	RC junk -> 'other'; demoted D code with no proof and D junk are unvalidated function bytes (not credited, like F1 residual)
+leaves named: D_junk	-2		demoted.tsv named_after=leaves	RC junk -> 'other'; demoted D code with no proof and D junk are unvalidated function bytes (not credited, like F1 residual)
+joins named: reached bytes outside every named mask	6076		reached.tsv new-proven in_named=0	F1 residual rows 5,860 B, IDA code outside functions 78 B, W2-8 'other' 138 B
+MAIN named/typed, H9		497139		98.31% of 505,684
+Headline numerator	+4431	935439	H1 931,008 + MAIN named delta	SUB 438,300 unchanged; 90.82% of 1,029,972 (H1 90.39%)

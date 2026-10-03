@@ -1,0 +1,97 @@
+MAIN 007C92 FF3D7D: BT on test
+MAIN 007C9A FF3D7D: b5 = BT on
+MAIN 007C9C FF3D7D: BB70 link state
+MAIN 007CA4 FF3D7D: b6 when BB70!=0
+MAIN 007CB0 store FF3D7D
+MAIN 007DC8 FF3D8C b7 <- FF8920.b0
+MAIN 007DCE bst #7
+MAIN 007DD8 bsr sub_7E32 when BT on
+MAIN 007DDA VOX level FF89BB
+MAIN 007DE0 mode 1 (VOX on)
+MAIN 007DEE mode 2 (VOX on, BT on)
+MAIN 007DF0 index +2 when BT on
+MAIN 007DF4 VOX delay FF89BC
+MAIN 007DF8 and #7
+MAIN 007DFE store FF3D8C
+MAIN 007E0A table 0x7E2C[index]
+MAIN 007E12 store FF3D8D
+MAIN 007E32 sub_7E32: VOX
+MAIN 007E38 FF8920.b7
+MAIN 007E40 BB70
+MAIN 007E48 b6 (SCO wanted, always-on mode)
+MAIN 007E4C b5 (save mode)
+MAIN 007E4E BB8F.b7
+MAIN 007E54 bist #6
+MAIN 00D2B2 F3D6: BBE5=1
+MAIN 00D2C2 opcode F3D6
+MAIN 00D2D6 shared payload sub_D2FC
+MAIN 00D2D8 send now sub_B6B6
+MAIN 00D2E8 opcode F3D2
+MAIN 00D318 FF3D94 <- FF8920.b0
+MAIN 00D32E sub-op FF8EAF
+MAIN 00D332 -> FF3D95 (frame+0x21)
+MAIN 00D334 selected record FF8EB0
+MAIN 00D340 record base FFAAEC
+MAIN 00D34A -> FF3D96 (frame+0x22)
+MAIN 00D38C F3D3: BB8F.b0 pending delete
+MAIN 00D392 -> F3D5 path
+MAIN 00D3C0 opcode F3D3
+MAIN 00D3F6 BB8E==1 (search)
+MAIN 00D3FA bit 7 = search
+MAIN 00D402 -> FF3D95
+MAIN 00D4B4 clear BB8F.b0
+MAIN 00D4BA set BB8F.b1
+MAIN 00D4CA opcode F3D5
+MAIN 00D4FA frame+8 = 9
+MAIN 00D50C record base FFAAEC
+MAIN 00D516 -> FF3D7D (frame+9)
+MAIN 00D52C F3D4 (setup item)
+MAIN 00D526 F3D4 bit = FF8920.b7
+MAIN 0482BE E5: set BA92.b4
+MAIN 0482C8 E5: FFBB92 (only reference)
+MAIN 0480FE E4: 29 B -> FFBB71
+MAIN 0481E8 E6: FFBB91
+MAIN 00FD30 E6 consumer reads FFBB91
+MAIN 073082 BB90 state table
+MAIN 0730A2 state 0: BT off
+MAIN 0730AE 8EAF=2 (BT on, not linked)
+MAIN 0730FC state 1: E4 code
+MAIN 073100 code 1 (module ready)
+MAIN 073118 state 2: send F3D6
+MAIN 07312A state 3: BB8F.b1 (delete pending)
+MAIN 07314C BB8E jump table
+MAIN 073184 scan: code 10h ignored
+MAIN 073188 scan: code 11h
+MAIN 0731AA alert tone AAE0=1Dh
+MAIN 07318C scan: code 12h
+MAIN 073194 add found device sub_731C0
+MAIN 0731D4 compare 1Ch bytes
+MAIN 073202 list full at 5
+MAIN 073246 copy record into list
+MAIN 07324E save list sub_3CDA0
+MAIN 073292 connecting: code 3
+MAIN 0732C2 send F3D6
+MAIN 0732DA linking: code 5
+MAIN 0732E0 linking: code 0 connected
+MAIN 0732FC popup BBE1=6
+MAIN 073322 linked: code 2 (lost)
+MAIN 07336C delete: code 9
+MAIN 07337C delete: count--
+MAIN 03CDA4 len 8Eh
+MAIN 03CDA8 EEPROM address 1EA00h
+MAIN 03CDAE src FFAAEA
+MAIN 03CDB4 EEPROM writer sub_3BF4C
+MAIN 073424 save mode only
+MAIN 07342C TX active FF94C0==1
+MAIN 073484 BB8F.b7 = SCO not needed
+MAIN 07348C hold timer 100
+MAIN 0734A0 clear BB8F.b7
+MAIN 02C0A8 menu: connect BB8E=2
+MAIN 02C0AE 8EAF=3
+MAIN 02C0E2 menu: search start BB8E=1
+MAIN 02C0EE menu: search stop BB8E=0
+MAIN 02C0FA menu: delete BB8F.b0
+MAIN 02C19E menu: connect BB8E=2
+MAIN 0078A0 sender table: sub_D38C
+MAIN 0078A4 sender table: sub_D2DE
+MAIN 0078A8 sender table: sub_D526

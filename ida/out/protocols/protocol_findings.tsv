@@ -1,0 +1,25 @@
+part	item	image	addr	file_off	evidence	verdict	consumer_or_note
+A	CTCSS_50_tone_table	MAIN	00035158	0x35158	50 x u16 BE = freq*10Hz, 0x029E(67.0)..0x09ED(254.1)	Confirmed	sub_34BCA@0x34BFA: mov.w @(0x35158,er3),r4 -> tone reg 0xFFFFAAB4 (CTCSS encode)
+A	DCS_104_code_table	MAIN	00005072	0x5072	104 x u16 BE = octal DCS as BCD, 0x0023(023)..0x0754(754)	Confirmed	sub_D13E@0xD1EC and sub_25EAE@0x2608E: mov.l #0x5072,er5
+A	DSP_link_cmd_strings	MAIN	0005AF10	0x5AF10	"CPU>DSP: STOP ENCODE / CPU>DSP:VER? / DSP>CPU: DATA TEXT SET / DSP>CPU: TERM TX / DSP>CPU: TERM RX"	Confirmed	DV voice/data delegated to external DSP (see doc 06 DSP-AMBE, BRIEF corr#6); framing not in this image
+A	Fusion_mode_strings	MAIN	0005D279	0x5D279	"Voice&Data CT=1".."CT=5", "Extend Voice1", "YAESU"; DN/VW labels image-wide	Confirmed	System Fusion mode/UI logic in MAIN; on-air framing in DSP
+A	Csync_no_DV_frame_sync	MAIN+SUB	-	-	sync_sweep.tsv/sync_sweep2.tsv: YSF/DMR/P25/DSTAR/NXDN frame-sync = 0 or at random floor over 5.24MB, all bit offsets, 172 probes	Confirmed(negative)	C4FM/YSF sync+FEC+interleave NOT stored in MAIN/SUB -> lives in external DSP
+A	FEC_poly_constant_scan	MAIN+SUB	-	-	fec_constants.tsv/sub_crc_poly_refs.tsv: 0x1021 hits are 'add #1021h,sp'; 0xC75/0x8408/0x8005 at/near noise floor	Not found(as constants)	No Golay/CRC generator confirmed by constant scan; method is below noise floor in multi-MB image
+A	AMBE_deinterleave_matches	SUB	FFC00000-FFC36000	0x0-0x36000	fec_tables.tsv: hundreds of 'AMBE 49-bit deinterleave' first16 hits, every ~2 bytes, inside known display-resource region	Not found(coincidental)	False positives in bitmap area (doc 01 SUB-LOWER); no real AMBE table -> vocoder is external chip
+A	JPEG_zigzag_perm62	SUB	FFF508F8	0x3508F8	62-byte perm 00,01,08,10,09,02,03,0a,17...= JPEG zig-zag scan order	Confirmed	sub_FFF4B084/sub_FFF4C57B/sub_FFF4F29D (JPEG image decode, camera/display) - NOT an on-air interleaver
+A	text_entry_perm126	MAIN	0005DF52	0x5DF52	126-byte non-trivial permutation	Confirmed	sub_68276@0x682DC byte-indexed; sub_68276 does ASCII class (cmp #'0'/':'/'A'/'['/'a') -> keypad/text-entry map, NOT interleaver
+A	FIR_filter_coeffs	MAIN	00042966	0x42966	symmetric (linear-phase) 11/13/15-tap integer arrays, 0x42966..0x42FBE	Inferred	audio/signal conditioning (CTCSS/audio); consumers not pinned this pass
+B	CATclone_frame_builder	MAIN	0006B77E	0x6B77E	sub_6B77E; 8-bit additive checksum var 0xFFB3DC r/w at 0x6B874/0x6B87A/0x6B88A; 0x04 EOT	Confirmed	frame wrapper for DATA-jack ASCII protocol (opcode table owned by MAIN-FULL doc 04)
+B	CATclone_cmd_templates	MAIN	0006C539	0x6C539	ASCII: V(version) B E F S N C P H R(read) W(write), each fixed hex fields + 0x04 EOT	Confirmed	V0030FT3D...20180418...0C01 identity; cross-model V0020FT2D also present
+B	CATclone_R_read_handler	MAIN	0006C344	0x6C344	sub_6C344 selects R00610/R00892/R00BB3 by mode@0xFEEAAC, formats state bytes as ASCII hex to 0xFEE000, mov.b #4 (EOT)	Confirmed	R = canned status query (not arbitrary flash read); returns radio state over SCI
+B	CATclone_W_write_handler	MAIN	0006C3DE	0x6C3DE	sub_6C3DE loads W template 0x6C602 ("W0048"+position payload)	Confirmed	W = write/set (e.g. GPS position); MAIN-FULL owns semantics
+B	APRS_symbol_table	MAIN	000437C0	0x437C0	3543-byte APRS symbol description table (Police,DIGI,DX Cluster,WX,...)	Confirmed	APRS feature set
+B	APRS_msgtype_addressee	MAIN	0005039E	0x5039E	"APCQ DF DX WX ID AIR ALL GPS QST...MICE RTCM TEST DRILL SPACE BEACON"	Confirmed	APRS addressees / Mic-E / beacon types
+B	NMEA_GPS_templates	MAIN	000463E6	0x463E6	"$GPRMC,..." @0x463E6, "$GPGGA,..." @0x4642E, "%PGGA"/"%PRMC" @0x47CA0/0x47CAA	Confirmed	NMEA-0183 GPS parse/format for APRS position
+B	AX25_FCS_cluster	MAIN	00048C44	0x48C44	packet-handler cluster 0x48C44-0x539A0; 0x8408 (reflected CRC-CCITT/AX.25 FCS) at 0x494AA,0x49894	Inferred	APRS over AX.25 UI frames
+B	DTMF_alphabet	MAIN	0000C8BE	0xC8BE	"DTMF -0123456789ABCD*#"	Confirmed	DTMF encode/decode (window sub_C814)
+B	SUB_no_serial_role	SUB	-	-	sub_periph_refs.tsv: IO_ports 252, TPU 42, DMAC 35, ADC 29, CMT 9, USB0 1; no SCI, no CRC unit, no RSPI/SSI	Confirmed	SUB is display/graphics; no host/on-air protocol role
+C	boot_protocol_write_only	host	-	-	doc 10 HOST-USB: no read opcode in either updater state machine; verify by device checksum 0x4B(H8S)/0x4D(RX)	Confirmed	shipped boot path cannot read flash
+C	RComms_ULE_ReadMemory	RComms.dll	1000C5F0	-	cmd 0x80070000 arbitrary read; siblings E7 0x80050000, H-UDI 0x80110000-0x80140000	Confirmed	belongs to Renesas on-chip DEBUGGER (E8a/E10A) protocol, not the serial boot loader
+C	RComms_gate	RComms.dll	1000AB40	-	IsSupportedDevice accepts only PID 0x8233/0x8236; ScanPorts@0x1000A660 hardcodes 045B:8236	Confirmed	read path is emulator-only; never applies to radio 045B:0025; unreachable from updaters
+C	boot_ROM_read_capability	radio	-	-	on-chip mask-ROM boot loader is NOT in this package (images are application flash)	Unknown	not determinable without issuing a command to a device (out of scope; no device touched)

@@ -1,0 +1,300 @@
+
+;==== range FFF12A8F-FFF12B20
+
+; ---- func FFF12A8F
+FFF12A8F  7100e8           add     #-18h, sp, sp   ; <- 0xfff3d5f7
+FFF12A92  3d0a00           mov.w   #0, 18h+var_4[sp]
+FFF12A95  3d0900           mov.w   #0, 18h+var_6[sp]
+FFF12A98  3c8100           mov.b   #0, 18h+var_7[sp]
+FFF12A9B  3c8000           mov.b   #0, 18h+var_8[sp]
+FFF12A9E  754149           mov.l   #49h, r1 ; 'I'
+FFF12AA1  050c6a01         bsr.a   sub_FFF294AD
+FFF12AA5  8409             mov.b   r1, 18h+var_7[sp]
+FFF12AA7  8c09             mov.b   18h+var_7[sp], r1
+FFF12AA9  6101             cmp     #0, r1
+FFF12AAB  10               beq.s   loc_FFF12AB3
+FFF12AAC  f90901ffff       mov.w   #-1, 18h+var_16[sp]
+FFF12AB1  2e5f             bra.b   loc_FFF12B10
+FFF12AB3  3c0400           mov.b   #0, 18h+var_14[sp]   ; <- 0xfff12aab
+FFF12AB6  3e0200           mov.l   #0, 18h+var_10[sp]
+FFF12AB9  3e0300           mov.l   #0, 18h+var_C[sp]
+FFF12ABC  710304           add     #18h+var_14, sp, r3
+FFF12ABF  6642             mov.l   #4, r2
+FFF12AC1  754149           mov.l   #49h, r1 ; 'I'
+FFF12AC4  05023001         bsr.a   sub_FFF25AC6
+FFF12AC8  2e36             bra.b   loc_FFF12AFE
+FFF12ACA  fbe2907eedff     mov.l   #pathtab_drive, r14   ; <- 0xfff12b0b
+FFF12AD0  8c01             mov.b   18h+var_8[sp], r1
+FFF12AD2  fe61e1           mov.l   [r1, r14], r1
+FFF12AD5  39d800           bsr.w   sub_FFF12BAD
+FFF12AD8  9281             mov.w   r1, 18h+var_4[sp]
+FFF12ADA  ba81             movu.w  18h+var_4[sp], r1
+FFF12ADC  6101             cmp     #0, r1
+FFF12ADE  10               beq.s   loc_FFF12AE6
+FFF12ADF  f90901ffff       mov.w   #-1, 18h+var_16[sp]
+FFF12AE4  2e2c             bra.b   loc_FFF12B10
+FFF12AE6  3d0900           mov.w   #0, 18h+var_6[sp]   ; <- 0xfff12ade
+FFF12AE9  0f               bra.s   loc_FFF12AF0
+FFF12AEA  9a09             mov.w   18h+var_6[sp], r1   ; <- 0xfff12af6
+FFF12AEC  6211             add     #1, r1
+FFF12AEE  9209             mov.w   r1, 18h+var_6[sp]
+FFF12AF0  ba09             movu.w  18h+var_6[sp], r1
+FFF12AF2  76010020         cmp     #2000h, r1
+FFF12AF6  29f4             blt.b   loc_FFF12AEA
+FFF12AF8  b401             movu.b  18h+var_8[sp], r1
+FFF12AFA  6211             add     #1, r1
+FFF12AFC  8401             mov.b   r1, 18h+var_8[sp]
+FFF12AFE  fbe2907eedff     mov.l   #pathtab_drive, r14
+FFF12B04  8c01             mov.b   18h+var_8[sp], r1
+FFF12B06  fe61ee           mov.l   [r1, r14], r14
+FFF12B09  610e             cmp     #0, r14
+FFF12B0B  21bf             bne.b   loc_FFF12ACA
+FFF12B0D  3d0100           mov.w   #0, 18h+var_16[sp]
+FFF12B10  d500010b         mov.w   18h+var_16[sp], 18h+var_2[sp]
+FFF12B14  ba89             movu.w  18h+var_2[sp], r1
+FFF12B16  6706             rtsd    #6
+
+; ---- func FFF12B18
+FFF12B18  7100e0           add     #-20h, sp, sp   ; <- 0xfff07ef1,0xfff3b91f,0xfff3bb38,0xfff3e25c
+FFF12B1B  a189             mov.l   r1, 20h+var_4[sp]
+FFF12B1D  3d0c00           mov.w   #0, 20h+var_8[sp]
+
+;==== range FFF3D500-FFF3D700
+FFF3D500  fb1258250100     mov.l   #12558h, r1
+FFF3D506  3d1090           mov.w   #-70h, [r1]
+FFF3D509  fb1258250100     mov.l   #12558h, r1
+FFF3D50F  3d1101           mov.w   #1, 2[r1]
+FFF3D512  fbe258250100     mov.l   #12558h, r14
+FFF3D518  fbf26c250100     mov.l   #1256Ch, r15
+FFF3D51E  d4fe02           mov.w   [r15], 4[r14]
+FFF3D521  3d6c00           mov.w   #0, 18h[r6]
+FFF3D524  7100c8           add     #-38h, sp, sp
+FFF3D527  754312           mov.l   #12h, r3
+FFF3D52A  fb2258250100     mov.l   #12558h, r2
+FFF3D530  ef01             mov.l   sp, r1
+FFF3D532  7f8f             smovf
+FFF3D534  ef01             mov.l   sp, r1
+FFF3D536  711114           add     #14h, r1, r1
+FFF3D539  754324           mov.l   #24h, r3 ; '$'
+FFF3D53C  ef62             mov.l   r6, r2
+FFF3D53E  7f8f             smovf
+FFF3D540  6602             mov.l   #0, r2
+FFF3D542  7541fe           mov.l   #-2, r1
+FFF3D545  059703fa         bsr.a   sub_FFEDD8DC
+FFF3D549  710038           add     #38h, sp, sp ; '8'
+FFF3D54C  d40001           mov.w   4+var_4[sp], 4+var_2[sp]
+FFF3D54F  9809             mov.w   4+var_2[sp], r1
+FFF3D551  5f11             movu.w  r1, r1
+FFF3D553  3f6602           rtsd    #8, r6-r6
+
+; ---- func FFF3D556
+FFF3D556  7ea6             push.l  r6   ; <- 0xfff3c645
+FFF3D558  6080             sub     #8, sp
+FFF3D55A  3d0200           mov.w   #0, 8+var_4[sp]
+FFF3D55D  710610           add     #8+arg_0, sp, r6
+FFF3D560  fb1258250100     mov.l   #12558h, r1
+FFF3D566  6602             mov.l   #0, r2
+FFF3D568  9212             mov.w   r2, 10h[r1]
+FFF3D56A  a09a             mov.l   r2, 0Ch[r1]
+FFF3D56C  a092             mov.l   r2, 8[r1]
+FFF3D56E  a01a             mov.l   r2, 4[r1]
+FFF3D570  e312             mov.l   r2, [r1]
+FFF3D572  754312           mov.l   #12h, r3
+FFF3D575  fb2234250100     mov.l   #12534h, r2
+FFF3D57B  fb1258250100     mov.l   #12558h, r1
+FFF3D581  7f8f             smovf
+FFF3D583  fbe25f080100     mov.l   #1085Fh, r14
+FFF3D589  58ee             movu.b  [r14], r14
+FFF3D58B  610e             cmp     #0, r14
+FFF3D58D  2061             beq.b   loc_FFF3D5EE
+FFF3D58F  fbe258250100     mov.l   #12558h, r14
+FFF3D595  f9e903ffff       mov.w   #-1, 6[r14]
+FFF3D59A  fb1258250100     mov.l   #12558h, r1
+FFF3D5A0  3d1090           mov.w   #-70h, [r1]
+FFF3D5A3  fb1258250100     mov.l   #12558h, r1
+FFF3D5A9  3d1101           mov.w   #1, 2[r1]
+FFF3D5AC  fbe258250100     mov.l   #12558h, r14
+FFF3D5B2  fbf26c250100     mov.l   #1256Ch, r15
+FFF3D5B8  d4fe02           mov.w   [r15], 4[r14]
+FFF3D5BB  3d6c00           mov.w   #0, 18h[r6]
+FFF3D5BE  7100c8           add     #-38h, sp, sp
+FFF3D5C1  754312           mov.l   #12h, r3
+FFF3D5C4  fb2258250100     mov.l   #12558h, r2
+FFF3D5CA  ef01             mov.l   sp, r1
+FFF3D5CC  7f8f             smovf
+FFF3D5CE  ef01             mov.l   sp, r1
+FFF3D5D0  711114           add     #14h, r1, r1
+FFF3D5D3  754324           mov.l   #24h, r3 ; '$'
+FFF3D5D6  ef62             mov.l   r6, r2
+FFF3D5D8  7f8f             smovf
+FFF3D5DA  6602             mov.l   #0, r2
+FFF3D5DC  7541fe           mov.l   #-2, r1
+FFF3D5DF  05fd02fa         bsr.a   sub_FFEDD8DC
+FFF3D5E3  710038           add     #38h, sp, sp ; '8'
+FFF3D5E6  f90901ffff       mov.w   #-1, 8+var_6[sp]
+FFF3D5EB  388c00           bra.w   loc_FFF3D677
+FFF3D5EE  fbe25f080100     mov.l   #1085Fh, r14   ; <- 0xfff3d58d
+FFF3D5F4  f8e401           mov.b   #1, [r14]
+FFF3D5F7  059854fd         bsr.a   sub_FFF12A8F
+FFF3D5FB  9081             mov.w   r1, 8+var_4[sp]
+FFF3D5FD  b881             movu.w  8+var_4[sp], r1
+FFF3D5FF  6101             cmp     #0, r1
+FFF3D601  200e             beq.b   loc_FFF3D60F
+FFF3D603  fbe258250100     mov.l   #12558h, r14
+FFF3D609  f9e903ffff       mov.w   #-1, 6[r14]
+FFF3D60E  0a               bra.s   loc_FFF3D618
+FFF3D60F  fb1258250100     mov.l   #12558h, r1   ; <- 0xfff3d601
+FFF3D615  3d1300           mov.w   #0, 6[r1]
+FFF3D618  fb1258250100     mov.l   #12558h, r1
+FFF3D61E  3d1090           mov.w   #-70h, [r1]
+FFF3D621  fb1258250100     mov.l   #12558h, r1
+FFF3D627  3d1101           mov.w   #1, 2[r1]
+FFF3D62A  fbe258250100     mov.l   #12558h, r14
+FFF3D630  fbf26c250100     mov.l   #1256Ch, r15
+FFF3D636  d4fe02           mov.w   [r15], 4[r14]
+FFF3D639  3d6c00           mov.w   #0, 18h[r6]
+FFF3D63C  7100c8           add     #-38h, sp, sp
+FFF3D63F  754312           mov.l   #12h, r3
+FFF3D642  fb2258250100     mov.l   #12558h, r2
+FFF3D648  ef01             mov.l   sp, r1
+FFF3D64A  7f8f             smovf
+FFF3D64C  ef01             mov.l   sp, r1
+FFF3D64E  711114           add     #14h, r1, r1
+FFF3D651  754324           mov.l   #24h, r3 ; '$'
+FFF3D654  ef62             mov.l   r6, r2
+FFF3D656  7f8f             smovf
+FFF3D658  6602             mov.l   #0, r2
+FFF3D65A  7541fe           mov.l   #-2, r1
+FFF3D65D  057f02fa         bsr.a   sub_FFEDD8DC
+FFF3D661  710038           add     #38h, sp, sp ; '8'
+FFF3D664  fbe25f080100     mov.l   #1085Fh, r14
+FFF3D66A  f8e400           mov.b   #0, [r14]
+FFF3D66D  6601             mov.l   #0, r1
+FFF3D66F  053355ff         bsr.a   sub_FFF32BA2
+FFF3D673  d5000201         mov.w   8+var_4[sp], 8+var_6[sp]
+FFF3D677  d5000103         mov.w   8+var_6[sp], 8+var_2[sp]
+FFF3D67B  b889             movu.w  8+var_2[sp], r1
+FFF3D67D  3f6603           rtsd    #0Ch, r6-r6
+
+; ---- func FFF3D680
+FFF3D680  6080             sub     #8, sp   ; <- 0xfff3c75d
+FFF3D682  3d0200           mov.w   #0, 8+var_4[sp]
+FFF3D685  3d0100           mov.w   #0, 8+var_6[sp]
+FFF3D688  fb12f0840600     mov.l   #684F0h, r1
+FFF3D68E  b819             movu.w  2[r1], r1
+FFF3D690  6111             cmp     #1, r1
+FFF3D692  18               bne.s   loc_FFF3D69A
+FFF3D693  f809ffff         mov.w   #-1, 8+var_8[sp]
+FFF3D697  38e901           bra.w   loc_FFF3D880
+FFF3D69A  fbe2f0840600     mov.l   #684F0h, r14   ; <- 0xfff3d692
+FFF3D6A0  f8e500           mov.w   #0, [r14]
+FFF3D6A3  3d0100           mov.w   #0, 8+var_6[sp]
+FFF3D6A6  2e49             bra.b   loc_FFF3D6EF
+FFF3D6A8  b809             movu.w  8+var_6[sp], r1   ; <- 0xfff3d6fb
+FFF3D6AA  751124           mul     #24h, r1 ; '$'
+FFF3D6AD  fbe260840600     mov.l   #68460h, r14
+FFF3D6B3  4b1e             add     r1, r14
+FFF3D6B5  5cee             movu.w  [r14], r14
+FFF3D6B7  755e5a           cmp     #5Ah, r14 ; 'Z'
+FFF3D6BA  212f             bne.b   loc_FFF3D6E9
+FFF3D6BC  b809             movu.w  8+var_6[sp], r1
+FFF3D6BE  751124           mul     #24h, r1 ; '$'
+FFF3D6C1  fb2260840600     mov.l   #68460h, r2
+FFF3D6C7  4b12             add     r1, r2
+FFF3D6C9  fbe2f0840600     mov.l   #684F0h, r14
+FFF3D6CF  5ce1             movu.w  [r14], r1
+FFF3D6D1  751124           mul     #24h, r1 ; '$'
+FFF3D6D4  0689e102         add     8[r14].l, r1
+FFF3D6D8  754324           mov.l   #24h, r3 ; '$'
+FFF3D6DB  7f8f             smovf
+FFF3D6DD  fbe2f0840600     mov.l   #684F0h, r14
+FFF3D6E3  dcef             mov.w   [r14], r15
+FFF3D6E5  621f             add     #1, r15
+FFF3D6E7  d3ef             mov.w   r15, [r14]
+FFF3D6E9  9809             mov.w   8+var_6[sp], r1
+FFF3D6EB  6211             add     #1, r1
+FFF3D6ED  9009             mov.w   r1, 8+var_6[sp]
+FFF3D6EF  fbe234250100     mov.l   #12534h, r14
+FFF3D6F5  b809             movu.w  8+var_6[sp], r1
+FFF3D6F7  06c5e101         cmp     2[r14].uw, r1
+FFF3D6FB  29ad             blt.b   loc_FFF3D6A8
+FFF3D6FD  fbe2f0840600     mov.l   #684F0h, r14
+
+;==== range FFF140C7-FFF14194
+
+; ---- func FFF140C7
+FFF140C7  7200f0fe         add     #-110h, sp, sp   ; <- 0xfff13207
+FFF140CB  e70143           mov.l   r1, 110h+var_4[sp]
+FFF140CE  f9058500         mov.w   #0, 110h+var_6[sp]
+FFF140D2  f9058400         mov.w   #0, 110h+var_8[sp]
+FFF140D6  3c075c           mov.b   #5Ch, 110h+var_109[sp] ; '\'
+FFF140D9  b18a             movu.b  110h+var_109[sp], r2
+FFF140DB  ed0143           mov.l   110h+var_4[sp], r1
+FFF140DE  057c1403         bsr.a   sub_FFF4555A
+FFF140E2  e301             mov.l   r1, 110h+var_110[sp]
+FFF140E4  660e             mov.l   #0, r14
+FFF140E6  ec04             mov.l   110h+var_110[sp], r4
+FFF140E8  fb36ff           mov.l   #-1, r3
+FFF140EB  ef41             mov.l   r4, r1
+FFF140ED  efe2             mov.l   r14, r2
+FFF140EF  7f80             suntil.b
+FFF140F1  fbf6fe           mov.l   #-2, r15
+FFF140F4  433f             sub     r3, r15
+FFF140F6  ef42             mov.l   r4, r2
+FFF140F8  6212             add     #1, r2
+FFF140FA  710508           add     #110h+var_108, sp, r5
+FFF140FD  ef51             mov.l   r5, r1
+FFF140FF  eff3             mov.l   r15, r3
+FFF14101  7f87             smovu
+FFF14103  4bf5             add     r15, r5
+FFF14105  ef51             mov.l   r5, r1
+FFF14107  4331             sub     r3, r1
+FFF14109  efe2             mov.l   r14, r2
+FFF1410B  7f88             sstr.b
+FFF1410D  fb1224ee0100     mov.l   #1EE24h, r1
+FFF14113  72111c01         add     #11Ch, r1, r1
+FFF14117  fb36ff           mov.l   #-1, r3
+FFF1411A  710208           add     #110h+var_108, sp, r2
+FFF1411D  7f87             smovu
+FFF1411F  fbe6ff           mov.l   #-1, r14
+FFF14122  6602             mov.l   #0, r2
+FFF14124  ed0143           mov.l   110h+var_4[sp], r1
+FFF14127  efe3             mov.l   r14, r3
+FFF14129  7f80             suntil.b
+FFF1412B  fbf6fe           mov.l   #-2, r15
+FFF1412E  ff043f           sub     r3, r15, r4
+FFF14131  ec01             mov.l   110h+var_110[sp], r1
+FFF14133  efe3             mov.l   r14, r3
+FFF14135  7f80             suntil.b
+FFF14137  433f             sub     r3, r15
+FFF14139  43f4             sub     r15, r4
+FFF1413B  d70485           mov.w   r4, 110h+var_6[sp]
+FFF1413E  f9058400         mov.w   #0, 110h+var_8[sp]
+FFF14142  2e19             bra.b   loc_FFF1415B
+FFF14144  5d0284           movu.w  110h+var_8[sp], r2   ; <- 0xfff14162
+FFF14147  ed0343           mov.l   110h+var_4[sp], r3
+FFF1414A  fec32e           movu.b  [r3, r2], r14
+FFF1414D  710f08           add     #110h+var_108, sp, r15
+FFF14150  fe01fe           mov.b   r14, [r1, r15]
+FFF14153  dd0184           mov.w   110h+var_8[sp], r1
+FFF14156  6211             add     #1, r1
+FFF14158  d70184           mov.w   r1, 110h+var_8[sp]
+FFF1415B  5d0184           movu.w  110h+var_8[sp], r1
+FFF1415E  06c50185         cmp     110h+var_6[sp].uw, r1
+FFF14162  29e2             blt.b   loc_FFF14144
+FFF14164  710e08           add     #110h+var_108, sp, r14
+FFF14167  660f             mov.l   #0, r15
+FFF14169  fe01ef           mov.b   r15, [r1, r14]
+FFF1416C  fb36ff           mov.l   #-1, r3
+FFF1416F  6602             mov.l   #0, r2
+FFF14171  710108           add     #110h+var_108, sp, r1
+FFF14174  7f80             suntil.b
+FFF14176  6011             sub     #1, r1
+FFF14178  fb22c1adf4ff     mov.l   #loc_FFF4ADC1, r2
+FFF1417E  7f87             smovu
+FFF14180  fb1224ee0100     mov.l   #1EE24h, r1
+FFF14186  72111c02         add     #21Ch, r1, r1
+FFF1418A  fb36ff           mov.l   #-1, r3
+FFF1418D  710208           add     #110h+var_108, sp, r2
+FFF14190  7f87             smovu
+FFF14192  6744             rtsd    #44h

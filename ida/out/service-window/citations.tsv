@@ -1,0 +1,466 @@
+addr	hex	label	claim
+078106	7a 00 00 fe e0 10	usb_init	mov.l #0xfee010,er0
+07810C	0f c9	usb_init	mov.l #0x4,er1
+07810E	01 0d 00 00	usb_init	mov.l #0x0,@er0
+078112	0a 90	usb_init	add.l er1,er0
+078114	7a 20 00 fe e2 0c	usb_init	cmp.l #0xfee20c,er0
+07811A	43 f2	usb_init	bls .-14 (0x7810e)
+07811C	6a 08 ee 04	usb_init	mov.b @0xee04:16,r0l
+078120	17 60	usb_init	extu.l #2,er0
+078122	03 98 10 30	usb_init	shll.l #0x18,er0
+078126	6a 09 ee 05	usb_init	mov.b @0xee05:16,r1l
+07812A	17 61	usb_init	extu.l #2,er1
+07812C	10 f9	usb_init	shll.l #16,er1
+07812E	01 f0 64 10	usb_init	or.l er1,er0
+078132	6a 09 ee 06	usb_init	mov.b @0xee06:16,r1l
+078136	17 61	usb_init	extu.l #2,er1
+078138	10 79	usb_init	shll.l #8,er1
+07813A	01 f0 64 10	usb_init	or.l er1,er0
+07813E	7a 40 00 08 20 00	usb_init	or.l #0x82000,er0
+078144	01 00 6b a0 00 ff 62 f8	usb_init	mov.l er0,@0xff62f8:32
+07814C	18 99	usb_init	sub.b r1l,r1l
+07814E	1a 80	usb_init	sub.l er0,er0
+078150	5e 07 84 5a	usb_init	jsr @0x7845a:24
+078154	6a 18 ee 2d 70 20	usb_init	bset #0x2,@0xee2d:16
+07815A	54 70	usb_init	rts 
+07815C	01 00 6d f2	usb_service	mov.l er2,@-er7
+078160	7a 02 00 ff 62 88	usb_service	mov.l #0xff6288,er2
+078166	01 00 6f 21 00 44	usb_service	mov.l @(0x44:16,er2),er1
+07816C	01 00 6f 20 00 40	usb_service	mov.l @(0x40:16,er2),er0
+078172	1f 81	usb_service	cmp.l er0,er1
+078174	47 06	usb_service	beq .+6 (0x7817c)
+078176	5e 07 68 a8	usb_service	jsr @0x768a8:24
+07817A	40 2e	usb_service	bra .+46 (0x781aa)
+07817C	01 00 6b 20 00 ff 63 58	usb_service	mov.l @0xff6358:32,er0
+078184	68 08	usb_service	mov.b @er0,r0l
+078186	17 50	usb_service	extu.w r0
+078188	6b 21 00 ff 63 f8	usb_service	mov.w @0xff63f8:32,r1
+07818E	1d 01	usb_service	cmp.w r0,r1
+078190	46 18	usb_service	bne .+24 (0x781aa)
+078192	6a 10 ee 00 73 40	usb_service	btst #0x4,@0xee00:16
+078198	47 10	usb_service	beq .+16 (0x781aa)
+07819A	6a 28 00 ff 63 60	usb_service	mov.b @0xff6360:32,r0l
+0781A0	6a 88 ee 2c	usb_service	mov.b r0l,@0xee2c:16
+0781A4	6b f0 00 ff 63 f8	usb_service	mov.w #0x0,@0xff63f8:32
+0781AA	01 00 6f 21 00 54	usb_service	mov.l @(0x54:16,er2),er1
+0781B0	01 00 6f 20 00 50	usb_service	mov.l @(0x50:16,er2),er0
+0781B6	1f 81	usb_service	cmp.l er0,er1
+0781B8	47 0a	usb_service	beq .+10 (0x781c4)
+0781BA	7a 00 00 ff 62 d8	usb_service	mov.l #0xff62d8,er0
+0781C0	5e 07 6f c8	usb_service	jsr @0x76fc8:24
+0781C4	54 02	usb_service	rts/l er2
+0781C6	7a 01 00 fe e0 10	usb_clear	mov.l #0xfee010,er1
+0781CC	0f c8	usb_clear	mov.l #0x4,er0
+0781CE	01 0d 01 00	usb_clear	mov.l #0x0,@er1
+0781D2	0a 81	usb_clear	add.l er0,er1
+0781D4	7a 21 00 fe e2 0c	usb_clear	cmp.l #0xfee20c,er1
+0781DA	43 f2	usb_clear	bls .-14 (0x781ce)
+0781DC	54 70	usb_clear	rts 
+0781DE	6a 09 ee 04	usb_init_twin	mov.b @0xee04:16,r1l
+0781E2	17 61	usb_init_twin	extu.l #2,er1
+0781E4	03 98 10 31	usb_init_twin	shll.l #0x18,er1
+0781E8	6a 08 ee 05	usb_init_twin	mov.b @0xee05:16,r0l
+0781EC	17 60	usb_init_twin	extu.l #2,er0
+0781EE	10 f8	usb_init_twin	shll.l #16,er0
+0781F0	01 f0 64 01	usb_init_twin	or.l er0,er1
+0781F4	6a 08 ee 06	usb_init_twin	mov.b @0xee06:16,r0l
+0781F8	17 60	usb_init_twin	extu.l #2,er0
+0781FA	10 78	usb_init_twin	shll.l #8,er0
+0781FC	01 f0 64 01	usb_init_twin	or.l er0,er1
+078200	7a 41 00 08 20 00	usb_init_twin	or.l #0x82000,er1
+078206	01 00 6b a1 00 ff 62 f8	usb_init_twin	mov.l er1,@0xff62f8:32
+07820E	18 99	usb_init_twin	sub.b r1l,r1l
+078210	1a 80	usb_init_twin	sub.l er0,er0
+078212	5e 07 84 5a	usb_init_twin	jsr @0x7845a:24
+078216	6a 18 ee 2d 70 20	usb_init_twin	bset #0x2,@0xee2d:16
+07821C	54 70	usb_init_twin	rts 
+07821E	01 80	sci_sleep	sleep 
+078220	54 70	sci_sleep	rts 
+078222	18 88	sci_async	sub.b r0l,r0l
+078224	38 8a	sci_async	mov.b r0l,@0x8a:8
+078226	f8 08	sci_async	mov.b #0x8,r0l
+078228	38 88	sci_async	mov.b r0l,@0x88:8
+07822A	f8 0c	sci_async	mov.b #0xc,r0l
+07822C	38 89	sci_async	mov.b r0l,@0x89:8
+07822E	18 88	sci_async	sub.b r0l,r0l
+078230	0a 08	sci_async	inc r0l
+078232	a8 ff	sci_async	cmp.b #0xff,r0l
+078234	45 fa	sci_async	bcs .-6 (0x78230)
+078236	f8 70	sci_async	mov.b #0x70,r0l
+078238	38 8a	sci_async	mov.b r0l,@0x8a:8
+07823A	54 70	sci_async	rts 
+07823C	18 88	sci_async_twin	sub.b r0l,r0l
+07823E	38 8a	sci_async_twin	mov.b r0l,@0x8a:8
+078240	f8 08	sci_async_twin	mov.b #0x8,r0l
+078242	38 88	sci_async_twin	mov.b r0l,@0x88:8
+078244	f8 0c	sci_async_twin	mov.b #0xc,r0l
+078246	38 89	sci_async_twin	mov.b r0l,@0x89:8
+078248	18 88	sci_async_twin	sub.b r0l,r0l
+07824A	0a 08	sci_async_twin	inc r0l
+07824C	a8 ff	sci_async_twin	cmp.b #0xff,r0l
+07824E	45 fa	sci_async_twin	bcs .-6 (0x7824a)
+078250	f8 70	sci_async_twin	mov.b #0x70,r0l
+078252	38 8a	sci_async_twin	mov.b r0l,@0x8a:8
+078254	54 70	sci_async_twin	rts 
+078256	f8 08	sci_smr_brr	mov.b #0x8,r0l
+078258	38 88	sci_smr_brr	mov.b r0l,@0x88:8
+07825A	f8 0c	sci_smr_brr	mov.b #0xc,r0l
+07825C	38 89	sci_smr_brr	mov.b r0l,@0x89:8
+07825E	54 70	sci_smr_brr	rts 
+078260	0d 08	ee32_burst	mov.w r0,e0
+078262	19 11	ee32_burst	sub.w r1,r1
+078264	0d 00	ee32_burst	mov.w r0,r0
+078266	47 12	ee32_burst	beq .+18 (0x7827a)
+078268	78 12 6a 20 00 ff 63 ac	ee32_burst	mov.b @(0xff63ac:32,r1.w),r0h
+078270	6a 80 ee 32	ee32_burst	mov.b r0h,@0xee32:16
+078274	0b 51	ee32_burst	inc.w #1,r1
+078276	1d 81	ee32_burst	cmp.w e0,r1
+078278	45 ee	ee32_burst	bcs .-18 (0x78268)
+07827A	54 70	ee32_burst	rts 
+07827C	01 30 6d f2	usb_isr	stm.l er2-er5,@-sp
+078280	01 00 6d f6	usb_isr	mov.l er6,@-er7
+078284	6a 09 ee 04	usb_isr	mov.b @0xee04:16,r1l
+078288	17 61	usb_isr	extu.l #2,er1
+07828A	0f 92	usb_isr	mov.l er1,er2
+07828C	03 98 10 32	usb_isr	shll.l #0x18,er2
+078290	6a 08 ee 05	usb_isr	mov.b @0xee05:16,r0l
+078294	17 60	usb_isr	extu.l #2,er0
+078296	10 f8	usb_isr	shll.l #16,er0
+078298	01 f0 64 02	usb_isr	or.l er0,er2
+07829C	6a 08 ee 06	usb_isr	mov.b @0xee06:16,r0l
+0782A0	17 60	usb_isr	extu.l #2,er0
+0782A2	10 78	usb_isr	shll.l #8,er0
+0782A4	01 f0 64 02	usb_isr	or.l er0,er2
+0782A8	7a 42 00 08 20 00	usb_isr	or.l #0x82000,er2
+0782AE	01 00 6b a2 00 ff 62 f8	usb_isr	mov.l er2,@0xff62f8:32
+0782B6	6a 09 ee 00	usb_isr	mov.b @0xee00:16,r1l
+0782BA	0f 94	usb_isr	mov.l er1,er4
+0782BC	03 98 10 34	usb_isr	shll.l #0x18,er4
+0782C0	6a 08 ee 01	usb_isr	mov.b @0xee01:16,r0l
+0782C4	17 60	usb_isr	extu.l #2,er0
+0782C6	10 f8	usb_isr	shll.l #16,er0
+0782C8	01 f0 64 04	usb_isr	or.l er0,er4
+0782CC	6a 08 ee 02	usb_isr	mov.b @0xee02:16,r0l
+0782D0	17 60	usb_isr	extu.l #2,er0
+0782D2	10 78	usb_isr	shll.l #8,er0
+0782D4	01 f0 64 04	usb_isr	or.l er0,er4
+0782D8	01 f0 66 24	usb_isr	and.l er2,er4
+0782DC	18 aa	usb_isr	sub.b r2l,r2l
+0782DE	6a 29 00 ff 62 46	usb_isr	mov.b @0xff6246:32,r1l
+0782E4	a9 ff	usb_isr	cmp.b #0xff,r1l
+0782E6	47 3a	usb_isr	beq .+58 (0x78322)
+0782E8	7a 05 00 ff 62 42	usb_isr	mov.l #0xff6242,er5
+0782EE	0f d6	usb_isr	mov.l er5,er6
+0782F0	0f c0	usb_isr	mov.l er4,er0
+0782F2	01 00 69 61	usb_isr	mov.l @er6,er1
+0782F6	01 f0 66 10	usb_isr	and.l er1,er0
+0782FA	47 10	usb_isr	beq .+16 (0x7830c)
+0782FC	01 00 6f 62 00 06	usb_isr	mov.l @(0x6:16,er6),er2
+078302	6e 69 00 04	usb_isr	mov.b @(0x4:16,er6),r1l
+078306	0f c0	usb_isr	mov.l er4,er0
+078308	5d 20	usb_isr	jsr @er2
+07830A	40 16	usb_isr	bra .+22 (0x78322)
+07830C	0a 0a	usb_isr	inc r2l
+07830E	0c a9	usb_isr	mov.b r2l,r1l
+078310	01 cc 50 a1	usb_isr	mulxu.b #0xa,r1
+078314	17 71	usb_isr	extu.l er1
+078316	0a d1	usb_isr	add.l er5,er1
+078318	0f 96	usb_isr	mov.l er1,er6
+07831A	6e 10 00 04	usb_isr	mov.b @(0x4:16,er1),r0h
+07831E	a0 ff	usb_isr	cmp.b #0xff,r0h
+078320	46 ce	usb_isr	bne .-50 (0x782f0)
+078322	6a 08 ee 00	usb_isr	mov.b @0xee00:16,r0l
+078326	6a 01 ee 01	usb_isr	mov.b @0xee01:16,r1h
+07832A	6a 08 ee 02	usb_isr	mov.b @0xee02:16,r0l
+07832E	01 00 6d 76	usb_isr	mov.l @er7+,er6
+078332	54 35	usb_isr	rts/l er2-er5
+078334	01 20 6d f4	ring_fill	stm.l er4-er6,@-sp
+078338	0f 95	ring_fill	mov.l er1,er5
+07833A	0f 84	ring_fill	mov.l er0,er4
+07833C	01 01 69 00	ring_fill	mov.l @(0x4:2,er0),er0
+078340	68 08	ring_fill	mov.b @er0,r0l
+078342	17 50	ring_fill	extu.w r0
+078344	0d 06	ring_fill	mov.w r0,r6
+078346	47 2a	ring_fill	beq .+42 (0x78372)
+078348	01 02 69 40	ring_fill	mov.l @(0x8:2,er4),er0
+07834C	68 01	ring_fill	mov.b @er0,r1h
+07834E	01 00 69 50	ring_fill	mov.l @er5,er0
+078352	68 81	ring_fill	mov.b r1h,@er0
+078354	01 00 69 51	ring_fill	mov.l @er5,er1
+078358	01 03 69 50	ring_fill	mov.l @(0xc:2,er5),er0
+07835C	1f 81	ring_fill	cmp.l er0,er1
+07835E	45 06	ring_fill	bcs .+6 (0x78366)
+078360	01 08 25 05	ring_fill	mov.l @(0x8:2,er5),@er5
+078364	40 08	ring_fill	bra .+8 (0x7836e)
+078366	0f 98	ring_fill	mov.l #0x1,er0
+078368	0a 81	ring_fill	add.l er0,er1
+07836A	01 00 69 d1	ring_fill	mov.l er1,@er5
+07836E	1b 56	ring_fill	dec.w #1,r6
+078370	46 d6	ring_fill	bne .-42 (0x78348)
+078372	6e 49 00 0d	ring_fill	mov.b @(0xd:16,er4),r1l
+078376	6a 89 ee 2c	ring_fill	mov.b r1l,@0xee2c:16
+07837A	54 26	ring_fill	rts/l er4-er6
+07837C	01 20 6d f4	ring_drain	stm.l er4-er6,@-sp
+078380	0f 96	ring_drain	mov.l er1,er6
+078382	0f 84	ring_drain	mov.l er0,er4
+078384	01 01 69 00	ring_drain	mov.l @(0x4:2,er0),er0
+078388	68 08	ring_drain	mov.b @er0,r0l
+07838A	17 50	ring_drain	extu.w r0
+07838C	0d 0d	ring_drain	mov.w r0,e5
+07838E	47 36	ring_drain	beq .+54 (0x783c6)
+078390	01 01 69 61	ring_drain	mov.l @(0x4:2,er6),er1
+078394	01 00 69 60	ring_drain	mov.l @er6,er0
+078398	1f 81	ring_drain	cmp.l er0,er1
+07839A	47 2a	ring_drain	beq .+42 (0x783c6)
+07839C	68 1d	ring_drain	mov.b @er1,r5l
+07839E	01 02 69 40	ring_drain	mov.l @(0x8:2,er4),er0
+0783A2	68 8d	ring_drain	mov.b r5l,@er0
+0783A4	01 01 69 61	ring_drain	mov.l @(0x4:2,er6),er1
+0783A8	01 03 69 60	ring_drain	mov.l @(0xc:2,er6),er0
+0783AC	1f 81	ring_drain	cmp.l er0,er1
+0783AE	45 0a	ring_drain	bcs .+10 (0x783ba)
+0783B0	01 02 69 60	ring_drain	mov.l @(0x8:2,er6),er0
+0783B4	01 01 69 e0	ring_drain	mov.l er0,@(0x4:2,er6)
+0783B8	40 08	ring_drain	bra .+8 (0x783c2)
+0783BA	0f 98	ring_drain	mov.l #0x1,er0
+0783BC	0a 81	ring_drain	add.l er0,er1
+0783BE	01 01 69 e1	ring_drain	mov.l er1,@(0x4:2,er6)
+0783C2	1b 5d	ring_drain	dec.w #1,e5
+0783C4	46 ca	ring_drain	bne .-54 (0x78390)
+0783C6	6e 49 00 0c	ring_drain	mov.b @(0xc:16,er4),r1l
+0783CA	6a 89 ee 2c	ring_drain	mov.b r1l,@0xee2c:16
+0783CE	01 01 69 41	ring_drain	mov.l @(0x4:2,er4),er1
+0783D2	68 18	ring_drain	mov.b @er1,r0l
+0783D4	17 50	ring_drain	extu.w r0
+0783D6	19 d0	ring_drain	sub.w e5,r0
+0783D8	54 26	ring_drain	rts/l er4-er6
+0783DA	01 20 6d f4	ring_move	stm.l er4-er6,@-sp
+0783DE	0f 94	ring_move	mov.l er1,er4
+0783E0	0f 86	ring_move	mov.l er0,er6
+0783E2	01 00 6b 20 00 ff 63 30	ring_move	mov.l @0xff6330:32,er0
+0783EA	68 01	ring_move	mov.b @er0,r1h
+0783EC	46 3c	ring_move	bne .+60 (0x7842a)
+0783EE	01 01 69 41	ring_move	mov.l @(0x4:2,er4),er1
+0783F2	01 00 69 40	ring_move	mov.l @er4,er0
+0783F6	1f 81	ring_move	cmp.l er0,er1
+0783F8	42 30	ring_move	bhi .+48 (0x7842a)
+0783FA	1f 81	ring_move	cmp.l er0,er1
+0783FC	47 28	ring_move	beq .+40 (0x78426)
+0783FE	01 00 69 65	ring_move	mov.l @er6,er5
+078402	01 01 69 60	ring_move	mov.l @(0x4:2,er6),er0
+078406	1f 85	ring_move	cmp.l er0,er5
+078408	47 1c	ring_move	beq .+28 (0x78426)
+07840A	01 78 01 05	ring_move	mov.b @er1,@er5
+07840E	0f 98	ring_move	mov.l #0x1,er0
+078410	01 09 06 10	ring_move	add.l er0,@er6
+078414	01 01 69 41	ring_move	mov.l @(0x4:2,er4),er1
+078418	0a 81	ring_move	add.l er0,er1
+07841A	01 01 69 c1	ring_move	mov.l er1,@(0x4:2,er4)
+07841E	01 00 69 40	ring_move	mov.l @er4,er0
+078422	1f 81	ring_move	cmp.l er0,er1
+078424	46 d8	ring_move	bne .-40 (0x783fe)
+078426	19 00	ring_move	sub.w r0,r0
+078428	54 26	ring_move	rts/l er4-er6
+07842A	0f 10	ring_move	mov.w #0x1,r0
+07842C	54 26	ring_move	rts/l er4-er6
+07842E	01 00 6d f2	load_be16	mov.l er2,@-er7
+078432	0f 82	load_be16	mov.l er0,er2
+078434	6e 09 00 01	load_be16	mov.b @(0x1:16,er0),r1l
+078438	17 51	load_be16	extu.w r1
+07843A	68 20	load_be16	mov.b @er2,r0h
+07843C	18 88	load_be16	sub.b r0l,r0l
+07843E	64 10	load_be16	or.w r1,r0
+078440	54 02	load_be16	rts/l er2
+078442	01 00 6d f2	load_le16	mov.l er2,@-er7
+078446	0f 82	load_le16	mov.l er0,er2
+078448	0f 99	load_le16	mov.l #0x1,er1
+07844A	0a 92	load_le16	add.l er1,er2
+07844C	6e 29 ff ff	load_le16	mov.b @(0xffff:16,er2),r1l
+078450	17 51	load_le16	extu.w r1
+078452	68 20	load_le16	mov.b @er2,r0h
+078454	18 88	load_le16	sub.b r0l,r0l
+078456	64 10	load_le16	or.w r1,r0
+078458	54 02	load_le16	rts/l er2
+07845A	79 00 00 32	usb_arm	mov.w #0x32,r0
+07845E	5e 07 82 60	usb_arm	jsr @0x78260:24
+078462	01 7d 40 cd ee 04	usb_arm	mov.b #0xcd,@0xee04:16
+078468	6a d0 ee 05	usb_arm	mov.b #0x0,@0xee05:16
+07846C	6a d0 ee 06	usb_arm	mov.b #0x0,@0xee06:16
+078470	6a 08 ee 2d	usb_arm	mov.b @0xee2d:16,r0l
+078474	e8 fc	usb_arm	and.b #0xfc,r0l
+078476	6a 88 ee 2d	usb_arm	mov.b r0l,@0xee2d:16
+07847A	6a 18 ee 2f 70 10	usb_arm	bset #0x1,@0xee2f:16
+078480	6a 08 ee 04	usb_arm	mov.b @0xee04:16,r0l
+078484	17 60	usb_arm	extu.l #2,er0
+078486	03 98 10 30	usb_arm	shll.l #0x18,er0
+07848A	6a 09 ee 05	usb_arm	mov.b @0xee05:16,r1l
+07848E	17 61	usb_arm	extu.l #2,er1
+078490	10 f9	usb_arm	shll.l #16,er1
+078492	01 f0 64 10	usb_arm	or.l er1,er0
+078496	6a 09 ee 06	usb_arm	mov.b @0xee06:16,r1l
+07849A	17 61	usb_arm	extu.l #2,er1
+07849C	10 79	usb_arm	shll.l #8,er1
+07849E	01 f0 64 10	usb_arm	or.l er1,er0
+0784A2	7a 40 00 08 20 00	usb_arm	or.l #0x82000,er0
+0784A8	01 00 6b a0 00 ff 62 f8	usb_arm	mov.l er0,@0xff62f8:32
+0784B0	6a d0 ee 08	usb_arm	mov.b #0x0,@0xee08:16
+0784B4	6a d0 ee 09	usb_arm	mov.b #0x0,@0xee09:16
+0784B8	6a d4 ee 0a	usb_arm	mov.b #0x4,@0xee0a:16
+0784BC	54 70	usb_arm	rts 
+0784BE	7a 01 00 fe e0 08	queue_init_isr	mov.l #0xfee008,er1
+0784C4	7a 00 00 ff 62 88	queue_init_isr	mov.l #0xff6288,er0
+0784CA	01 01 69 81	queue_init_isr	mov.l er1,@(0x4:2,er0)
+0784CE	01 00 69 81	queue_init_isr	mov.l er1,@er0
+0784D2	f9 10	queue_init_isr	mov.b #0x10,r1l
+0784D4	01 00 6f 81 00 54	queue_init_isr	mov.l er1,@(0x54:16,er0)
+0784DA	01 00 6f 81 00 50	queue_init_isr	mov.l er1,@(0x50:16,er0)
+0784E0	f1 e1	queue_init_isr	mov.b #0xe1,r1h
+0784E2	01 00 6f 81 00 44	queue_init_isr	mov.l er1,@(0x44:16,er0)
+0784E8	01 00 6f 81 00 40	queue_init_isr	mov.l er1,@(0x40:16,er0)
+0784EE	6a f1 00 ff 62 40	queue_init_isr	mov.b #0x1,@0xff6240:32
+0784F4	6b f0 00 ff 63 f8	queue_init_isr	mov.w #0x0,@0xff63f8:32
+0784FA	01 7d 40 7f ee 00	queue_init_isr	mov.b #0x7f,@0xee00:16
+078500	01 7d 40 73 ee 28	queue_init_isr	mov.b #0x73,@0xee28:16
+078506	54 70	queue_init_isr	rts 
+078508	7a 01 00 fe e0 08	queue_init	mov.l #0xfee008,er1
+07850E	7a 00 00 ff 62 88	queue_init	mov.l #0xff6288,er0
+078514	01 01 69 81	queue_init	mov.l er1,@(0x4:2,er0)
+078518	01 00 69 81	queue_init	mov.l er1,@er0
+07851C	f9 10	queue_init	mov.b #0x10,r1l
+07851E	01 00 6f 81 00 54	queue_init	mov.l er1,@(0x54:16,er0)
+078524	01 00 6f 81 00 50	queue_init	mov.l er1,@(0x50:16,er0)
+07852A	f1 e1	queue_init	mov.b #0xe1,r1h
+07852C	01 00 6f 81 00 44	queue_init	mov.l er1,@(0x44:16,er0)
+078532	01 00 6f 81 00 40	queue_init	mov.l er1,@(0x40:16,er0)
+078538	6a f1 00 ff 62 40	queue_init	mov.b #0x1,@0xff6240:32
+07853E	6b f0 00 ff 63 f8	queue_init	mov.w #0x0,@0xff63f8:32
+078544	54 70	queue_init	rts 
+002152	79 04 04 ae	outside	mov.w #0x4ae,r4
+002156	7a 05 00 07 b2 a6	outside	mov.l #0x7b2a6,er5
+00215C	7a 06 00 ff 60 34	outside	mov.l #0xff6034,er6
+002162	7b d4 59 8f	outside	eepmov.w 
+002166	0d 44	outside	mov.w r4,r4
+002168	46 f8	outside	bne .-8 (0x2162)
+0021FA	6a 8c 81 3a	outside	mov.b r4l,@0x813a:16
+0021FE	fe c8	outside	mov.b #0xc8,r6l
+002200	2c 4c	outside	mov.b @0x4c:8,r4l
+002202	ec 7f	outside	and.b #0x7f,r4l
+002204	ac 7d	outside	cmp.b #0x7d,r4l
+002206	47 16	outside	beq .+22 (0x221e)
+002214	5e 05 4b f8	outside	jsr @0x54bf8:24
+002218	5e 05 4c 44	outside	jsr @0x54c44:24
+00221C	40 22	outside	bra .+34 (0x2240)
+002222	fc 01	outside	mov.b #0x1,r4l
+002224	6a 8c 81 3a	outside	mov.b r4l,@0x813a:16
+002228	5e 05 5f fe	outside	jsr @0x55ffe:24
+002234	5e 07 81 06	outside	jsr @0x78106:24
+00251E	79 04 04 ae	outside	mov.w #0x4ae,r4
+002522	7a 05 00 07 b2 a6	outside	mov.l #0x7b2a6,er5
+002528	7a 06 00 ff 60 34	outside	mov.l #0xff6034,er6
+00252E	7b d4 59 8f	outside	eepmov.w 
+054D54	6a 0c 81 3a	outside	mov.b @0x813a:16,r4l
+054D58	58 60 01 4c	outside	bne .+332 (0x54ea8)
+054EA8	01 30 6d f0	outside	stm.l er0-er3,@-sp
+054EB0	5e 07 82 7c	outside	jsr @0x7827c:24
+054EC0	56 70	outside	rte 
+05DCFE	6a 0c b0 c4	outside	mov.b @0xb0c4:16,r4l
+05DD02	58 70 00 e4	outside	beq .+228 (0x5ddea)
+05DD06	ac 05	outside	cmp.b #0x5,r4l
+05DD08	45 14	outside	bcs .+20 (0x5dd1e)
+05DD12	5e 07 81 5c	outside	jsr @0x7815c:24
+05DD8A	6a 18 fb a5 70 50	outside	bset #0x5,@0xfba5:16
+05DD98	6a 18 fb 91 70 50	outside	bset #0x5,@0xfb91:16
+05DD9E	5e 07 82 22	outside	jsr @0x78222:24
+07615E	6a 20 00 ff bc 70	outside	mov.b @0xffbc70:32,r0h
+07616A	11 a0	outside	shlr.b #4,r0h
+076186	78 01 6a 29 00 07 85 f0	outside	mov.b @(0x785f0:32,r0l.b),r1l
+076190	78 01 6a 29 00 07 85 e0	outside	mov.b @(0x785e0:32,r0l.b),r1l
+07619A	78 01 6a 29 00 07 85 d0	outside	mov.b @(0x785d0:32,r0l.b),r1l
+0761A4	78 01 6a 29 00 07 85 c0	outside	mov.b @(0x785c0:32,r0l.b),r1l
+0761AE	78 01 6a 29 00 07 85 b0	outside	mov.b @(0x785b0:32,r0l.b),r1l
+0761B8	78 01 6a 29 00 07 85 a0	outside	mov.b @(0x785a0:32,r0l.b),r1l
+0761C0	6a a9 00 ff bc 71	outside	mov.b r1l,@0xffbc71:32
+0761CE	fc 82	outside	mov.b #0x82,r4l
+0761D4	6b 2b 00 ff bc 72	outside	mov.w @0xffbc72:32,e3
+0761DA	79 2b 24 21	outside	cmp.w #0x2421,e3
+0761E2	79 2b 25 76	outside	cmp.w #0x2576,e3
+0761FA	78 88 7a c6 00 ff 60 34	outside	mova/l.l @(0xff6034:32,r0l.b),er6
+076208	78 b8 7a c0 00 ff 60 36	outside	mova/l.l @(0xff6036:32,r3l.b),er0
+0762E4	6a 20 00 ff bc 76	outside	mov.b @0xffbc76:32,r0h
+0762EA	a0 2c	outside	cmp.b #0x2c,r0h
+0762FE	78 01 6b 20 00 07 85 46	outside	mov.w @(0x78546:32,r0l.b),r0
+076306	11 10	outside	shlr.w r0
+076308	59 06	outside	bra r0.w
+0767B6	6b a1 00 ff bc 74	outside	mov.w r1,@0xffbc74:32
+0768A8	6a 10 ee 00 73 40	outside	btst #0x4,@0xee00:16
+0768AE	47 16	outside	beq .+22 (0x768c6)
+0768B0	7a 00 00 ff 63 54	outside	mov.l #0xff6354,er0
+0768B6	7a 01 00 ff 62 c8	outside	mov.l #0xff62c8,er1
+0768BC	5e 07 83 7c	outside	jsr @0x7837c:24
+0768C0	6b a0 00 ff 63 f8	outside	mov.w r0,@0xff63f8:32
+076FC8	01 30 6d f2	outside	stm.l er2-er5,@-sp
+076FD2	7a 06 00 ff 62 88	outside	mov.l #0xff6288,er6
+077008	79 2a 00 40	outside	cmp.w #0x40,e2
+07700E	79 0a 00 40	outside	mov.w #0x40,e2
+07701E	29 8c	outside	mov.b @0x8c:8,r1l
+077020	4a fc	outside	bpl .-4 (0x7701e)
+077022	30 8b	outside	mov.b r0h,@0x8b:8
+077E3A	7a 01 00 07 b2 60	outside	mov.l #0x7b260,er1
+077F52	01 78 48 07 00 07 b2 70	outside	mov.b @0x7b270:32,@er7
+077F5A	01 78 48 27 00 07 b2 71	outside	mov.b @0x7b271:32,@(0x2:2,er7)
+078546	00 00 00 1c 00 36 00 50 00 6a 00 86 00 a2 00 bc 00 d8 00 f4 01 10 01 2a 01 44 01 5e 01 7a 01 96 01 b0 01 cc 01 e6 02 02 02 1c 02 36 02 50 02 6c 02 86 02 a2 02 be 02 d8 02 f2 03 0c 03 26 03 42 03 5c 03 78 03 94 03 ae 03 c8 03 e4 04 00 04 1a 04 34 04 4c 04 64 04 7c 04 96	switch_disp	45 BE words; byte displacement from 0x07630A
+0785A0	ff ff ff ff ff ff ff b1 b2 e0 b4 b5 d4 d5 d6 ed	nibble_a	16-byte map selected when FFBC70 high nibble is 0xA
+0785B0	ff a7 a8 a9 aa ab e1 e2 e3 e4 e5 e6 e7 e8 e9 ea	nibble_b	16-byte map for high nibble 0xB
+0785C0	eb ec af ee ef ff ff ff ff ff f0 f1 f2 f3 f4 ff	nibble_c	16-byte map for high nibble 0xC
+0785D0	ff ff ff ff ac ad ae ff ff ff ff ff ff ff ff ff	nibble_d	16-byte map for high nibble 0xD
+0785E0	b3 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4	nibble_e	16-byte map for high nibble 0xE
+0785F0	f5 f6 f7 f8 f9 ca cb cc cd ce ff ff ff ff ff ff	nibble_f	16-byte map for high nibble 0xF
+078600	30 21 30 22 30 23 30 24 30 25 30 26 30 27 30 28	codes_600	first 8 BE words of the 0x078600 table
+07B120	21 21 21 22 21 23 21 24 21 25 21 26 21 27 21 28	codes_b120	first 8 BE words of the 0x07B120 table
+07B250	26 48 26 4b 26 4c 26 50 26 56 26 58 ff ff ff ff	codes_tail	last words of 0x078600-0x07B25F, then FFFF
+07B260	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00	zeros	16 zero bytes; address loaded by 0x077E3A
+07B270	00 00	str_pad	two zero bytes loaded by 0x077F52 and 0x077F5A
+07B272	04 03 09 04	usb_lang	bLength 4, type 3, wLANGID 0x0409
+07B276	10 03 52 00 65 00 6e 00 65 00 73 00 61 00 73 00	usb_str_mfg	bLength 0x10, type 3, UTF-16LE Renesas
+07B286	1a 03 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00 30 00	usb_str_ser	bLength 0x1A, type 3, UTF-16LE 000000000000
+07B2A0	00 00 00 00 00 ff	before_data	zeros, then FF, immediately before the copied image
+07B2A6	24 21 24 22 24 22 24 21 24 23 24 24 24 24 24 23	pair_head	first key/value words of the copied pair list
+07B4A2	25 6f 25 6e 25 74 25 26 25 75 25 2c 25 76 25 32	pair_tail	last pairs; final key 0x2576
+07B4B2	01 00	ff6240	initializer of FF6240
+07B4B4	80 00 00 00 00 00 00 07 84 be	handler0	mask 0x80000000 byte 0 handler 0x0784BE
+07B4BE	05 00 00 00 01 00 00 07 69 aa	handler1	mask 0x05000000 byte 1 handler 0x0769AA
+07B4C8	08 00 00 00 00 00 00 07 68 c8	handler2	mask 0x08000000 byte 0 handler 0x0768C8
+07B4D2	02 00 00 00 01 00 00 07 69 aa	handler3	mask 0x02000000 byte 1 handler 0x0769AA
+07B4DC	40 00 00 00 05 00 00 07 67 be	handler4	mask 0x40000000 byte 5 handler 0x0767BE
+07B4E6	10 00 00 00 04 00 00 07 68 a8	handler5	mask 0x10000000 byte 4 handler 0x0768A8
+07B4F0	00 00 00 00 ff 00 00 00 00 00	handler_end	byte at +4 is 0xFF, end of the handler list
+07B4FA	00 fe e0 08 00 fe e0 08 00 fe e0 08 00 fe e0 10	ff6288	image of FF6288 +0 and +4
+07B53A	00 fe e1 10 00 fe e1 10 00 fe e1 10 00 fe e2 0f	ff62c8	image of FF62C8, ring at 0xFEE110 limit 0xFEE20F
+07B54A	00 fe e0 10 00 fe e0 10 00 fe e0 10 00 fe e1 0f	ff62d8	image of FF62D8, ring at 0xFEE010 limit 0xFEE10F
+07B56A	ff ff ff ff	ff62f8	image of FF62F8 before the IER snapshot
+07B5A2	00 ff ee 24	ff6330	image of FF6330, pointer 0xFFEE24
+07B5F0	00 ff 64 0e	ptr_dev	copied pointer to device descriptor at FF640E
+07B5F4	00 43	ptr_len	0x0043 beside the descriptor pointers
+07B5F6	00 ff 64 9f	ptr_cfg	copied pointer to config descriptor at FF649F
+07B5FA	04 00 00 07 b2 72	ptr_lang	LE length 4 and pointer 0x07B272
+07B600	10 00 00 07 b2 76	ptr_mfg	LE length 0x10 and pointer 0x07B276
+07B60C	1a 00 00 07 b2 86	ptr_ser	LE length 0x1A and pointer 0x07B286
+07B61E	00 00 10 00 00 15 20 80 00 01 25 28 80 00 02 34 38 10 00 03	ee32_image	first 20 of 50 bytes burst to FFEE32
+07B632	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00	ee32_pad	remaining 30 bytes of that 50-byte image, all 0x00
+07B680	12 01 10 01 02 00 00 08 aa 26 20 00 00 01 00 00 03 01	usb_device	device descriptor, RAM FF640E
+07B692	08 10 31 40 80	after_device	five bytes between the device descriptor and the ACME length
+07B697	00 79	acme_len	BE16 0x0079; count includes these two bytes, ASCII follows
+07B699	4d 41 4e 55 46 41 43 54 55 52 45 52 3a 41 43 4d 45 20 4d 61 6e 75 66 61 63 74 75 72 69 6e 67 3b	acme_head	start of the ACME text; 119 ASCII bytes through 0x07B70F
+07B710	18	acme_tail	single 0x18 between the ACME text and the config descriptor
+07B711	09 02 43 00 02 01 00 c0 10	usb_config	config, wTotalLength 0x0043, 2 interfaces
+07B71A	09 04 00 00 01 02 02 01 00	usb_if0	interface 0, class 02 subclass 02 protocol 01
+07B723	05 24 00 10 01	usb_header	CS_INTERFACE header, bcdCDC 0x0110
+07B728	04 24 02 06	usb_acm	CS_INTERFACE ACM, bmCapabilities 0x06
+07B72C	05 24 06 00 01	usb_union	CS_INTERFACE union, master 0 subordinate 1
+07B731	05 24 01 03 01	usb_call	CS_INTERFACE call management
+07B736	07 05 83 03 08 00 10	usb_ep3	endpoint 0x83 interrupt IN, 8 bytes, interval 16
+07B73D	09 04 01 00 02 0a 00 00 00	usb_if1	interface 1, class 0A, 2 endpoints
+07B746	07 05 01 02 40 00 00	usb_ep1	endpoint 0x01 bulk OUT, 64 bytes
+07B74D	07 05 82 02 40 00 00	usb_ep2	endpoint 0x82 bulk IN, 64 bytes
+07B753	00	last	last image byte
+07B754	ff	past	byte after the image

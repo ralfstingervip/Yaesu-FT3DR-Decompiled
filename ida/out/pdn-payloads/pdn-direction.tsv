@@ -1,0 +1,19 @@
+frame	radio_sends	radio_accepts	effect_when_accepted	can_request_TX	evidence
+V	yes (gate ident)	yes	gate: opens session; data phase: RESTARTS MAIN (jsr sub_2648; orc #0x80,ccr; jmp 0x2050) in both modes	no	0x06BB08
+M	yes (echo)	yes	mode A (FF8DDE>0): retunes live VFO (freq/shift/tone/DCS) via sub_25D72; mode B (FF8DDE<0): only FFB12F-B131 refreshed, no VFO write	no (tune only)	0x06BA02; sub_25EAE vs sub_2611A
+B	yes	yes	mode B: starts position exchange (loc_1CA72) and advances state B3E4	no	0x06BE9C
+C	yes (status)	yes	status poll; no RAM write	no	0x06BEF6
+P	yes (status, unsolicited)	no	-	-	sub_6BB4C 0x06BB4C
+N	yes (GPS text)	yes	poll; no RAM write	no	0x06BFB4
+E	no	yes	loads 45/65/90 B vocoder-bit block into 4-slot ring FEE944 (fed to DSP by sub_5BA22 opcode 0x0C/0x0D/0x0E)	indirectly (data queued; S keys)	0x06C850
+F	no	yes	loads 60 B on-air header (FF0BFC) + <=0x40C B data body (FF0C38) for transmission	indirectly (data loaded; S/node keys)	0x06C686
+S	no	yes	p0.b0=1 -> KEY TX and transmit loaded data (sub_2244C via sub_6CAF8/AAD4.b0); p0.b0=0 -> stop TX (sub_22718)	YES -- direct TX keyer	0x06C8E8; 0x06C982; 0x06C918
+W	yes (own position)	yes	accepts PC ack of radio's position report; advances state B3E4 3->4	no	0x06BD0A
+H	yes (heard/status, unsolicited)	no	-	-	sub_6C19A 0x06C19A
+R	yes (RX vocoder block, unsolicited)	no	-	-	sub_6C344 0x06C344
+G	yes (RX data message, unsolicited)	no	-	-	sub_6C05C 0x06C05C
+--- auxiliary keyer paths (not framed letters) ---	-	-	-	-	-
+node-cmd 0x11	-	internal (node_cmd sub_73E58, only FF94C0==1)	host/node cmd byte 0x11 -> sub_34A52 -> sub_35872 keys radio	YES	0x073E66 a1 11 ... jsr sub_34A52
+node-cmd 0x12	-	internal sub_73E58	0x12 -> sub_350E4 (stop/unkey)	no	0x073E62
+host data session 0x16	-	internal sub_6CF30	FF8DDE!=0 + B3D8.b7 clear: forces B0C7=2, sub_5A1BE, B0BE=0x16 (PC-driven header+block TX)	YES	0x06CF30
+node 0x0A data TX	-	internal sub_6CA6E	node command handler queues data-FR TX (sub_5A28A, AAD4.b0)	YES	0x06CA8E/0x06CABA

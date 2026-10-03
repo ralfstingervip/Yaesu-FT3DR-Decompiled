@@ -1,0 +1,16 @@
+item	bytes	evidence	source
+H8 baseline (doc 46): validated 438,300 + reached gap 25,758	464058		doc 46 finding 8
+H8 'code-conflict' runs (18 runs) decoded: true code	+40	FFEE97C5 `71 01 0a`, FFEF4947 `7c 1e`, FFF0D77A `a0 0b`, 13x `a0 84` after `71 04 60`, FFF33683 `3e 01 00 2e 1c`, FFF454E2 `ef 18`	conflicts-resolved.tsv cluster G; reached by flow from H8-credited heads
+13 `f8 04` fragments completed as `f8 04 00` mov.l #0,[sp]	+26	e.g. FFF2A98E `f8 04 00` after `71 03 60 | a0 0b`	cluster A rows; IDA had `00` brk at FFF2A990 (fake)
+fragment FFEEA555 reached by true beq.s	+3	FFEEA550 `15` -> FFEEA555 `f8 06 00`	cluster P
+orphan FFF3627B reached	+116	FFF366CB `39 b0 fb` bsr.w (true phase; IDA had `fb a2 09 a8 89 39` at FFF366C6)	orphans.tsv
+orphan FFF40314 reached	+21	FFF4030C `39 08 00` bsr.w (true phase; IDA had `fb 62 40 39 08 00` at FFF40309)	orphans.tsv
+49 wave-2 rejects `60 40` (sub #4,sp) 2-byte slivers: unreferenced	-98	e.g. FFF0F05B `60 40` before validated FFF0F05D `60 40 f8 05 1f`	raw/rej2.tsv; FIX closure does not reach them
+19 other wave-2 rejects (149 B) re-reached by flow	+0	e.g. FFEF3715 59 B, FFF1B3A9 `71 04 5c a0 84`	stay credited as reached code, not as validated
+phase repairs: 108 out-of-phase IDA heads replaced by 187 true heads	+0	all bytes are code in both decodes; 1 byte covered only by a fake head is re-reached	raw/closure_cmp.txt
+FFF4B077 13 B twin wrapper (task e): unreferenced, sits inside published string-pool data	+0	`60 40 66 04 f8 06 01 39 06 00 62 40 02`; no LE32/LE24, no relative branch; twin FFF4B06C is called by bsr.a at FFEDE86F	dead; moves data->residue only if the pool bound is corrected to FFF4B059
+FFEDFFFD 9 B hand-decoded pair (H8 finding 5)	+0	kept as H8 credited it; IDA cannot decode across 0xFFEE0000	explains FIX 464,157 vs final 464,166
+FINAL SUB window code (H8 standard)	464166	464166 / 524288 = 88.53 %	delta +108 on 464,058
+typed data (unchanged from H8)	56289		
+unresolved residue	3833	3,692 B in 52 dead orphan runs + 43 B fragments + 98 B `60 40` slivers	524288-final-56289
+reachability-only cross-check (informative)	454630	closure from xref-class starts, vectors, pointers only; 8,782 B of lane-4 'body' functions + 102 B xref-class + 643 B gap code are not reached	raw/reach_only.txt

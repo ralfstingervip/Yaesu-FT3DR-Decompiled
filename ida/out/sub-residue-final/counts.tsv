@@ -1,0 +1,27 @@
+figure	source	bytes	note
+window	FFED0000-FFF50000	524288	64 KB-aligned bracket (doc 02): code band FFEDAB4C.. + INTB + string pool; above FFF50000 erased except the 2,526 B JPEG tail FFF50000-FFF509DE
+window code, headline (H8/H10 + 49 w2 entries)	mask_final3_after_headline_w2.bin	464263	88.5511%
+  of which reach-only proven	mask_final3_after_reach_w2.bin	457462	87.2540%
+  of which credited-unreached	headline_w2 - reach_w2	6801	
+headline without w2	mask_final3_after_headline.bin	464165	
+gap = window - window code		60025	
+  typed data (window - allwf)	complement of mask_final3_after_allwf.bin	56289	incl. 13 B code twin FFF4B077-FFF4B084 kept typed
+  residue (allwf - headline_w2)	runs.tsv	3736	
+    DEAD dead functions		3393	
+    DEAD dead function FFF2A6D1 incl. split byte FFF2A7FC		300	299 + 1
+    DEAD fragments		43	
+  anything else (unexplored / non-typed non-code)		0	
+code+typed (headline)	headline_w2 | typed	520552	99.2874%
+all-well-formed (DB code outside typed)	mask_final3_after_allwf.bin	467999	89.2637%
+
+headline_option	SUB_bytes	SUB_pct_of_524288	MAIN_named+SUB	pct_of_1029972
+A now: MAIN named + SUB window code (headline_w2)	464263	88.5511%	965919	93.7811%
+B SUB window code + DEAD residue typed as code	467999	89.2637%	969655	94.1438%
+C SUB code + typed data (named analogue, residue left out)	520552	99.2874%	1022208	99.2462%
+D SUB code + typed + DEAD residue (I12 convention: dead DB code counts as named)	524288	100.0000%	1025944	99.6089%
+E strict reach both sides: MAIN proven + SUB reach_w2	457462	87.2540%	822248	79.8321%
+
+K7 125 dead functions (sub-final3 dead.tsv), bytes by mask		10670	credited-unreached 6801, reached 120, residue 3736, typed-data 13
+reach_w2 bytes inside dead functions (stale lane-4 xref roots FFF2570F, FFF38800; I17 ambiguous.tsv)		120	FFF256BD 98, FFF387C9 22
+strict reach (reach_w2 minus those)		457342	87.2311%
+E2 strict both sides: MAIN proven + SUB strict reach	457342	87.2311%	822128	79.8204%

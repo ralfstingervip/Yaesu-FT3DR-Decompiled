@@ -1,0 +1,40 @@
+# Audio/TX-session state machine at entry 0x039080 (IDA function sub_3906A).
+# State variable = FFA9E5 (0..8). Event/request flags = FFA9E3. Output = FF8184 (EP3 report byte 0).
+# Called from 9 sites: 002CC4, 003166, 0038CE, 003A26, 02D1B0, 02DDEA, 033C30, 034746, 074B1C.
+#
+# --- dispatch table at 0x0390FC (index = FFA9E5 * 4) ---
+state	handler	range	role
+0	sub_39136	039136-039182	IDLE: if TX bits (FFA9E3&0x2C) begin routing, bsr sub_391C0, -> state 1
+1	sub_39184	039184-0391BC	wait 953B clear; set FFA9E5=2; loc_39190 route (port59.2 from SP SEL/VBUS), bsr sub_391C0
+2	loc_39190	039190-0391BF	(entered as state 2) same routing body as state 1 tail
+3	sub_393E2	0393E2-039418	if TX bits -> 953B=0,state1; else jsr sub_39120 (teardown)
+4	sub_39120	039120-039135	teardown: clr port59.2, jsr sub_391C0, clr AAE1.7, FFA9E5=0
+5	sub_39454	039454-03948C	SESSION START: FFA9E3 bclr4, FF8184=1, set port59.2, FFA9AD/AC=0, 953B=2, FFA9E5=6
+6	sub_3948E	03948E-0394A6	wait 953B clear; FFA9E5=7
+7	loc_3949A	03949A-0394A6	set AAE1.7; FFA9E5=8
+8	sub_394A8	0394A8-0394B2	wait tone-seq FFAAE8==0; then jsr sub_39120 (-> state 0)
+#
+# --- prologue 0x039080-0x0390FA (runs every call before dispatch) ---
+# 039080  r2l = FFA9E3; bclr #7,FFA9E3
+# 03908A  if r2l.5: bclr #0,#1 of FFA9E3
+# 03909A  if r2l.4: FFA9E5 = 5            (external force into session, e.g. D1 image push)
+# 0390A2  if FFA9E5>=5 or ==3: skip to dispatch
+# 0390AA  if r2l.7==0 or r2l.0 or r2l.1: skip
+# 0390B6  FFA9AD=0; FFA9AC=0
+# 0390C0  if FFA9E3 & 0x2C: skip          (TX-path bits latched -> leave state)
+# 0390C8  if FFA9E5==2: FFA9E5=4 else FFA9E5=0
+# 0390E6  dispatch via table[FFA9E5]
+#
+# --- byte-0 decision (end of sub_391C0, convergence loc_0x3935A -> store 0x0393DC) ---
+# priority	condition	FF8184(byte0)
+# 1	FF89C5 bit1 (USB CAMERA SP SEL = CAMERA) set	1
+# 2	FFA9E3 & 0x2C (TX-path/mute bits) non-zero	0
+# 3	default (no TX)	1, then forced 0 if band-RX audio active:
+#   band A: FF8EA0.7 set AND (FFA9AD!=0 or FFA9AC!=0)  -> 0
+#   band B: FF8EA0.6 set AND (FFA9AC!=0, or via FFA9AD) -> 0
+# FFA9AD / FFA9AC = per-band receive-audio-active flags, set 0xFF/0 earlier in sub_391C0
+#   from squelch/busy queries sub_1E80A, sub_1E7C2 and band state FF8EA0/FF8EA6/FFBAD6/FF89D1.
+#
+# Net: FF8184 = 1  <=> internal audio path is free for the accessory
+#                       (SP SEL routes audio to camera, OR radio idle)
+#      FF8184 = 0  <=> radio is driving its own audio path now (TX, or RX audio on a monitored band, SP SEL=INT SP)

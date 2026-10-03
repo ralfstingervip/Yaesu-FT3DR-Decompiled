@@ -1,0 +1,15 @@
+port	bit	dir	function	evidence	confidence
+0xFFFF4C	0-6	input	keypad-matrix return column, ACTIVE-LOW (one bit low per key). Read at boot strap sub_20FA 0x2200 and by key scanner sub_100E4 0x100F8. sub_100E4 decode: 0x7E->0x0E, 0x7D->0x11, 0x7B->0x0A, 0x77->0x0F, 0x6F->0x0D, 0x5F->0x0C, 0x3F->0x12 (internal key codes); 0x7F=no key. Never written anywhere in image (input-only).	sub_100E4 0x100E4-0x10168; sub_20FA 0x2200; regops: only 2 readers, 0 writers	Confirmed (electrical role); key silkscreen label Unknown (no keypad map/schematic in package)
+0xFFFF4C	7	input	masked off (and.b #0x7F) in both readers	0x2202, 0x100FA	Confirmed
+0xFFFF4C	=0x7D	strap	bit1 held low at power-on (that key held) => sub_20FA sets 0xFF813A=1: selects 2nd USB personality (CDC-ACM, MAIN-IO) AND DSP-bridge/write mode. sub_100E4 maps 0x7D->internal key code 0x11.	sub_20FA 0x2204 cmp#0x7D beq 0x221E -> 0xFF813A=1; 0x100E4 0x7D->0x11	Confirmed
+0xFFFF52	--	output	DSP control output port. DDR = 0xFFFB82, init 0xBF (bits0-5,7 output; bit6 input); data init 0xA0 in sub_20FA 0x226E/0x2272.	sub_20FA 0x226E (0xA0->0xFFFF52), 0x2272 (0xBF->0xFFFB82)	Confirmed (0xFFFF52); DDR pairing 0xFFFB82 Inferred (strong: written adjacent, bit6-input matches only input use)
+0xFFFF52	0	output	DSP POWER/ENABLE. bset in DSP-loader entry sub_5DCDA 0x5DCE6 and power-on sub_56492 0x56498; bclr in shutdown sub_56056 0x56056.	regops FFFF52; sub_5DCDA/56492/56056	Confirmed
+0xFFFF52	1	output	DSP direction/strobe. bset in power-on sub_564FA 0x56506; bclr in DSP DMA-TX setup sub_4834E 0x483C6 and shutdown 0x56064.	sub_4834E 0x483C6 bclr#1; sub_56056 0x56064	Confirmed
+0xFFFF52	2	output	DSP control line. bset power-on 0x5650A; bclr shutdown 0x56068.	regops	Confirmed
+0xFFFF52	3	output	DSP RESET (active high pulse). loader: bset 0x5DD62 (assert), bclr 0x5DD76 (release); also power-on 0x5650E / init 0x56526; bclr shutdown 0x5605A.	sub_5DCFE 0x5DD62/0x5DD76	Confirmed
+0xFFFF52	4	output	DSP BOOT-MODE select (held during firmware load). loader: bset 0x5DD50, bclr 0x5DDD4 (release at completion); bclr shutdown 0x5606C.	sub_5DCFE 0x5DD50/0x5DDD4	Confirmed
+0xFFFF52	5	output	NON-DSP (unrelated peripheral): bset in sub_2F400 0x2F486, sub_30F00 0x30F80; NOT cleared by DSP shutdown; init 1.	regops FFFF52	Confirmed (not DSP; exact load Unknown)
+0xFFFF52	6	input	DDR bit6=0 (input). No DSP use.	DDR 0xFFFB82=0xBF	Inferred
+0xFFFF52	7	output	NON-DSP: bst #7 (store from carry) in reset_handler (x7), sub_30E0, sub_3EA28; init 1. A frequently-toggled strobe/LED/latch, not DSP.	regops FFFF52	Confirmed (not DSP; exact load Unknown)
+0xFFFF49	7	input	DSP handshake/ready line. Polled only in DSP loader sub_5DCFE states 4 (wait clear, 0x5DDAE) and 5 (wait set, 0x5DDBE).	sub_5DCFE 0x5DDAE/0x5DDBE	Confirmed
+0xFF813A	--	RAM flag	the unified strap/personality selector. Written only in sub_20FA (0x21FA=0 default, 0x2224=1 on 0xFFFF4C==0x7D). READ by: USB ISR sub_54D50 (0x54D54), DSP SCI-C RX ISR sub_5615C (0x56160, normal vs bridge), reset_handler (main loop), key/mode handler 0x101B2 (=>sub_103C0 enter DSP write). Ties USB 2nd personality + DSP bridge to one boot decision.	regops FF813A (14 sites)	Confirmed

@@ -1,0 +1,76 @@
+item	got	expected	result	note
+MAIN sha256	8e3ecd05409b2c314ebed77320ece5930bf31c8333cd84aeef4f6b0264c1bcce	8e3ecd05409b2c314ebed77320ece5930bf31c8333cd84aeef4f6b0264c1bcce	PASS	
+SUB sha256	b93570b3c2f69ccb51c113c893b4bc4c414cf78ceddde478748404e0768c6230	b93570b3c2f69ccb51c113c893b4bc4c414cf78ceddde478748404e0768c6230	PASS	
+final7_proven length	1048576	1048576	PASS	
+final7_proven values	[0, 1]	[0, 1]	PASS	
+final7_proven popcount	365358	365358	PASS	
+final7_proven sha256	5585a9c6d810d96401a6dbd14eadabc575893e8c890dd39263e1df00040d58db	5585a9c6d810d96401a6dbd14eadabc575893e8c890dd39263e1df00040d58db	PASS	
+final7_proven bytes at/above 0x07B754	0	0	PASS	
+final7_named length	1048576	1048576	PASS	
+final7_named values	[0, 1]	[0, 1]	PASS	
+final7_named popcount	505165	505165	PASS	
+final7_named sha256	0bcf995b1087e72397fc67e8f2e8487ddae0010ba312dfd58ae000f7fdf7fdd2	0bcf995b1087e72397fc67e8f2e8487ddae0010ba312dfd58ae000f7fdf7fdd2	PASS	
+final7_named bytes at/above 0x07B754	0	0	PASS	
+final6_proven length	1048576	1048576	PASS	
+final6_proven values	[0, 1]	[0, 1]	PASS	
+final6_proven popcount	364786	364786	PASS	
+final6_proven sha256	ecd7deaf54da6d21abeaf99597a6d18dca04f75874cf9f91cd910a7adc73d2c5	ecd7deaf54da6d21abeaf99597a6d18dca04f75874cf9f91cd910a7adc73d2c5	PASS	
+final6_proven bytes at/above 0x07B754	0	0	PASS	
+final6_named length	1048576	1048576	PASS	
+final6_named values	[0, 1]	[0, 1]	PASS	
+final6_named popcount	501656	501656	PASS	
+final6_named sha256	fe8f60996e0a585216db5dec8ddbbcc7323c00fa816e2ed0ab34b0a89aa1165d	fe8f60996e0a585216db5dec8ddbbcc7323c00fa816e2ed0ab34b0a89aa1165d	PASS	
+final6_named bytes at/above 0x07B754	0	0	PASS	
+main-final6 masks == l-wave-recon final6 (M1 cmp-equal)	(True, True)	(True, True)	PASS	
+final7 proven subset of named	0	0	PASS	
+final6 named subset of final7 named	0	0	PASS	
+image tail 0x07B754.. all FF	True	True	PASS	
+proven removed final6->final7	1544	1544	PASS	1,472 + 72
+proven added final6->final7	2116	2116	PASS	390 + 1,726
+named added final6->final7	3509	3509	PASS	
+ledger arithmetic proven	365358	365358	PASS	
+ledger arithmetic named	505165	505165	PASS	
+final6-to-final7-diff.tsv runs == my diff runs	True	True	PASS	279 rows
+M2 proposed demotions bytes	368	368	PASS	
+M2 demotions all removed	True	True	PASS	
+M3 proposed demotions bytes	574	574	PASS	
+M3 demotions all removed	True	True	PASS	
+M4 proposed demotions bytes	530	530	PASS	
+M4 demotions all removed	True	True	PASS	
+removed outside M2/M3/M4 (the 72 B cascade)	['066FB4-066FC8', '067250-067284']	['066FB4-066FC8', '067250-067284']	PASS	
+cascade size	72	72	PASS	
+dropped leaf 066FB4 final7 proven / named	(0, 1)	(0, 1)	PASS	
+dropped leaf 067250 final7 proven / named	(0, 1)	(0, 1)	PASS	
+dropped leaf 066FBE final7 proven / named	(0, 1)	(0, 1)	PASS	
+dropped leaf 06726A final7 proven / named	(0, 1)	(0, 1)	PASS	
+M6 core+companion bytes	390	390	PASS	148 + 242
+M6 core+companion = added outside CDC	True	True	PASS	
+CDC handler records BE32 at 0x07B4B4+10k+6	['0784BE', '0769AA', '0768C8', '0769AA', '0767BE', '0768A8']	['0784BE', '0769AA', '0768C8', '0769AA', '0767BE', '0768A8']	PASS	
+M7 ranges new vs final6	1778	1778	PASS	
+M7 credited	1726	1726	PASS	
+M7 not credited	['0771AE-0771E2']	['0771AE-0771E2']	PASS	
+raw byte-pattern hits into 0x0771AE-0x0771E1 (abs24/BE32/bsr/bcc)	['bcc8 077142 in 077140+2 (6 B c)', 'bcc8 077158 in 077156+2 (6 B c)']	-	INFO	INFO
+inbound edges into 0x0771AE-0x0771E1 at instruction heads (M1 seed heads)	[]	[]	PASS	Not found expected; scope 0..0x07B754
+M5 named bytes	2880	2880	PASS	
+M6 named bytes (Confirmed tiers)	635	635	PASS	
+M8 named bytes	27	27	PASS	
+M5 & M6 overlap	['018FAA-018FB0']	['018FAA-018FB0']	PASS	
+M8 inside M6	True	True	PASS	
+union M5|M6|M8	3509	3509	PASS	
+union == named added	True	True	PASS	
+stale copy bytes held	['069A7F-069AAA']	['069A7F-069AAA']	PASS	
+stale copy unnamed in final7	0	0	PASS	
+stale copy first 37 B == 0x069964	True	True	PASS	
+MAIN unnamed	519	519	PASS	
+proven % of content	72.25%	72.25%	PASS	
+proven % of decodable	93.86%	93.86%	PASS	
+named %	99.90%	99.90%	PASS	
+headline	(969428, '94.12%')	(969428, '94.12%')	PASS	
+named incl. stale	(505208, '99.91%')	(505208, '99.91%')	PASS	
+SUB window code (headline_w2)	464263	464263	PASS	
+M15 convention B headline	(973164, '94.48%')	(973164, '94.48%')	PASS	
+M15 convention C headline	(1025717, '99.59%')	(1025717, '99.59%')	PASS	
+M15 convention D headline	(1029453, '99.95%')	(1029453, '99.95%')	PASS	
+M15 convention E	(822700, '79.88%')	(822700, '79.88%')	PASS	
+M15 gap 60,025 = 56,289 + 3,736	60025	60025	PASS	
+old headline 965,919 + 3,509	969428	969428	PASS	

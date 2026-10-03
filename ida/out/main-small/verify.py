@@ -1,0 +1,234 @@
+# -*- coding: utf-8 -*-
+"""Lane M11 citation checker. Re-reads every byte run cited in
+docs/deep/123-main-small-unknowns.md from the plaintext images (read-only) and
+writes verify.tsv next to this file. Exit code 1 on any mismatch.
+MAIN: file offset = address. SUB: file offset = address - 0xFFC00000."""
+import sys
+from pathlib import Path as _Path
+_REPO = _Path(__file__).resolve().parents[3]
+import hashlib, os, sys
+
+ROOT = str(_REPO)
+sys.exit('The firmware image is not in this repository.')
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "verify.tsv")
+
+C = [
+ # --- item 1: FF910A guard ---
+ ("M", 0x01497E, "01 00 6b 04 91 0a 7a 24 00 06 66 00 46 44", "guard idx10: mov.l @FF910A,er4; cmp.l #0x00066600"),
+ ("M", 0x01499A, "01 00 6b 04 91 0a 7a 24 00 06 66 00 46 28", "guard idx8"),
+ ("M", 0x03FB0C, "6e 5c 00 1f 73 7c 46 1e", "unpack: packed+0x1F b7 selects slot"),
+ ("M", 0x03FB32, "7a 06 00 ff 91 02 6a 18 8e a6 70 00", "unpack dest FF9102 (=FF90F0+0x12), set 8EA6.b0"),
+ ("M", 0x03FB70, "01 00 6f 54 00 02 fc 00 79 2c 00 18 45 3c", "freq dword from packed+2, low byte zeroed, fixup only if >=1.8 MHz"),
+ ("M", 0x03FB7E, "a4 12 47 2e a4 37 47 2a a4 62 47 26 a4 87 47 22", "12.5 kHz grid fixups (x.x125/375/625/875)"),
+ ("M", 0x03FBB0, "fc 50 40 06 fc 25 40 02 fc 75 01 00 6f e4 00 08", "low byte 50/25/75; mov.l er4,@(8,er6) = FF910A when er6=FF9102"),
+ ("M", 0x03FE6E, "01 00 6f 05 00 1a 7a 06 00 02 21 72", "repack: record+0x1A freq vs table 0x022172"),
+ ("M", 0x03FE82, "01 00 6f 05 00 1a 7a 06 00 02 21 c0", "repack: alt table 0x0221C0"),
+ ("M", 0x03FE94, "ab 83 47 0c 7a 06 00 ff 91 02 f4 00 70 74", "code != 0x83 (i.e. 0xC3) -> FF9102 record, b7 set"),
+ ("M", 0x022172, "00 0a 00 05", "table A: stride 10, 5 rows"),
+ ("M", 0x022176, "00 05 00 00 00 17 95 00 00 c3", "0.50000-1.79500 MHz code C3"),
+ ("M", 0x022180, "00 18 00 00 02 99 95 00 00 83", "1.8-29.995 MHz code 83"),
+ ("M", 0x02218A, "03 00 00 00 07 59 95 00 00 83", "30-75.995 MHz code 83"),
+ ("M", 0x022194, "07 60 00 00 10 79 95 00 00 c3", "76-107.995 MHz code C3"),
+ ("M", 0x02219E, "58 00 00 00 99 99 95 00 00 83", "580-999.995 MHz code 83"),
+ ("M", 0x0221D8, "03 00 00 00 08 79 95 00 00 83", "table B: 30-87.995 MHz code 83"),
+ ("M", 0x0221E2, "08 80 00 00 10 79 95 00 00 c3", "table B: 88-107.995 MHz code C3"),
+ ("M", 0x03ECDE, "6a 0c 80 0f f4 01 ac 02 45 08 ac 05 44 04 fc 00", "table select by market FF800F in 2..4"),
+ ("M", 0x00EB60, "fc 98 7a 20 00 ff 90 f0 47 02 fc 18 6e ac 00 1f", "default builder tags FF90F0 records +0x1F=0x98 (b7)"),
+ ("M", 0x00EB04, "01 00 6f 81 00 1a", "default builder writes record+0x1A"),
+ ("M", 0x00E99E, "fa 00 7a 01 00 05 40 00 5e 00 ea ca fa 04 7a 06 00 00 f0 42", "FF90F0 defaults: band0 = 0.54000 MHz, band4 from 0xF042"),
+ ("M", 0x00E9BA, "fa 03 7a 06 00 00 f0 22 5e 00 ea 92", "band3 from 0xF022"),
+ ("M", 0x00DFF8, "7a 00 00 ff 90 f0 5e 00 e9 9e", "factory init calls sub_E99E with er0=FF90F0"),
+ ("M", 0x00E030, "7a 00 00 ff 90 f0 5e 00 e9 9e", "second call"),
+ ("M", 0x00F022, "07 60 00 00 07 60 00 00 08 80 00 00 08 80 00 00 08 80 00 00 07 60 00 00", "band3 default 76/88 MHz by market"),
+ ("M", 0x00F042, "09 57 50 00", "band4 default 95.75 MHz"),
+ ("M", 0x03987C, "7a 00 00 00 09 80 7a 01 00 ff 90 f0 5e 03 ab 80", "EEPROM 0x980 -> FF90F0 0x80 B"),
+ ("M", 0x0398C6, "7a 00 00 00 09 80 7a 01 00 ff 90 f0 5e 03 ab 80", "second restore path"),
+ ("M", 0x03A622, "6a 10 8e a6 73 00 47 06 7a 00 00 ff 90 f0", "active record = FF90F0 when 8EA6.b0"),
+ ("M", 0x01498C, "fc 16 6a 8c aa e0 6a 18 bc 8a 70 60", "idx10 arm after guard"),
+ # --- item 2: event 13 ---
+ ("M", 0x00FB40, "6a 2c 00 ff 89 b5 46 1c fc 00 6a 0b 81 71 6a 8c 81 71 73 7b 46 68", "FF89B5==0: FF8171.b7 -> raw 0x16"),
+ ("M", 0x00FB64, "fc 00 6a 0b bb e3 6a 8c bb e3 73 7b 46 4c", "FF89B5!=0: BBE3.b7 -> raw 0x16"),
+ ("M", 0x00FB72, "6a 0b 81 71 6a 8c 81 71 73 7b 47 06 5e 00 fc 56", "other encoder -> sub_FC56"),
+ ("M", 0x00FB56, "6a 0b bb e3 6a 8c bb e3 73 7b 47 22 40 1a", "FF89B5==0: BBE3.b7 -> sub_FC56"),
+ ("M", 0x00FBBE, "77 0b 6a 18 a9 ee 67 00 fc 16 ac 0a 44 08 6a 8c a9 f0 fc 00 40 04 fb 09 18 bc 6a 8c a9 ed", "dir bit -> A9EE.b0; raw 0x16; event = raw-9"),
+ ("M", 0x00FC56, "6a 18 aa 38 70 60 77 0b 6a 18 a9 ee 67 00 54 70", "sub_FC56: AA38.b6 + dir"),
+ ("M", 0x00011C, "00 00 29 ca", "vector 71 (IRQ7) -> 0x29CA"),
+ ("M", 0x000128, "00 00 2a 60", "vector 74 (IRQ10) -> 0x2A60"),
+ ("M", 0x0029D6, "6a 10 81 7f 73 00 47 2a 6a 0c 94 b9 46 24", "IRQ7 gate FF817F.b0, debounce FF94B9"),
+ ("M", 0x0029E4, "2c 4e 6a 10 81 70 73 00 46 06 73 3c", "IRQ7 reads port 4E b3 vs edge state 8170.b0"),
+ ("M", 0x0029F8, "fc 80 40 02 fc 81 6a 8c 81 71 fc 04 6a 8c 94 b9", "FF8171 = 0x80|dir"),
+ ("M", 0x002A08, "6b 04 fd 6a 71 74 71 64 6b 84 fd 6a 6a 18 81 70 71 00", "flip IRQ7 edge select and 8170.b0"),
+ ("M", 0x002A6C, "2c 4e 6a 10 81 70 73 10 46 06 73 1c", "IRQ10 reads port 4E b1 vs 8170.b1"),
+ ("M", 0x002A80, "fc 80 40 02 fc 81 6a 8c bb e3", "BBE3 = 0x80|dir"),
+ ("M", 0x002A8A, "6b 04 fd 68 71 5c 71 4c 6b 84 fd 68 6a 18 81 70 71 10", "flip IRQ10 edge select and 8170.b1"),
+ ("M", 0x00E634, "fc 01 6a 8c 89 b5", "factory default FF89B5 = 1"),
+ ("M", 0x00A210, "79 04 f3 96", "screen 0x66 notifier sends F396"),
+ ("M", 0x00A228, "6a 0b 89 b5", "F396 value = FF89B5"),
+ ("M", 0x01932A, "79 01 00 95 5a 03 cc bc", "screen 0x66 exit saves R1 n=0x95 (FF89B5)"),
+ ("M", 0x011994, "00 03 46 de", "TX table #33 slot 13 -> sub_346DE"),
+ ("M", 0x011BB4, "00 03 46 de", "TX table #41 slot 13 -> sub_346DE"),
+ ("M", 0x011AE8, "00 01 71 fc", "TX table #38 slot 13"),
+ ("M", 0x011B2C, "00 01 66 f2", "TX table #39 slot 13"),
+ ("M", 0x0346DE, "6a 0c aa d5 ac 0e 46 0e fc ff 6a 8c aa e0 fc 0f 6a 8c aa d5", "sub_346DE: state 0x0E -> stop tone, state 0x0F"),
+ ("M", 0x011620, "00 01 e8 ea", "home table #20 slot 13 -> tuning handler 0x01E8EA"),
+ ("M", 0x01342C + 4 * 13, "00 01 9c 3a", "VOX screen key table slot 13 -> value step 0x019C3A"),
+ ("M", 0x019C3A, "7a 05 00 01 9c 44 5a 01 52 60 00 01 a0 ac 00 01 9c 50 00 01 9c 76", "row dispatch to steppers"),
+ ("M", 0x03F628, "6a 18 aa 30 70 60 6a 10 a9 ee 73 00 46 20", "wrapping stepper: A9EE.b0 = direction"),
+ ("M", 0x03F63E, "69 64 1c bc 47 02 44 0a 0c 4b", "up: cur>=hi -> lo else +1"),
+ ("M", 0x03F65E, "69 64 1c 4b 47 02 44 0a 0c cb", "down: cur<=lo -> hi else -1"),
+ ("M", 0x073EB4, "a1 17 44 24 6a 18 a9 ee 72 70 a1 0a 44 0c fc 00 6a 8c a9 ed 6a 81 a9 f0", "node 'A': r1h<0x17; <0x0A digit"),
+ ("M", 0x073ECE, "fc 09 18 c1 6a 81 a9 ed", "node 'A': event = r1h-9 (0x16 -> 13)"),
+ ("M", 0x0744B6, "00 07 3e b4", "node table slot 0x11 ('A') -> sub_73EB4"),
+ ("M", 0x010108, "f9 0e ac 7e 47 28 f9 11 ac 7d 47 22 f9 0a ac 7b 47 1c f9 0f ac 77 47 16 f9 0d ac 6f 47 10 f9 0c ac 5f 47 0a f9 12 ac 3f", "matrix codes 0x0A-0x12 only"),
+ # --- item 3: labels ---
+ ("M", 0x0122AC, "00 01 9d 10", "dial slot screen 0x1F -> 0x019D10"),
+ ("M", 0x019D10, "6a 18 aa 30 70 60 6a 18 89 20 71 70 5e 07 34 b0", "bnot FF8920.b7; jsr sub_734B0"),
+ ("M", 0x0078A8, "00 00 d5 26", "notifier slot screen 0x1F -> sub_D526"),
+ ("M", 0x00D526, "6a 10 89 20 77 70 79 0b f3 d4", "F3D4 value = FF8920.b7"),
+ ("M", 0x073412, "6a 10 89 20 73 00 58 70 00 8c 6a 0c 89 bb 58 60 00 84 6a 10 89 20 73 70 47 7c", "save logic needs BT on, VOX 0, BT Save on"),
+ ("M", 0x07342C, "6a 0c 94 c0 ac 01 47 58", "TX keeps awake"),
+ ("M", 0x073470, "6a 0c 95 a1 46 38 6a 10 bb 8f 73 70 46 30 6a 18 81 7e 70 10 6a 18 bb 8f 70 70", "timer expired -> BB8F.b7 set"),
+ ("M", 0x07348C, "fc 64 6a 8c 95 a1 6a 10 bb 8f 73 70 47 14 6a 18 81 7e 70 10 6a 18 bb 8f 72 70", "activity -> reload 100, clear b7"),
+ ("M", 0x0734A8, "6a 18 bb 8f 72 70 54 70", "save off -> clear b7"),
+ ("M", 0x0734B0, "fc c8 6a 8c 95 a1 6a 18 bb 8f 72 70 54 70", "toggle -> reload 200, clear b7"),
+ ("M", 0x073072, "5e 07 34 12", "caller of sub_73412"),
+ ("M", 0x00EF88, "5e 07 34 b0", "caller of sub_734B0"),
+ ("M", 0x007DC6, "fb 00 6a 10 89 20 77 00 67 7b 6a 10 89 20 73 00 47 02 55 58", "FF3D8C b7 = BT on; bsr sub_7E32 if BT on"),
+ ("M", 0x007DDA, "6a 0d 89 bb 47 14 f5 01 6a 0d 89 bb 6a 10 89 20 73 00 47 04 f5 02 8d 02 14 5b 6a 0c 89 bc ec 07 10 4c 14 cb 6a ab 00 ff 3d 8c", "b1-0 VOX source, b4-2 FF89BC, store FF3D8C"),
+ ("M", 0x007E32, "6a 0c 89 bb 46 08 6a 10 89 20 73 70 46 0c 6a 0c bb 70 ac 00 46 0e 70 6b 40 0a 70 5b 6a 10 bb 8f 77 70 67 eb 54 70", "b5 = VOX0 & BT Save; b6 = !BB8F.b7 or BB70==0"),
+ # --- item 4: VOX table ---
+ ("M", 0x007E04, "7a 65 00 00 00 ff 78 50 6a 2b 00 00 7e 2c 6a ab 00 ff 3d 8d", "table read, index r5l"),
+ ("M", 0x007E2C, "00 28 14 2d 18 00", "table + pad"),
+ ("M", 0x019C82, "00 02 00 ff 89 bb 00 05 00 ff 89 bc", "step records: FF89BB 0..2, FF89BC 0..5"),
+ ("M", 0x019C50, "7a 06 00 01 9c 82 5e 03 f6 28", "stepper for FF89BB"),
+ ("M", 0x019C76, "7a 06 00 01 9c 88 5e 03 f6 28", "stepper for FF89BC"),
+ ("M", 0x002ABA, "fc 00 6a 8c 89 bb", "FF89BB = 0 (sub_2AA0)"),
+ ("M", 0x0103CE, "fc 00 6a 8c 89 bb", "FF89BB = 0 (sub_103C0)"),
+ ("M", 0x0193DC, "7a 01 00 ff 89 bb 79 06 00 02 5a 03 cc d0", "exit handler saves FF89BB/BC"),
+ # --- item 5: AAD2.b0 ---
+ ("M", 0x00FD42, "6a 10 aa d2 73 00", "only reader of AAD2.b0"),
+ ("M", 0x00FD52, "6a 18 aa d2 70 00", "set on headset press"),
+ ("M", 0x00FCC2, "6a 18 aa d2 72 00 6a 18 aa d2 72 10 fc 17", "clear on PTT press (no delay)"),
+ ("M", 0x00FD06, "6a 18 aa d2 72 00 fc 17", "clear on PTT press (after PTT delay)"),
+ ("M", 0x03266E, "6a 0c aa d2 ec 9d 6a 8c aa d2", "mask keeps b0"),
+ ("M", 0x022830, "6a 18 aa d2 72 70", "TX-end cleanup clears b7 only"),
+ ("M", 0x002132, "7a 06 00 00 00 00 7a 04 00 ff 73 00 7a 05 00 fe e0 00", "reset RAM clear FEE000-FF72FF only"),
+ # --- item 6: AA30.b4 ---
+ ("M", 0x034A2E, "6a 10 aa d1 73 20 46 16", "state 1: AAD1.b2 (T-CALL) test"),
+ ("M", 0x034A4C, "6a 18 aa d1 72 20 6a 18 aa 30 70 40 40 20", "AAD1.b2 -> AA30.b4"),
+ ("M", 0x073E86, "5e 03 4a 52 fc 01 40 06", "node '@' 0x11 -> 0x034A52"),
+ ("M", 0x073E98, "fc 00 6a 8c a9 9d", "'@' 0x11 also mutes mic DAC A99D"),
+ ("M", 0x073E8E, "5e 03 50 e4", "'@' 0x12 -> stop"),
+ ("M", 0x002C48, "6a 0c 94 c0 ac 01 47 58", "TX-only main-loop branch"),
+ ("M", 0x002CB4, "5e 03 50 5c", "jsr sub_3505C (only caller)"),
+ ("M", 0x03505C, "6a 0a aa 30 73 4a 47 0c 6a 18 aa 30 72 40 fc 00 6a 8c aa d6", "only reader of AA30.b4: consume, AAD6=0"),
+ ("M", 0x035070, "6a 0b aa d6 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 03 50 86 59 60", "dispatch AAD6"),
+ ("M", 0x035086, "00 03 50 92 00 03 50 d0 00 03 50 dc", "3 states"),
+ ("M", 0x035092, "73 4a 47 28 6a 18 aa d1 70 30 6a 18 a9 e3 70 70 6a 18 a9 e3 70 20 5e 03 83 14 6a 10 aa e1 73 70 47 04 55 0a 40 06 fc 01 6a 8c aa d6", "state 0"),
+ ("M", 0x0350C0, "79 04 00 47 5e 03 87 7a fc 02 6a 8c aa d6", "start 8-bit timer, compare 0x47"),
+ ("M", 0x0350DC, "6a 0c aa d8 4b 00 54 70", "state 2 hold (bmi +0)"),
+ ("M", 0x0350E4, "6a 18 aa d1 72 30 5e 03 83 0a 6a 18 a9 e3 70 70 6a 18 a9 e3 72 20 fc 00 6a 8c aa d6", "stop"),
+ ("M", 0x03877A, "6b 84 fe c4 79 04 00 00 6b 84 fe c8 6a 0c fe c3 cc 03 6a 8c fe c3", "timer compare/toggle"),
+ ("M", 0x002D04, "6a 0a aa 30 73 1a", "AA30 byte read tests b1"),
+ ("M", 0x034EEE, "6a 0a aa 30 73 2a", "AA30 byte read tests b2"),
+ ("M", 0x03E682, "6a 0a aa 30 73 3a", "AA30 byte read tests b3"),
+ ("M", 0x035042, "6a 10 aa d1 73 30 47 04 5e 03 50 e4", "TX end stops burst if AAD1.b3"),
+ # --- SUB labels / gate ---
+ ("S", 0xFFC3E745, "42 6c 75 65 74 6f 6f 74 68 20 53 61 76 65 00", "'Bluetooth Save'"),
+ ("S", 0xFFC3E475, "44 49 41 4c 20 4b 4e 4f 42 20 43 48 41 4e 47 45 00", "'DIAL KNOB CHANGE'"),
+ ("S", 0xFFC3E71D, "42 6c 75 65 74 6f 6f 74 68 00", "'Bluetooth'"),
+ ("S", 0xFFF3851D, "b6 11 75 21 20", "SUB: frame[0x18] & 0x20 (doc 107)"),
+ # --- added citations from the doc body ---
+ ("M", 0x00216A, "7a 04 00 ff 8e e0 01 00 6b 84 81 22", "record A = FF8EE0"),
+ ("M", 0x00217E, "7a 04 00 ff 8f e8 01 00 6b 84 81 26", "record B = FF8FE8"),
+ ("M", 0x00EBB0, "5e 03 fb 0c", "unpack caller"),
+ ("M", 0x03A292, "5e 03 fb 0c", "unpack caller"),
+ ("M", 0x03A2B2, "5e 03 fb 0c", "unpack caller"),
+ ("M", 0x03A36E, "5e 03 fb 0c", "unpack caller"),
+ ("M", 0x03A5D2, "5e 03 fb 0c", "unpack caller"),
+ ("M", 0x03A614, "5e 03 fb 0c", "unpack caller"),
+ ("M", 0x002384, "6a 8c 81 71 6a 8c 81 70", "reset clear of FF8171/FF8170"),
+ ("M", 0x0107B0, "6a 10 aa 38 73 60 46 14", "AA38.b6 consumer in sub_1079E"),
+ ("M", 0x0107DE, "5e 01 10 50", "-> sub_11050"),
+ ("M", 0x0350D0, "6a 10 aa e1 73 70 47 02 55 e6", "state 1 waits AAE1.b7"),
+ ("M", 0x02F5FA, "5e 03 26 6e", "caller of sub_3266E"),
+ ("M", 0x0310E8, "5e 03 26 6e", "caller of sub_3266E"),
+ ("M", 0x007E40, "6a 0c bb 70 ac 00 46 0e 70 6b", "b6 = (BB70 == 0) outside BT Save"),
+ ("M", 0x007E4C, "70 5b 6a 10 bb 8f 77 70 67 eb", "b5 set; b6 = !BB8F.b7"),
+ ("M", 0x022A88, "5e 03 50 e4", "T-CALL release stop"),
+ ("M", 0x022A9A, "5e 03 50 e4", "T-CALL release stop"),
+ ("M", 0x073EA0, "5e 03 4c 58", "'@' 0x12 -> sub_34C58"),
+ ("M", 0x034C58, "6a 10 8e a0 73 60", "sub_34C58 is inside mic-gain routine sub_34C34"),
+ ("M", 0x02C10A, "6a 8c bb 70", "BB70 writer outside the 0x073xxx cluster"),
+ ("M", 0x00E9A0, "7a 01 00 05 40 00", "540.00 kHz default"),
+ ("M", 0x0029CA, "6d f4 6b 04 ff 36 72 7c 6b 84 ff 36", "sub_29CA prologue clears ISR flag"),
+]
+
+# raw-count claims over MAIN 0..0x80000 (pattern, expected count)
+COUNTS = [
+    ("00 06 66 00", 2, "only the two guard immediates"),
+    ("91 0a", 2, "abs16 FF910A: the two guard reads"),
+    ("91 0d", 0, "no abs16 FF910D"),
+    ("00 ff 91 0a", 0, "no abs32 FF910A"),
+    ("00 ff 91 02", 2, "FF9102 base loads (unpack, repack)"),
+    ("aa d2", 32, "all AAD2 abs16 sites"),
+    ("aa d2 70 00", 1, "bset #0 AAD2"),
+    ("aa d2 72 00", 2, "bclr #0 AAD2"),
+    ("aa d2 73 00", 1, "btst #0 AAD2"),
+    ("6a 8c aa d2", 1, "whole-byte store AAD2 (masked)"),
+    ("aa 30 70 40", 1, "bset #4 AA30"),
+    ("aa 30 72 40", 1, "bclr #4 AA30"),
+    ("aa 30 73 40", 0, "no btst #4 @AA30"),
+    ("aa 30 71 40", 0, "no bnot #4 @AA30"),
+    ("aa 30 77 40", 0, "no bld #4 @AA30"),
+    ("6a 8c aa 30", 0, "no whole-byte store AA30"),
+    ("6a 0a aa 30", 4, "whole-byte reads of AA30"),
+    ("6a 8c 89 bb", 2, "abs16 stores of FF89BB"),
+    ("00 ff 89 bb", 2, "abs32 FF89BB: exit handler + step record"),
+    ("81 71", 6, "FF8171 sites"),
+    ("bb e3", 5, "FFBBE3 sites"),
+    ("00 00 7e 2c", 1, "only reader of 0x007E2C"),
+    ("6a 8c bb 70", 9, "abs16 stores of BB70 (0x02C10A + 8 in 0x0730B2-0x073326)"),
+    ("fc 16 ac 0a", 1, "raw 0x16 formed once before the translator compare"),
+]
+
+
+def hx(s):
+    return bytes.fromhex(s.replace(" ", ""))
+
+
+def main():
+    m = open(MAIN, "rb").read()
+    s = open(SUB, "rb").read()
+    rows, bad = [], 0
+    for img, a, b, note in C:
+        buf, off = (m, a) if img == "M" else (s, a - 0xFFC00000)
+        want = hx(b)
+        got = buf[off:off + len(want)]
+        ok = got == want
+        bad += not ok
+        rows.append("%s\t0x%08X\t0x%06X\t%s\t%s\t%s\t%s" % (img, a, off, b, got.hex(" "), "PASS" if ok else "FAIL", note))
+    for pat, n, note in COUNTS:
+        p = hx(pat)
+        cnt, i = 0, 0
+        while True:
+            i = m.find(p, i, 0x80000)
+            if i < 0:
+                break
+            cnt += 1
+            i += 1
+        ok = cnt == n
+        bad += not ok
+        rows.append("M\tcount\t0..0x80000\t%s\t%d\t%s\texpected %d: %s" % (pat, cnt, "PASS" if ok else "FAIL", n, note))
+    hm = hashlib.sha256(m).hexdigest()
+    hs = hashlib.sha256(s).hexdigest()
+    with open(OUT, "w", encoding="utf-8", newline="\n") as h:
+        h.write("# M11 verify: MAIN sha256 %s, SUB sha256 %s\n" % (hm, hs))
+        h.write("img\taddr\tfile_off\texpected\tgot\tresult\tnote\n")
+        h.write("\n".join(rows) + "\n")
+    print("rows %d fail %d main %s sub %s" % (len(rows), bad, hm[:16], hs[:16]))
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

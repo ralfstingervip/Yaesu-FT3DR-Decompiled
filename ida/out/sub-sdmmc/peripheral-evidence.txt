@@ -1,0 +1,146 @@
+# K6 peripheral evidence -- SUB (RX64M) SD/MMC storage driver
+# Every line: mapped address, file offset (= addr - 0xFFC00000), bytes re-read from
+# decrypted\FT3D_SUB_ver102_ALL.bin (asserted equal to the IDA listing), disassembly, note.
+# Register NAMES come from the RX64M register map (part knowledge, Inferred); the
+# addresses, values and bit numbers are Confirmed from the bytes.
+
+== 1. Module stop (sub_FFF36CCA, the only writer of MSTPCRB/C/D in the DB) ==
+  FFF36CD1  file 336CD1  fae9f7010ba5   mov.w #-5AF5h, 3EEh[r14]                 PRCR (0x803FE = 0x80010+0x3EE) <- 0xA50B: unlock
+  FFF36D2F  file 336D2F  fb1e100008     mov.l #80010h, r1                        r1 = 0x80010
+  FFF36D34  file 336D34  a89a           mov.l 0Ch[r1], r2                        r2 = [0x8001C] MSTPCRD
+  FFF36D36  file 336D36  7b32           bclr #13h, r2                            clear bit 19 = MSTPD19 (SDHI)
+  FFF36D38  file 336D38  a09a           mov.l r2, 0Ch[r1]                        write MSTPCRD
+  All 16 module-stop bit operations in sub_FFF36CCA (enumerated from the listing):
+    MSTPCRA 0x80010: clr 13,13,13,19,17,16,28,9,13,15,15,14
+    MSTPCRB 0x80014: clr 31,29,28   (SCI0, SCI2, SCI3 per RX64M map)
+    MSTPCRD 0x8001C: clr 19         (SDHI)    -- the only MSTPCRD bit touched
+    MSTPCRC 0x80018: never addressed (periph_all.tsv, whole DB)
+  RSPI0/RSPI1 (MSTPCRB b17/b18), USB0 (MSTPCRB b19), MMCIF and QSPI are never released.
+  FFF36D8C  file 336D8C  fae9f70103a5   mov.w #-5AFDh, 3EEh[r14]                 PRCR <- 0xA503
+
+== 2. SDHI register window 0x0008AC00-0x0008ADFF ==
+  Coverage-independent byte scan (MOV.L #imm,Rd = FB, li=11 24-bit or li=00 32-bit) over all
+  4,194,304 bytes: 77 hits, 19 distinct SDHI addresses, 75 inside FFF329FA..FFF33ADA;
+  2 outliers at FFDEA76E/FFDEA9C0 decode to 0x8AD75 (odd, not a register; bytes lie in a
+  non-code table region, IDA has no instruction there).
+  IDA const-propagated scan (raw\periph_all.tsv, 2,426 functions, 0 orphan runs):
+    0008AC00 SDCMD       8 accesses  sub_FFF33421
+    0008AC08 SDARG       2 accesses  sub_FFF33421
+    0008AC10 SDSTOP      2 accesses  sub_FFF3320D
+    0008AC14 SDBLKCNT    2 accesses  sub_FFF33200
+    0008AC18 SDRSP10     6 accesses  sub_FFF3355A
+    0008AC20 SDRSP32     2 accesses  sub_FFF3355A
+    0008AC28 SDRSP54     2 accesses  sub_FFF3355A
+    0008AC30 SDRSP76     2 accesses  sub_FFF3355A
+    0008AC38 SDSTS1     18 accesses  sub_FFF32A29 sub_FFF3321C sub_FFF332D1 sub_FFF33421
+    0008AC3C SDSTS2     22 accesses  sub_FFF3312D sub_FFF332D1 sub_FFF33421 sub_FFF3350F sub_FFF33AA7
+    0008AC40 SDIMSK1    19 accesses  sub_FFF329FA sub_FFF332D1 sub_FFF33421
+    0008AC44 SDIMSK2    34 accesses  sub_FFF332D1 sub_FFF33421 sub_FFF337D7 sub_FFF33961
+    0008AC48 SDCLKCR     8 accesses  sub_FFF3312D sub_FFF331E9 sub_FFF33739
+    0008AC4C SDSIZE      2 accesses  sub_FFF331F3
+    0008AC50 SDOPT       8 accesses  sub_FFF33293 sub_FFF33739
+    0008AC60 SDBUFR      4 accesses  sub_FFF3306E sub_FFF330C8 sub_FFF338D7
+    0008ADB0 SDDMAEN    24 accesses  sub_FFF3306E sub_FFF330C8 sub_FFF337D7 sub_FFF33961
+    0008ADC0 SDRST       4 accesses  sub_FFF3326B
+  Never addressed: SDERSTS1/2 (+0x58/+0x5C), SDSWAP, SDVER.
+  Key writes:
+  FFF331B7  file 3331B7  f90a054001     mov.l #140h, 20h+var_C[sp]               SDCLKCR value 0x140 for mode 0 (identification)
+  FFF331BE  file 3331BE  f90a050101     mov.l #101h, 20h+var_C[sp]               SDCLKCR value 0x101 for mode 1 (default speed)
+  FFF331C5  file 3331C5  f90a050001     mov.l #100h, 20h+var_C[sp]               SDCLKCR value 0x100 for mode 2 (high speed)
+  FFF331DD  file 3331DD  e10e05         mov.l 20h+var_C[sp], [r14]               SDCLKCR <- value
+  FFF331EE  file 3331EE  f8ea0002       mov.l #200h, [r14]                       SDCLKCR <- 0x200 (clock stop, slots 1/10)
+  With PCLKB = 48 MHz (12 MHz crystal assumption, docs 02/03/14): div 0x40 -> /256 = 187.5 kHz,
+  0x01 -> /4 = 12 MHz, 0x00 -> /2 = 24 MHz (CLKSEL coding from the RX64M map: Inferred).
+  FFF332A0  file 3332A0  f8eaee40       mov.l #40EEh, [r14]                      SDOPT <- 0x40EE (4-bit bus)
+  FFF332AB  file 3332AB  f8eeeec000     mov.l #0C0EEh, [r14]                     SDOPT <- 0xC0EE (1-bit bus)
+  FFF33448  file 333448  f8ea1d03       mov.l #31Dh, [r14]                       SDIMSK1 <- 0x31D during command issue
+  FFF33451  file 333451  f8ee7f8b00     mov.l #8B7Fh, [r14]                      SDIMSK2 <- 0x8B7F
+  FFF334A3  file 3334A3  7ce1           btst #0Eh, r1                            SDSTS2 bit14 CBSY -> -9
+  FFF3352B  file 33352B  77217f8000     and #807Fh, r1                           SDSTS2 & 0x807F = error bits returned by send_cmd
+  FFF33274  file 333274  f8e600         mov.l #0, [r14]                          SDRST <- 0
+  FFF3327C  file 33327C  f8e601         mov.l #1, [r14]                          SDRST <- 1
+  FFF33228  file 333228  7c51           btst #5, r1                              SDSTS1 bit5 card-detect monitor (slot 2)
+  SDSTS1 readers (whole DB): sub_FFF32A29 (b3,b4), sub_FFF3321C (b5), sub_FFF332D1 (b0,b2),
+  sub_FFF33421 (clear). Bit 7 (write-protect monitor) is never tested; slot 3 is a 0 stub.
+
+== 3. Interrupt vectors (INTB = 0xFFED8A70) ==
+  vector  44 slot FFED8B20 file 2D8B20 bytes a72cf3ff -> FFF32CA7
+  vector 111 slot FFED8C2C file 2D8C2C bytes 992cf3ff -> FFF32C99
+  vector 123 slot FFED8C5C file 2D8C5C bytes fb2df3ff -> FFF32DFB
+  FFF32CAB  file 332CAB  05fc0d00       bsr.a sub_FFF33AA7                       vec 44 handler -> sub_FFF33AA7 (clears SDSTS2 BRE 0x100 / BWE 0x200)
+  FFF32C9D  file 332C9D  058cfdff       bsr.a sub_FFF32A29                       vec 111 handler -> sub_FFF32A29 (SDSTS1 b4 insert / b3 remove; dev+0x58 bit6)
+  FFF32DFF  file 332DFF  05230300       bsr.a sub_FFF33122                       vec 123 handler -> sub_FFF33122 (DMAC3 transfer end)
+== ICU enables / priorities ==
+  FFF32E8B  file 332E8B  f0e4           bset #4, [r14].b                         IER05 (0x87205) bit4 = vector 44 enable
+  FFF32E92  file 332E92  f1e30a         bset #3, 0Ah[r14].b                      IER0F (0x87205+0xA) bit3 = vector 123 enable
+  FFF32DF8  file 332DF8  f0e7           bset #7, [r14].b                         IER0D (0x8720D) bit7 = vector 111 enable
+  FFF32DCF  file 332DCF  f0ef           bclr #7, [r14].b                         IER0D bit7 cleared first
+  FFF32DE9  file 332DE9  72ee6704       add #467h, r14, r14                      r14 = 0x8720D + 0x467 = 0x87674 (GENBL1 per RX64M map)
+  FFF32DEF  file 332DEF  783f           bset #3, r15                             GENBL1 bit3 set (group BL1 source: SDHI card detect, Inferred name)
+  FFF32DDA  file 332DDA  656f           or #6, r15                               IPR at 0x8720D+0x162 = 0x8736F = IPR[111] <- 6
+  FFF32E40  file 332E40  655f           or #5, r15                               IPR at 0x87205+0x127 = 0x8732C = IPR[44] <- 5
+  FFF32E53  file 332E53  782f           bset #2, r15                             IPR at 0x87205+0x176 = 0x8737B = IPR[123] <- 4
+  FFF32E32  file 332E32  fae407022c     mov.b #2Ch, 207h[r14] ; ','              DMRSR3 (0x87205+0x207 = 0x8740C) <- 0x2C = 44: DMAC3 triggered by SDHI vector 44
+  Card-detect mask helpers use a 16-bit RMW at the odd address 0x8720D:
+  FFF329E5  file 3329E5  5cef           movu.w [r14], r15                        
+  FFF329E7  file 3329E7  762fff7f       and #7FFFh, r15                          clears bit15 of the word = 0x8720E bit7 (IER0E, vector 119)
+  FFF329F5  file 3329F5  78ff           bset #0Fh, r15                           sets bit15 = 0x8720E bit7 (vector 119)
+  Little-endian word at 0x8720D: low byte IER0D, high byte IER0E. So sub_FFF329E0/sub_FFF329EE
+  (called around mount/unmount at FFF357A0/FFF357C6/FFF357F1/FFF357FA) toggle IEN for vector
+  119, whose INTB slot is 0 (unused), and rewrite IER0D unchanged; they do NOT mask vector 111.
+  Instruction semantics Confirmed; that this is an unintended bit is Inferred.
+
+== 4. DMAC channel 3 (base 0x820C0; sub_FFF32E09) ==
+  FFF32E10  file 332E10  f8e400         mov.b #0, [r14]                          DMAST (0x82200) <- 0 while configuring
+  FFF32E1B  file 332E1B  3c1c00         mov.b #0, 0Ch[r1]                        DMCNT (0x820DC) <- 0
+  FFF32E62  file 332E62  3d1280         mov.w #-80h, 4[r1]                       DMAMD (0x820D4) <- 0x0080 (uimm8 zero-extended; IDA prints -80h)
+  FFF32E6A  file 332E6A  f8e90192       mov.w #-6DFFh, [r14]                     DMTMD (0x820D0) <- 0x9201: block mode, 32-bit, peripheral trigger
+  FFF32E83  file 332E83  3c1310         mov.b #10h, 3[r1]                        DMINT (0x820D3) <- 0x10 (transfer-end interrupt)
+  FFF32E9A  file 332E9A  f8e401         mov.b #1, [r14]                          DMAST <- 1
+  CORRECTION to doc 13 / storage\sd_interface.tsv: DMAMD is 0x0080, not 0xFF80. The opcode
+  3D 12 80 is MOV.W #uimm8,dsp:5[Rd]; the 8-bit immediate is unsigned. Same IDA display trap
+  at FFF362D6 (3E 00 80 = #0x80, CSD C_SIZE_MULT 5 -> 128).
+
+== 5. Pins (sub_FFF32CBF) ==
+  FFF32D1F  file 332D1F  f1ef18         bclr #7, 18h[r14].b                      PWPR (0x8C107+0x18 = 0x8C11F) B0WI clear
+  FFF32D27  file 332D27  f1e618         bset #6, 18h[r14].b                      PWPR PFSWE set
+  FFF32D39  file 332D39  c7ef76         mov.b r15, 76h[r14]                      P75PFS 0x8C17D <- (x|0x1A)&0xDA = PSEL 0x1A
+  FFF32D4B  file 332D4B  c7ef77         mov.b r15, 77h[r14]                      P76PFS 0x8C17E <- (x|0x1A)&0xDA = PSEL 0x1A
+  FFF32D5D  file 332D5D  c7ef78         mov.b r15, 78h[r14]                      P77PFS 0x8C17F <- (x|0x1A)&0xDA = PSEL 0x1A
+  FFF32D6F  file 332D6F  c7ef79         mov.b r15, 79h[r14]                      P80PFS 0x8C180 <- (x|0x1A)&0xDA = PSEL 0x1A
+  FFF32D81  file 332D81  c7ef7a         mov.b r15, 7Ah[r14]                      P81PFS 0x8C181 <- (x|0x1A)&0xDA = PSEL 0x1A
+  FFF32D93  file 332D93  c7ef9b         mov.b r15, 9Bh[r14]                      PC2PFS 0x8C1A2 <- (x|0x1A)&0xDA = PSEL 0x1A
+  FFF32DA5  file 332DA5  c7ef9c         mov.b r15, 9Ch[r14]                      PC3PFS 0x8C1A3 <- (x|0x1A)&0xDA = PSEL 0x1A
+  FFF32DB7  file 332DB7  c7ef9d         mov.b r15, 9Dh[r14]                      PC4PFS 0x8C1A4 <- (x|0x1A)&0xDA = PSEL 0x1A
+  PMR set: 0x8C067 b5,b6,b7 (P75-P77), 0x8C068 b0,b1 (P80,P81), 0x8C06C b2,b3,b4 (PC2-PC4);
+  DSCR 0x8C0EC b2-b4 (PC2-PC4 high drive); PODR7 0x8C027 b7 set first.
+  PSEL 0x1A on these eight pins is the RX64M SDHI function (CLK/CMD/D0-D3/CD/WP): Inferred
+  from the part datasheet, not from the image.
+
+== 6. Alternatives tested and absent (scope: whole 4 MB image, FB-immediate byte scan +
+   raw 32-bit literal scan; and IDA const-propagated scan over all 2,426 functions) ==
+  RSPI0-2 0x000D0100-0x000D01FF : 0 immediates, 0 literals, 0 accesses; MSTPCRB b17/b18 never cleared
+  MMCIF   0x00088500-0x000885FF : 0 / 0 / 0
+  QSPI    0x00089E00-0x00089EFF : 0 / 0 / 0
+  SCI12   0x0008B300-0x0008B31F : 0 / 0 / 0
+  SCI0/2/3 (0x8A000/0x8A040/0x8A060) are used, but only by sub_FFEDB300/FFEDB4E8/FFEDB8F1/
+  FFEDBD53 (UART drivers, doc 14); SPMR (+0x0D) is never addressed, and no SCI address is
+  touched by any of the 175 functions in the SD driver closure (raw\closure.tsv).
+  Bit-banged SPI: the closure touches PORT/MPC only in sub_FFF32CBF (pin-function setup
+  above); no PODR/PIDR toggling loop exists in the closure.
+
+== 7. USB / DSP / IPC touch of the driver (scope: 175-function forward closure from the
+   vtable slots, the attach entry FFF32C56, registration FFF33AE7, ISRs 44/111/123 and the
+   format entries FFF36999/FFF369F2/FFF368FF) ==
+    block 820xx : 60 accesses
+    block 822xx : 4 accesses
+    block 872xx : 23 accesses
+    block 873xx : 6 accesses
+    block 874xx : 1 accesses
+    block 8ACxx : 141 accesses
+    block 8ADxx : 28 accesses
+    block 8C0xx : 24 accesses
+    block 8C1xx : 34 accesses
+    block FBFxx : 1 accesses
+  USB0 0xA0000-0xA03FF: 0.  USBA 0xD0000-0xD00FF: 0.  SCI (any): 0.  RSPI: 0.  FCU: 0.
+  (0xFBFxx above is a false positive: cmp #0FBFFFh, the 504 MiB threshold at FFF363FE.)

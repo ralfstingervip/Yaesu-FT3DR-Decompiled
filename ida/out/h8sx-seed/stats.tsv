@@ -1,0 +1,25 @@
+metric	MAIN_FULL	G1_H8S	MAIN_H8SX (seed)	note
+processor	h8s300a	h8sxa	h8sxa	inf procname
+segments	ROM 0x000000-0x100000 CODE 32-bit	same	same	single segment in all three
+dword@0 (reset vector)	0x00002092	0x00002092	0x00002092	entry reset_handler 0x2092, nmi_handler 0x267C in all three
+functions (all in 0x000000-0x07B753)	3899	4019	5022	
+function chunk bytes	292504	309282	358600	
+code bytes in content 0x000000-0x07B753	380738	391452	390184	is_code item sizes
+code heads	121773	124926	124103	
+data item bytes in content	5788	6558	21957	+15,552 B are the 3,888 table slots made dwords
+odd-aligned code heads	1501 (3102 B)	1466 (3032 B)	0	H8 instructions are word-aligned
+odd heads inside functions	6	6	0	all in odd-start func 0x06B681
+odd-start functions	1	1	0	0x06B681
+H8SX sites (A+B, sites.tsv) code at planned length	n/a (undecodable)	663/663	663/663	246/246 MOV.L @(d:32,ERs),ERd
+H8SX module 0x075F36-0x078105 non-code bytes	n/a	0	0	of 8,656
+G1 new functions present	-	164/164	164/164	absorbed.tsv kind=new
+G1 removed functions absent	-	44/44	44/44	absorbed.tsv kind=removed
+closed window 0x078106-0x07B753 heads / code bytes	99 / 318	152 / 318	152 / 318	seed window item list identical to G1 (sha1 396479f5...)
+user names	12	14	14	carried over
+comments (all kinds)	0	49	49	carried over
+proved.tsv rows, function at row start (G1: raw rows)	444	438	351	93 rows now start at their table-proven entry instead (92 F1 inside-> moves + 02ACA8->02ACAA)
+proved.tsv rows, row start has incoming xref	0	27	275	
+proved.tsv rows, entry-aware survival	0	27 (strict; entry-aware not measured)	368	function start + incoming xref at the row start or at its table-proven entry (367 measured by h2_xref + 02ACA8->02ACAA moved by the generic pass)
+same, after re-apply + auto analysis (stability run on H2_TEST copy)	-	-	368	fixed point: 0 code bytes, 0 functions changed outside window
+G2 reference (h8s300a, FIN_MAIN_IND, 4,194 rows)	261 strict	-	-	docs\deep\37 / main-banks\survival.txt
+table->target rows applied	-	-	3888 of 4194	306 excluded: table-xrefs-excluded.tsv

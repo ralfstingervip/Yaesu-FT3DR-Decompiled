@@ -1,0 +1,42 @@
+Lane K5 - LOCATION SERVICE (SUB setup label FFC3E7D1, file 0x3E7D1)
+All byte runs below are re-checked by ida\jobs\k5_gen_tables.py (76 checks, last run passed).
+
+VERDICT: Confirmed reachable, ordinary user setting.  Menu path TX/RX > DIGITAL > LOCATION SERVICE.
+MAIN group 2, DIGITAL sub-list, row 1 = screen/row id 0xB5 -> IPC code F325 -> SUB menu_table group 0x16, row 1.
+Settings byte FF8D82 (R3 n=0x62, EEPROM 0xD062), bit 0, default 1 = ON.  Values OFF / ON.
+This corrects doc 14 ("not in any menu category group"): the label is in menu_table group 0x16 = 22 (1-based),
+the 4-row TX/RX>DIGITAL group, which doc 01 already listed.
+
+SUB side (RX64M, little-endian)
+  menu_table entry   FFED74E8 + 8*0x16 = FFED7598 : 04 00 00 00 bd e7 c3 ff  -> 4 rows, labels at FFC3E7BD
+                     row 0 FFC3E7BD DIGITAL POPUP | row 1 FFC3E7D1 LOCATION SERVICE | row 2 FFC3E7E5 STANDBY BEEP | row 3 FFC3E7F9 DIGITAL VW
+  walker sub_FFF0964A FFF09695 fb e2 e8 74 ed ff (mov.l #FFED74E8,r14) ; FFF0969F 75 13 14 (mul #20,row) ; FFF096A2 06 89 e3 01 (add 4[r14].l)
+  code->group  sub_FFF092FC: hi nibble 2 ; FFF09344 75 51 25 2a 07 3c 02 16  (code <= 0x25 -> group 0x16)
+  code->row    sub_FFF09396: hi nibble 2 ; FFF09417.. lo==1 or lo==5 -> row 1          (0x25 -> row 1)
+  store        FFEFEA4B (group 2/0x15-0x17 handler): FFEFEA6A 71 1e dc 61 7e 23 0c (0x24..0x2A) -> 1-byte compare+copy FFEFEAA5 c5 fe 20 20
+  value draw   sub_FFF0104F jump table FFF481F0[5] = dd 00 -> FFF01162 (shared with F329 STANDBY BEEP, F32A DIGITAL VW)
+               FFF01162: frame+0x20 == 0 -> "OFF" FFF486DD ; else "ON" FFF48787 ; cursor icon FFECFDCC
+  Japanese     group-0x16 handler FFF09A75, case row 1 -> FFF09AE6:
+               FFF09AEA fb 42 f7 a5 f4 ff  fb 3e 00 aa 00  (FFF4A5F7, mask 0xAA00) = JIS 304C 4356 3E70 4A73 = 位置情報
+               then FFF4A600 "ON/OFF" at x+0x70  -> displayed "位置情報ON/OFF"
+
+MAIN side (H8SX, big-endian, base 0)
+  row list     group 2 sub-list b (FF8F4F==1): 0x14F24 mov.l #0x1510E,er6 ; jsr sub_3F62E ; cmp.b #4,r3l ; bcs ; mov.b @(0x1516A,er3),r3l
+               0x1516A = b8 b5 c1 b2 | c2 .. d1 d6 d3   -> index 1 = 0xB5 (rows 4..21 are hidden by the cmp #4, see doc 87)
+  notifier     0x782C[0xB5] = 0x5E9B2 : 79 0b f3 25 6a 0b 8d 82 5e 00 97 6a 54 70   (send F325 with [FF8D82] via sub_976A)
+  dial         0x12268[0xB5-0x0E] = 0x5E526 : 7a 06 00 05 e5 32 5e 03 f6 28 54 70 ; record 0x5E532 = 00 01 00 ff 8d 82
+               (sub_3F62E wrapping step 0..1)
+  exit/save    0x148A0 + BE16 0x19A9E[0xB5-0x0E] = 0x19976 : 79 01 00 62 5a 03 cd 1c  (save R3 n=0x62 -> EEPROM 0xD062)
+  default      0xE728 fc 01 6a 8c 8d 82   (ON)
+  readers (all btst #0,@FF8D82 = 6a 10 8d 82 73 00), 15 sites:
+     0x035A46 in sub_35A04 (called 0x03464A/0x0346B4 from the TX/PTT state machine sub_34538): ON and AC0A==0 and DT (B11E) in {0,2} -> jsr sub_5CA34
+     0x035F9A in sub_35F8E (called from main loop sub_2070 at 0x0039F4): same test
+     0x05C622/0x05C6BE in sub_5C602: OFF -> writes 61 5F 30 at FF0208 ; ON and sub_23038 true -> 62 5F 30
+     0x05C888, 0x05CB1C, 0x05CB96, 0x05CC1C, 0x05CD00, 0x05CD86, 0x05CDBC, 0x05CDEC, 0x05CF3C, 0x05CFB2 (0x05Cxxx family)
+     0x06A294 in sub_6A0EE: ON and sub_23038 true -> eepmov 20 B FF9D90 -> FF2F2E, else alternate fill
+  Inferred role: gates whether the radio's own position data is put into the C4FM digital transmission (V/D modes,
+  B11E 0/2) and the position-dependent display; sub_23038 is the shared "position available" test. The exact
+  meaning of the 0x61/0x62 markers is Unknown.  Not part of any DSP config opcode (11/12/1C/32).
+
+Scope: SUB menu_table groups 0..29 decoded from bytes; MAIN 0x782C/0x12268/0x19A9E slots for id 0xB5; MAIN raw scan
+of 0x000000-0x07FFFF for abs16/abs32 forms of FF8D82 (closed window 0x078106-0x07B753 contains none of the hits).

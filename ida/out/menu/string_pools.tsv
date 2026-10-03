@@ -1,0 +1,16 @@
+pool_ea	pool_file	extent	what	encoding	notes
+FFC3DD55	03DD55	23 x 20 bytes	setup category-NAME array, 1-based	ASCII, NUL-padded to 20	slots 1-12 are the 12 shipped categories, 13-20 are blank, 21-23 are the submenu path names TX/RX>MODE, TX/RX>DIGITAL, TX/RX>AUDIO
+FFC3DF35	03DF35	13 bytes	byte table, 3 loads at FFEFE38A FFF08A11 FFF08CA0	binary	sits in slot 24 of the name lattice; values 05 07 05 06 09 05 02 07 06 04 07 06 08; read 1-based it tracks the category name lengths with SCAN the one mismatch; purpose not confirmed
+FFC3DF4D	03DF4D	116 counted + 1 orphan x 20 bytes	setup ITEM-LABEL array, contiguous across all categories	ASCII, NUL-padded to 20	the only pool the walker reads; reached solely via menu_table[cat].labels, there is no direct xref to FFC3DF4D anywhere in the image
+FFC3E871	03E871	packed	standalone WIRES-X strings LOCAL NEWS, UPLOAD, DOWNLOAD, SEARCH & DIRECT	ASCII, NUL-terminated	past the end of the 20-byte lattice; referenced individually from FFF0F9DE, FFF11536, FFF1236E, FFF34CB0 and others
+FFC3DAF3	03DAF3	FFC3DAF3-FFC3DD5F	SQL-type abbreviations, DCS code list, CTCSS tone list	ASCII	SQL abbreviations TN TSQ DCS RTN JR PR PAG DC T-D D-T at FFC3DAF3; the 3-digit DCS code list at FFC3DB13; the CTCSS tone list 67.0 to 254.1 at FFC3DC5B
+FFF483D0	3483D0	about 1.5 KB	GPS module command strings	ASCII	$PMTK313 314 225 286 330 386 301 - the MediaTek MT333x GPS command set, so the GPS is a MediaTek module on a UART
+FFF48554	348554	about 9 KB	English UI value strings for every setup item	ASCII	includes PASSWORD INPUT and ENTRY, Main/Sub/DSP Ver., the tone list, the APRS value lists and MODEL CODE : APY03D
+FFF4A380	34A380	about 1.7 KB	Japanese localised setup labels and values	JIS X 0201 half-width katakana A1-DF, Yaesu pre-composed voiced forms E0-FF, 2-byte JIS X 0208 kanji	the mirror of the English 20-byte table, consumed one string at a time by the per-category localised draw functions
+FFF4A484	34A484	about 0x50	camera setting screen strings	ASCII + katakana	SIZE :, 320*240, 160*120, QUALITY:, SP SEL :, CAMERA, INT SP - all drawn by sub_FFF08201, the OPTION category screen
+FFF4AA16	34AA16	8 bytes	USB followed by KA-ME-RA (camera)	ASCII + JIS X 0201	the Japanese label for the USB CAMERA row, drawn by sub_FFF0A7B9 for item index 0
+FFF4AA3F	34AA3F	9 bytes	RAM followed by 0x493D 0x3C28 = the kanji for display	ASCII + JIS X 0208	the Japanese label for the RAM DISPLAY row, drawn by sub_FFF0A7B9 for item index 4 with attribute 0x0A00 instead of 0
+FFF4AA5C	34AA5C	about 0xE0	status and error message pool	ASCII	COMPLETED, Waiting, Connected, Not Connected, Busy Error, Offline Error, W PROTECT, NO SD CARD, SD CARD FULL, HEAT, FIRM ERROR, EMERGENCY !!, OVERWRITE?, WRITE?
+FFF4ACA8	34ACA8	about 0x90	charger and DSP-write-mode screens	ASCII	Now Charging, --Complete--, Charge Error, No Battery, External DC, then ---DSP WRITE MODE----, Push DISP Key!, Loading..., Complete
+FFF4AD58	34AD58	about 0x70	SD card paths	ASCII	local tree, not in this repo
+FFF4AE75	34AE75	about 0x120	Bluetooth module command protocol	ASCII	4-letter verbs SCAN LINK SCOL TXAT PINF HELL PAIR FIND ERAT RXAT SCOI ERRO plus printf forms SCAN=%d, LINK=%c twelve times, PAIR=%c%c%c%c, PINF=0 followed by twelve %c - an ASCII AT-style protocol over a UART, not USB

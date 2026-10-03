@@ -1,0 +1,48 @@
+###### lin 000150A4 x8
+000150A4  54 70                  rts                                          ; 
+000150A6  6a 0c 8f 51            mov.b   @0xFFFF8F51:16, r4l                  ; a=0xFFFF8F51 R28
+000150AA  ac 04                  cmp.b   #4, r4l                              ; #0x4 R28
+000150AC  45 06                  bcs     locret_150B4:8                       ; a=0x150B4
+000150AE  fc 00                  mov.b   #0, r4l                              ; #0x0 R28
+000150B0  6a 8c 8f 51            mov.b   r4l, @0xFFFF8F51:16                  ; R28 a=0xFFFF8F51
+000150B4  54 70                  rts                                          ; 
+000150B6  ?? 00
+###### lin 00029A20 x36
+00029A20  40 6a                  bra     loc_29A8C:8                          ; a=0x29A8C
+00029A22  6e 0c 00 01            mov.b   @(1:16,er0), r4l                     ; d(R32,+0x0) R28
+00029A26  ac 0d                  cmp.b   #0xD, r4l                            ; #0xD R28
+00029A28  47 4a                  beq     loc_29A74:8                          ; a=0x29A74
+00029A2A  6a 0c 8f 4f            mov.b   @0xFFFF8F4F:16, r4l                  ; a=0xFFFF8F4F R28
+00029A2E  47 30                  beq     loc_29A60:8                          ; a=0x29A60
+00029A30  ac 01                  cmp.b   #1, r4l                              ; #0x1 R28
+00029A32  47 16                  beq     loc_29A4A:8                          ; a=0x29A4A
+00029A34  fb 05                  mov.b   #5, r3l                              ; #0x5 R27
+00029A36  7a 01 00 ff 8f 52      mov.l   #0xFF8F52, er1                       ; #0xFF8F52 R33
+00029A3C  5e 02 c0 30            jsr     loc_2C030:24                         ; a=0x2C030
+00029A40  58 b0 00 a0            bmi     sub_29AE4:16                         ; a=0x29AE4
+00029A44  5e 01 4f 18            jsr     sub_14F18:24                         ; a=0x14F18
+00029A48  40 42                  bra     loc_29A8C:8                          ; a=0x29A8C
+00029A4A  fb 04                  mov.b   #4, r3l                              ; #0x4 R27
+00029A4C  7a 01 00 ff 8f 51      mov.l   #0xFF8F51, er1                       ; #0xFF8F51 R33
+00029A52  5e 02 c0 30            jsr     loc_2C030:24                         ; a=0x2C030
+00029A56  58 b0 00 8a            bmi     sub_29AE4:16                         ; a=0x29AE4
+00029A5A  5e 01 4f 3a            jsr     sub_14F3A:24                         ; a=0x14F3A
+00029A5E  40 2c                  bra     loc_29A8C:8                          ; a=0x29A8C
+00029A60  fb 03                  mov.b   #3, r3l                              ; #0x3 R27
+00029A62  7a 01 00 ff 8f 50      mov.l   #0xFF8F50, er1                       ; #0xFF8F50 R33
+00029A68  5e 02 c0 30            jsr     loc_2C030:24                         ; a=0x2C030
+00029A6C  4b 76                  bmi     sub_29AE4:8                          ; a=0x29AE4
+00029A6E  5e 01 4f 56            jsr     sub_14F56:24                         ; a=0x14F56
+00029A72  40 18                  bra     loc_29A8C:8                          ; a=0x29A8C
+00029A74  6b 04 bb c2            mov.w   @0xFFFFBBC2:16, r4                   ; a=0xFFFFBBC2 R4
+00029A78  79 24 00 08            cmp.w   #8, r4                               ; #0x8 R4
+00029A7C  44 66                  bcc     sub_29AE4:8                          ; a=0x29AE4
+00029A7E  79 34 00 05            .byte 0x79                                   ; #0x5 R4
+00029A82  6a 8c 8f 4f            .byte 0x6A                                   ; R28 a=0xFFFF8F4F
+00029A86  5e 01 4b 7e            .byte 0x5E                                   ; a=0x14B7E
+00029A8A  40 5c                  bra     locret_29AE8:8                       ; a=0x29AE8
+00029A8C  6e 8b 00 01            mov.b   r3l, @(1:16,er0)                     ; R27 d(R32,+0x0)
+00029A90  5e 01 4d b6            jsr     sub_14DB6:24                         ; a=0x14DB6
+00029A94  6a 18 a9 ee 72 70      bclr    #7, @0xFFFFA9EE:16                   ; #0x7 a=0xFFFFA9EE
+###### lin 00015102 x1
+00015102  ?? 00

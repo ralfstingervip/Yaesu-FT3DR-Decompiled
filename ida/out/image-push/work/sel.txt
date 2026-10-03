@@ -1,0 +1,74 @@
+
+;---- func 0x55976..0x559f4  sub_55976
+055976  79 25 01 00                cmp.w   #0x100, r5                             <- 5569a
+05597a  47 42                      beq     loc_559BE:8                            
+05597c  79 25 02 00                cmp.w   #0x200, r5                             
+055980  47 2c                      beq     loc_559AE:8                            
+055982  79 25 03 00                cmp.w   #0x300, r5                             
+055986  47 16                      beq     loc_5599E:8                            
+055988  79 25 04 00                cmp.w   #0x400, r5                             
+05598c  46 64                      bne     locret_559F2:8                         
+05598e  6d f5                      push.w  r5                                     
+055990  7a 05 00 ff 5b 06          mov.l   #0xFF5B06, er5                         
+055996  7a 06 00 ff 58 06          mov.l   #0xFF5806, er6                         
+05599c  40 2e                      bra     loc_559CC:8                            
+05599e  6d f5                      push.w  r5                                     <- 55986
+0559a0  7a 05 00 ff 5a 06          mov.l   #0xFF5A06, er5                         
+0559a6  7a 06 00 ff 5b 06          mov.l   #0xFF5B06, er6                         
+0559ac  40 1e                      bra     loc_559CC:8                            
+0559ae  6d f5                      push.w  r5                                     <- 55980
+0559b0  7a 05 00 ff 59 06          mov.l   #0xFF5906, er5                         
+0559b6  7a 06 00 ff 5a 06          mov.l   #0xFF5A06, er6                         
+0559bc  40 0e                      bra     loc_559CC:8                            
+0559be  6d f5                      push.w  r5                                     <- 5597a
+0559c0  7a 05 00 ff 58 06          mov.l   #0xFF5806, er5                         
+0559c6  7a 06 00 ff 59 06          mov.l   #0xFF5906, er6                         
+0559cc  01 00 6b 86 bc 48          mov.l   er6, @0xFFFFBC48:16                    <- 5599c,559ac,559bc
+0559d2  79 04 01 00                mov.w   #0x100, r4                             
+0559d6  6b 84 bc 3e                mov.w   r4, @0xFFFFBC3E:16                     
+0559da  5e 00 b6 10                jsr     sub_B610:24                            
+0559de  01 00 6b 05 b0 98          mov.l   @0xFFFFB098:16, er5                    
+0559e4  7a 35 00 00 01 00          sub.l   #0x100, er5                            
+0559ea  01 00 6b 85 b0 98          mov.l   er5, @0xFFFFB098:16                    
+0559f0  6d 75                      pop.w   r5                                     
+0559f2  54 70                      rts                                            <- 5598c
+
+;---- func 0x559f4..0x55a24  sub_559F4
+0559f4  01 00 6b 04 b0 98          mov.l   @0xFFFFB098:16, er4                    <- 55612
+0559fa  47 10                      beq     loc_55A0C:8                            
+0559fc  6b 84 bc 3e                mov.w   r4, @0xFFFFBC3E:16                     
+055a00  01 00 6b 05 bc 48          mov.l   @0xFFFFBC48:16, er5                    
+055a06  5e 00 b6 10                jsr     sub_B610:24                            
+055a0a  55 18                      bsr     sub_55A24:8                            
+055a0c  6a 18 bb f2 72 20          bclr    #2, @0xFFFFBBF2:16                     <- 559fa
+055a12  6a 18 bb f1 70 40          bset    #4, @0xFFFFBBF1:16                     
+055a18  5e 00 af 94                jsr     sub_AF94:24                            
+055a1c  fc 02                      mov.b   #2, r4l                                
+055a1e  6a 8c bc 4e                mov.b   r4l, @0xFFFFBC4E:16                    
+055a22  54 70                      rts                                            
+
+;---- func 0x55a24..0x55a2c  sub_55A24
+055a24  7a 04 00 00 4e 20          mov.l   #0x4E20, er4                           <- 55a0a
+055a2a  40 06                      bra     loc_55A32:8                            
+
+;---- func 0x55a2c..0x55a42  sub_55A2C
+055a2c  7a 04 00 00 4e 20          mov.l   #0x4E20, er4                           <- 556a4
+055a32  00 00                      nop                                            <- 55a2a,55a3e
+055a34  00 00                      nop                                            
+055a36  00 00                      nop                                            
+055a38  00 00                      nop                                            
+055a3a  00 00                      nop                                            
+055a3c  1b 74                      dec.l   #1, er4                                
+055a3e  46 f2                      bne     loc_55A32:8                            
+055a40  54 70                      rts                                            
+
+;---- func 0x55a42..0x55a70  sub_55A42
+055a42  fc 02                      mov.b   #2, r4l                                <- 2ac64
+055a44  6a 8c bc 52                mov.b   r4l, @0xFFFFBC52:16                    
+055a48  5e 07 10 d2                jsr     sub_710D2:24                           
+055a4c  fc 0a                      mov.b   #0xA, r4l                              
+055a4e  6a 8c ba a3                mov.b   r4l, @0xFFFFBAA3:16                    
+055a52  6a 18 bb f1 70 10          bset    #1, @0xFFFFBBF1:16                     
+055a58  fc 03                      mov.b   #3, r4l                                
+055a5a  6a 8c bb e1                mov.b   r4l, @0xFFFFBBE1:16                    
+055a5e  6a 18 bb f2 70 20          bset    #2, @0xFFFFBBF2:16                     

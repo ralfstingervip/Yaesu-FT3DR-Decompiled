@@ -1,0 +1,156 @@
+source_doc	line	covered_by_citation_row	disposition_if_not	text
+69-main-final3-seed.md	123	Y		| `0x054D22`–`0x054D4B` | 42 | 0 | 0 | vec-238 EE2F pulse, skipped by `40 2a` at `0x054D20` |
+69-main-final3-seed.md	154	Y		| `0x003284` | write | `mov.b r4l,@0xa9e0:16` (r4l = 1, from `0x003282 fc 01`) |
+69-main-final3-seed.md	155	Y		| `0x003296` | write | `mov.b r4l,@0xa9e0:16` (r4l = 2, from `0x003294 fc 02`) |
+69-main-final3-seed.md	156	Y		| `0x0032BA` | write | `mov.b r4l,@0xa9e0:16` (r4l = 1, from `0x0032B8 fc 01`) |
+70-dERn-dispatchers.md	28	N	encoding/opcode notation with no image address	load (`78 b0 6b 26` MOV.L `@(d:32,ERs),ERd`, and its 16-bit-displacement sibling
+70-dERn-dispatchers.md	29	N	encoding/opcode notation with no image address	`01 00 6f sd` MOV.L `@(d:16,ERs),ERd`) **immediately feeding a `jmp/jsr @ERd`** finds exactly
+70-dERn-dispatchers.md	49	N	encoding/opcode notation with no image address	index. Two encodings: `78 [1sss]0 6b 2d <d32>` (table base ≥ 0x8000) and
+70-dERn-dispatchers.md	50	N	encoding/opcode notation with no image address	`01 00 6f [s][d] <d16>` (base < 0x8000). Both appear in H9's reached stream as
+70-dERn-dispatchers.md	52	Y		(e.g. `0x054FF8 = 78 b0 6b 26 00 05 50 02 59 60`; `0x028D24 = 01 00 6f 16 00 04`).
+70-dERn-dispatchers.md	54	N	continuation of a cited line (checked there)	a `jmp @erD` (`59 d0`) or `jsr @erD` (`5d d0`) within 14 bytes on the same dest register.
+70-dERn-dispatchers.md	72	N	encoding/opcode notation with no image address	root class (not a `78 b0 6b 26` pointer-array load) and are left to I8/I15. Exact lengths of
+70-dERn-dispatchers.md	82	N	encoding/opcode notation with no image address	| d32 load (`78 b0 6b 26`) → jump | 178 | — |
+70-dERn-dispatchers.md	83	N	encoding/opcode notation with no image address	| d16 load (`01 00 6f`) → jump | 10 | — |
+70-dERn-dispatchers.md	102	Y		04E2D6 7a 05 00 04 e3 1e   mov.l #0x4E31E,er5      ; -> its own label string
+70-dERn-dispatchers.md	103	Y		04E2DC 6a 0c bb e9         mov.b @0xFFBBE9:16,r4l   ; sensor state
+70-dERn-dispatchers.md	104	Y		04E2E0 7a 64 00 00 00 ff   and.l #0xFF,er4
+70-dERn-dispatchers.md	105	Y		04E2E6 7a 06 00 ff b0 5a   mov.l #0xFFB05A,er6
+70-dERn-dispatchers.md	107	Y		04E31A 5e 05 27 80         jsr  @0x052780
+70-dERn-dispatchers.md	108	Y		04E31C 54 70               rts
+71-key-dispatch-028cbc.md	35	N	whole-image pattern count -> counts.tsv	1. **Byte scan (Python, offline).** Searched the whole MAIN image for `bb c2`: 88 hits, all
+71-key-dispatch-028cbc.md	37	N	whole-image pattern count -> counts.tsv	(`6b 0X bb c2` into r3/r4) or data; exactly **3 are stores** (`6b 8X bb c2`). `bb c3` has 0
+71-key-dispatch-028cbc.md	47	Y		4. **Cross-checks.** Char map `0x01BE32` read directly (`00 61 62 … 7a` = `a`..`z`). Record
+71-key-dispatch-028cbc.md	59	Y		`0x028CBC 6b 04 bb c2` = `mov.w @0xFFBBC2:16, r4`, then a `cmp.w #k,r4; beq` ladder. The record
+71-key-dispatch-028cbc.md	92	Y		`sub_26F9C` does the same into `0xFFBBC4` (a secondary coordinate/hit). The dword `00 FF BB C2`
+72-main-unreached-functions.md	60	Y		| `0x02A924` | 10 | record-field callback | PROVEN `0x028C20: 7A 01 00 02 8C 2A` (`mov.l #0x28C2A,er1`) then `bra 0x28CBC` (the common record dispatch). Record at `0x028C2A` holds a BE32 code pointer 
+72-main-unreached-functions.md	61	Y		| `0x02A9F4` | 10 | record-field callback | PROVEN `0x028C82: 7A 01 00 02 8C 8A` (`mov.l #0x28C8A,er1`) then `bra 0x28CBC`. Record at `0x028C8A` field **+0x14** = `0x028C9E` = `00 02 A9 F4`. Same stub
+72-main-unreached-functions.md	62	Y		| `0x065EFA` | 6 | switch-case handler | Embedded between proven `0x065EF8 bra→0x65F30` and proven `0x065F0A`. Body `5E 06 5B 66` (`jsr @0x65B66`, proven) `; bra 0x65F30` (proven). Its address is list
+72-main-unreached-functions.md	63	Y		| `0x065F00` | 6 | switch-case handler | `jsr @0x65B86` (proven) `; bra 0x65F30`. Table entry `00 06 5F 00` at `0x02B3DC`. | as above |
+72-main-unreached-functions.md	64	Y		| `0x065F06` | 4 | switch-case handler | `jsr @0x65BA6` (proven) `; bra 0x65F30`. Table entry `00 06 5F 06` at `0x02B3E0`. | as above |
+72-main-unreached-functions.md	89	Y		`0x0455B8: 7A 05 00 04 58 D8`, which is a *data* load, not a call), `0x04E012` `"P-Rate"`, `0x06796A` `"M01\xffM02\xff…"`,
+72-main-unreached-functions.md	91	Y		- Byte-ramp / parameter tables: `0x0376C8` (`11 11 … 12 12`, 152 B monotonic), `0x009B34` (`1C 1D 1E 1F 20`),
+72-main-unreached-functions.md	130	Y		`mov.w #0x5A03`; target `1D 1D … 1E 1E` is a byte ramp, not code), and `0x014C6A` (its BE32 match at `0x01CFD3` is
+73-usb-status-byte0.md	28	N	USB vendor request code, not an image location	"a transfer/session is active" must be announced: the `41 D1` image-push start (`0x055496`), the
+73-usb-status-byte0.md	37	N	USB vendor request code, not an image location	each other and the `41 D1` handler happens to write both (`FF8184=1`, `FF8183=8`), which is the likely
+73-usb-status-byte0.md	55	N	form checked at the 0x054C64/0x054F1E/0x05601E rows	`writers-readers.tsv`. The long-word init forms (`01 00 6b 84 81 84`) were cross-checked against the
+73-usb-status-byte0.md	91	Y		| `0x055496` | 1 | `41 D1` image-push start |
+73-usb-status-byte0.md	111	N	USB vendor request code, not an image location	force `FFA9E5 = 5` (this is how `41 D1` enters the push session — I12 §5 sets `FFA9E3` bit 4);
+74-usb-key14-tone4f.md	1	N	USB vendor request code, not an image location	# 74 — Vendor-USB loose ends: key 0x14 (`41 D3`) and tone event 0x4F (lane J6)
+74-usb-key14-tone4f.md	16	N	USB vendor request code, not an image location	**(1) Key 0x14** is the camera accessory's second button, exposed over USB by vendor request `41 D3`.
+74-usb-key14-tone4f.md	33	Y		the sequencer's accepted-event table at `0x03839C` (`4f 1e 35 5d ff`). It is posted to the event mailbox
+74-usb-key14-tone4f.md	34	N	USB vendor request code, not an image location	`FFAAE0` at exactly one site in the image — `0x05548E`, the USB `41 D1` image-upload-accept handler —
+74-usb-key14-tone4f.md	38	Y		D1 handler sets control-machine state 8; state 8 (`sub_55520`, `0x055520 = 6a 0c aa e8 46 f8`) spins on
+74-usb-key14-tone4f.md	80	Y		00fdfe  fc 14          mov.b #0x14, r4l
+74-usb-key14-tone4f.md	81	Y		00fe00  6a 8c a9 ed    mov.b r4l, @FFA9ED     ; inject raw key code 0x14
+74-usb-key14-tone4f.md	85	N	whole-image pattern count -> counts.tsv	`0x14` injector: `0x00FDFE`. (Scope: every `6a 8r a9 ed` store and every `fc 14` within 8 bytes of an
+74-usb-key14-tone4f.md	86	N	whole-image pattern count -> counts.tsv	`a9 ed` store, whole image.) The remote button has no physical matrix position; `0x14` can only arrive
+74-usb-key14-tone4f.md	87	N	USB vendor request code, not an image location	from the USB `41 D3` request. **Correction to I12 §7:** the dispatched key index is not `0x14` itself —
+74-usb-key14-tone4f.md	151	Y		05548e  fc 4f 6a 8c aa e0   D1-accept: FFAAE0 = 0x4F     (ONLY 0x4F poster in the image)
+74-usb-key14-tone4f.md	152	Y		05549c  fc 08 6a 8c 81 83   D1-accept: control state FF8183 = 8
+74-usb-key14-tone4f.md	154	Y		03835e  6a 0a aa e0         r2l = FFAAE0 (event)
+74-usb-key14-tone4f.md	158	Y		038674  fc 00 6a 8c aa e8   script terminator (0x25) reached -> FFAAE8 := 0   (also 0x038762)
+74-usb-key14-tone4f.md	160	Y		055520  6a 0c aa e8 46 f8   while FFAAE8 != 0: return without sending status ZLP (host NAKed)
+74-usb-key14-tone4f.md	161	Y		055526  fc 09 ...           FFAAE8 == 0: arm EP0 status ZLP, advance to state 9 (UPLOAD)
+74-usb-key14-tone4f.md	178	N	USB vendor request code, not an image location	- **Q1 (everything USB).** Closes three of I12's open items. `41 D3`/key 0x14 is a remote shutter-style
+74-usb-key14-tone4f.md	180	N	USB vendor request code, not an image location	no new hardware (SD + LCD only). `41 D1`'s deferred status stage is a self-imposed wait for a
+75-usb-registers-ram.md	66	Y		054c7c  fc 00            mov.b #0,   r4l
+75-usb-registers-ram.md	67	Y		054c7e  6a 8c ee 08      mov.b r4l,  @0xFFEE08      ; ISR0 = 0x00
+75-usb-registers-ram.md	68	Y		054c82  fc 07            mov.b #7,   r4l
+75-usb-registers-ram.md	69	Y		054c84  6a 8c ee 09      mov.b r4l,  @0xFFEE09      ; ISR1 = 0x07
+75-usb-registers-ram.md	70	Y		054c88  fc 1f            mov.b #0x1F, r4l
+75-usb-registers-ram.md	71	Y		054c8a  6a 8c ee 0a      mov.b r4l,  @0xFFEE0A      ; ISR2 = 0x1F
+75-usb-registers-ram.md	72	Y		054c8e  00 00  (x3 nop)
+75-usb-registers-ram.md	73	Y		054c94  fc 8d            mov.b #0x8D, r4l
+75-usb-registers-ram.md	74	Y		054c96  6a 8c ee 04      mov.b r4l,  @0xFFEE04      ; IER0 = 0x8D
+75-usb-registers-ram.md	75	Y		054c9a  fc 03 ...        mov.b #3  -> @0xFFEE05     ; IER1 = 0x03
+75-usb-registers-ram.md	76	Y		054ca0  fc 18 ...        mov.b #0x18 -> @0xFFEE06   ; IER2 = 0x18
+75-usb-registers-ram.md	77	Y		054ca6  6a 18 ee 2d 70 20  bset #2, @0xFFEE2D       ; module enable
+75-usb-registers-ram.md	99	Y		054d1e  46 2c   bne loc_54D4C      ; both paths jump past the block
+75-usb-registers-ram.md	100	Y		054d20  40 2a   bra loc_54D4C
+75-usb-registers-ram.md	101	Y		054d22  fc 08 / 6a 8c ee 2f   mov.b #8 -> @0xFFEE2F   ; <-- 8
+75-usb-registers-ram.md	103	Y		054d46  fc 00 / 6a 8c ee 2f   mov.b #0 -> @0xFFEE2F   ; <-- 0
+76-dsp-tpu-tick.md	28	Y		The exact divider is **φ/4**. Vector 110 (file offset `0x1B8`, bytes `00 00 2a 30`)
+76-dsp-tpu-tick.md	67	Y		002482  fc 21 6a 8c fe f0        mov.b #0x21,r4l ; mov.b r4l,@0xFFFEF0:16   TCR  = 0x21
+76-dsp-tpu-tick.md	68	Y		002488  fc c0 6a 8c fe f1        mov.b #0xC0,r4l ; mov.b r4l,@0xFFFEF1:16   TMDR = 0xC0
+76-dsp-tpu-tick.md	69	Y		00248E  fc 00 6a 8c fe f2        mov.b #0,r4l    ; mov.b r4l,@0xFFFEF2:16   TIOR = 0x00
+76-dsp-tpu-tick.md	70	Y		002494  fc 41 6a 8c fe f4        mov.b #0x41,r4l ; mov.b r4l,@0xFFFEF4:16   TIER = 0x41
+76-dsp-tpu-tick.md	71	Y		00249A  79 04 00 00 6b 84 fe f6  mov.w #0,r4     ; mov.w r4,@0xFFFEF6:16    TCNT = 0
+76-dsp-tpu-tick.md	72	Y		0024A2  79 04 4e 20 6b 84 fe f8  mov.w #0x4E20,r4; mov.w r4,@0xFFFEF8:16    TGRA = 0x4E20
+76-dsp-tpu-tick.md	73	Y		0024AA  fc 20 3c bc              mov.b #0x20,r4l ; mov.b r4l,@0xFFBC:8      TSTR = 0x20
+76-dsp-tpu-tick.md	74	Y		0024AE  fc 00 3c bd              mov.b #0,r4l    ; mov.b r4l,@0xFFBD:8      TSYR = 0x00
+76-dsp-tpu-tick.md	93	Y		**Uniqueness.** The store `6a 8c fe f0` (TCR5) occurs exactly once in the whole image
+76-dsp-tpu-tick.md	94	Y		(`0x002484`); `79 04 4e 20` (TGRA = 20000) occurs exactly once as an instruction
+76-dsp-tpu-tick.md	117	Y		0001B8  00 00 2a 30     -> 0x002A30
+76-dsp-tpu-tick.md	123	Y		002A32  6a 18 fe f5 72 00   bclr #0,@0xFFFEF5     ; TSR.TGFA acknowledge (TPU5)
+76-dsp-tpu-tick.md	124	Y		002A38  6a 0c 94 b8 47 06 1a 0c 6a 8c 94 b8   if (FF94B8) FF94B8--
+76-dsp-tpu-tick.md	126	Y		002A5A  56 70               rts
+76-dsp-tpu-tick.md	134	Y		from the main loop (`0x0030B8: 5e 05 62 72 = jsr @0x056272`). The 5 ms interrupt only
+76-dsp-tpu-tick.md	143	Y		0022F6  fc 00 3c f0     mov.b #0,r4l ; mov.b r4l,@0xFFF0:8   TCR(0xFFFFF0) = 0x00
+76-dsp-tpu-tick.md	144	Y		0022FA  fc c0 3c f1     TMDR = 0xC0
+76-dsp-tpu-tick.md	145	Y		002304  fc 40 3c f4     TIER = 0x40   (TGIEA clear -> no interrupt; polled)
+76-dsp-tpu-tick.md	152	Y		05B8A0  7e bc 73 30             btst #3,@0xFFFFBC            ; is TPU3 running?
+76-dsp-tpu-tick.md	153	Y		05B8A4  47 20                   beq  (start it)
+76-dsp-tpu-tick.md	154	Y		05B8A6  2c f5                   mov.b @0xFFFFF5:8,r4l        ; TSR
+76-dsp-tpu-tick.md	155	Y		05B8A8  6b 0c ff f6             mov.w @0xFFFFF6:16,r4        ; TCNT
+76-dsp-tpu-tick.md	156	Y		05B8AC  79 2c 89 80             cmp.w #0x8980,r4             ; >= 35200 ?
+76-dsp-tpu-tick.md	157	Y		05B8B0  44 06 ...               (branch on carry)
+76-dsp-tpu-tick.md	158	Y		05B8B2  73 4c                   btst #4,r4l                 ; TSR.TCIV overflow backstop
+77-dsp-tx-sources.md	92	Y		| `B0CC.b0` set | `0x15` (table `05C40A`, `1C 03`) | `sub_5A2F8` (`0x0359C8`) | the B0CC.b0 mode (tone/analog carrier path) |
+77-dsp-tx-sources.md	113	N	encoding/opcode notation with no image address	carrier/tone TX path (`1C 03`).
+77-dsp-tx-sources.md	130	N	encoding/opcode notation with no image address	radio-ID list editor**; pushes `15 01` / `15 11` (needs DSP ≥ `0x041E`).
+77-dsp-tx-sources.md	155	Y		| [15..26] | ROM `0x00F9A8` | `eepmov` 12 B | `39 2a 2a 00 28 04 30 60 3f 6f 19 19` |
+77-dsp-tx-sources.md	235	N	encoding/opcode notation with no image address	4. **`B0CC` byte semantics.** `B0CC.b0` selects the `0x15`/`1C 03` session; decode the full `B0CC`
+78-sub-merge-dead.md	95	Y		`FFF13DEC 3e 01 00` mov.l #0,… — not a stop — into `FFF13DEF`. `FFF13DEF` ends at
+78-sub-merge-dead.md	96	Y		`FFF13EE8 2a 19` bgt.b `FFF13F01`, a conditional branch that falls through into `FFF13EEA`.
+78-sub-merge-dead.md	97	Y		`FFF13EEA` ends at `FFF13EFF 2e 17` bra.b `FFF13F16`. So the three are one dead routine, owner
+78-sub-merge-dead.md	106	Y		- **`FFEF0609`→`FFEF05DD` (jump, root dead).** `FFEF05DD` ends `FFEF05E9 2e 53` bra.b `FFEF063C`,
+78-sub-merge-dead.md	109	Y		one of I10's 52) calls `FFF2A70B` by `FFF2A6F7 39 14 00` bsr.w. `FFF2A70B` has that single call
+78-sub-merge-dead.md	147	N	encoding/opcode notation with no image address	instance of I17's flagged-dead principle that I10 did not enumerate (it is not a bare `71 00`
+78-sub-merge-dead.md	157	Y		RAM control block** sibling (`0x12D44`, the block H10 identified; e.g. `FFEDC459 fb e2 44 2d 01 00`
+78-sub-merge-dead.md	158	Y		mov.l #12D44h,r14 then `fa e5 7c 4f 00` mov.w #0,9EF8h[r14]) and tail-calls `sub_FFEDD355` with
+78-sub-merge-dead.md	162	Y		`#0x83812` (mov.w #0 — a DMAC/system-area register), `#0x8C100` (`f0 e1` bset #1,[r14].b — an I/O
+81-ledger-reverify.md	44	Y		0x055684 `6a 0c ee 10` (I1), 0x0554A4 `7a 04 00 ff 58 06` (I1), 0x054C1C
+81-ledger-reverify.md	45	Y		`24 28 80 00 02` (I12), 0x056B58 `6a 0b b1 02` (I4), 0x05F4B0 `7a 04 00 ff 50 06`
+81-ledger-reverify.md	46	Y		(I11), 0x028D0C `01 00 6f 16 00 00 5d 60` (I9), 0x00326A `01 00 6f 36 32 72 59 60`
+81-ledger-reverify.md	48	Y		`5b f0 f0 ff`, 0xFFF0F05B `60 40 60 40 f8 05`, 0xFFEDFFFD `fb e2 d4 cd 01 00`,
+81-ledger-reverify.md	49	Y		0xFFF4A4E6 `43 6f 6e 6e 65 63 74 65 64 00` ("Connected\0") (I2).
+81-ledger-reverify.md	52	N	continuation of a cited line (checked there)	er1 edge, "`0x0178F0 → 0x015224` (*verified* `5d 10`)", binds `5d 10` (jsr @er1)
+81-ledger-reverify.md	53	Y		to **0x015224**; **0x0178F0** holds `7a 01 00 01 a0 84` (mov.l #0x1a084,er1). The
+81-ledger-reverify.md	118	Y		EP1 bulk-OUT image-push loop (0x055684 `6a 0c ee 10`, base 0x05567E
+81-ledger-reverify.md	119	Y		`7a 15 00 ff 58 06`, I1), vendor request plumbing (0x0554A4, 0x055520
+81-ledger-reverify.md	120	N	continuation of a cited line (checked there)	`6a 0c aa e8 46 f8`, I12), the configured bulk-IN EP2 (0x054C1C `24 28 80 00 02`,
+82-eeprom-verify.md	49	N	whole-image pattern count -> counts.tsv	reference `0x3C668`: `jsr @aa:24` (`5e 03 c6 68`), `jmp @aa:24` (`5a 03 c6 68`),
+82-eeprom-verify.md	50	N	whole-image pattern count -> counts.tsv	and a BE32 pointer (`00 03 c6 68`). All three = 0 hits.
+82-eeprom-verify.md	65	Y		- `0x3BDB4` `6a 18 fb a4 70 00` → `bset #0,@0xFFFBA4` — SDA drive (bit 0).
+82-eeprom-verify.md	68	Y		- `0x3BE4E` `6a 10 fb a0` → `bld #0,@0xFFFBA0` — SDA sense (input).
+82-eeprom-verify.md	69	Y		- `0x3BE84` `6a 8a fb a8` → `mov.b r2l,@0xFFFBA8` — output latch.
+82-eeprom-verify.md	70	Y		- `0x3C3E2` `6a 18 fb a4 67 00` → `bst #0,@0xFFFBA4` — shift carry out onto SDA in
+82-eeprom-verify.md	73	Y		Device bytes: `0x3C3AC` `fd a2` (`mov.b #0xA2` write) and `0x3BE1C` `fd a3`
+82-eeprom-verify.md	90	Y		- `0xFF5C` bit 7 — chip-select/enable: `0x33536` `7f 5c 72 70` `bclr #7` (assert),
+82-eeprom-verify.md	91	Y		`0x335BC` `7f 5c 70 70` `bset #7` (release).
+82-eeprom-verify.md	93	Y		data-out bit 0 (`0x33554` `7f 5a 67 00` `bst #0`).
+82-eeprom-verify.md	94	Y		- `0xFF4A` bit 0 — data-in: `0x335A4` `7e 4a 77 00` `bld #0` → `rotxl.w r3`.
+82-eeprom-verify.md	96	Y		(`0x33580`/`0x335D0` `6a 8c fb 8a`).
+82-eeprom-verify.md	104	Y		Callers (IDA `XrefsTo`, exactly two): `0x77DB2` `5e 03 35 32` is **not inside any
+82-eeprom-verify.md	106	Y		`0x77DF6` `5e 03 35 32` is inside `sub_77DB8`, which has 9 code xrefs → live, as
+82-eeprom-verify.md	115	Y		05E96A 6a 04 8d d8   mov.b @0xFF8DD8,r4h
+82-eeprom-verify.md	116	Y		05E96E 6a 0c 8d d9   mov.b @0xFF8DD9,r4l
+82-eeprom-verify.md	117	Y		05E972 0d 4c         mov.w r4,e4            ; er4 high word = {8DD8,8DD9}
+82-eeprom-verify.md	118	Y		05E974 6a 10 8e a0 73 60  btst #6,@0xFF8EA0 ; RX/TX select
+82-eeprom-verify.md	119	Y		05E97A 47 0a         beq  0x5E986
+82-eeprom-verify.md	120	Y		05E97C 6a 04 8e d8   mov.b @0xFF8ED8,r4h    ; TX DG-ID working word
+82-eeprom-verify.md	121	Y		05E980 6a 0c 8e d9   mov.b @0xFF8ED9,r4l
+82-eeprom-verify.md	122	Y		05E984 40 08         bra  0x5E98E
+82-eeprom-verify.md	123	Y		05E986 6a 04 8e d6   mov.b @0xFF8ED6,r4h    ; RX DG-ID working word
+82-eeprom-verify.md	124	Y		05E98A 6a 0c 8e d7   mov.b @0xFF8ED7,r4l
+82-eeprom-verify.md	125	Y		05E98E 01 00 6b 84 b0 5a  mov.l er4,@0xFFB05A ; packed 32-bit store
+82-eeprom-verify.md	126	Y		05E994 79 0b f3 65   mov.w #0xF365,e3
+82-eeprom-verify.md	127	Y		05E998 5e 00 99 22   jsr  sub_9922          ; format/emit with id 0xF365
+82-eeprom-verify.md	147	N	whole-image pattern count -> counts.tsv	The byte scan over the full 1 MB image finds **0** of `5e 03 c6 68` (jsr),
+82-eeprom-verify.md	148	N	whole-image pattern count -> counts.tsv	`5a 03 c6 68` (jmp) and `00 03 c6 68` (BE32 pointer). No external call, no data
+RESUME-FULL.md	100	Y		Key `0x14` = the camera accessory's **remote-shutter button** (vendor `41 D3` →
+RESUME-FULL.md	104	N	USB vendor request code, not an image location	**"upload started" beep** (posted only by the `41 D1` handler at `0x05548E`);
+RESUME-FULL.md	123	N	continuation of a cited line (checked there)	`00 00 2a 30`. **Corrects H15**: no φ/8→10 ms (φ/8 is not a TPU clock value); tiers
+RESUME-FULL.md	166	Y		(`0xFFFBA0/A4/A8`, device bytes `fd a2`/`fd a3`, 17-bit addressing of a >64 KB
+RESUME-FULL.md	200	N	USB vendor request code, not an image location	(`41 D3` → key index `0x0B`) opens the last photo; no new endpoint; the only bulk-IN

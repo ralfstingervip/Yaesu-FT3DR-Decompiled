@@ -1,0 +1,91 @@
+### dis FFEDC9A8-FFEDC9B8 
+FFEDC9A8  21 c0 08                              mov.l   #8C021h, r14
+FFEDC9AB  f0 ed                                 bclr    #5, [r14].b
+FFEDC9AD  fb ee 22 c0 08                        mov.l   #8C022h, r14
+FFEDC9B2  f0 ea                                 bclr    #2, [r14].b
+FFEDC9B4  fb ee 28 c0 08                        mov.l   #8C028h, r14
+
+### dis FFF36F78-FFF36FBC 
+FFF36F78  e4 60 00                              mov.b   #0, 60h[r14]
+FFF36F7B  fb ee 22 c0 08                        mov.l   #8C022h, r14
+FFF36F80  f8 e4 00                              mov.b   #0, [r14]
+FFF36F83  fb ee 02 c0 08                        mov.l   #8C002h, r14
+FFF36F88  f0 e0                                 bset    #0, [r14].b
+FFF36F8A  fb ee 02 c0 08                        mov.l   #8C002h, r14
+FFF36F8F  f0 e9                                 bclr    #1, [r14].b
+FFF36F91  fb ee 02 c0 08                        mov.l   #8C002h, r14
+FFF36F96  f0 ea                                 bclr    #2, [r14].b
+FFF36F98  fb ee 02 c0 08                        mov.l   #8C002h, r14
+FFF36F9D  f0 e3                                 bset    #3, [r14].b
+FFF36F9F  fb ee 02 c0 08                        mov.l   #8C002h, r14
+FFF36FA4  f0 e4                                 bset    #4, [r14].b
+FFF36FA6  fb ee 02 c0 08                        mov.l   #8C002h, r14
+FFF36FAB  f0 ed                                 bclr    #5, [r14].b
+FFF36FAD  fb ee 02 c0 08                        mov.l   #8C002h, r14
+FFF36FB2  f0 e6                                 bset    #6, [r14].b
+FFF36FB4  fb ee 02 c0 08                        mov.l   #8C002h, r14
+FFF36FB9  f0 ef                                 bclr    #7, [r14].b
+FFF36FBB  fb ee 62 c0 08                        mov.l   #8C062h, r14
+
+### dis FFF373D4-FFF373E4 
+FFF373D4  ee 62 c0 08                           mov.l   #8C062h, r14
+FFF373D8  f0 e3                                 bset    #3, [r14].b
+FFF373DA  fb ee 02 c0 08                        mov.l   #8C002h, r14
+FFF373DF  f0 e2                                 bset    #2, [r14].b
+FFF373E1  fb ee 08 c0 08                        mov.l   #8C008h, r14
+
+### dis FFF396B4-FFF396C4 
+FFF396B4  06 00                                 mov.l   #683B4h, r14
+FFF396B6  e1 0e 01                              mov.l   8+var_4[sp], [r14]
+FFF396B9  fb ee 22 c0 08                        mov.l   #8C022h, r14
+FFF396BE  f0 e2                                 bset    #2, [r14].b
+FFF396C0  fb e2 a8 83 06 00                     mov.l   #683A8h, r14
+
+### dis FFF396F4-FFF39700 
+FFF396F4  ff ff                                 mov.w   #-1, 4+var_4[sp]
+FFF396F6  2e 6d                                 bra.b   loc_FFF39763
+FFF396F8  fb ee 22 c0 08                        mov.l   #8C022h, r14
+FFF396FD  f0 ea                                 bclr    #2, [r14].b
+FFF396FF  fb ee 28 c0 08                        mov.l   #8C028h, r14
+
+### dis FFF39E0C-FFF39E1A 
+FFF39E0C  fd                                    bsr.a   sub_FFF158F0
+FFF39E0D  05 1e b4 fd                           bsr.a   sub_FFF1522B
+FFF39E11  fb ee 22 c0 08                        mov.l   #8C022h, r14
+FFF39E16  f0 ec                                 bclr    #4, [r14].b
+FFF39E18  d4 00 01                              mov.w   0Ch+var_C[sp], 0Ch+var_A[sp]
+
+### callers FFF3B115
+FFF3B74C  t17  sub_FFF3B69B@FFF3B69B    bsr.w   sub_FFF3B115
+
+### xref 12530
+
+### xref 1252C
+
+### dis FFF159DF-FFF15A20 
+FFF159DF  60 80                                 sub     #8, sp
+FFF159E1  a0 09                                 mov.l   r1, 8+var_4[sp]
+FFF159E3  fb 12 0a 25 01 00                     mov.l   #1250Ah, r1
+FFF159E9  b8 19                                 movu.w  2[r1], r1
+FFF159EB  61 11                                 cmp     #1, r1
+FFF159ED  20 0d                                 beq.b   loc_FFF159FA
+FFF159EF  fb 12 0a 25 01 00                     mov.l   #1250Ah, r1
+FFF159F5  b8 91                                 movu.w  4[r1], r1
+FFF159F7  61 11                                 cmp     #1, r1
+FFF159F9  1d                                    bne.s   loc_FFF159FE
+FFF159FA  f8 06 01                              mov.l   #1, 8+var_8[sp]
+FFF159FD  0c                                    bra.s   loc_FFF15A01
+FFF159FE  f8 06 00                              mov.l   #0, 8+var_8[sp]
+FFF15A01  ec 01                                 mov.l   8+var_8[sp], r1
+FFF15A03  61 01                                 cmp     #0, r1
+FFF15A05  a8 09                                 mov.l   8+var_4[sp], r1
+FFF15A07  20 0c                                 beq.b   loc_FFF15A13
+FFF15A09  fb e2 10 25 01 00                     mov.l   #12510h, r14
+FFF15A0F  d0 e1                                 mov.w   [r14], [r1]
+FFF15A11  67 02                                 rtsd    #2
+FFF15A13  f8 15 00                              mov.w   #0, [r1]
+FFF15A16  67 02                                 rtsd    #2
+FFF15A18  6e ef                                 pushm   r14-r15
+FFF15A1A  6e 15                                 pushm   r1-r5
+FFF15A1C  71 00 e8                              add     #-18h, sp, sp
+FFF15A1F  3c 87 00                              mov.b   #0, 18h+var_1[sp]

@@ -1,0 +1,15 @@
+opcode	length	ack	assembler_0x05683E	dispatcher_0x056A94	handler_or_state	meaning	label
+86-8F,91-99,9B,9D,A1-A5,AC-B5 (normal mode)	32	ACK	accepted (0x86<=op<0xBC)	reaches handler table; state 0 returns; any other state resets to 0	none	no consumer in normal mode	Confirmed (no handler compares these values)
+90	32	-	accepted	not dispatched	0x0569E4 B0A4 b6 clr, b4 set	NAK from DSP	Confirmed (H15)
+A0	32	-	accepted	not dispatched	0x0569F4 B0A4 b6 clr, b5 set	ACK from DSP	Confirmed (H15)
+9F	32	ACK unless it answers a command	only opcode accepted before version known	dispatched when unsolicited	0x056A04 B0DC=rx[1]<<8 or rx[2]	DSP version	Confirmed (H15)
+9A	32	-	accepted	not dispatched when [8DDE]!=0	B3D5 b0	host-link pacing	Confirmed (H15)
+9C	32	ACK	accepted	dispatched; state 0 ignores; other states reset (state 19 ignores it in host-link mode)	B12D b0	vendor trace "DSP>CPU: DATA TEXT SET" (0x05AF34)	Confirmed
+9E	32	ACK	accepted	dispatched	B12D b7	vendor trace "DSP>CPU: TERM TX" (0x05AF4C)	Confirmed
+A6 / B6	32	none	accepted	band gate 0x05DA00	states 0,3,9,15,19,24	CSD1: FICH rx[1..4], rx[5..6], dest callsign rx[7..16], source callsign rx[17..26]; A = band A, B = band B	layout Confirmed (trace 0x05A8CE prints 1+6 hex then 10+10 text); band mapping Inferred
+A7 / B7	32	none	accepted	gate 0x05D9E6	states 1,4,7,10,13,16,20,22,25	CSD2: downlink ID rx[7..16], uplink ID rx[17..26]	layout Confirmed; naming Inferred (C4FM CSD2)
+A8 / B8	32	none	accepted	gate 0x05D9E6	states 2,5,8,11,14,17,21,23,26	CSD3: 15 text bytes rx[7..21] + 5-byte radio ID rx[22..26]	layout Confirmed (trace 0x05A948 prints 15+5 text)
+A9 / B9	32	none	accepted	gate 0x05D9E6	states 6 (DT0) and 18 (DT1)	data-channel block, 20 B payload rx[7..26], rx[5] frame no./count	Confirmed
+AA / BA	32	none	accepted	gate 0x05D9E6	state 12 (DT2)	data-channel block, 10 B payload rx[7..16]	Confirmed
+AB / BB	32	none	sets B115 b0/b1 and timers 957C/958D=25	gate; B0C6=2, B111=0, B113=0, then table	no state matches: state 0 returns, others reset	vendor trace "DSP>CPU: TERM RX" (0x05AF5E): terminator received	Confirmed
+AC / AD / AE (host-link mode)	32	none	accepted	diverted to sub_06C402 when [8DDE]!=0	codec relay	vocoder bits 9/13/18 B per frame	Confirmed (H15)

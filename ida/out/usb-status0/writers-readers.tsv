@@ -1,0 +1,33 @@
+cell	ea	dir	instruction	value/role	function/context	status
+FF8184	0393DC	W	mov.b r3l,@0xFF8184	r3l in {0,1} computed from audio routing/RX/TX	sub_391C0 (audio-path machine body); PRIMARY writer	Confirmed
+FF8184	039462	W	mov.b r4l,@0xFF8184	=1	sub_39454 (FFA9E5 state 5 handler = camera/push session start)	Confirmed
+FF8184	054C64	W	mov.l er4,@0xFF8184	er4=0x0100FFFF -> FF8184=1,FF8185=0,FF8186=FFFF	sub_54C44 cold-boot vendor init	Confirmed
+FF8184	054F1C	W	mov.l er4,@0xFF8184	=0x0100FFFF	ISR vec235 VBUS-gone soft reset	Confirmed
+FF8184	055496	W	mov.b r4l,@0xFF8184	=1	D1 start-image handler (also sets FF8183=8)	Confirmed
+FF8184	0557A4	W	mov.b r4l,@0xFF8184	=1	sub_557A2 settings-refresh EP3 builder (forces byte0=1)	Confirmed
+FF8184	05601C	W	mov.l er4,@0xFF8184	=0x0100FFFF	selector=1 / soft-reset path near 0x056000	Confirmed
+FF8184	05520A	R	mov.b @0xFF8184,r4l	-> EPDR3 (EE18): byte 0 onto the wire	state 6 EP3 builder	Confirmed
+FF8184	055336	R	mov.b @0xFF8184,r4l	-> EPDR3: byte 0 onto the wire	state 7/10 EP3 builder	Confirmed
+FF8184	0557D8	R	mov.b @0xFF8184,r4l	-> EPDR3: byte 0 onto the wire	sub_557A2 EP3 builder	Confirmed
+FF8184	0551DA	R	mov.w @0xFF8184,r4	byte0+FF8185 shadow (compare)	state-4 ZLP-latch handler	Confirmed
+FF8184	055306	R	mov.w @0xFF8184,r4	byte0+shadow compare (send-on-change)	state 7/10 EP3 builder precheck	Confirmed
+FF8184	0557A8	R	mov.w @0xFF8184,r4	byte0+shadow compare (send-on-change)	sub_557A2 EP3 builder precheck	Confirmed
+FF8184	054F4E	R	mov.b @0xFF8184,r4l	-> EPDR3 (dead)	UNREACHABLE block 0x054F3A (I12); never executes	Confirmed
+FF8183	054C52	W	mov.b r4l,@0xFF8183	=0 (init)	sub_54C44 vendor init	Confirmed
+FF8183	054EF0	W	mov.b r4l,@0xFF8183	control state	ISR vec235 / reset	Confirmed
+FF8183	054F0A	W	mov.b r4l,@0xFF8183	control state	ISR vec235	Confirmed
+FF8183	05503E	W	mov.b r4l,@0xFF8183	control state	SETUP handler	Confirmed
+FF8183	055160	W	mov.b r4l,@0xFF8183	control state	descriptor handler	Confirmed
+FF8183	0551A6	W	mov.b r4l,@0xFF8183	control state	state-latch handler	Confirmed
+FF8183	0551BC	W	mov.b r4l,@0xFF8183	control state	state-latch handler	Confirmed
+FF8183	0551D4	W	mov.b r4l,@0xFF8183	control state	state-latch handler	Confirmed
+FF8183	05549C	W	mov.b r4l,@0xFF8183	control state (=8, UPLOAD)	D1 handler	Confirmed
+FF8183	0554C6	W	mov.b r4l,@0xFF8183	control state (=11, SINK)	D1-refuse handler	Confirmed
+FF8183	0554FE	W	mov.b r4l,@0xFF8183	control state	D3 handler	Confirmed
+FF8183	055534	W	mov.b r4l,@0xFF8183	control state	EP1 data state	Confirmed
+FF8183	055632	W	mov.b r4l,@0xFF8183	control state	D2 handler	Confirmed
+FF8183	055782	W	mov.b r4l,@0xFF8183	control state	D2 (SINK) handler	Confirmed
+FF8183	05600A	W	mov.b r4l,@0xFF8183	control state	selector=1 / soft reset	Confirmed
+FF8183	054E30	R	mov.b @0xFF8183,r4l	tests state==4 for EP0-IN ZLP	ISR vec234 IFR0 b1	Confirmed
+FF8183	054FEC	R	mov.b @0xFF8183,r3l	dispatch index into 12-slot table 0x055002	sub_54FEC control dispatcher	Confirmed
+FF8183	05512A	R	mov.b @0xFF8183,r4l	state read in SETUP handler	sub_55034	Confirmed

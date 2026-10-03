@@ -1,0 +1,20 @@
+# M4 PROPOSAL ONLY (masks/seeds NOT edited). Dead fnindex-validated switch-arms inside live functions, start>=0x058000, below the service window.
+# Evidence: no inbound edge of any form whole-image (BE32/abs24/raw-3byte/rel8/rel16/bsr16), enclosing fn reached but these bytes not, containing fn has no indirect jmp.
+start	end_excl	len	addend	class	note
+05C8DC	05C9B6	218	A	DEAD	WIRES-X reply-string switch arms; all bra->05C9B6, skipped by 05C8D8 bra; no inbound
+05CF34	05CF3C	8	A	SPLIT-TAIL	proven boundary mid mov.l of dead B0B9 jmp@er6 dispatcher at 05CF22 (05CF20 bra skips it; no inbound)
+0605C6	0605D2	12	A	DEAD	case arm after 0605C4 bra->0605F4; no inbound
+062808	062814	12	A	DEAD	WIRES-X switch arms jsr@66FB4/jsr@67250; after 062806 bra->6281E; no inbound; fn has no indirect jmp
+0628FE	062902	4	A	DEAD	arm jsr@66FAA after 0628FC bra->062902; no inbound
+064EDE	064EE2	4	A	DEAD	lone bra.w arm after 064EDA bra; no inbound
+064EFE	064F06	8	A	DEAD	arm jsr@64BD0 after 064EFA bra; no inbound
+06691E	066922	4	A	DEAD	arm jsr@1FA22;rts after 06691C bra; no inbound
+06723A	067246	12	A	DEAD	WIRES-X switch arm jsr@66FB4 after 067236 bra; no inbound; fn has no indirect jmp
+06AB1C	06AB3C	32	A	DEAD	WIRES-X switch arms jsr@66FB4/67250/6726A/66FAA/66FBE after 06AB18 bra->06AB5A; no inbound; fn has no indirect jmp
+06ADF6	06AE14	30	A	DEAD	WIRES-X switch arms (twin of 06AB1C) after 06ADF2 bra->06AE14; no inbound; fn has no indirect jmp
+06BC56	06BC8C	54	A	DEAD	reply-digit builder block after 06BC54 bra->06BCBE; no inbound
+06BE52	06BE6E	28	A	DEAD	alt-length copy 0x4A from FEE000 after 06BE50 bra->06BE6E; no inbound
+06CCE8	06CCEC	4	A	DEAD	jsr@3FFA0 reached only from unreached 06CCC0 bne (06CCE6 bra skips it); no live inbound
+070DAA	070DBA	16	A	DEAD	dead selector chain after 070DA8 bra->070DBA; no inbound
+070DD6	070E2A	84	A	DEAD	3 arms (ptrs 72DD8/72E6E/72F04) reached only from dead 070DAA selector; no inbound
+# total proposed demotion: 530 bytes

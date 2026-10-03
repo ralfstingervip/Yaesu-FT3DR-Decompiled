@@ -1,0 +1,65 @@
+job PC_L4_MAIN a
+; ==== sub_103C0 000103C0-000103E6 ====
+000103C0  jsr     sub_105AE:24
+000103C4  jsr     sub_10310:24
+000103C8  mov.b   #0, r4l
+000103CA  mov.b   r4l, @0xFFFFB0C4:16
+000103CE  mov.b   #0, r4l
+000103D0  mov.b   r4l, @0xFFFF89BB:16
+000103D4  mov.b   #0xEE, r3l
+000103D6  bra     loc_103DE:8
+000103D8  jsr     sub_10310:24
+000103DC  mov.b   #0xEC, r3l
+000103DE  jsr     sub_3FF10:24
+000103E2  mov.b   #0, r4l
+000103E4  rts
+
+; no func at 000101B2
+
+; ==== sub_8532 00008532-0000856C ====
+00008532  push.w  r3
+00008534  mov.w   #0x2A, r4 ; '*'
+00008538  mov.w   r4, @0xFF3D72:32
+0000853E  mov.w   #0xF008, r4
+00008542  mov.w   r4, @0xFF3D74:32
+00008548  mov.w   #0x20, r4 ; ' '
+0000854C  mov.w   r4, @0xFF3D76:32
+00008552  jsr     sub_7C20:24
+00008556  pop.w   r3
+00008558  mov.l   #0xFF3D94, er6
+0000855E  mov.b   r3l, @er6
+00008560  mov.b   r3h, r3l
+00008562  mov.l   #0xFF3D95, er6
+00008568  mov.b   r3l, @er6
+0000856A  rts
+
+; ==== sub_5E9E2 0005E9E2-0005EA0A ====
+0005E9E2  mov.b   #0, r3l
+0005E9E4  mov.b   #0, r3h
+0005E9E6  mov.b   @0xFFFFB0C4:16, r4l
+0005E9EA  cmp.b   #5, r4l
+0005E9EC  bcs     loc_5EA04:8
+0005E9EE  mov.b   #1, r3l
+0005E9F0  mov.b   #3, r3h
+0005E9F2  mov.b   @0xFFFF813A:16, r4h
+0005E9F6  beq     loc_5E9FC:8
+0005E9F8  mov.b   #1, r3l
+0005E9FA  mov.b   #6, r3h
+0005E9FC  cmp.b   #7, r4l
+0005E9FE  bcs     loc_5EA04:8
+0005EA00  mov.b   #2, r3l
+0005EA02  mov.b   #0xA, r3h
+0005EA04  jsr     sub_8532:24
+0005EA08  rts
+
+; ==== xrefs TO 00008532 ====
+  0005EA04 sub_5E9E2              jsr     sub_8532:24
+; (1)
+
+; ==== xrefs TO 000103C0 ====
+  000101B8 ?                      jsr     sub_103C0:24
+; (1)
+
+; ==== xrefs TO 0005E9E2 ====
+; (0)
+

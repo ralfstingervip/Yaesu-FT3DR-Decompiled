@@ -1,0 +1,207 @@
+item	value	expected	result	note
+sha256 MAIN	8e3ecd05409b2c314ebed77320ece5930bf31c8333cd84aeef4f6b0264c1bcce	8e3ecd05409b2c314ebed77320ece5930bf31c8333cd84aeef4f6b0264c1bcce	PASS	
+sha256 SUB	b93570b3c2f69ccb51c113c893b4bc4c414cf78ceddde478748404e0768c6230	b93570b3c2f69ccb51c113c893b4bc4c414cf78ceddde478748404e0768c6230	PASS	
+MAIN size	1048576	1048576	PASS	
+SUB size	4194304	4194304	PASS	
+final3_proven_mask length	505684	505684	PASS	
+final3_proven_mask values	[0, 1]	[0, 1]	PASS	
+final3_proven popcount (MAIN_FINAL3 proven)	368366	368366	PASS	
+final3_named popcount (MAIN named)	497314	497314	PASS	
+final2_proven popcount	368432	368432	PASS	
+|final3 \ final2|  (I15 +54)	54	54	PASS	
+|final2 \ final3|  (I12 -120)	120	120	PASS	
+I12 block 0x054D22-0x054D4B in final3_proven	0	0	PASS	42 B block
+I12 block 0x054F3A-0x054F87 in final3_proven	0	0	PASS	78 B block
+I12 block 0x054D22-0x054D4B in final2_proven	42	42	PASS	
+I12 block 0x054F3A-0x054F87 in final2_proven	78	78	PASS	
+final2 \ final3 == the two I12 blocks	True	True	PASS	
+final3_proven_runs.tsv rows	928	928	PASS	
+final3_proven_runs.tsv sum(len)	368366	368366	PASS	
+J2 range length 0x04E2D6-0x04E31D	72	72	PASS	
+J2 range in final3_proven	0	0	PASS	
+J2 range in final2_proven	0	0	PASS	
+J2 range already in final3_named	2	2	PASS	so +70 named
+J2 named increment	70	70	PASS	
+J2 rts at 0x04E31C	54 70	54 70	PASS	
+J2 slot 68 of 0x04ABE4 (0x04ACF4) BE32	0004E2D6	0004E2D6	PASS	
+J2 0x04ABE4 + 68*4	04ACF4	04ACF4	PASS	
+J2 jsr @er6 at 0x052232	5d 60	5d 60	PASS	
+J2 load at 0x05222A uses base 0x04ABE4	00 04 ab e4	00 04 ab e4	PASS	
+J4 +16 Inferred bytes	16	16	PASS	
+J4 +16 in final3_proven	0	0	PASS	not credited
+J4 0x02A924/0x02A9F4 already in final3_proven (I15 +54)	20	20	PASS	rediscovery, not new
+MAIN proven 368,366 + 72	368438	368438	PASS	
+MAIN named 497,314 + 70	497384	497384	PASS	
+MAIN proven + J4 Inferred (not credited)	368454	368454	PASS	informational
+SUB headline+w2 popcount ida\out\sub-final2\raw\mask_final2_headline_w2.bin	464263	464263	PASS	
+SUB mask length ida\out\sub-final2\raw\mask_final2_headline_w2.bin	524288	524288	PASS	
+SUB headline+w2 popcount ida\out\sub-final\raw\mask_final_headline_w2.bin	464263	464263	PASS	
+SUB mask length ida\out\sub-final\raw\mask_final_headline_w2.bin	524288	524288	PASS	
+denominator 505,684 + 524,288	1029972	1029972	PASS	
+content end 0x7B754	505684	505684	PASS	
+headline numerator 497,384 + 464,263	961647	961647	PASS	
+headline numerator = I-wave 961,577 + 70	961647	961647	PASS	
+headline % (2 dp)	93.37	93.37	PASS	93.3663%
+MAIN named % of 505,684	98.36	98.36	PASS	98.3587%
+MAIN proven % of content	72.86	72.86	PASS	72.8593%
+MAIN proven % of 388,490 decodable	94.84	94.84	PASS	94.8385%
+SUB window % of 524,288	88.55	88.55	PASS	88.5511%
+SUB code+typed % (520,552)	99.29	99.29	PASS	99.2874%
+doc69 one-descent union 365570+1544+116+66+1136+54	368486	368486	PASS	
+doc69 368,486 - 120	368366	368366	PASS	
+doc69 named 497139+141+34	497314	497314	PASS	
+doc69 named 497280+34	497314	497314	PASS	
+doc69 72.845% of 505,684	72.845	72.845	PASS	
+doc69 94.82% of 388,490	94.82	94.82	PASS	
+doc69 build: 16+18 code bytes	34	34	PASS	
+doc69 build: 5+6 heads	11	11	PASS	
+doc69 I12 blocks 42+78	120	120	PASS	
+doc69 no ff a9 e0 in content	0	0	PASS	
+doc70 368,432 + 72	368504	368504	PASS	
+doc70 sites.tsv rows	188	188	PASS	
+doc70 sites reached Y	174	174	PASS	
+doc70 sites reached N	14	14	PASS	
+doc70 distinct roots	173	173	PASS	
+doc70 d32 sites	178	178	PASS	
+doc70 d16 sites	10	10	PASS	
+doc70 I8 split 166+7+1	174	174	PASS	
+doc70 families.tsv rows	173	173	PASS	
+doc70 new targets (sum n_new over families)	1	1	PASS	
+doc71 "bb c2" occurrences, whole image	88	88	PASS	
+doc71 "bb c3" occurrences, whole image	0	0	PASS	
+doc71 stores 6b 8X bb c2, whole image	3	3	PASS	
+doc72 functions rows	83	83	PASS	
+doc72 REACHED count	5	5	PASS	
+doc72 WINDOW count	3	3	PASS	
+doc72 DATA count	15	15	PASS	
+doc72 DEAD count	60	60	PASS	
+doc72 REACHED bytes	36	36	PASS	
+doc72 DATA bytes	604	604	PASS	
+doc72 DEAD bytes	2286	2286	PASS	
+doc72 WINDOW bytes 750+204+4	958	958	PASS	
+doc72 dbcode-runs rows	598	598	PASS	
+doc72 dbcode-runs sum(size)	22262	22262	PASS	
+doc72 22,262 + 98	22360	22360	PASS	
+doc72 36+11996+9272+958+98	22360	22360	PASS	
+doc72 958 + 9272	10230	10230	PASS	
+doc72 22,360 - 36	22324	22324	PASS	
+doc72 W2-8 runtypes sum	22262	22262	PASS	
+doc72 368,432 + 36 / + 20	(368468, 368452)	(368468, 368452)	PASS	
+doc73 writers of FF8184 (byte/long store forms, whole image)	7	7	PASS	6a 8X 81 84 + 01 00 6b 8X 81 84
+doc74 fc 14 within 8 B before a 6a 8X a9 ed store	['00FDFE']	['00FDFE']	PASS	
+doc74 "fc 4f 6a 8c aa e0" whole image	['05548E']	['05548E']	PASS	
+doc75 stores to FFEE08 outside window	1	1	PASS	054C7E
+doc75 stores to FFEE09 outside window	1	1	PASS	054C84
+doc75 stores to FFEE0A outside window	1	1	PASS	054C8A
+doc75 BE32 in 0xFF5C06-0xFF5C44 outside window (all offsets)	0	0	PASS	
+doc75 0xFF5806 + 0x3FF	FF5C05	FF5C05	PASS	
+doc75 0xFF5806 + 0x43E	FF5C44	FF5C44	PASS	
+doc75 overrun 0x43E - 0x3FF	63	63	PASS	
+doc75 buffers tile 0xFF5006+3*0x400	FF5C05	FF5C05	PASS	
+doc76 0x4E20	20000	20000	PASS	
+doc76 0x8980	35200	35200	PASS	
+doc76 TCR 0x21: CCLR (b7:5)	1	1	PASS	
+doc76 TCR 0x21: TPSC (b2:0)	1	1	PASS	
+doc76 TIER 0x41: TGIEA (b0)	1	1	PASS	
+doc76 TSTR 0x20 -> channel bit	5	5	PASS	
+doc76 TCR 0x00: TPSC	0	0	PASS	
+doc76 tick = 20000 / (16 MHz/4) ms	5.000	5.000	PASS	
+doc76 tick = (20000+1) / 4 MHz ms	5.00025	5.00025	PASS	doc 76 uses TGRA+1 counts; RESUME rounds to 5.000
+doc76 guard = 35200 / 16 MHz ms	2.2000	2.2000	PASS	
+doc76 guard = 35200 x 62.5 ns	2200000.0	2200000.0	PASS	
+doc76 overflow 65536 / 16 MHz ms	4.096	4.096	PASS	
+doc76 0x8980 < 0x10000	True	True	PASS	
+doc76 vector 110 offset	440	440	PASS	
+doc76 vector 66 offset	264	264	PASS	
+doc76 tiers 5ms x2 x10 x10	(10, 100, 1000)	(10, 100, 1000)	PASS	
+doc76 "6a 8c fe f0" whole image	['002484']	['002484']	PASS	
+doc76 "79 04 4e 20" whole image (raw)	['0024A2']	['0024A2']	PASS	
+doc76 cmp.w #0x8980 (79 2X 89 80) whole image	9	9	PASS	0565FA,056650,05A1CA,05A25C,05A296,05A304,05A352,05B8AC,05B8E4
+doc76 guard-sites.tsv == scan	[353786, 353872, 369098, 369244, 369302, 369412, 369490, 374956, 375012]	[353786, 353872, 369098, 369244, 369302, 369412, 369490, 374956, 375012]	PASS	
+doc78 disposition rows	156	156	PASS	
+doc78 merge-into count/bytes	(31, 2279)	(31, 2279)	PASS	
+doc78 dead count/bytes	(125, 7780)	(125, 7780)	PASS	
+doc78 cu count/bytes	(89, 5321)	(89, 5321)	PASS	
+doc78 prev-dead count/bytes	(67, 4738)	(67, 4738)	PASS	
+doc78 dead heads that were cu / dead	(59, 66)	(59, 66)	PASS	
+doc78 cu dead-head bytes	3414	3414	PASS	
+doc78 merges into cu / dead owners (count,bytes)	((19, 824), (12, 1455))	((19, 824), (12, 1455))	PASS	
+doc78 FFF2A70B size	[372]	[372]	PASS	
+doc78 20+7+3+1	31	31	PASS	
+doc78 824+1455	2279	2279	PASS	
+doc78 31+125	156	156	PASS	
+doc78 2279+7780	10059	10059	PASS	
+doc78 5321+4738	10059	10059	PASS	
+doc78 66+59	125	125	PASS	
+doc78 peripheral.tsv rows	12	12	PASS	
+doc78 branch FFF13EE8 + disp 0x19	FFF13F01	FFF13F01	PASS	
+doc78 branch FFF13EFF + disp 0x17	FFF13F16	FFF13F16	PASS	
+doc78 branch FFEF05E9 + disp 0x53	FFEF063C	FFEF063C	PASS	
+doc78 branch FFF2A6F7 + disp 0x14	FFF2A70B	FFF2A70B	PASS	
+doc79 icon 254 x 28 end	FFED71A8	FFED71A8	PASS	
+doc79 font 26 x 12 end	FFED477C	FFED477C	PASS	
+doc79 glyph1 51 x 12 end	FFED49E0	FFED49E0	PASS	
+doc79 glyph_tbl8 45 x 8 end	FFED4B48	FFED4B48	PASS	
+doc79 mask 18 x 4 end	FFED7F60	FFED7F60	PASS	
+doc79 geometry 13 x 44 end	FFED819C	FFED819C	PASS	
+doc79 record 2 address	FFED7FB8	FFED7FB8	PASS	
+doc79 0x7DFFFF	8257535	8257535	PASS	
+doc79 223+30+1	254	254	PASS	
+doc80 settings-49.tsv rows	49	49	PASS	
+doc80 dead rows	1	1	PASS	
+doc80 read-live/save-dead rows	1	1	PASS	
+doc80 live rows	47	47	PASS	
+doc80 dead row is FF89CA	['0xFF89CA']	['0xFF89CA']	PASS	
+doc80 save-dead row is FF8937	['0xFF8937']	['0xFF8937']	PASS	
+doc80 F5 dedicated-writer, no-menu-item rows	663	663	PASS	
+doc80 I6 settings-bytes-ext rows	644	644	PASS	
+doc80 I6 ext rows of class dedicated-unattributed	614	614	PASS	
+doc80 663 minus I6 keys	49	49	PASS	
+doc80 that set == settings-49.tsv keys	True	True	PASS	
+doc80 attributed 614 + 48	662	662	PASS	
+doc80 662 + 1 dead	663	663	PASS	
+doc80 47+1+1	49	49	PASS	
+doc80 live groups 16+1+2+1+1+1+2+2+1+3+1+1+15	47	47	PASS	
+doc80 groups 13 live + 1 + 1	15	15	PASS	
+doc80 R1 0x58-0x67 / R3 0x120-0x12E sizes	(16, 15)	(16, 15)	PASS	
+doc80 abs16 refs to 89 ca (6a/6b xx 89 ca), whole image	['00E678']	['00E678']	PASS	"only image-wide reference"
+doc82 "5e 03 c6 68" whole image	0	0	PASS	
+doc82 "5a 03 c6 68" whole image	0	0	PASS	
+doc82 "00 03 c6 68" whole image	0	0	PASS	
+doc82 "5e 03 35 32" whole image	['077DB2', '077DF6']	['077DB2', '077DF6']	PASS	
+doc82 bne at 0x3C996 target	3C668	3C668	PASS	
+doc82 jsr @0x3BDAC count (32 callers)	32	32	PASS	raw abs24 jsr count
+doc82 jsr @0x3BF4C count (31 callers)	31	31	PASS	raw abs24 jsr count
+exists ida\out\main-final3 (J1): 12 files	[]	[]	PASS	
+exists ida\out\dern-dispatch (J2): 3 files	[]	[]	PASS	
+exists ida\out\key-dispatch (J3): 10 files	[]	[]	PASS	
+exists ida\out\main-unreached (J4): 2 files	[]	[]	PASS	
+exists ida\out\usb-status0 (J5): 9 files	[]	[]	PASS	
+exists ida\out\usb-key14 (J6): 5 files	[]	[]	PASS	
+exists ida\out\usb-registers (J7): 11 files	[]	[]	PASS	
+exists ida\out\dsp-tick (J8): 3 files	[]	[]	PASS	
+exists ida\out\dsp-tx-src (J9): 8 files	[]	[]	PASS	
+exists ida\out\sub-merge (J10): 6 files	[]	[]	PASS	
+exists ida\out\sub-icon-glyph (J11): 8 files	[]	[]	PASS	
+exists ida\out\settings-49 (J12): 4 files	[]	[]	PASS	
+exists ida\out\ledger-reverify (J13): 3 files	[]	[]	PASS	
+exists ida\out\eeprom-verify (J14): 3 files	[]	[]	PASS	
+job scripts named in J docs exist (ida\jobs)	[]	[]	PASS	
+eeprom-verify j14_dis_*.txt present	True	True	PASS	
+citations 69-main-final3-seed.md	PASS=22		INFO	
+citations 70-dERn-dispatchers.md	PASS=18 FAIL-OFFSET=1		INFO	
+citations 71-key-dispatch-028cbc.md	PASS=9 FAIL-OFFSET=1		INFO	
+citations 72-main-unreached-functions.md	PASS=40 FAIL-OFFSET=3 FAIL=1		INFO	
+citations 73-usb-status-byte0.md	PASS=16 FAIL-OFFSET=2		INFO	
+citations 74-usb-key14-tone4f.md	PASS=15 FAIL-OFFSET=2		INFO	
+citations 75-usb-registers-ram.md	PASS=34		INFO	
+citations 76-dsp-tpu-tick.md	PASS=36 FAIL-OFFSET=4		INFO	
+citations 77-dsp-tx-sources.md	PASS=11 N/A=1		INFO	
+citations 78-sub-merge-dead.md	PASS=12		INFO	
+citations 79-sub-icon-glyph-fields.md	PASS=7 FAIL=1		INFO	
+citations 80-settings-49.md	PASS=7 FAIL-OFFSET=1 FAIL=1		INFO	
+citations 81-ledger-reverify.md	PASS=22		INFO	
+citations 82-eeprom-verify.md	PASS=33		INFO	
+citations RESUME-FULL.md	PASS=10		INFO	
+citations TOTAL	PASS=292 FAIL-OFFSET=14 FAIL=3 N/A=1		INFO	rows=310
+citations anchors not found	0	0	PASS	

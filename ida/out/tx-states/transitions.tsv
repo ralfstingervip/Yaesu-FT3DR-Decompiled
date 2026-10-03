@@ -1,0 +1,56 @@
+machine	from	to	condition	evidence
+main	any	0x00	AACF not 0/4/7/8; AAD3 b0/b2 clear; AAD4.b7 clear	0x034562:6a 0a aa cf 58 70 00 cc | 0x0345A0:fc 00 6a 8c aa d5
+main	any	0x0D	same, with AAD4.b7 set (the bit is cleared)	0x034588:6a 10 aa d4 73 70 47 10 6a 18 aa d4 72 70 | 0x034596:fc 0d 6a 8c aa d5
+main	any	0x0D	APRS beacon (AAD3.b0) and FF8C52!=0: AAE0=0x4D	0x0345AA:6a 0c 8a a0 | 0x0345B2:6a 0c 8c 52 47 e8 | 0x0345B8:fc 4d | 0x0345D0:fc 0d 6a 8c aa d5
+main	any	0x0D	APRS message/ack (AAD3.b2) and FF8C53!=0: AAE0=0x4E	0x0345BC:6a 0c 8a a0 | 0x0345C4:6a 0c 8c 53 47 d6 | 0x0345CA:fc 4e
+main	any	0x00	APRS with ringer flag 0	0x0345B6:47 e8 | 0x0345C8:47 d6
+main	>=2	(same)	AACF=4: re-run tone/encoder arm sub_34B44 (AACF=4 posted by sub_17210 while FF94C0!=0)	0x03456A:aa 04 47 6a | 0x0345D8:6a 0c aa d5 ac 02 45 56 5e 03 4b 44 | 0x01725E:6a 84 aa cf
+main	<2	END	AACF=7 -> sub_34FF4	0x0345E6:6a 0c aa d5 ac 02 44 06 5e 03 4f f4
+main	>=2	0x05	AACF=7	0x0345F4:fc 05 6a 8c aa d5
+main	<2	END	AACF=8 -> sub_34FF4	0x0345FC:6a 0c aa d5 ac 02 44 06 5e 03 4f f4
+main	0x13	(same)	AACF=8 ignored	0x03460A:ac 13 47 28
+main	any	(same)	AACF=8 ignored while AAD4.b0 (data queued)	0x03460E:6a 10 aa d4 73 00 46 20
+main	0x14	END	AACF=8 -> sub_34FF4	0x034622:6a 0c aa d5 ac 14 47 da
+main	other	0x11	AACF=8: B0BB.b0=0, B0BB.b1=1, FF9553=0x64	0x034616:6a 18 b0 bb 72 00 6a 18 b0 bb 70 10 | 0x03462A:fc 11 6a 8c aa d5 fc 64 6a 8c 95 53
+main	0x00	0x01	AACF!=0 and FFAAAA inside the VHF or UHF TX window	0x0346FA:0c aa 47 06 55 06 5e 03 47 82 | 0x034806:fc 01 6a 8c aa d5
+main	0x00	0x03	FFAAAA outside both windows (defensive; the request gate sub_34E42 tests the same windows on FFAAAE)	0x0347AA:45 62 | 0x03480E:fc 03 6a 8c aa d5
+main	0x00	0x01	host-keyed node (FF8DDE<0 and (8DE0.b7 or B3D9.b2)): no settle, no offset/port setup	0x0347E2:6a 10 8d e0 73 70 46 2c 6a 10 b3 d9 73 20 46 24 | 0x034830:fc 01 6a 8c aa d5
+main	0x01	(same)	FF956D!=0 (settle)	0x03497C:6a 0c 95 6d 58 60 00 f6
+main	0x01	END	0xFFFF4D.b3 high and FF9568==0 -> sub_34FF4	0x034984:7e 4d 73 30 58 60 00 e4 | 0x034A70:6a 0c 95 68 46 04 5e 03 4f f4
+main	0x01	0x02	analog voice / APRS / short-TX key-up complete	0x034A18:fc 02 6a 8c aa d5
+main	0x01	sub_35872	digital comm mode and not APRS	0x0349D0:58 60 00 96 | 0x034A6A:5e 03 58 72
+main	sub_35872	0x10	B0CC.b0 and sub_5A2F8 (session 0x15) accepted	0x0358CA:6a 10 b0 cc 73 00 58 60 00 f4 | 0x0359C8:5e 05 a2 f8 46 14 6a 18 | 0x0359DA:fc 10 6a 8c aa d5
+main	sub_35872	0x13	AAD4.b0 and sub_5A28A (session 0x0A) accepted	0x0358D4:6a 10 aa d4 73 00 58 60 00 ca | 0x0359A8:5e 05 a2 8a 46 34 | 0x0359C0:fc 13 6a 8c aa d5
+main	sub_35872	0x10	voice: sub_5A1BE (session 0x02/0x0B/0x10 by B0C7) accepted; AA30.b2, FF9597=0x23	0x03596A:5e 05 a1 be 46 72 | 0x03599A:6a 18 aa 30 70 20 | 0x0359A0:fc 23 6a 8c 95 97
+main	sub_35872	0x14	dsp_request busy (nonzero return)	0x03596E:46 72 | 0x0359E2:fc 14 6a 8c aa d5
+main	0x02	0x03	0xFFFF4D.b3 high: FF9568=4	0x034CCE:7e 4d 73 30 46 60 | 0x034D34:fc 04 6a 8c 95 68 fc 03 6a 8c
+main	0x02	END	tone class 7 with AAD1.b0: AACE reaches 0 -> sub_227BC	0x034D0A:6a 0c aa ce 1a 0c 6a 8c aa ce 46 0c 6a 18 aa d1 72 00 5e 02 27 bc
+main	0x03	0x02	0xFFFF4D.b3 low	0x034D42:7e 4d 73 30 46 08 fc 02 6a 8c aa d5
+main	0x03	END	0xFFFF4D.b3 high and FF9568==0 -> sub_34FF4	0x034D50:6a 0c 95 68 46 04 5e 03 4f f4
+main	0x05	0x02	TSTR.b0 clear and (AC0A!=0 or PTT held A9EA==2)	0x034D66:7e bc 73 00 46 02 55 02 | 0x034D78:6a 0c ac 0a 46 1e | 0x034D7E:6a 0c a9 ea ac 02 46 2a | 0x034DA8:fc 02 6a 8c aa d5
+main	0x05	END	TSTR.b0 clear and (AAD2.b1 or PTT not held) -> sub_227BC	0x034D70:6a 10 aa d2 73 10 46 38 | 0x034DB0:5e 02 27 bc
+main	0x0D	0x0E	always, after sub_34706	0x0346C8:55 3c fc 0e 6a 8c aa d5
+main	0x0E	0x01/0x03	FFAAE8==0 -> sub_34782	0x0346D2:6a 0c aa e8 46 04 5e 03 47 82
+main	0x0E	0x0F	key event 13 (sub_346DE): AAE0=0xFF	0x0346DE:6a 0c aa d5 ac 0e 46 0e fc ff 6a 8c aa e0 fc 0f 6a 8c aa d5 | 0x011994:00 03 46 de | 0x011BB4:00 03 46 de
+main	0x0F	0x01/0x03	sub_34782	0x0346D8:5e 03 47 82
+main	0x10	(same)	after 3.5 s, then every 2.5 s: LOCATION block via sub_5CA34	0x035A2A:6a 0c 95 97 46 32 | 0x035A5E:5e 05 ca 34 | 0x05CA50:fc 19 6a 8c 95 97
+main	0x11	0x12	B0BB.b7 or FF9553==0; B11F++, FF9553=3	0x035A8C:6a 10 b0 bb 73 70 46 12 6a 0c 95 53 47 0c | 0x035AA6:7a 06 00 05 c8 76 5e 03 f6 36 fc 03 6a 8c 95 53 fc 12 6a 8c aa d5
+main	0x12	END	FF9553==0 -> sub_227BC (FF94C0=0)	0x035ABE:6a 0c 95 53 46 f8 5e 02 27 bc | 0x022858:fc 00 6a 8c 94 c0
+main	0x13	0x13	B0BA in 1..0x7F (more blocks)	0x035B60:6a 0c b0 ba 47 36 4b 34 | 0x035B90:fc 13 6a 8c aa d5
+main	0x13	0x12	B0BA zero/negative, or AAD9 trip (abort via loc_5ECFE)	0x035B5A:6a 0c aa d9 46 38 | 0x035B98:5e 05 ec fe | 0x035B9C:fc 03 6a 8c 95 53 fc 12 6a 8c aa d5 54 70
+main	0x14	sub_35872 retry	FF9598!=0	0x0359EA:6a 0c 95 98 58 60 fe b2
+main	0x14	END	FF9598==0: tone 0x1D (if FF8DDE==0) + sub_34FF4	0x0359F2:6a 0c 8d de 46 06 fc 1d 6a 8c aa e0 5e 03 4f f4
+main	tail	END	AAD7 set, AAD9==0, A996 (AN1) >= 0xF4: tone 0x1D, sub_34F74 forced TX end, AAD9=1	0x03465C:6a 0c aa d7 47 10 fc 00 6a 8c aa d7 6a 0c aa d9 46 04 5e 03 5b aa | 0x035BC2:ac f4 45 20 6a 0c 8d de 46 06 fc 1d 6a 8c aa e0 5e 03 4f 74 fc 01 6a 8c
+main	tail	(same)	A996 0xEB..0xEE -> power level <=1; 0xEF..0xF3 -> power level 0; tone 0x32, popup 0x23 (sub_1BF40)	0x035BB6:6a 0c a9 96 ac eb 45 54 ac ef 45 1c ac f4 | 0x035BDE:aa 02 45 30 fa 01 40 06 aa 00 47 28 fa 00 | 0x035BF2:fc 32 6a 8c aa e0 fc 23 5e 01 bf 40
+main	TOT	END	FF95EA expired: analog sub_34FF4 / digital sub_22718 (AACF=8 -> 0x11)	0x034F6E:6b 04 95 ea 46 7e | 0x034FAA:55 48 | 0x034FB4:5e 02 27 18
+twin	any	0x00	AACF not 0/8 and AAD4.b7 clear	0x035C3E:6a 0a aa cf 58 70 00 62 | 0x035C64:fc 00 6a 8c aa d5
+twin	any	0x0D	AAD4.b7	0x035C4C:6a 10 aa d4 73 70 47 10 6a 18 aa d4 72 70 | 0x035C5A:fc 0d 6a 8c aa d5
+twin	<2 or 0x14	END	AACF=8 -> sub_35E88	0x035C6E:6a 0c aa d5 ac 02 44 06 5e 03 5e 88 | 0x035C98:ac 14 47 da
+twin	other	0x11	AACF=8 (not 0x13, not AAD4.b0)	0x035C9C:fc 11 6a 8c aa d5 fc 64 6a 8c 95 53
+twin	0x00	0x01/0x03	sub_35D96	0x035D42:0c aa 47 04 55 04 55 4c | 0x035E04:fc 01 6a 8c aa d5 | 0x035E0C:fc 03 6a 8c aa d5
+twin	0x01	0x10/0x13/0x14	sub_35EC0 dispatch	0x035EDC:6a 10 b0 cc 73 00 58 60 00 62 | 0x035F28:5e 05 a2 8a 46 34 | 0x035F48:5e 05 a2 f8 46 14 | 0x035F5A:fc 10 6a 8c aa d5 | 0x035F62:fc 14 6a 8c aa d5
+twin	0x11	0x12	B0BB.b7 or FF9553==0	0x035FB8:6a 10 b0 bb 73 70 46 08 6a 0c 95 53 47 02 40 16 7a 06 | 0x035FD8:fc 12 6a 8c aa d5
+twin	0x12	END	FF9553==0 -> sub_35E88	0x035FE0:6a 0c 95 53 46 26 5e 03 5e 88
+twin	0x13	0x13/0x12	as main	0x036040:fc 13 6a 8c aa d5 | 0x03604C:fc 03 6a 8c 95 53 fc 12 6a 8c
+twin	0x14	retry/END	FF9598	0x035F6A:6a 0c 95 98 58 60 ff 6a | 0x035F7E:5e 03 5e 88
+twin	tail	-	no AN1 protection: 'bne +0' at 0x035CD4 where main has 'bne +4 ; jsr sub_35BAA'	0x035CD0:6a 0c aa d9 46 00 54 70 | 0x03466C:46 04 5e 03 5b aa

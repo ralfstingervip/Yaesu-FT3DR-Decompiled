@@ -1,0 +1,131 @@
+# Lane I7: all MAIN reads/writes of FF800F/FF8010/FF8011 + predicate wrappers + every static caller.
+# Scope: 505684 bu_all heads in 0..0x7B754 minus closed window 0x078106-0x07B753; forms abs16/long@FF800E/#FF800E block; caller forms jsr+jmp abs24, bsr, BE32.
+# Writers listed by address only (lane boundary).
+kind	site	ida_fn	target	bytes	insn_or_role	h9_reached	note
+read	006846	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+read	006864	006864-0068A8	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	00686C	-	FF8010	6a 0c 80 10	mov.b @0x8010:16,r4l	Y	
+read	00688A	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+read	00DCA0	002070-002092	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+write	00DE0A	-	FF800F	6a 8c 80 0f	mov.b r4l,@0x800f:16	Y	boundary - not traced
+write	00DE10	-	FF8010	6a 8c 80 10	mov.b r4l,@0x8010:16	Y	boundary - not traced
+write	00DE1A	-	FF8011	6a 8d 80 11	mov.b r5l,@0x8011:16	Y	boundary - not traced
+read	00DF3E	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+write	00DF46	-	FF8011	6a 8d 80 11	mov.b r5l,@0x8011:16	Y	boundary - not traced
+read	00E440	00DEFA-00E85C	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	00E45A	-	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	00E478	-	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	00E492	-	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	00E7F2	00DEFA-00E85C	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	00EA92	00EA92-00EAA8	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	00EAD2	00EAD2-00EBE0	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	00EBC0	00EAD2-00EBE0	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	010288	010276-0102A6	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	010290	-	FF8010	6a 0c 80 10	mov.b @0x8010:16,r4l	Y	
+read	01D40E	01D40E-01D4DA	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	01D418	-	FF8010	6a 04 80 10	mov.b @0x8010:16,r4h	Y	
+read	01D618	01D5E2-01D64C	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	01D622	-	FF8010	6a 04 80 10	mov.b @0x8010:16,r4h	Y	
+read	01E556	01E506-01E59E	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	01EEA4	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+read	01F130	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+read	02136A	021348-0213BE	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	021374	-	FF8010	6a 04 80 10	mov.b @0x8010:16,r4h	Y	
+read	02365C	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+read	023698	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+read	0236B8	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+write	0236E2	-	FF800F	6a 8c 80 0f	mov.b r4l,@0x800f:16	Y	boundary - not traced
+write	0236E6	-	FF8010	6a 8b 80 10	mov.b r3l,@0x8010:16	Y	boundary - not traced
+read	023B26	023AEC-023B5E	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+read	032650	032650-03266E	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	032660	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+read	032BDC	032BDC-032BFA	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	035776	-	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	N	containing code 0x035754-0357E8 has no static reference; not credited
+block	03955E	039554-039566	FF800E_blockptr	7a 01 00 ff 80 0e	mov.l #0xff800e,er1	Y	sub_39554 arms sub_39534(load)/sub_39544(save) of the FF800E block; load is a writer: boundary - not traced
+read	03ECB8	03ECB8-03ECC4	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	03ECC4	03ECC4-03ECD4	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	N	
+read	03ECD4	03ECD4-03ECDE	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	03ECDE	03ECDE-03ECF4	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	03F386	03F386-03F3A4	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	03F38E	-	FF8010	6a 04 80 10	mov.b @0x8010:16,r4h	Y	
+read	03F396	-	FF8011	6a 04 80 11	mov.b @0x8011:16,r4h	Y	
+read	03F47E	03F47E-03F48E	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	03F4A2	03F4A2-03F4EA	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	03F4AE	-	FF8011	6a 04 80 11	mov.b @0x8011:16,r4h	Y	
+read	03F554	03F522-03F52A	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	07357A	07357A-07358E	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	073584	-	FF8010	6a 04 80 10	mov.b @0x8010:16,r4h	Y	
+read	073588	-	FF8011	6a 0c 80 11	mov.b @0x8011:16,r4l	Y	
+write	073B12	-	FF8010	6a 8c 80 10	mov.b r4l,@0x8010:16	Y	boundary - not traced
+write	073B16	-	FF8011	6a 8c 80 11	mov.b r4l,@0x8011:16	Y	boundary - not traced
+read	073B82	073B62-073BB4	FF800E_long	01 00 6b 04 80 0e	mov.l @0x800e:16,er4	Y	copies FF800E..11 into clone header FF96FC; same routine writes FF8010/11: boundary - not traced
+write	073BA0	-	FF8010	6a 8c 80 10	mov.b r4l,@0x8010:16	Y	boundary - not traced
+write	073BA4	-	FF8011	6a 8c 80 11	mov.b r4l,@0x8011:16	Y	boundary - not traced
+write	0740F6	-	FF800F	6a 81 80 0f	mov.b r1h,@0x800f:16	Y	boundary - not traced
+write	0740FA	-	FF8010	6a 8b 80 10	mov.b r3l,@0x8010:16	Y	boundary - not traced
+read	07516A	075160-0753D4	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+read	075554	075554-075EB4	FF800F	6a 0c 80 0f	mov.b @0x800f:16,r4l	Y	
+predicate	03ECB8	sub_3ECB8	FF800F	6a 0c 80 0f	Z iff FF800F==0 (also returns r4l=FF800F)	Y	22 callers
+caller:sub_3ECB8	00E80E	00DEFA-00E85C	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	00E8EA	00E8AE-00E934	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	00E9E0	00E9CC-00EA92	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	00EA14	00E9CC-00EA92	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	00EAA8	00EAA8-00EAB0	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	00EBE2	00EBE0-00EBEC	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	010D66	010CC4-010EA0	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	014F96	014F8E-014FA6	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	016FAC	016F82-016FFE	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	01A370	-	via sub_3ECB8	5e 03 ec b8	jsr	N	caller has no static ref
+caller:sub_3ECB8	01D24C	01D220-01D2BA	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	01D2C0	01D2C0-01D2EE	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	01E59E	01E59E-01E5EE	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	01E5F6	01E5F6-01E620	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	01E620	01E620-01E63E	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	01E652	01E646-01E6BE	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	01E67C	01E646-01E6BE	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	01E6EE	01E6E2-01E73C	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	02FB00	02FAEC-02FB94	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	0315A8	031594-03163C	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	0328A6	0328A6-0328DA	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+caller:sub_3ECB8	063C7A	063C16-063C8E	via sub_3ECB8	5e 03 ec b8	jsr	Y	
+predicate	03ECC4	sub_3ECC4	FF800F	6a 0c 80 0f	Z iff FF800F in {0,6} (no caller - dead)	N	0 callers
+predicate	03ECD4	sub_3ECD4	FF800F	6a 0c 80 0f	Z iff FF800F==1 (also returns r4l=FF800F)	Y	6 callers
+caller:sub_3ECD4	00E844	00DEFA-00E85C	via sub_3ECD4	5e 03 ec d4	jsr	Y	
+caller:sub_3ECD4	00EAB8	00EAB0-00EACA	via sub_3ECD4	5e 03 ec d4	jsr	Y	
+caller:sub_3ECD4	01E524	01E506-01E59E	via sub_3ECD4	5e 03 ec d4	jsr	Y	
+caller:sub_3ECD4	02CE8A	02CE6A-02CEB0	via sub_3ECD4	5e 03 ec d4	jsr	Y	
+caller:sub_3ECD4	033250	0331DC-0332BA	via sub_3ECD4	5e 03 ec d4	jsr	Y	
+caller:sub_3ECD4	03F56E	03F522-03F52A	via sub_3ECD4	5e 03 ec d4	jsr	Y	
+predicate	03ECDE	sub_3ECDE	FF800F	6a 0c 80 0f	r4l=0(Z) iff 2<=FF800F<=4 else 1	Y	11 callers
+caller:sub_3ECDE	022230	022212-02225C	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	02225C	02225C-022276	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	022294	022276-0222C0	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	02F782	02F718-02F83A	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	02F95C	02F93A-02FA34	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	02F99E	02F93A-02FA34	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	031252	0311E8-0312E2	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	031404	0313E2-0314DC	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	031446	0313E2-0314DC	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	03D2CC	03D022-03D36E	via sub_3ECDE	5e 03 ec de	jsr	Y	
+caller:sub_3ECDE	03FE68	03FE60-03FEDC	via sub_3ECDE	5e 03 ec de	jsr	Y	
+predicate	03F386	sub_3F386	FF800F	6a 0c 80 0f	er4 = 4*FF800F + (FF8010 ? FF8010+FF8011 : 0)	Y	9 callers
+caller:sub_3F386	01C2BA	01C2BA-01C348	via sub_3F386	5e 03 f3 86	jsr	Y	
+caller:sub_3F386	01C360	01C360-01C394	via sub_3F386	5e 03 f3 86	jsr	Y	
+caller:sub_3F386	01C394	01C394-01C3BE	via sub_3F386	5e 03 f3 86	jsr	Y	
+caller:sub_3F386	01D268	01D220-01D2BA	via sub_3F386	5e 03 f3 86	jsr	Y	
+caller:sub_3F386	03F3B4	03F3B4-03F47E	via sub_3F386	55 d0	bsr	Y	
+caller:sub_3F386	03F4EC	03F4EA-03F522	via sub_3F386	5e 03 f3 86	jsr	Y	
+caller:sub_3F386	03F546	03F522-03F52A	via sub_3F386	5e 03 f3 86	jsr	Y	
+caller:sub_3F386	074ABE	07481A-074B08	via sub_3F386	5e 03 f3 86	jsr	Y	
+caller:sub_3F386	075096	074E38-0750C2	via sub_3F386	5e 03 f3 86	jsr	Y	
+predicate	03F47E	loc_3F47E	FF800F	6a 0c 80 0f	er6 += 0x24*FF800F then copy 8B (into sub_3F48E)	Y	2 callers
+caller:loc_3F47E	03F4D8	-	via loc_3F47E	55 a4	bsr	Y	
+caller:loc_3F47E	03F4E6	-	via loc_3F47E	55 96	bsr	Y	
+predicate	03F4A2	sub_3F4A2	FF800F	6a 0c 80 0f	window selector (see gates.tsv)	Y	1 callers
+caller:sub_3F4A2	002DC8	-	via sub_3F4A2	5e 03 f4 a2	jsr	Y	
+predicate	03F554	loc_3F554	FF800F	6a 0c 80 0f	er6 = 0xF0A2 + 0x24*FF800F (inside sub_3F522)	Y	0 callers
+predicate	006864	sub_6864	FF800F	6a 0c 80 0f	index into 0x68A8 code-name table	Y	1 callers
+caller:sub_6864	06BD94	-	via sub_6864	5e 00 68 64	jsr	Y	
+predicate	07357A	sub_7357A	FF800F	6a 0c 80 0f	e4=FF800F r4h=FF8010 r4l=FF8011 (BACKUP/clone ID)	Y	2 callers
+caller:sub_7357A	0737F4	-	via sub_7357A	5e 07 35 7a	jsr	Y	
+caller:sub_7357A	073924	-	via sub_7357A	5e 07 35 7a	jsr	Y	

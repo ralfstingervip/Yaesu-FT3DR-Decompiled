@@ -1,0 +1,38 @@
+# IRQ4/IRQ5 capture ISRs and TPU0/TPU2 TGIA dispatchers
+func 0028F4 IRQ4_TPU0_capture
+func 002922 IRQ5_TPU2_capture
+func 0028D0 v88_TPU0_TGIA
+func 0028E2 v97_TPU2_TGIA
+# RX decode routines, band A (TPU0 / FF811A)
+func 00171C rxA_handler_171C
+func 001784 rxA_handler_1784
+func 00181A rxA_handler_181A
+func 0017DA rx_helper_17DA
+# RX decode routines, band B (TPU2 / FF811E)
+func 001F54 rxB_handler_1F54
+func 001FEA rxB_handler_1FEA
+func 001EEC rxB_handler_1EEC
+# pointer selection sites
+func 02FB00 tpu0_rx_select
+func 0315A0 tpu2_rx_select
+func 00DC00 ptr_defaults_DC00
+# config
+func 0010C0 rx_cfg_10C0
+dis 00158C 001600 cfg_records_158C
+dis 003C70 003C90 rx_class_maps
+# xrefs to the RX state RAM and flags
+xref 8F87
+xref 8F88
+xref 8F7C
+xref 8F7E
+xref 8F8A
+xref 8F8C
+xref 8F8E
+xref 8F92
+xref FF36
+xref 8F96
+xref 811A
+xref 811E
+# callers of the selectors to see RX enable path
+callers 02FB00
+callers 0315A0

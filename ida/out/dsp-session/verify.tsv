@@ -1,0 +1,116 @@
+id	addr	expect	got	result	claim
+T1	0001B8	00 00 2a 30	00 00 2a 30	ok	vector 110 -> 0x002A30 (tick ISR)
+T2	002482	fc 21 6a 8c fe f0 fc c0 6a 8c fe f1 fc 00 6a 8c fe f2 fc 41 6a 8c fe f4	fc 21 6a 8c fe f0 fc c0 6a 8c fe f1 fc 00 6a 8c fe f2 fc 41 6a 8c fe f4	ok	TCR=0x21 TMDR=0xC0 TIOR=0 TIER=0x41 on channel 0xFFFEF0
+T3	00249A	79 04 00 00 6b 84 fe f6 79 04 4e 20 6b 84 fe f8 fc 20 3c bc fc 00 3c bd	79 04 00 00 6b 84 fe f6 79 04 4e 20 6b 84 fe f8 fc 20 3c bc fc 00 3c bd	ok	TCNT=0, TGRA=0x4E20, TSTR(FFFFBC)=0x20, TSYR(FFFFBD)=0
+T4	002A30	6d f4 6a 18 fe f5 72 00 6a 0c 94 b8 47 06 1a 0c 6a 8c 94 b8	6d f4 6a 18 fe f5 72 00 6a 0c 94 b8 47 06 1a 0c 6a 8c 94 b8	ok	ISR clears TSR.b0 and decrements FF94B8
+T5	003576	6a 0c 94 b8 46 f8 fc 02 6a 8c 94 b8 79 06 00 58 7a 05 00 ff 95 36	6a 0c 94 b8 46 f8 fc 02 6a 8c 94 b8 79 06 00 58 7a 05 00 ff 95 36	ok	fast tier: FF94B8 reload 2, 0x58 byte timers from FF9536
+T6	0035C4	6a 0c 95 34 1a 0c 6a 8c 95 34 46 74 fc 0a 6a 8c 95 34 79 06 00 24 7a 05 00 ff 95 8e	6a 0c 95 34 1a 0c 6a 8c 95 34 46 74 fc 0a 6a 8c 95 34 79 06 00 24 7a 05 00 ff 95 8e	ok	slow tier every 10 fast ticks: 0x24 byte timers from FF958E
+T7	003618	6a 0c 95 35 1a 0c 6a 8c 95 35 46 20 fc 0a	6a 0c 95 35 1a 0c 6a 8c 95 35 46 20 fc 0a	ok	third tier every 10 slow ticks
+T8	0030B4	5e 02 d8 cc 5e 05 62 72	5e 02 d8 cc 5e 05 62 72	ok	main loop calls the DSP tick 0x056272 every pass
+T9	0020FC	79 04 01 11 6b 84 fd c4	79 04 01 11 6b 84 fd c4	ok	SCKCR(FFFDC4)=0x0111 (not decoded)
+T10	0022F6	fc 00 3c f0	fc 00 3c f0	ok	TCR of the 0xFFFFF0 channel = 0x00
+D1	01054A	5e 01 03 10 5e 04 52 c6 f4 ff 40 0a	5e 01 03 10 5e 04 52 c6 f4 ff 40 0a	ok	entry A: FF8DDE candidate 0xFF
+D2	010556	5e 01 03 10 5e 04 52 c6 f4 01	5e 01 03 10 5e 04 52 c6 f4 01	ok	entry B: FF8DDE candidate 0x01
+D3	010578	6a 0c 8d de 47 02 f4 00 6a 84 8d de	6a 0c 8d de 47 02 f4 00 6a 84 8d de	ok	toggle: store 0 if already set, else the candidate
+D4	01058A	5e 01 9a 4c 6a 0c 8d de 46 0a 5e 04 52 ac 5e 04 51 86	5e 01 9a 4c 6a 0c 8d de 46 0a 5e 04 52 ac 5e 04 51 86	ok	re-init SCI-A (0x045186) after the change
+D5	0105AE	6a 0c 8d de 47 08 fc 00 6a 8c 8d de 55 ce	6a 0c 8d de 47 08 fc 00 6a 8c 8d de 55 ce	ok	clear-if-set, called by the other mode entries
+D6	00E514	fc 00 6a 8c 8d de fc 00 6a 8c 8d df fc 00 6a 8c 8d e0	fc 00 6a 8c 8d de fc 00 6a 8c 8d df fc 00 6a 8c 8d e0	ok	defaults routine clears FF8DDE..FF8DE0
+D7	010266	00 01 05 56 00 01 05 4a	00 01 05 56 00 01 05 4a	ok	only references to the two setters: slots inside 0x10100-0x102C0 (out of scope)
+D8	008A94	6a 0c 8d de 4a 26 7a 05 00 00 8a 70	6a 0c 8d de 4a 26 7a 05 00 00 8a 70	ok	negative value -> label at 0x8A70
+D9	008A70	00 00 57 49 52 45 53 2d 58 20 50 44 4e	00 00 57 49 52 45 53 2d 58 20 50 44 4e	ok	WIRES-X PDN
+D10	008AE4	79 04 00 12 7a 05 00 00 8a 82	79 04 00 12 7a 05 00 00 8a 82	ok	positive value -> label at 0x8A82
+D11	008A82	00 00 57 49 52 45 53 2d 58 20 4e 4f 44 45	00 00 57 49 52 45 53 2d 58 20 4e 4f 44 45	ok	WIRES-X NODE
+D12	0081B6	6a 0c 8d de 47 1a 79 04 00 0a 7a 05 00 00 82 64	6a 0c 8d de 47 1a 79 04 00 0a 7a 05 00 00 82 64	ok	"nonzero -> ""WIRES-X"" line"
+D13	05B7E6	6a 0c 8d de 4a 0c fc 00 6a 10 b3 d9 77 00 67 fc 0c cc 46 10	6a 0c 8d de 4a 0c fc 00 6a 10 b3 d9 77 00 67 fc 0c cc 46 10	ok	sign test idiom: 0xFF is active only while B3D9.b0==0; 1 is always active
+A1	0569B6	ac 9c 47 22 ac 9e 47 16	ac 9c 47 22 ac 9e 47 16	ok	9C and 9E branches in the RX assembler
+A2	0569D4	6a 18 b1 2d 70 70 40 6e 6a 18 b1 2d 70 00	6a 18 b1 2d 70 70 40 6e 6a 18 b1 2d 70 00	ok	9E sets B12D.b7, 9C sets B12D.b0
+A3	059CCE	6a 18 b1 2d 72 00	6a 18 b1 2d 72 00	ok	0x19 builder clears B12D.b0
+A4	059D26	6a 18 b1 2d 72 00	6a 18 b1 2d 72 00	ok	0x09 builder clears B12D.b0
+A5	059D86	6a 18 b1 2d 72 00	6a 18 b1 2d 72 00	ok	059D2E clears B12D.b0
+A6	05B898	6a 18 b1 2d 72 00	6a 18 b1 2d 72 00	ok	session step consumes B12D.b0
+A7	05BC3C	6a 18 b1 2d 72 70	6a 18 b1 2d 72 70	ok	session step consumes B12D.b7
+A8	05B814	6a 18 b1 2d 72 70	6a 18 b1 2d 72 70	ok	TX start clears a stale B12D.b7
+B1	05993C	6a 2c 00 ff 0b f6	6a 2c 00 ff 0b f6	ok	header builder reads FF0BF6 (host-link arm only)
+B2	0597FC	6a 0c 8d de 4a 0c fc 00 6a 10 b3 d9 77 00 67 fc 0c cc 58 60 01 02	6a 0c 8d de 4a 0c fc 00 6a 10 b3 d9 77 00 67 fc 0c cc 58 60 01 02	ok	host-link gate in front of B1
+B3	05B04A	fc 24 6a ac 00 ff 0b f6	fc 24 6a ac 00 ff 0b f6	ok	init step 12 writes 0x24 when FF8DDE!=0
+B4	06C7F4	6a ab 00 ff 0b f6	6a ab 00 ff 0b f6	ok	host packet field writer of FF0BF6
+B5	059956	6a 2c 00 ff 0b f8 6a 8c b1 41 6a 2c 00 ff 0b f9 6a 8c b1 42	6a 2c 00 ff 0b f8 6a 8c b1 41 6a 2c 00 ff 0b f9 6a 8c b1 42	ok	FF0BF8 -> [3], FF0BF9 -> [4]
+C1	05714A	fb 31 5e 06 c2 00	fb 31 5e 06 c2 00	ok	tag '1' (CSD1 state)
+C2	05732C	fb 32 5e 06 c2 00	fb 32 5e 06 c2 00	ok	tag '2' (CSD2 state)
+C3	0577DA	fb 33 5e 06 c2 00	fb 33 5e 06 c2 00	ok	tag '3' (CSD3 state)
+C4	06C20E	6a 0c b3 e0 47 ea	6a 0c b3 e0 47 ea	ok	sub_06C200 needs FFB3E0!=0 (link up)
+C5	06C24A	6a ab 00 fe eb 28 79 04 00 06 7a 05 00 ff b0 e1 7a 06 00 ff b3 be	6a ab 00 fe eb 28 79 04 00 06 7a 05 00 ff b0 e1 7a 06 00 ff b3 be	ok	tag -> FEEB28; rx[1..6] -> FFB3BE
+C6	06C296	79 04 00 14 7a 05 00 ff b0 e7 7a 06 00 fe eb 14	79 04 00 14 7a 05 00 ff b0 e7 7a 06 00 fe eb 14	ok	rx[7..26] -> FEEB14 (20 B)
+C7	06C290	6a ab 00 fe eb 29	6a ab 00 fe eb 29	ok	mode character -> FEEB29
+C8	06B73A	fc 01 6a 8c b3 e0	fc 01 6a 8c b3 e0	ok	FFB3E0=1 when the second host handler is installed
+C9	058794	6a 0c 8d de 47 2e 4a 26	6a 0c 8d de 47 2e 4a 26	ok	message relay gate: 0 -> local dispatch, positive -> relay
+C10	05EAA6	7a 05 00 fe f9 20 7a 06 00 fe fd 72	7a 05 00 fe f9 20 7a 06 00 fe fd 72	ok	sub_05EA3A copies from FEF920 to FEFD72
+C11	05EA3A	6a 0c b3 e0 58 70 00 86	6a 0c b3 e0 58 70 00 86	ok	sub_05EA3A also needs FFB3E0!=0
+P1	05B810	7f 52 72 20	7f 52 72 20	ok	TX start clears P3DR.b2
+P2	05BC7C	7f 52 70 20	7f 52 70 20	ok	TX end sets P3DR.b2
+P3	05BF30	7f 52 70 20	7f 52 70 20	ok	TX end (data sessions) sets P3DR.b2
+S1	0563DA	78 b0 6b 26 00 05 b3 10	78 b0 6b 26 00 05 b3 10	ok	B0BE dispatch through 0x05B310
+S2	0563A8	78 b0 6b 26 00 05 eb d2	78 b0 6b 26 00 05 eb d2	ok	BB94 dispatch through 0x05EBD2
+S3	05AF7C	78 b0 6b 26 00 05 af 92	78 b0 6b 26 00 05 af 92	ok	init dispatch through 0x05AF92
+S4	05C19A	78 b0 6b 26 00 05 c2 00	78 b0 6b 26 00 05 c2 00	ok	B0BE=0x17 dispatch reads 0x05C200, not 0x05C1A4
+S5	05A39C	6a 8c b0 bd 6a 0c b0 b7 6a 8c b0 be	6a 8c b0 bd 6a 0c b0 b7 6a 8c b0 be	ok	request: B0BD=1, B0BE=B0B7
+S6	05A214	fc 10 6a 8c b0 b7 fc 03 6a 8c b1 1e	fc 10 6a 8c b0 b7 fc 03 6a 8c b1 1e	ok	B0C7==3 -> code 0x10, DT 3
+S7	05A22A	fc 0b 6a 8c b0 b7 fc 02 6a 8c b1 1e	fc 0b 6a 8c b0 b7 fc 02 6a 8c b1 1e	ok	B0C7==2 -> code 0x0B, DT 2
+S8	05A240	fc 02 6a 8c b0 b7 fc 00 6a 8c b1 1e	fc 02 6a 8c b0 b7 fc 00 6a 8c b1 1e	ok	otherwise -> code 0x02, DT 0
+S9	05A2E8	fc 0a 6a 8c b0 b7 fc 01 6a 8c b1 1e	fc 0a 6a 8c b0 b7 fc 01 6a 8c b1 1e	ok	data message -> code 0x0A, DT 1
+S10	05A32E	fc 15 6a 8c b0 b7	fc 15 6a 8c b0 b7	ok	code 0x15
+S11	06CF4A	fc 16 6a 8c b0 b7	fc 16 6a 8c b0 b7	ok	code 0x16
+S12	06D08A	fc 17 6a 8c b0 b7 6a 8c b0 be	fc 17 6a 8c b0 b7 6a 8c b0 be	ok	code 0x17
+S13	0560EE	fc 01 6a 8c b0 b7 fc 00 6a 8c b0 bc 6a 8c b0 bd 6a 8c b0 be	fc 01 6a 8c b0 b7 fc 00 6a 8c b0 bc 6a 8c b0 bd 6a 8c b0 be	ok	power-off: B0B7=1, B0BC=B0BD=B0BE=0
+N1	05A55A	ac 18 47 48	ac 18 47 48	ok	trace formatter: opcode 0x18 -> 0x05AF10
+N2	05AF10	43 50 55 3e 44 53 50 3a 20 53 54 4f 50 20 45 4e 43 4f 44 45	43 50 55 3e 44 53 50 3a 20 53 54 4f 50 20 45 4e 43 4f 44 45	ok	CPU>DSP: STOP ENCODE
+N3	05A55E	ac 1a 47 4c	ac 1a 47 4c	ok	opcode 0x1A -> RX ENABLE/DISABLE strings
+N4	05A5AE	6e 5c 00 01 46 08 7a 03 00 05 ae d6	6e 5c 00 01 46 08 7a 03 00 05 ae d6	ok	"[1]==0 -> ""RX ENABLE"""
+N5	05A74C	6e 5c 00 01 46 08 7a 03 00 05 ae fc	6e 5c 00 01 46 08 7a 03 00 05 ae fc	ok	"1D [1]==0 -> ""MUTE OFF"""
+D14	017822	6a 0c 8d de 47 06 5e 03 ff a0	6a 0c 8d de 47 06 5e 03 ff a0	ok	node mode refuses the 32 re-send request
+D15	0358BE	6a 0c b3 db 6a 8c b0 c7	6a 0c b3 db 6a 8c b0 c7	ok	host-link TX DT source FFB3DB -> B0C7
+D16	06C826	6a 8c b3 db	6a 8c b3 db	ok	host F packet writes FFB3DB
+B6	0581BC	7a 06 00 ff 0b f6	7a 06 00 ff 0b f6	ok	] store pointer load of FF0BF6
+C12	0587C2	5e 05 ea 3a 40 4e	5e 05 ea 3a 40 4e	ok	relay replaces local dispatch
+OP00	05909A	f3 11 6a 0b 8e 2a 70 7b 6a 0c 8d de 47 02 70 1b	f3 11 6a 0b 8e 2a 70 7b 6a 0c 8d de 47 02 70 1b	ok	opcode 11 05905E
+OP01	059286	f3 12 6a 0b 8d 85 eb fc 6a 0c b1 1e ec 03 14 cb	f3 12 6a 0b 8d 85 eb fc 6a 0c b1 1e ec 03 14 cb	ok	opcode 12 059240 (r2l=0), 05923C (2), 059238 (2), 059234 (3)
+OP02	05EB2A	f3 31 fb 00 6b 83 b1 3e f3 30 fb 44 6b 83 b1 40 f3 40 fb a0 6b 83 b1 42 fc a0 6a 8c b1 44	f3 31 fb 00 6b 83 b1 3e f3 30 fb 44 6b 83 b1 40 f3 40 fb a0 6b 83 b1 42 fc a0 6a 8c b1 44	ok	opcode 31 05EAEE
+OP03	05EB8A	f3 32 fb 00 6a 0c 8a a0 47 02 70 7b	f3 32 fb 00 6a 0c 8a a0 47 02 70 7b	ok	opcode 32 05EB4E
+OP04	05A0B4	f2 01 fa 12 7a 01 00 ff 45 76	f2 01 fa 12 7a 01 00 ff 45 76	ok	opcode 15 05A0B4
+OP05	05A0C0	f2 11 fa 06 7a 01 00 ff 46 96	f2 11 fa 06 7a 01 00 ff 46 96	ok	opcode 15 05A0C0
+OP06	059A1E	f9 16 5e 05 94 fa	f9 16 5e 05 94 fa	ok	opcode 16 059A1E, 0599BE, 0599FA (all r1l=0x16 into 0594FA)
+OP07	059BBA	f9 07 5e 05 94 fa	f9 07 5e 05 94 fa	ok	opcode 07 059BBA
+OP08	059BDE	f9 08 5e 05 94 fa	f9 08 5e 05 94 fa	ok	opcode 08 059BDE
+OP09	059A6E	f9 06 5e 05 94 fa	f9 06 5e 05 94 fa	ok	opcode 06 059A6E
+OP10	059CE0	f9 09 5e 05 96 80	f9 09 5e 05 96 80	ok	opcode 09 059CD6; 059C28 for short message types
+OP11	059D38	f9 19 5e 05 96 80 fc 50	f9 19 5e 05 96 80 fc 50	ok	opcode 19 059C28, 059D2E
+OP12	059DD4	79 04 1a 00 6b 84 b1 3e	79 04 1a 00 6b 84 b1 3e	ok	opcode 1A 059D94 (via 059D8E)
+OP13	059E52	79 04 1a 01 6b 84 b1 3e	79 04 1a 01 6b 84 b1 3e	ok	opcode 1A 059E16 (via 059E10)
+OP14	059EA2	79 04 1d 01 6b 84 b1 3e	79 04 1d 01 6b 84 b1 3e	ok	opcode 1D 059E66
+OP15	059EF2	79 04 1d 00 6b 84 b1 3e	79 04 1d 00 6b 84 b1 3e	ok	opcode 1D 059EB6
+OP16	059F8E	79 0a 0b 00 fa 00 01 00 6b 82 b1 3e	79 0a 0b 00 fa 00 01 00 6b 82 b1 3e	ok	opcode 0B 059F40
+OP17	05A02E	79 0a 0b 01 fa 00 01 00 6b 82 b1 3e	79 0a 0b 01 fa 00 01 00 6b 82 b1 3e	ok	opcode 0B 059FE0
+OP18	05903E	18 00 00 00	18 00 00 00	ok	opcode 18 058F94 -> ROM 05903E
+OP19	05A07C	f3 1c 6a 0b b0 b8 6b 83 b1 3e	f3 1c 6a 0b b0 b8 6b 83 b1 3e	ok	opcode 1C 05A040
+OP20	05901E	1f 02 00 00	1f 02 00 00	ok	opcode 1F 058F86 -> ROM 05901E
+OP21	058FFE	1f 01 00 00	1f 01 00 00	ok	opcode 1F ROM 058FFE
+OP22	05BB2A	78 20 6a 2d 00 fe ea b4 0d 5d 78 20 6a 25 00 fe ea b0	78 20 6a 2d 00 fe ea b4 0d 5d 78 20 6a 25 00 fe ea b0	ok	opcode 0C 05BA22
+OP23	05BBD2	0c 00 0d 0e 2d 00 41 5a	0c 00 0d 0e 2d 00 41 5a	ok	opcode 0D 05BA22
+OP24	05BBD6	2d 00 41 5a	2d 00 41 5a	ok	opcode 0E 05BA22
+OP25	05BBA0	fd 01 0d 5d f5 1f fd 00 01 00 6b 85 b1 3e	fd 01 0d 5d f5 1f fd 00 01 00 6b 85 b1 3e	ok	opcode 0C-0E 05BA22 (ring empty)
+W1	000000-080000	5c 78 36 61 5b 5c 78 38 30 2d 5c 78 38 66 5d 5c 78 38 64 5c 78 64 65	00E516 010580 0105B6	ok	abs16 byte stores to FF8DDE
+W2	000000-080000	5c 78 36 61 5b 5c 78 61 30 2d 5c 78 61 66 5d 5c 78 30 30 5c 78 66 66 5c 78 38 64 5c 78 64 65		ok	abs32 byte stores to FF8DDE
+W3	000000-080000	5c 78 37 61 5b 5c 78 30 30 2d 5c 78 30 37 5d 5c 78 30 30 5c 78 66 66 5c 78 38 64 5c 78 64 65		ok	pointer loads of FF8DDE
+W4	000000-080000	5c 78 36 61 5b 5c 78 38 30 2d 5c 78 38 66 5d 5c 78 62 30 5c 78 62 65	0349F8 0560FE 05A3A4 05B426 05B43C 05B778 05B836 06CF54 06D090	ok	abs16 byte stores to FFB0BE (script code)
+W5	000000-080000	5c 78 36 61 5b 5c 78 61 30 2d 5c 78 61 66 5d 5c 78 30 30 5c 78 66 66 5c 78 62 30 5c 78 62 65 7c 5c 78 37 61 5b 5c 78 30 30 2d 5c 78 30 37 5d 5c 78 30 30 5c 78 66 66 5c 78 62 30 5c 78 62 65		ok	abs32 stores / pointer loads of FFB0BE
+W6	000000-080000	00 05 c1 a4		ok	32-bit references to table 0x05C1A4
+W7	000000-080000	5c 78 37 66 5c 78 35 32 5c 78 37 30 5c 78 32 30	05650A 05BC7C 05BF30	ok	bset #2,@FFFF52 (P3DR.b2 set)
+W8	000000-080000	5c 78 37 66 5c 78 35 32 5c 78 37 32 5c 78 32 30	056068 05B810	ok	bclr #2,@FFFF52 (P3DR.b2 clear)
+W9	000000-080000	00 01 05 4a 7c 00 01 05 56	010266 01026A	ok	references to the FF8DDE setters 0x01054A/0x010556
+W10	000000-080000	5c 5e 01 05 4a 7c 5c 5e 01 05 56		ok	jsr to the setters
+W11	000000-080000	48 52 49		ok	string HRI in MAIN
+W16	000000-080000	6a 5c 0c 8d de 4a 5c 0c fc 00 6a 10 b3 d9 77 00 67 fc 5c 0c cc	034C34 0358A4 0358EA 035A04 035AD8 035B68 0592C4 0597FC 05B7E6 05B85E 05B91A 05BC86 05C50C 05EC18	ok	sign-test idiom on FF8DDE (count only)
+W12	000000-080000	5c 78 66 63 5b 5c 78 30 36 2d 5c 78 30 39 5d 5c 78 36 61 5b 5c 78 38 30 2d 5c 78 38 66 5d 5c 78 62 30 5c 78 62 66		ok	immediate stores of 6..9 to the step byte FFB0BF
+W13	000000-080000	5c 78 35 65 5c 78 30 35 5c 78 39 62 5c 78 62 61 7c 5c 78 35 65 5c 78 30 35 5c 78 39 62 5c 78 64 65	05B6AA 05B6E6	ok	jsr to the 07/08 builders
+W14	000000-080000	5c 78 35 65 5c 78 30 35 5c 78 62 36 5c 78 61 30 7c 5c 78 35 65 5c 78 30 35 5c 78 62 36 5c 78 64 63	05B062 05B072 05B092 05B0A2	ok	jsr to the 07/08 step bodies (all inside unreferenced chunks 05B058/05B068/05B088/05B098)
+W15	000000-080000	00 05 b0 58 7c 00 05 b0 68 7c 00 05 b0 88 7c 00 05 b0 98		ok	32-bit references to those chunks

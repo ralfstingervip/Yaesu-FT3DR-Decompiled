@@ -1,0 +1,43 @@
+
+;---- func 0x3f636..0x3f656
+03f636  01 00 6f 65 00 02        mov.l   @(2:16,er6), er5                     <- 162e0,17a06,1a2a6,1c894,1ca04,1d108,1e8b8,23372
+03f63c  68 5b                    mov.b   @er5, r3l                            
+03f63e  69 64                    mov.w   @er6, r4                             
+03f640  1c bc                    cmp.b   r3l, r4l                             
+03f642  47 02                    beq     loc_3F646:8                          
+03f644  44 0a                    bcc     loc_3F650:8                          
+03f646  0c 4b                    mov.b   r4h, r3l                             <- 3f642
+03f648  6a 18 aa e1 72 20        bclr    #2, @0xFFFFAAE1:16                   
+03f64e  40 02                    bra     loc_3F652:8                          
+03f650  0a 0b                    inc.b   r3l                                  <- 3f644
+03f652  68 db                    mov.b   r3l, @er5                            <- 3f64e
+03f654  54 70                    rts                                          
+03f656  01 00 6f 65 00 02        mov.l   @(2:16,er6), er5                     <- 3f634
+03f65c  68 5b                    mov.b   @er5, r3l                            
+03f65e  69 64                    mov.w   @er6, r4                             
+03f660  1c 4b                    cmp.b   r4h, r3l                             
+03f662  47 02                    beq     loc_3F666:8                          
+03f664  44 0a                    bcc     loc_3F670:8                          
+03f666  0c cb                    mov.b   r4l, r3l                             <- 3f662
+03f668  6a 18 aa e1 72 20        bclr    #2, @0xFFFFAAE1:16                   
+03f66e  40 02                    bra     loc_3F672:8                          
+03f670  1a 0b                    dec.b   r3l                                  <- 3f664
+03f672  68 db                    mov.b   r3l, @er5                            <- 3f66e
+03f674  54 70                    rts                                          
+
+;---- func 0x3f676..0x3f6ae
+03f676  6a 10 a9 ee 73 00        btst    #0, @0xFFFFA9EE:16                   <- 1a2fc,6006c,6009c,60112,60134,63fd2,63ff6,64064
+03f67c  46 18                    bne     loc_3F696:8                          
+03f67e  68 6b                    mov.b   @er6, r3l                            
+03f680  6b 24 00 ff b0 92        mov.w   @0xFFB092:32, r4                     
+03f686  1c bc                    cmp.b   r3l, r4l                             
+03f688  47 02                    beq     loc_3F68C:8                          
+03f68a  44 04                    bcc     loc_3F690:8                          
+03f68c  0c 4b                    mov.b   r4h, r3l                             <- 3f688
+03f68e  40 02                    bra     loc_3F692:8                          
+03f690  0a 0b                    inc.b   r3l                                  <- 3f68a
+03f692  68 eb                    mov.b   r3l, @er6                            <- 3f68e
+03f694  54 70                    rts                                          
+03f696  68 6b                    mov.b   @er6, r3l                            <- 3f67c
+03f698  6b 24 00 ff b0 92        mov.w   @0xFFB092:32, r4                     
+03f69e  1c 4b                    cmp.b   r4h, r3l                             

@@ -1,0 +1,375 @@
+group	doc	item	got	expected	verdict	note
+ledger:image	83,95,R	MAIN sha256 prefix	8e3ecd05409b2c31	8e3ecd05409b2c31	PASS	
+ledger:image	83,95,R	SUB sha256 prefix	b93570b3c2f69ccb	b93570b3c2f69ccb	PASS	
+ledger:image	83,95,R	MAIN size	1048576	1048576	PASS	
+ledger:image	83,95,R	SUB size	4194304	4194304	PASS	
+ledger:image	83,95,R	MAIN content end 0x7B754 (= 505,684); bytes above are all 0xFF or 0x00	True	True	PASS	content length used as denominator
+ledger:mask	83,95,R	final4_proven length	1048576	1048576	PASS	
+ledger:mask	83,95,R	final4_proven values are 0/1 only	True	True	PASS	
+ledger:mask	83,95,R	final4_proven zero above 0x7B754	0	0	PASS	
+ledger:mask	83,95,R	final4_named length	1048576	1048576	PASS	
+ledger:mask	83,95,R	final4_named values are 0/1 only	True	True	PASS	
+ledger:mask	83,95,R	final4_named zero above 0x7B754	0	0	PASS	
+ledger:mask	83,95,R	final3_proven length	505684	505684	PASS	final3 masks are content-length (505,684 B); doc 83 Findings 4 says final4 uses "the same format as main-final3: 1,048,576 bytes" -- wording only
+ledger:mask	83,95,R	final3_proven values are 0/1 only	True	True	PASS	
+ledger:mask	83,95,R	final3_proven zero above 0x7B754	0	0	PASS	
+ledger:mask	83,95,R	final3_named length	505684	505684	PASS	final3 masks are content-length (505,684 B); doc 83 Findings 4 says final4 uses "the same format as main-final3: 1,048,576 bytes" -- wording only
+ledger:mask	83,95,R	final3_named values are 0/1 only	True	True	PASS	
+ledger:mask	83,95,R	final3_named zero above 0x7B754	0	0	PASS	
+ledger:mask	83,95,R	final4_proven popcount	368624	368624	PASS	
+ledger:mask	83,95,R	final4_named popcount	497451	497451	PASS	
+ledger:mask	83,95,R	final3_proven popcount	368366	368366	PASS	
+ledger:mask	83,95,R	final3_named popcount	497314	497314	PASS	
+ledger:mask	83,95,R	final4_proven sha256 prefix	3a45f1f46b36a47f	3a45f1f46b36a47f	PASS	
+ledger:mask	83,95,R	final4_named sha256 prefix	2b8255b683ca474a	2b8255b683ca474a	PASS	
+ledger:mask	83,95,R	final3_proven \ final4_proven (lost)	0	0	PASS	
+ledger:mask	83,95,R	final3_named \ final4_named (lost)	0	0	PASS	
+ledger:mask	83,95,R	final4_proven \ final4_named (proven not named)	0	0	PASS	
+ledger:mask	83,95,R	final4_proven \ final3_proven bytes	258	258	PASS	
+ledger:mask	83,95,R	final4_named \ final3_named bytes	137	137	PASS	
+ledger:mask	83,95,R	new proven = exactly the 12 listed runs (RESUME K ledger / doc 83 table)	[(96730, 8), (168308, 6), (176166, 10), (177002, 18), (177074, 14), (177738, 64), (178364, 10), (180830, 10), (320214, 72), (412646, 16), (417530, 16), (431804, 14)]	[(96730, 8), (168308, 6), (176166, 10), (177002, 18), (177074, 14), (177738, 64), (178364, 10), (180830, 10), (320214, 72), (412646, 16), (417530, 16), (431804, 14)]	PASS	
+ledger:mask	83,95,R	sum of 12 listed runs	258	258	PASS	
+ledger:mask	83,95,R	K1b runs (12 minus 0x04E2D6) sum	186	186	PASS	
+ledger:mask	83,95,R	J4's 0x065EFA/F00/F06 = 16 B	16	16	PASS	
+ledger:mask	83,95,R	named delta that is new proven code	95	95	PASS	
+ledger:mask	83,95,R	named delta: Baro header 0x04E31E-0x04E31F	2	2	PASS	
+ledger:mask	83,95,R	named delta remainder (helper-table tails)	40	40	PASS	
+ledger:mask	83,95,R	named delta runs not proven and not Baro (count of runs)	15	15	PASS	
+ledger:mask	83,95,R	named 497,314 + 95 + 2 + 40	497451	497451	PASS	
+ledger:mask	83,95,R	final4_proven set bytes inside window 0x078106-0x07B753	220	220	PASS	
+ledger:mask	83,95,R	final3_proven set bytes inside window	220	220	PASS	
+ledger:mask	83,95,R	final4_proven inside window all inside code 0x078106-0x078545	0	0	PASS	
+ledger:mask	83,95,R	I12 blocks 0x054D22-4B + 0x054F3A-87 (120 B) set in final4_proven	0	0	PASS	len 120
+ledger:mask	83,95,R	new proven bytes inside I12 blocks	0	0	PASS	
+ledger:mask	83,95,R	new proven bytes inside the window	0	0	PASS	
+ledger:ledger	83,95,R	J-wave 368,438 = 368,366 + 72	368438	368438	PASS	
+ledger:ledger	83,95,R	368,624 - 368,438 = 186 (K1b)	186	186	PASS	
+ledger:demotion	83,95,R	range length 0x054AE2-0x054BF7	278	278	PASS	
+ledger:demotion	83,95,R	range fully set in final4_proven	278	278	PASS	
+ledger:demotion	83,95,R	range fully set in final4_named	278	278	PASS	
+ledger:demotion	83,95,R	head 0x054AC0-0x054AE1 in final4_proven	0	0	PASS	
+ledger:demotion	83,95,R	0x054BF8-0x054C11 in final4_proven (stays)	26	26	PASS	
+ledger:demotion	83,95,R	368,624 - 278	368346	368346	PASS	
+ledger:demotion	83,95,R	bytes 0x054ADE	6a 0a a5 1a	6a 0a a5 1a	PASS	
+ledger:demotion	83,95,R	bytes 0x054AE2	4b 0c	4b 0c	PASS	
+ledger:demotion	83,95,R	bytes 0x054BF6 (rts)	54 70	54 70	PASS	
+ledger:demotion	83,95,R	bytes 0x002214	5e 05 4b f8	5e 05 4b f8	PASS	
+ledger:demotion	83,95,R	bytes 0x054AC0	5e 05 45 68	5e 05 45 68	PASS	
+ledger:demotion	83,95,R	BE32 values in [0x054AC0,0x054BF8) at even offsets in content	0	0	PASS	
+ledger:demotion	83,95,R	BE32 values in [0x054AC0,0x054BF8) at odd offsets (not pointers on H8SX)	['04E9FB=00054B00']	['04E9FB=00054B00']	PASS	byte table 00 04 6a 00 00 05 4b 00 00 06 59 00; not one of doc 83 values 054AC0/054AE2/054AE4/054AF0
+ledger:demotion	83,95,R	BE32 exactly 054AC0/054AE2/054AE4/054AF0 any alignment	0	0	PASS	
+ledger:demotion	83,95,R	jmp/jsr abs24 (5a/5e) into [0x054AC0,0x054BF8) anywhere in content	0	0	PASS	
+ledger:demotion	83,95,R	mov.l #imm (7a 0x) into range anywhere	0	0	PASS	
+ledger:demotion	83,95,R	relative branches (bXX/bsr) decoded at any final4-proven offset outside range, targeting range	0	0	PASS	
+ledger:fnindex	83,95,R	fnindex-only-runs.tsv runs	94	94	PASS	
+ledger:fnindex	83,95,R	fnindex-only-runs.tsv sum	4850	4850	PASS	
+ledger:fnindex	83,95,R	minus 0x054AE2 (93 runs / 4,572 B)	(93, 4572)	(93, 4572)	PASS	
+ledger:fnindex	83,95,R	five largest	[('03C668', 820), ('046210', 472), ('054AE2', 278), ('077CC2', 206), ('01C4D2', 194)]	[('03C668', 820), ('046210', 472), ('054AE2', 278), ('077CC2', 206), ('01C4D2', 194)]	PASS	
+ledger:fnindex	83,95,R	every fnindex-only run fully final4-proven	True	True	PASS	
+ledger:doc95	83,95,R	range 07810C-07815B length	80	80	PASS	
+ledger:doc95	83,95,R	range 0781A4-0781A9 length	6	6	PASS	
+ledger:doc95	83,95,R	range 0781C4-078221 length	94	94	PASS	
+ledger:doc95	83,95,R	range 07823C-07825F length	36	36	PASS	
+ledger:doc95	83,95,R	range 078268-078279 length	18	18	PASS	
+ledger:doc95	83,95,R	range 07827C-078333 length	184	184	PASS	
+ledger:doc95	83,95,R	range 07833C-07837B length	64	64	PASS	
+ledger:doc95	83,95,R	range 078384-0783D9 length	86	86	PASS	
+ledger:doc95	83,95,R	range 0783EE-07842D length	64	64	PASS	
+ledger:doc95	83,95,R	range 078440-078441 length	2	2	PASS	
+ledger:doc95	83,95,R	range 078448-078459 length	18	18	PASS	
+ledger:doc95	83,95,R	range 078462-078507 length	166	166	PASS	
+ledger:doc95	83,95,R	range 078514-078545 length	50	50	PASS	
+ledger:doc95	83,95,R	13 ranges sum	868	868	PASS	
+ledger:doc95	83,95,R	13 ranges: final4_proven set bytes	0	0	PASS	
+ledger:doc95	83,95,R	13 ranges: final4_named set bytes	0	0	PASS	
+ledger:doc95	83,95,R	unset proven bytes in 0x078106-0x078545	868	868	PASS	
+ledger:doc95	83,95,R	unset proven runs in code part == the 13 ranges	[(6, 85), (158, 163), (190, 283), (310, 345), (354, 371), (374, 557), (566, 629), (638, 723), (744, 807), (826, 827), (834, 851), (860, 1025), (1038, 1087)]	[(6, 85), (158, 163), (190, 283), (310, 345), (354, 371), (374, 557), (566, 629), (638, 723), (744, 807), (826, 827), (834, 851), (860, 1025), (1038, 1087)]	PASS	
+ledger:doc95	83,95,R	unset named bytes in 0x078106-0x078545	868	868	PASS	
+ledger:doc95	83,95,R	span 0x078106-0x07B753 inclusive	13902	13902	PASS	
+ledger:doc95	83,95,R	data part 13902-1088	12814	12814	PASS	
+ledger:doc95	83,95,R	code-heads.tsv rows	336	336	PASS	
+ledger:doc95	83,95,R	heads contiguous from 0x078106 (gaps)	0	0	PASS	
+ledger:doc95	83,95,R	heads end at 0x078546	492870	492870	PASS	
+ledger:doc95	83,95,R	heads byte total	1088	1088	PASS	
+ledger:doc95	83,95,R	heads whose hex != image	0	0	PASS	
+ledger:doc95	83,95,R	heads whose length != bu_all.tsv oracle length	0	0	PASS	
+ledger:doc95	83,95,R	heads whose mnemonic != bu_all.tsv mnemonic	0	0	PASS	
+ledger:doc95	83,95,R	868 clear bytes all inside the 336 heads	True	True	PASS	
+ledger:doc95	83,95,R	heads partly set/partly clear in proven (should be 0: ranges on head boundaries)	0	0	PASS	
+ledger:ledger	83,95,R	MAIN proven follow-up 368,346 + 868	369214	369214	PASS	
+ledger:ledger	83,95,R	MAIN named follow-up 497,451 + 868	498319	498319	PASS	
+ledger:ledger	83,95,R	K-wave headline 497,451 + 464,263	961714	961714	PASS	
+ledger:ledger	83,95,R	follow-up headline 498,319 + 464,263	962582	962582	PASS	
+ledger:ledger	83,95,R	denominator 505,684 + 524,288	1029972	1029972	PASS	
+ledger:ledger	83,95,R	headline % 962,582/1,029,972	93.46	93.46	PASS	
+ledger:ledger	83,95,R	K-wave headline % 961,714/1,029,972	93.37	93.37	PASS	
+ledger:ledger	83,95,R	doc 83 headline % (3 dp)	93.373	93.373	PASS	
+ledger:ledger	83,95,R	MAIN named % 498,319/505,684	98.54	98.54	PASS	
+ledger:ledger	83,95,R	MAIN named % 497,451/505,684	98.37	98.37	PASS	
+ledger:ledger	83,95,R	proven % 369,214/505,684	73.01	73.01	PASS	
+ledger:ledger	83,95,R	proven % 368,346/505,684	72.84	72.84	PASS	
+ledger:ledger	83,95,R	proven % 368,346/388,490	94.81	94.81	PASS	
+ledger:ledger	83,95,R	doc 83 proven % 368,624/505,684 (3 dp)	72.896	72.896	PASS	
+ledger:ledger	83,95,R	doc 83 proven % 368,624/388,490 (3 dp)	94.886	94.886	PASS	
+ledger:ledger	83,95,R	doc 83 alt proven % 368,346 (3 dp)	72.841	72.841	PASS	
+ledger:ledger	83,95,R	doc 83 K1b-J4-only: 368,366+72+16 / named 497,314+70+2+... 	368454	368454	PASS	
+ledger:ledger	83,95,R	K1b-J4-only after demotion	368176	368176	PASS	
+ledger:ledger	83,95,R	doc 83 J4-only headline 497,387 + 464,263	961650	961650	PASS	
+ledger:ledger	83,95,R	doc 83 J4-only headline % (3 dp)	93.367	93.367	PASS	
+ledger:ledger	83,95,R	doc 83 alt named-removed 497,451-278 / headline	(497173, 961436, 93.346)	(497173, 961436, 93.346)	PASS	
+ledger:ledger	83,95,R	K wave +67 B on J (961,714-961,647)	67	67	PASS	
+ledger:ledger	83,95,R	follow-up +868 on K (962,582-961,714)	868	868	PASS	
+ledger:ledger	83,95,R	SUB window % 464,263/524,288	88.55	88.55	PASS	
+ledger:ledger	83,95,R	SUB code+typed % 520,552/524,288	99.29	99.29	PASS	
+ledger:ledger	83,95,R	strict companion 497,451 + 457,462	954913	954913	PASS	
+ledger:ledger	83,95,R	strict companion %	92.71	92.71	PASS	
+ledger:final5-info	83,95,R	final5_proven popcount = follow-up proven	369214	369214	PASS	
+ledger:final5-info	83,95,R	final5_named popcount = follow-up named	498319	498319	PASS	
+ledger:final5-info	83,95,R	final5 minus final4 proven = exactly the 868 window bytes	True	True	PASS	
+ledger:final5-info	83,95,R	final4 minus final5 proven = exactly 0x054AE2-0x054BF7	True	True	PASS	
+ledger:final5-info	83,95,R	final5 named = final4 named + the 868 window bytes	True	True	PASS	
+ledger:sub	83,95,R	K7 mask_final3_after_headline == I17 mask_final2_headline (byte-identical)	True	True	PASS	len 524288/524288
+ledger:sub	83,95,R	popcount mask_final3_after_headline	464165	464165	PASS	
+ledger:sub	83,95,R	popcount mask_final2_headline	464165	464165	PASS	
+ledger:sub	83,95,R	K7 mask_final3_before_headline == after	True	True	PASS	
+ledger:sub	83,95,R	K7 mask_final3_after_headline_w2 == I17 mask_final2_headline_w2 (byte-identical)	True	True	PASS	len 524288/524288
+ledger:sub	83,95,R	popcount mask_final3_after_headline_w2	464263	464263	PASS	
+ledger:sub	83,95,R	popcount mask_final2_headline_w2	464263	464263	PASS	
+ledger:sub	83,95,R	K7 mask_final3_before_headline_w2 == after	True	True	PASS	
+ledger:sub	83,95,R	K7 mask_final3_after_reach == I17 mask_final2_reach (byte-identical)	True	True	PASS	len 524288/524288
+ledger:sub	83,95,R	popcount mask_final3_after_reach	454692	454692	PASS	
+ledger:sub	83,95,R	popcount mask_final2_reach	454692	454692	PASS	
+ledger:sub	83,95,R	K7 mask_final3_before_reach == after	True	True	PASS	
+ledger:sub	83,95,R	K7 mask_final3_after_reach_w2 == I17 mask_final2_reach_w2 (byte-identical)	True	True	PASS	len 524288/524288
+ledger:sub	83,95,R	popcount mask_final3_after_reach_w2	457462	457462	PASS	
+ledger:sub	83,95,R	popcount mask_final2_reach_w2	457462	457462	PASS	
+ledger:sub	83,95,R	K7 mask_final3_before_reach_w2 == after	True	True	PASS	
+ledger:sub	83,95,R	K7 mask_final3_after_allwf == I17 mask_final2_allwf (byte-identical)	True	True	PASS	len 524288/524288
+ledger:sub	83,95,R	popcount mask_final3_after_allwf	467999	467999	PASS	
+ledger:sub	83,95,R	popcount mask_final2_allwf	467999	467999	PASS	
+ledger:sub	83,95,R	K7 mask_final3_before_allwf == after	True	True	PASS	
+ledger:sub	83,95,R	sub-final3/counts.txt typed data mask	56289	56289	PASS	
+ledger:sub	83,95,R	sub-final3/counts.txt code+typed (headline+w2)	520552	520552	PASS	
+ledger:sub	83,95,R	sub-final3/counts.txt functions in DB	2395	2395	PASS	
+pattern	85,R	jsr @0x026F08 (5e 02 6f 08) in MAIN content	125	125	PASS	
+pattern	85	whole MAIN image same pattern	125	125	PASS	
+pattern	85	mov.w @0xFFBBC2,Rn load sites (6b 0X bb c2)	84	84	PASS	doc 85: "78 of the 84 0xFFBBC2 load sites"
+pattern	86	jsr sub_6D052 (5e 06 d0 52)	['062DB2', '062E2C', '062EC4', '062F6A', '062FD8', '06304C']	['062DB2', '062E2C', '062EC4', '062F6A', '062FD8', '06304C']	PASS	
+pattern	86	fc imm 6a 8c b0 b9 stores	19	19	PASS	
+pattern	86	each of the six calls has 6a 0c 8d de 4a xx within the 16 B before it	True	True	PASS	
+pattern	93	abs16 stores to FF956D (6a 8X 95 6d)	11	12	FAIL	doc 93 says "Twelve sites"; its own list and ff956d.tsv give 11: 02F622 03111E 0341E4 03421A 03429A 0342BE 0342D2 034316 03433A 034860 039436
+pattern	93	those stores each preceded by fc 02	True	True	PASS	
+pattern	93	abs16 reads of FF956D (6a 0X 95 6d)	['02FA7C', '03497C']	['02FA7C', '03497C']	PASS	
+pattern	93	abs32 00 ff 95 6d / 00 ff 95 6c, word 6b xx 95 6c|6d	0	0	PASS	
+pattern	93	B0CC abs16 stores (6a 8X b0 cc)	['002E18', '073B3A', '0743BC', '0743CC']	['002E18', '073B3A', '0743BC', '0743CC']	PASS	doc 93: "4 stores"
+pattern	93	B0CC references in the whole image (abs16 6a/6b any, abs32)	9	8	FAIL	doc 93: "8 references in the whole image"; image has 9: 002E18 0358CA 035A22 035EDC 035F86 073B3A 0743BC 0743C2 0743CC; 0x035F86 (btst after bra at 0x035F84) is not final4-proven
+pattern	93	B0CC references inside final4-proven code	8	8	PASS	
+pattern	94	bb c2 in MAIN content	88	88	PASS	
+pattern	94	bb c3 in MAIN content	0	0	PASS	
+pattern	94	6b 8X bb c2	3	3	PASS	
+pattern	94	6a 8c fe f0	['002484']	['002484']	PASS	
+pattern	94	79 04 4e 20	['0024A2']	['0024A2']	PASS	
+pattern	94	79 2X 89 80	9	9	PASS	
+pattern	94	79 2X 89 80 sites == guard-sites.tsv	['0565FA', '056650', '05A1CA', '05A25C', '05A296', '05A304', '05A352', '05B8AC', '05B8E4']	['0565FA', '056650', '05A1CA', '05A25C', '05A296', '05A304', '05A352', '05B8AC', '05B8E4']	PASS	
+pattern	94	ff a9 e0 in content	0	0	PASS	
+pattern	94	5e/5a/00 03 c6 68	0	0	PASS	
+pattern	94	5e 03 35 32	['077DB2', '077DF6']	['077DB2', '077DF6']	PASS	
+pattern	94	jsr @0x3BDAC	32	32	PASS	
+pattern	94	jsr @0x3BF4C	31	31	PASS	
+pattern	94	abs16 89 ca references (6a/6b xx 89 ca)	['00E678']	['00E678']	PASS	
+pattern	94	fc 14 6a 8c a9 ed injector	['00FDFE']	['00FDFE']	PASS	
+pattern	94	fc 4f 6a 8c aa e0	['05548E']	['05548E']	PASS	
+pattern	96	mov.b stores to FF800F/10/11 (6a 8X 80 0f|10|11)	['00DE0A', '00DE10', '00DE1A', '00DF46', '0236E2', '0236E6', '073B12', '073B16', '073BA0', '073BA4', '0740F6', '0740FA']	['00DE0A', '00DE10', '00DE1A', '00DF46', '0236E2', '0236E6', '073B12', '073B16', '073BA0', '073BA4', '0740F6', '0740FA']	PASS	doc 96 writers table (12 mov.b + 68 9c + mov.l = 13 hits + pointer)
+pattern	96	mov.b stores to FF800E (6a 8X 80 0e)	0	0	PASS	
+pattern	96	mov.l #0xFF800E,erN	['03955E']	['03955E']	PASS	
+pattern	96	jsr sub_39534	['00DC8C', '00DCD6', '073B6C']	['00DC8C', '00DCD6', '073B6C']	PASS	
+pattern	96	jsr sub_39544	['00DCE2', '0236EA', '0740FE']	['00DCE2', '0236EA', '0740FE']	PASS	
+pattern	96	jmp sub_39534/39544	0	0	PASS	
+pattern	96	jsr/jmp sub_DDFE	['00DF2C']	['00DF2C']	PASS	
+pattern	96	mov.l #0x20,er0 (7a 00 00 00 00 20)	['039558']	['039558']	PASS	
+pattern	96	mov.l #0x21/22/23,er0	0	0	PASS	
+table	96	writers.tsv hex == image	[]	[]	PASS	
+pattern	97	jsr sub_34DC2	13	13	PASS	
+pattern	97	jsr sub_34E82	['025B98', '025FD0']	['025B98', '025FD0']	PASS	
+pattern	97	jsr sub_34E42	['034E84']	['034E84']	PASS	
+pattern	97	bsr 55 7c targeting 0x034E42	['034DC4']	['034DC4']	PASS	
+pattern	97	mov.l #FF92CE/#FF92D6,er5 (stores)	['03F4BA', '03F4C2', '03F4D2', '03F4E0']	['03F4BA', '03F4C2', '03F4D2', '03F4E0']	PASS	
+pattern	97	other #FF92CE immediates (non-er5)	['03478E', '034E48', '035D9C']	['03478E', '034E48', '035D9C']	PASS	
+pattern	97	jsr sub_3F4A2	['002DC8']	['002DC8']	PASS	
+pattern	97	jsr sub_32650	['01E114', '01E30E', '01E5A8', '032ACC']	['01E114', '01E30E', '01E5A8', '032ACC']	PASS	
+pattern	97	btst #4 on 6e xx 00 86	['010674']	['010674']	PASS	
+pattern	97	FF8010 abs16 in the literal range 0x034E42-0x03F4EA	1	0	FAIL	doc 97: "FF8010 does not occur in 0x034E42-0x03F4EA"; hits: 03F38E (6a 04 80 10 = mov.b @FF8010,r4h; outside sub_34E42 and sub_3F4A2)
+pattern	97	FF8010 abs16 inside sub_34E42 (034E42-034E82) or sub_3F4A2 (03F4A2-03F4EA)	0	0	PASS	
+table	97	SUB file 0x349073 SIMPLEX/-RPT/+RPT/DUPLEX	b'SIMPLEX\x00-RPT\x00+RPT\x00DUPLEX\x00'	b'SIMPLEX\x00-RPT\x00+RPT\x00DUPLEX\x00'	PASS	
+table	83,84,85	zone tables listed	99	99	PASS	
+table	83,84,85	sum of image counts (zones incl. 3 phantoms)	511	511	PASS	
+table	83	union of table extents (overruns counted once)	5296	5296	PASS	sum of 2+10n is 5308; the 3 overruns add 4 B each into the next table
+table	83,85	span 0x02702A-0x02853E minus table bytes = 3 unreferenced blocks	100	100	PASS	
+table	83	tsv count == image count, all rows	True	True	PASS	
+table	83	first / last table	('02702A', '02853E')	('02702A', '02853E')	PASS	
+table	83,85	tables overrunning the next table	['027648', '0276D2', '027784']	['027648', '0276D2', '027784']	PASS	
+table	83,85	overrun amount (bytes) each	[4, 4, 4]	[4, 4, 4]	PASS	
+table	83	helper-tables.tsv sites (distinct site column; 80 rows incl. 12 L1 sub-table rows)	71	71	PASS	
+table	83	helper tables (distinct)	79	79	PASS	see next row
+table	83	distinct table addresses incl. two-level sub-tables	79	79	PASS	
+table	83	slot total over the 79 distinct tables (N-1 each; 0x02AFF2 used with N=9 and N=8)	642	642	PASS	sum over the 80 rows is 649
+table	83	11 helpers at 0x02853E + 0x24k: cmp.w #N (79 24 00 NN at +4)	[3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 23]	[3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 23]	PASS	
+table	83	helper jsr @er6 sites (I8 nine) = 5d 60	['5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60']	['5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60', '5d60']	PASS	
+table	85	0x028452 5 full-width rows Y 31-59..151-179 -> 1..5	[(31, 59, 1), (61, 89, 2), (91, 119, 3), (121, 149, 4), (151, 179, 5)]	[(31, 59, 1), (61, 89, 2), (91, 119, 3), (121, 149, 4), (151, 179, 5)]	PASS	
+table	85	0x02839A	[(1, 185, 104, 238, 6), (108, 185, 211, 238, 7)]	[(1, 185, 104, 238, 6), (108, 185, 211, 238, 7)]	PASS	
+table	85	0x02843C	[(1, 185, 104, 238, 61444), (215, 185, 318, 238, 61441)]	[(1, 185, 104, 238, 61444), (215, 185, 318, 238, 61441)]	PASS	
+table	85	0x02704C values / Y	[(128, 180, 7), (128, 180, 8), (128, 180, 9)]	[(128, 180, 7), (128, 180, 8), (128, 180, 9)]	PASS	
+table	85	0x02706C values	[10, 11, 12, 13]	[10, 11, 12, 13]	PASS	
+table	85	0x027096 values	[14, 15, 16, 17, 18]	[14, 15, 16, 17, 18]	PASS	
+table	85	0x02702A / 0x027036 zone counts	(1, 2)	(1, 2)	PASS	
+table	85	0x0270CA count 12 (3x4 keypad)	12	12	PASS	
+table	85	0x0271E6 count 14	14	14	PASS	
+table	85	0x027274 count 19, values 30-45,3,4,5	[3, 4, 5, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]	[3, 4, 5, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]	PASS	
+table	85	keyboards 0x027334/0x0273F4/0x0274BE/0x02757E counts 19-20	[19, 20, 19, 20]	[19, 20, 19, 20]	PASS	
+table	85	DISPLAY row table 0x01515C: 9 rows then pad 00	(True, 0)	(True, 0)	PASS	
+table	84	event-ladder.tsv arms	94	94	PASS	
+pattern	84	00 ff bb c8 occurrences in MAIN content	['006620', '047866']	['006620', '047866']	PASS	doc 84: immediate at 0x047864 (mov.l #, imm at +2) and data at 0x6620
+pattern	84	readers of FFBBD4 (mov.l 01 00 6b 0X bb d4, instruction start; plus any 6a 0X bb d4)	['026358', '02639C']	['026358', '02639C']	PASS	
+pattern	84	readers of FFBBD3 (6a 0X bb d3)	['026342']	['026342']	PASS	
+pattern	88	LE32 FFED7EB0 anywhere in SUB	['0xfff32c78']	['0xfff32c78']	PASS	only inside fb 12 imm32 at FFF32C76
+pattern	88	imm24 form b0 7e ed after fb ?e	0	0	PASS	
+pattern	88	LE32 FFF36999 anywhere in SUB	0	0	PASS	
+pattern	88	MSTPCRD bit clears: only FFF36D36 7b 32	['0xfff36d34']	['0xfff36d34']	PASS	
+table	89	dead.tsv rows	125	125	PASS	
+table	89	dead.tsv bytes_total sum	10670	10670	PASS	
+table	89	dead.tsv chunks all 1	True	True	PASS	
+table	89	dead.tsv inbound_edges_now all 0	True	True	PASS	
+table	89	merges.tsv rows	31	31	PASS	
+table	89	merges bytes_j10 / all chunks	(2279, 2890)	(2279, 2890)	PASS	
+table	89	merges owners	15	15	PASS	
+table	89	125 dead 7,780 + 2,890 merged	10670	10670	PASS	
+table	89	usb-scan.tsv rows (all scope C)	(184, {'C-le32-aligned'})	(184, {'C-le32-aligned'})	PASS	
+table	89	scope C classes: code@ / data@+4 / data@+0 / unexplored	(11, 85, 15, 73)	(11, 85, 15, 73)	PASS	doc 89: 6 bsr.a + 5 straddle = 11 code@; 100 typed = 85+15; 73 unexplored
+table	89	bsr.a FFEE7F8C target	0xffeefeee	0xffeefeee	PASS	
+table	89	bsr.a FFF26C30 target	0xfff2ec2c	0xfff2ec2c	PASS	
+table	89	bra.b FFEF05E9 2e 53 target	0xffef063c	0xffef063c	PASS	
+table	89	bsr.w FFF2A6F7 39 14 00 target	0xfff2a70b	0xfff2a70b	PASS	
+arith	95	flash 07B680 -> RAM	FF640E	FF640E	PASS	
+arith	95	flash 07B711 -> RAM	FF649F	FF649F	PASS	
+arith	95	flash 07B698 -> RAM	FF6426	FF6426	PASS	
+arith	95	flash 07B4B4 -> RAM	FF6242	FF6242	PASS	
+arith	95	flash 07B4B8 -> RAM	FF6246	FF6246	PASS	
+arith	95	flash 07B54A -> RAM	FF62D8	FF62D8	PASS	
+arith	95	flash 07B53A -> RAM	FF62C8	FF62C8	PASS	
+arith	95	flash 07B5A2 -> RAM	FF6330	FF6330	PASS	
+arith	95	flash 07B56A -> RAM	FF62F8	FF62F8	PASS	
+arith	95	flash 07B61E -> RAM	FF63AC	FF63AC	PASS	
+arith	95	flash 07B5F0 -> RAM	FF637E	FF637E	PASS	
+arith	95	flash 07B4B2 -> RAM	FF6240	FF6240	PASS	
+arith	95	0x07B754 - 0x07B2A6 = 0x4AE = 1198	(1198, 1198)	(1198, 1198)	PASS	
+arith	95	config record lengths	67	67	PASS	
+arith	95	07B2A6-07B4B1 = 524 B = 262 words; 524/4 = 131	(524, 262, 131)	(524, 262, 131)	PASS	
+table	95	0x078600-0x07B25F words: count/min/max/distinct	(5680, '0x2121', '0xffff', 3201)	(5680, '0x2121', '0xffff', 3201)	PASS	
+table	95	records 07B4B4.. masks/+4/handler	['80 00 00 00 00 00 00 07 84 be', '05 00 00 00 01 00 00 07 69 aa', '08 00 00 00 00 00 00 07 68 c8', '02 00 00 00 01 00 00 07 69 aa', '40 00 00 00 05 00 00 07 67 be', '10 00 00 00 04 00 00 07 68 a8', '00 00 00 00 ff 00 00 00 00 00']	['80 00 00 00 00 00 00 07 84 be', '05 00 00 00 01 00 00 07 69 aa', '08 00 00 00 00 00 00 07 68 c8', '02 00 00 00 01 00 00 07 69 aa', '40 00 00 00 05 00 00 07 67 be', '10 00 00 00 04 00 00 07 68 a8', '00 00 00 00 ff 00 00 00 00 00']	PASS	
+table	95	string descriptors 07B272/76/86	('04 03 09 04', 'Renesas', '000000000000')	('04 03 09 04', 'Renesas', '000000000000')	PASS	
+table	95	pointer records 07B5FA/07B600/07B60C	('04 00 00 07 b2 72', '10 00 00 07 b2 76', '1a 00 00 07 b2 86')	('04 00 00 07 b2 72', '10 00 00 07 b2 76', '1a 00 00 07 b2 86')	PASS	
+table	95	07B5F0/07B5F4/07B5F6	('00 ff 64 0e', '00 43', '00 ff 64 9f')	('00 ff 64 0e', '00 43', '00 ff 64 9f')	PASS	
+table	95	07B54A ring image / 07B53A / 07B5A2 / 07B56A	('00 fe e0 10 00 fe e0 10 00 fe e0 10 00 fe e1 0f', '00 fe e1 10 00 fe e1 10 00 fe e1 10 00 fe e2 0f', '00 ff ee 24', 'ff ff ff ff')	('00 fe e0 10 00 fe e0 10 00 fe e0 10 00 fe e1 0f', '00 fe e1 10 00 fe e1 10 00 fe e1 10 00 fe e2 0f', '00 ff ee 24', 'ff ff ff ff')	PASS	
+table	95	07B61E 50-byte burst image	00 00 10 00 00 15 20 80 00 01 25 28 80 00 02 34 38 10 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00	00 00 10 00 00 15 20 80 00 01 25 28 80 00 02 34 38 10 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00	PASS	
+table	95	0x078222 and 0x07823C same 26 bytes	True	True	PASS	
+table	95	no BE32 pointer to 07B680 / 07B697 / 07B698 / FF6426 in MAIN	[]	[]	PASS	
+table	95	07B697..: 119 ASCII bytes 07B699-07B70F	True	True	PASS	
+lane-table	95	ida\out\service-window\citations.tsv rows	465	465	PASS	
+lane-table	95	ida\out\service-window\citations.tsv rows not matching the image	[]	[]	PASS	
+lane-table	96	ida\out\market-values\citations.tsv rows	94	94	PASS	
+lane-table	96	ida\out\market-values\citations.tsv rows not matching the image	[]	[]	PASS	
+lane-table	97	ida\out\tx-freq-range\citations.tsv rows	92	92	PASS	
+lane-table	97	ida\out\tx-freq-range\citations.tsv rows not matching the image	[]	[]	PASS	
+lane-table	97	rows that match SUB only (RESUME: one SUB row, file 0x349073)	['349073']	['349073']	PASS	
+rerun:K8	-	fcs_test.py exit / result	0 / ALL PASS		PASS	
+rerun:K8	-	fcs_test.py stdout vs fcs_test_result.txt python part			PASS	
+rerun:K8	-	fcs.c (gcc) exit / result	0 / ALL PASS		PASS	
+rerun:K8	-	fcs.c (gcc) stdout vs fcs_test_result.txt C part			PASS	
+rerun:K5	-	k5_gen_tables.py exit	0		PASS	path literals replaced: 1; 0.0 s; last stdout: checks ok: 76 f3 rows: 19 op rows: 27
+rerun:K5	-	f3-label-map.tsv rewritten vs published	ba3c2eb6f424742b / ba3c2eb6f424742b		PASS	
+rerun:K5	-	opcode-payload-names.tsv rewritten vs published	77fb770d2cb98d12 / 77fb770d2cb98d12		PASS	
+rerun:L96	-	l96_bytes.py exit	0		PASS	path literals replaced: 1; 0.3 s; last stdout: wrote local-temp
+rerun:L96	-	l96_cite.py exit	0		PASS	path literals replaced: 2; 0.1 s; last stdout:   0x0747f2 er4 #0x40
+rerun:L96	-	citations.tsv rewritten vs published	d387b905834c8cd6 / d387b905834c8cd6		PASS	
+rerun:L96	-	mask-check.txt rewritten vs published	cb97948bbbab621b / cb97948bbbab621b		PASS	
+rerun:L96	-	scan-raw.txt rewritten vs published	d707987c0a0bf1ef / d707987c0a0bf1ef		PASS	
+rerun:L96	-	writers.tsv rewritten vs published	be4a297832feeae0 / be4a297832feeae0		PASS	
+rerun:L97	-	l97_scan.py exit	0		PASS	path literals replaced: 1; 0.1 s; last stdout: wrote local-temp
+rerun:L97	-	l97_tables.py exit	0		PASS	path literals replaced: 1; 0.1 s; last stdout: 
+rerun:L97	-	l97_cite.py exit	0		PASS	path literals replaced: 1; 0.0 s; last stdout: rows 92
+rerun:L97	-	citations.tsv rewritten vs published	f9f793f3e713b8e1 / f9f793f3e713b8e1		PASS	
+rerun:L97	-	scan.txt rewritten vs published	4646e8f676267a19 / 4e01a104bf7b9ff4		DIFFERS-EXPLAINED	lines pub/new 321/322, differing 23, first lines [300, 301, 302]; only the mask-list lines differ: a later lane wrote ida/out/main-final5/final5_proven_mask.bin, which the script picks as newest; the frozen re-run (final5 excluded) is IDENTICAL
+rerun:L97	-	tables.txt rewritten vs published	14250fedca60d954 / 14250fedca60d954		PASS	
+rerun:L95	-	l95_oracle.py exit	0		PASS	path literals replaced: 1; 0.8 s; last stdout:   078212 -> 07845A jsr @0x7845a:24
+rerun:L95	-	l95_heads.py exit	0		PASS	path literals replaced: 1; 0.4 s; last stdout: heads 336 bytes 1088 overlap_ok True
+rerun:L95	-	l95_facts.py exit	0		PASS	path literals replaced: 1; 0.5 s; last stdout: span 13902 last 00 next ff
+rerun:L95	-	l95_data.py exit	0		PASS	path literals replaced: 1; 0.4 s; last stdout: 07B2B0  24 24 24 24 24 23 24 25 24 26 24 26 24 25 24 27
+rerun:L95	-	l95_cite.py exit	0		PASS	path literals replaced: 1; 0.4 s; last stdout: rows 465 disasm 1183
+rerun:L95	-	abs-ops.tsv rewritten vs published	149e0a3fb0b2c3f4 / 149e0a3fb0b2c3f4		PASS	
+rerun:L95	-	callees.txt rewritten vs published	129d9ae67003ba7b / 129d9ae67003ba7b		PASS	
+rerun:L95	-	calls.tsv rewritten vs published	c4aa4640d34a34ac / c4aa4640d34a34ac		PASS	
+rerun:L95	-	citations.tsv rewritten vs published	1d112fb979c1581e / 1d112fb979c1581e		PASS	
+rerun:L95	-	code-heads.tsv rewritten vs published	b806f8729cdd07c8 / b806f8729cdd07c8		PASS	
+rerun:L95	-	data-image.txt rewritten vs published	26c99df770a1d698 / 26c99df770a1d698		PASS	
+rerun:L95	-	data-notes.txt rewritten vs published	9e5c4ec1d0f8a174 / 9e5c4ec1d0f8a174		PASS	
+rerun:L95	-	descriptors.txt rewritten vs published	c9ccac64e002da73 / c9ccac64e002da73		PASS	
+rerun:L95	-	disasm.asm rewritten vs published	34cf1376b7ea4a9c / 34cf1376b7ea4a9c		PASS	
+rerun:L95	-	entries.tsv rewritten vs published	7a0b081f5557f73e / 7a0b081f5557f73e		PASS	
+rerun:L95	-	entry-context.txt rewritten vs published	1afa1048bf4f4073 / 1afa1048bf4f4073		PASS	
+rerun:L95	-	facts.txt rewritten vs published	a8cb69bd389f7968 / a8cb69bd389f7968		PASS	
+rerun:L95	-	gap-routines.txt rewritten vs published	6b848be8223a45a0 / 6b848be8223a45a0		PASS	
+rerun:L95	-	gaps.tsv rewritten vs published	bd05e2279086bdf7 / bd05e2279086bdf7		PASS	
+rerun:L95	-	insns.tsv rewritten vs published	672bbf3d28126b15 / 672bbf3d28126b15		PASS	
+rerun:L95	-	listing.asm rewritten vs published	142dad4f0335eaf9 / 142dad4f0335eaf9		PASS	
+rerun:L95	-	oracle-summary.txt rewritten vs published	1e3be6d9205246fa / 65d38113f12932fd		DIFFERS-EXPLAINED	lines pub/new 290/294, differing 280, first lines [15, 16, 17]; only the mask-list lines differ: a later lane wrote ida/out/main-final5/final5_proven_mask.bin, which the script picks as newest; the frozen re-run (final5 excluded) is IDENTICAL
+rerun:L95	-	outside-refs.tsv rewritten vs published	a702a8a049b5d7e1 / a702a8a049b5d7e1		PASS	
+rerun:L95	-	strings.txt rewritten vs published	fabdba2d2131bfd4 / fabdba2d2131bfd4		PASS	
+rerun:L95	-	switch-078546.tsv rewritten vs published	7dd126a5cfd2ec89 / 7dd126a5cfd2ec89		PASS	
+rerun:L97-frozen	-	l97_scan.py exit	0		PASS	path literals replaced: 2; 0.1 s; last stdout: wrote local-temp
+rerun:L97-frozen	-	scan.txt rewritten vs published	4e01a104bf7b9ff4 / 4e01a104bf7b9ff4		PASS	
+rerun:L95-frozen	-	l95_oracle.py exit	0		PASS	path literals replaced: 2; 0.8 s; last stdout:   078212 -> 07845A jsr @0x7845a:24
+rerun:L95-frozen	-	abs-ops.tsv rewritten vs published	149e0a3fb0b2c3f4 / 149e0a3fb0b2c3f4		PASS	
+rerun:L95-frozen	-	callees.txt rewritten vs published	129d9ae67003ba7b / 129d9ae67003ba7b		PASS	
+rerun:L95-frozen	-	calls.tsv rewritten vs published	c4aa4640d34a34ac / c4aa4640d34a34ac		PASS	
+rerun:L95-frozen	-	data-image.txt rewritten vs published	26c99df770a1d698 / 26c99df770a1d698		PASS	
+rerun:L95-frozen	-	descriptors.txt rewritten vs published	c9ccac64e002da73 / c9ccac64e002da73		PASS	
+rerun:L95-frozen	-	entries.tsv rewritten vs published	7a0b081f5557f73e / 7a0b081f5557f73e		PASS	
+rerun:L95-frozen	-	entry-context.txt rewritten vs published	1afa1048bf4f4073 / 1afa1048bf4f4073		PASS	
+rerun:L95-frozen	-	gaps.tsv rewritten vs published	bd05e2279086bdf7 / bd05e2279086bdf7		PASS	
+rerun:L95-frozen	-	insns.tsv rewritten vs published	672bbf3d28126b15 / 672bbf3d28126b15		PASS	
+rerun:L95-frozen	-	listing.asm rewritten vs published	142dad4f0335eaf9 / 142dad4f0335eaf9		PASS	
+rerun:L95-frozen	-	oracle-summary.txt rewritten vs published	65d38113f12932fd / 65d38113f12932fd		PASS	
+rerun:L95-frozen	-	outside-refs.tsv rewritten vs published	a702a8a049b5d7e1 / a702a8a049b5d7e1		PASS	
+rerun:L95-frozen	-	strings.txt rewritten vs published	fabdba2d2131bfd4 / fabdba2d2131bfd4		PASS	
+rerun:L95-frozen	-	switch-078546.tsv rewritten vs published	7dd126a5cfd2ec89 / 7dd126a5cfd2ec89		PASS	
+rerun:K1	-	k1_build_masks.py exit	0		PASS	path literals replaced: 1; 6.6 s; last stdout: wrote final4 masks, ledger.tsv, ledger-delta.tsv, new-proven-runs.tsv, new-heads.tsv, helper-tables.tsv, touch-zone-tables.tsv, typing-plan.tsv, crefs-plan.tsv
+rerun:K1	-	build_log.txt rewritten vs published	e0551f660fae5c34 / e0551f660fae5c34		PASS	
+rerun:K1	-	crefs-plan.tsv rewritten vs published	a3ac614c72f6614a / a3ac614c72f6614a		PASS	
+rerun:K1	-	final4_named_mask.bin rewritten vs published	2b8255b683ca474a / 2b8255b683ca474a		PASS	
+rerun:K1	-	final4_proven_mask.bin rewritten vs published	3a45f1f46b36a47f / 3a45f1f46b36a47f		PASS	
+rerun:K1	-	final4_proven_runs.tsv rewritten vs published	5210551b298c9b0a / 5210551b298c9b0a		PASS	
+rerun:K1	-	helper-tables.tsv rewritten vs published	1f6f0e0a09e3f684 / 1f6f0e0a09e3f684		PASS	
+rerun:K1	-	k1a-slots.tsv rewritten vs published	1bed19a845a70fef / 1bed19a845a70fef		PASS	
+rerun:K1	-	ledger-delta.tsv rewritten vs published	e521f64fe1e3552f / e521f64fe1e3552f		PASS	
+rerun:K1	-	ledger.tsv rewritten vs published	e0ea4821007584be / e0ea4821007584be		PASS	
+rerun:K1	-	new-heads.tsv rewritten vs published	7cd24e0179cd50af / 7cd24e0179cd50af		PASS	
+rerun:K1	-	new-proven-runs.tsv rewritten vs published	315da5ed39f81029 / 315da5ed39f81029		PASS	
+rerun:K1	-	touch-zone-tables.tsv rewritten vs published	72b8c699cbcff919 / 72b8c699cbcff919		PASS	
+rerun:K1	-	typing-plan.tsv rewritten vs published	53aa51557f52b412 / 53aa51557f52b412		PASS	
+citation-tally	83-main-final4-seed.md	citations by verdict	PASS=34		INFO	
+citation-tally	84-touch-producer.md	citations by verdict	PASS=15		INFO	
+citation-tally	85-touch-screens.md	citations by verdict	PASS=15 WRONG-ADDR-STORE=1		INFO	
+citation-tally	86-dsp-autoreply.md	citations by verdict	PASS=55		INFO	
+citation-tally	87-dsp-payload-labels.md	citations by verdict	PASS=98 WRONG-ADDR=2		INFO	
+citation-tally	88-sub-sdmmc-driver.md	citations by verdict	PASS=63		INFO	
+citation-tally	89-sub-final3-seed.md	citations by verdict	PASS=14		INFO	
+citation-tally	90-aprs-ax25.md	citations by verdict	FAIL=2 PASS=20		INFO	
+citation-tally	91-cat-opcodes.md	citations by verdict	PASS=4		INFO	
+citation-tally	92-pdn-payloads.md	citations by verdict	PASS=14		INFO	
+citation-tally	93-tx-gate.md	citations by verdict	PASS=55		INFO	
+citation-tally	94-ledger-reverify-j.md	citations by verdict	PASS=53 PASS-QUOTED=9		INFO	
+citation-tally	95-service-window.md	citations by verdict	PASS=111		INFO	
+citation-tally	96-market-values.md	citations by verdict	PASS=100 PASS-WITHIN=1 WRONG-ADDR-STORE=1		INFO	
+citation-tally	97-tx-freq-range.md	citations by verdict	PASS=165 PASS-ENCODING=2 PASS-NEXT=12 WRONG-ADDR=1		INFO	
+citation-tally	RESUME-FULL.md	citations by verdict	PASS=55		INFO	
+citation-tally	all	citations by verdict	FAIL=2 PASS=871 PASS-ENCODING=2 PASS-NEXT=12 PASS-QUOTED=9 PASS-WITHIN=1 WRONG-ADDR=3 WRONG-ADDR-STORE=2		INFO	total 902

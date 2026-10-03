@@ -1,0 +1,86 @@
+Lane K11 - PTT identity evidence (MAIN ver 1.02, H8SX, base 0, file offset = mapped address)
+DB K11_TXGATE (copy of J1_MAIN_FINAL3). Job ida\jobs\k11_dump.py. Read-only. Window 0x078106-0x07B753 not entered.
+
+RESULT
+  PTT key  = port input 0xFFFF4E bit 7 (@0x4E:8), active low.  Firmware role Confirmed; "PTT" label Inferred (high)
+             from 6 independent firmware facts below. Physical pin/schematic: Unknown (not in package).
+  0xFFFF4D bit 3 = NOT the PTT key. Per-band RF status line (band A; band B mirror = bit 2), active-low "OK".
+             Roles Confirmed; physical identity Unknown; best fit = synthesizer lock-detect (Inferred, moderate).
+  => doc 77 section 1 ("0xFFFF4D b3 is the PTT input") is refuted.
+
+A. 0xFFFF4E bit 7 key FSM  (sub_FC66, state byte FFA9EA, table 0x00FC80)
+  00FC66  2a 4e        mov.b @0x4E:8,r2l
+  00FC68  ea 80        and.b #0x80,r2l                      ; only bit 7
+  00FC76  78 b0 6b 26 00 00 fc 80  jmp via off_FC80[A9EA]
+  st0 00FC90: wait until released (bit=1) -> st1          ; PTT held at power-on is ignored until released
+  st1 00FC9C: pressed (bit=0):
+          FF89B0==0 -> 00FCCE fc 17 / 6a 8c a9 ed : raw key 0x17, A9EA=2
+          FF89B0!=0 -> FF953D = byte[0x00FCDC+FF89B0], A9EA=3 (delay)
+  st3 00FCF4: released -> st1 (no event); still pressed and FF953D==0 -> raw 0x17, A9EA=2
+  st2 00FCE2: released -> 00FCE6 fc 18 : raw key 0x18, A9EA=1
+  Caller: sub_FAF6 (key translator) 0x00FB18 jsr sub_FC66. Raw->event = raw-9 at 0x00FBD4: 0x17->14, 0x18->15.
+
+B. PTT DELAY: table 0x00FCDC = 00 02 05 0a 14 (ticks of the 10 ms tier; FF953D lies in the 10 ms
+   byte array FF9536-FF958D, see ff956d.tsv) = OFF / 20 / 50 / 100 / 200 ms.
+   SUB list at 0xFFF49041 (10-byte stride): "OFF" "20 ms" "50 ms" "100 ms" "200 ms"; SUB setup label
+   "PTT DELAY" at 0xFFC3E3C1. FF89B0 = R1 n=0x90, EEPROM 0x610, menu item F38C (settings-bytes.tsv).
+   Match is 5 entries 1:1 (Confirmed bytes); F38C->"PTT DELAY" label routing Inferred (SUB F3xx map open).
+
+C. Event 14 = TX request. Main-screen key tables 0x0115EC + mode*0x44 (17 dwords):
+   modes 0-5 and 8: ev14 = 0x02244C (sub_2244C), ev15 = 0x03FFA0 (no-op), ev16 = 0x022A28.
+   sub_2244C is the only TX-request entry: it gates on PTT LOCK (jsr sub_22562 at 0x022492; sub_22562 =
+   FF89C1.b3 && FF89AB>=3 = lock types PTT / KEY&PTT / DIAL&PTT / ALL, SUB list 0xFFF48FF4..), then
+   sets AACF=1 (0x02253C) and FF94C0=1 (0x022542) which starts the TX FSM sub_34538.
+   A "PTT lock" gate on event 14 is direct firmware evidence that event 14 is the PTT.
+
+D. Event 15 = PTT release. While FF94C0!=0 the dispatcher (0x010914 -> sub_10FA8) switches to the
+   TX-time tables 0x011960+(n-1)*0x44; ev15 there = 0x022718 (sub_22718) in all four
+   (0x01199C/0x011AF0/0x011B34/0x011B78). sub_22718 clears B0BB.b0 (digital) or posts AACF=7/8 -> TX end.
+
+E. FFA9EA==2 ("PTT FSM in pressed state") is read as the PTT-held level by:
+   0x034D7E sub_34D70 (TX FSM states 4/5: A9EA!=2 -> sub_227BC end TX),
+   0x022AAC sub_22AA4 (T-CALL key release: end TX unless A9EA==2),
+   0x038EDE sub_38E84 (A9EA!=2 -> sub_22718), plus 0x0105F4 and SUB-message engines 0x061EBA..0x06336C.
+
+F. Alternate keyers that synthesise the same raw codes 0x17/0x18 (Confirmed bytes, labels Inferred):
+   - 0xFFFF4E bit 0 level FSM sub_105BE/sub_106D4/sub_10712 (state BB93), active when FF89BB!=0;
+     release hang FF95A3 = byte[0x01070C+FF89BC] = 06 0b 10 15 1a 1f (100 ms tier = 0.5..3.0 s step 0.5 s,
+     +1 tick); output 0xFFFF50 bit 6 enabled with 300 ms warm-up (FF95A4=3). Best fit: VOX (SUB label "VOX"
+     0xFFC3E849). While this keyer's enable (0x50.b6) or state BB93 is active, the PTT key FSM is held reset
+     (0x00FB0C..0x00FB28: A9EA=0).
+   - serial-frame bit FF980B.b0 -> BB91 (sub_4811E 0x0481E8, frame buffer FF9800, ring FF306A..FF3C6A)
+     -> sub_FD22 0x00FD30..0x00FD58 raw 0x17/0x18; runs only when FF8920.b0 set. Accessory PTT over a serial
+     link; which accessory/SCI = Unknown.
+   - command slot 0x03 (frame byte '3') sub_73BB4 writes event 0x0E/0x0F (press/release) directly.
+   - T-CALL: side key 0xFFFF4E bit 4 (raw 0x19 -> ev16 sub_22A28) calls sub_2244C when FF89C0.b0 set.
+   - While FF8004>=2 (clone/remote mode) all three key FSMs are reset every pass (0x00FAF6..0x00FAFC -> 0x00FAE6).
+
+G. 0xFFFF4D bit 3 / bit 2: every reader
+   bit3 (band A struct, FF8122 ptr / FF9190; timers FF956D/FF9568):
+     0x02FA8C sub_2FA7C  band-A RX state 1 (after FF956D settle). low -> normal RX states 6/7/8 (sub_2FAEC);
+                         high for >FF9568 (30-40 ms) -> 0x8F.b3 set, band state 0x93=2 = nullsub_128 (parked
+                         until the next band event). A "no carrier" line would park the receiver forever on a
+                         quiet channel -> busy/carrier semantics do not fit; "fault/unlock" does.
+     0x0305CA sub_30590, 0x03080C sub_3080C  RX state 11: low -> RSSI squelch evaluation sub_306EA (A992 vs
+                         FF8970) -> 0x90; high -> 0x90=2 (mute). Squelch itself is computed from RSSI.
+     0x034984 sub_34966  TX FSM state 1: after FF956D settle, low -> start TX; high -> abort after FF9568.
+                         Bypassed when FF8DDE<0 and (FF8DE0.b7 or B3D9.b2) (host-keyed node mode).
+     0x034CCE sub_34CCE  TX FSM state 2: high -> FF9568=4, state 3.
+     0x034D42 sub_34D42  TX FSM state 3: low -> back to 2; high and FF9568==0 -> sub_34FF4 (end TX).
+     0x074410 sub_743E0  command slot 0x2E ('^') reply 5E 02 <0/1> for band A (bit3) / band B (bit2),
+                         only if band field 0x8F.b2 (sampled-after-settle) is set, else 0x15.
+   bit2 (band B struct, FF8126 / FF922C; timers FF9580/FF957D):
+     0x031534 sub_31524 (exact mirror of sub_2FA7C), 0x031FD8 sub_31F9E (mirror of sub_30590),
+     0x03222E sub_32202, 0x07443A sub_743E0.
+   bit4: 0x03E8D0 sub_3E864 serial data-in of a 3-wire bit-banged read (clock 0x5A.b1, strobe 0x5D.b4/5).
+   Conclusion: bit3/bit2 = per-band RF status, low = OK. The TX FSM samples bit3 (band A path) after the TX
+   retune (sub_34838 arms FF956D) and drops TX 30-40 ms after it goes high. This is a hardware TX
+   interlock, not the PTT. Synthesizer lock-detect is the best single fit (Inferred).
+
+H. Corrections
+   doc 77 section 1 / RESUME J9 / Q3 answer: PTT = 0xFFFF4E b7 (via sub_FC66, events 14/15), not 0xFFFF4D b3.
+   doc 05 port table row "PTT / TX enable, squelch: 0xFFFF49 b7, 0xFFFF41 b3, 0xFFFF42 b6": none of those
+     is the PTT. 0x49 b7 (band A, sub_2FC6E/sub_2FCC8) and 0x41 b3 (band B, sub_317DC/sub_31836) are another
+     per-band pair read in comm-mode-2 RX; 0x42 b6 (sub_3EA28) not examined here.
+   pc-05 "0x17/0x18 ... 0xFFBB91.0 via 0xFD22, or remote cmd 0x73BB4": incomplete; the primary source is
+     the 0xFFFF4E b7 FSM sub_FC66 (and the 0x4E b0 keyer sub_105BE).

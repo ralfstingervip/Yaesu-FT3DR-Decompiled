@@ -1,0 +1,89 @@
+K9 — DATA-jack 0x6B91A "DMA-dump" and 0x6B7DC "reset" paths (MAIN, H8SX, base 0)
+Owner-side static analysis; no device touched. Evidence = disassembly from
+J1_MAIN_FINAL3 seed (K9_CAT). All addresses mapped (file offset == mapped addr on MAIN).
+
+=====================================================================
+0x6B91A — the serial DMA push (reply transmitter). NOT host-addressable.
+=====================================================================
+Reached ONLY from 0x6B7A0  `btst #2,@0xFFFFB3D2; bne loc_6B91A`.
+0xFFB3D2.2 is set only by the reply finalizer 0x6CC76 (`bset #2,@0xFFFFB3D2` at
+0x6CCB0) after a reply has been assembled in RAM. So the DMA fires because the
+RADIO built a reply, never because the host asked.
+
+Disassembly (0x6B91A..0x6B984):
+  0x6B926  mov.w  @0xFFFFB3CC:16, r3      ; length (16-bit), radio-set
+  0x6B92A  mov.w  #0, e3                  ; zero-extend -> count = 0..0xFFFF
+  0x6B92E  mov.l  #0xFEE000, er5          ; SOURCE = fixed immediate 0xFEE000
+  0x6B93C  mov.l  #0x1A0, er4
+  0x6B942  mov.l  er4, @0xFFFFFC54:16     ; DMABCR
+  0x6B948  mov.l  er5, @0xFFFFFC40:16     ; MAR0A  <- 0xFEE000   (SOURCE addr)
+  0x6B94E  mov.l  #0xFFFE93, er4
+  0x6B954  mov.l  er4, @0xFFFFFC44:16     ; IOAR0A <- 0xFFFE93 = SCI-A TDR (DEST)
+  0x6B95A  mov.l  er3, @0xFFFFFC4C:16     ; ETCR0A <- count
+  0x6B960  mov.l  #0x200000, er4 -> DMACR @0xFFFFFC58
+  0x6B96C  mov.b  #0xA2 -> @0xFFFFFD22    ; DMAC channel select/enable
+  0x6B972  mov.l  #0x800001A0 -> DMABCR   ; enable
+  0x6B97E  bset   #7,@0xFFFFFE92          ; SCI-A SCR.TIE
+Completion ISR sub_6B986: clears TIE, clears DMABCR enable, sets 0xFFB3D2.6, rte.
+
+Source address  : FIXED immediate #0xFEE000 (reply staging buffer). Bytes
+                  `7a 05 00 fe e0 00`. There is no code path that loads MAR0A
+                  from a host value.
+Length (0xFFB3CC): set ONLY by the finalizer 0x6CC76 as `r6+2`, where r6 is the
+                  length of the reply the radio just built (0x6CC78 inc #2,
+                  0x6CC7A mov.w r4,@0xFFFFB3CC). Host does not set it.
+Destination     : FIXED #0xFFFE93 = SCI-A TDR (the DATA jack).
+VERDICT: the DMA transmitter can move only the radio's own freshly-built reply
+out of a fixed buffer. A host cannot choose the source address or the length,
+so it cannot read arbitrary RAM/flash through this path. CONFIRMED.
+
+(This is the same DMA that doc 14 flagged as "the bulk data-out path". It is
+bulk-OUT of a canned reply only; direction is radio->PC, addressing fixed.)
+
+=====================================================================
+0x6B7DC — the software reset. A link-loss TIMEOUT, not a command.
+=====================================================================
+Context, main-loop poll sub_6B77E / state code in sub_6B700 family:
+  0x6B7A4  mov.b @0xFFFFB3E0 ; beq 0x6B80A      ; B3E0=0 -> not in data phase -> drain ring
+  0x6B7AA  mov.b @0xFFFF94C0 ; cmp #1; beq 0x6B7C0   ; transmitting branch
+  0x6B7B2  mov.b @0xFFFF8DDE ; bmi 0x6B7E6        ; mode byte bit7 SET -> mode-B branch
+  0x6B7B8  mov.b @0xFFFF959E ; bne 0x6B80A        ; link counter != 0 -> still alive
+  0x6B7BE  bra 0x6B7D6
+  0x6B7D6  mov.b @0xFFFF8DDE ; bmi 0x6B7EE        ; bit7 SET -> mode-B (no reset)
+  0x6B7DC  jsr sub_2648 ; orc #0x80,ccr ; jmp 0x2050   ; <-- RESET
+
+Entry conditions for 0x6B7DC (ALL must hold):
+  * data phase active (0xFFB3E0 != 0),
+  * not transmitting (0xFF94C0 != 1),
+  * node mode byte 0xFF8DDE bit7 CLEAR i.e. a positive non-zero value ("mode A"),
+  * link-activity counter 0xFF959E == 0.
+0xFF959E is reloaded to 0x64 (=100) on every good frame (0x6B8DA) and decremented
+by the slow timer (~100 ms/count, so ~10 s to reach 0). => this is an inactivity
+timeout that restarts MAIN when the PC link in mode A goes quiet. It is NOT
+selected by any opcode byte.
+
+The ONE command-triggered reset is the data-phase `V` opcode at 0x6BB08
+(`bmi 0x6BB12` only skips the `jsr sub_2648` pre-step; `orc #0x80; jmp 0x2050`
+runs in BOTH modes). It performs a restart and returns nothing — it is a
+control action, not a memory operation. CORRECTS doc 14's "mode 0xFF skips the
+restart": the restart is not skipped, only the sub_2648 quiesce call is.
+
+sub_2648 / loc_2050 are the standard boot-quiesce + reset-entry (same pair used
+by the clone-receive finish at 0x73672 and the BACKUP.dat restore at 0xDC4E).
+No address or length is host-controlled anywhere in this path. CONFIRMED.
+
+=====================================================================
+Does ANY DATA-jack opcode read or write a host-chosen RAM/flash address?
+=====================================================================
+NO. Full parser coverage (dispatcher sub_6BAD6 @0x6BAD6, gate sub_6B9AC):
+  gate opcodes : V, M
+  data opcodes : B, C, E, F, S, N, W, V   (unknown letters -> mov #0; rts, ignored)
+  auto-out     : V, P, C, H, R, G, W
+Every handler's loads/stores use FIXED immediate addresses (0xFEExxx, 0xFFBxxx,
+0xFF80xx, 0xFF0Bxx, 0xFF1Axx frame buffer) or counter-indexed fixed rings
+(0xFEE944 slot = counter&3). The host supplies DATA/VALUES that land in fixed
+destinations (VFO fields, the C4FM TX ring, a callsign buffer) — never an
+address operand. The reply DMA sources fixed 0xFEE000. There is no read-memory
+and no write-memory opcode. Scope: the entire 0x6B700-0x6C7D8 framed engine plus
+its builders 0x6BE34-0x6C539 and 0x6CB40-0x6CCB8. CONFIRMED / Not found (arbitrary
+address), full-parser scope stated.

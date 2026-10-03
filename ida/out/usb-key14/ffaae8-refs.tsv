@@ -1,0 +1,18 @@
+kind	addr	func	op	value	role
+write	038340	3835e	mov.b	0	reset path (event 0xFF): sequencer flushed
+write	0383ea	383a2	mov.b	0	new-event handler: stop current tone
+write	03840a	383a2	mov.b	0	new-event handler: suppress/clear
+write	0384dc	384c2	mov.b	1	phase 0 -> 1 (tone armed)
+write	038576	384c2	mov.b	3	phase set while playing
+write	03857e	384c2	mov.b	2	phase set while playing
+write	038674	38638	mov.b	0	NORMAL END: tone script terminator reached -> idle
+write	038736	38686	mov.b	3	phase 3 continue
+write	038762	38686	mov.b	0	NORMAL END (phase-3 branch): idle
+read	03836a	3835e	mov.b	-	sequencer dispatch index (phase 0..6)
+read	0383c4	383a2	mov.b	-	new-event handler
+read	010628	105be	mov.b	-	other UI tick waits for tone idle
+read	0340f6	340ee	mov.b	-	tone/UI consumer
+read	0346d2	346d2	mov.b	-	tone/UI consumer
+read	035d36	35d36	mov.b	-	tone/UI consumer
+read	0394a8	394a8	mov.b	-	audio/TX state machine waits for tone idle
+read	055520	55520	mov.b	-	*** USB vendor D1 status-stage gate (state 8) ***

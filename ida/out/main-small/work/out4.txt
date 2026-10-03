@@ -1,0 +1,229 @@
+### callers EAD2
+00EA4C  t17  sub_E9CC@E9CC            jsr     sub_EAD2:24
+00EA8E  t17  sub_E9CC@E9CC            bsr     sub_EAD2:8
+00EABE  t17  sub_EAB0@EAB0            bsr     sub_EAD2:8
+
+### func sub_3983E@3983E 3983E-398D8 
+03983E  79 06 00 80                           mov.w   #0x80, r6
+039842  7a 00 00 00 0a 00                     mov.l   #0xA00, er0
+039848  7a 01 00 ff bd f6                     mov.l   #0xFFBDF6, er1
+03984E  5e 03 ab 80                           jsr     sub_3AB80:24
+039852  79 06 00 80                           mov.w   #0x80, r6
+039856  7a 01 00 ff bd f6                     mov.l   #0xFFBDF6, er1
+03985C  fb 00                                 mov.b   #0, r3l
+03985E  0c ec                                 mov.b   r6l, r4l
+039860  1a 0c                                 dec.b   r4l
+039862  0f 95                                 mov.l   er1, er5
+039864  6c 54                                 mov.b   @er5+, r4h
+039866  08 4b                                 add.b   r4h, r3l
+039868  1a 0c                                 dec.b   r4l
+03986A  46 f8                                 bne     loc_39864:8
+03986C  68 5c                                 mov.b   @er5, r4l
+03986E  1c cb                                 cmp.b   r4l, r3l
+039870  46 50                                 bne     loc_398C2:8
+039872  6a 18 bc aa 72 30                     bclr    #3, @0xFFFFBCAA:16
+039878  79 06 00 80                           mov.w   #0x80, r6
+03987C  7a 00 00 00 09 80                     mov.l   #0x980, er0
+039882  7a 01 00 ff 90 f0                     mov.l   #0xFF90F0, er1
+039888  5e 03 ab 80                           jsr     sub_3AB80:24
+03988C  79 06 00 20                           mov.w   #0x20, r6 ; ' '
+039890  7a 00 00 ff 90 f0                     mov.l   #0xFF90F0, er0
+039896  7a 01 00 ff bd f6                     mov.l   #0xFFBDF6, er1
+03989C  01 00 6d 04                           mov.l   @er0+, er4
+0398A0  01 00 6d 15                           mov.l   @er1+, er5
+0398A4  1f c5                                 cmp.l   er4, er5
+0398A6  46 06                                 bne     loc_398AE:8
+0398A8  1b 56                                 dec.w   #1, r6
+0398AA  46 f0                                 bne     loc_3989C:8
+0398AC  40 28                                 bra     locret_398D6:8
+0398AE  7a 00 00 00 09 80                     mov.l   #0x980, er0
+0398B4  7a 01 00 ff bd f6                     mov.l   #0xFFBDF6, er1
+0398BA  79 0e 00 02                           mov.w   #2, e6
+0398BE  5e 03 b4 3c                           jsr     sub_3B43C:24
+0398C2  79 06 00 80                           mov.w   #0x80, r6
+0398C6  7a 00 00 00 09 80                     mov.l   #0x980, er0
+0398CC  7a 01 00 ff 90 f0                     mov.l   #0xFF90F0, er1
+0398D2  5e 03 ab 80                           jsr     sub_3AB80:24
+0398D6  54 70                                 rts
+
+### func sub_1D99A@1D99A 1D99A-1DA32 
+01D99A  6a 10 a9 ee 73 70                     btst    #7, @0xFFFFA9EE:16
+01D9A0  58 60 00 88                           bne     loc_1DA2C:16
+01D9A4  6e 0c 00 55                           mov.b   @(0x55:16,er0), r4l
+01D9A8  ac ff                                 cmp.b   #0xFF, r4l
+01D9AA  47 7a                                 beq     loc_1DA26:8
+01D9AC  79 03 00 02                           mov.w   #2, r3
+01D9B0  5e 01 c1 7c                           jsr     loc_1C17C:24
+01D9B4  6a 10 8e a0 73 60                     btst    #6, @0xFFFF8EA0:16
+01D9BA  46 4c                                 bne     loc_1DA08:8
+01D9BC  5e 01 c8 2e                           jsr     sub_1C82E:24
+01D9C0  46 0e                                 bne     loc_1D9D0:8
+01D9C2  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0
+01D9C8  7a 06 00 ff 90 f0                     mov.l   #0xFF90F0, er6
+01D9CE  40 0c                                 bra     loc_1D9DC:8
+01D9D0  7a 00 00 ff 90 f0                     mov.l   #0xFF90F0, er0
+01D9D6  01 00 6b 06 81 2a                     mov.l   @0xFFFF812A:16, er6
+01D9DC  6e 0c 00 55                           mov.b   @(0x55:16,er0), r4l
+01D9E0  6e 8c 00 05                           mov.b   r4l, @(5:16,er0)
+01D9E4  6f 04 00 60                           mov.w   @(0x60:16,er0), r4
+01D9E8  6f 84 00 08                           mov.w   r4, @(8:16,er0)
+01D9EC  fc 0e                                 mov.b   #0xE, r4l
+01D9EE  0f 85                                 mov.l   er0, er5
+01D9F0  7a 15 00 00 00 04                     add.l   #4, er5
+01D9F6  7a 16 00 00 00 04                     add.l   #4, er6
+01D9FC  5e 03 f3 6e                           jsr     sub_3F36E:24
+01DA00  fc ff                                 mov.b   #0xFF, r4l
+01DA02  6e 8c 00 55                           mov.b   r4l, @(0x55:16,er0)
+01DA06  40 28                                 bra     locret_1DA30:8
+01DA08  01 00 6b 00 81 2a                     mov.l   @0xFFFF812A:16, er0
+01DA0E  6e 0c 00 55                           mov.b   @(0x55:16,er0), r4l
+01DA12  6e 8c 00 05                           mov.b   r4l, @(5:16,er0)
+01DA16  6f 04 00 60                           mov.w   @(0x60:16,er0), r4
+01DA1A  6f 84 00 08                           mov.w   r4, @(8:16,er0)
+01DA1E  fc ff                                 mov.b   #0xFF, r4l
+01DA20  6e 8c 00 55                           mov.b   r4l, @(0x55:16,er0)
+01DA24  40 0a                                 bra     locret_1DA30:8
+01DA26  5e 01 c0 dc                           jsr     sub_1C0DC:24
+01DA2A  40 04                                 bra     locret_1DA30:8
+01DA2C  5e 03 ff a0                           jsr     sub_3FFA0:24
+01DA30  54 70                                 rts
+
+### func sub_3FF7A@3FF7A 3FF7A-3FF9A 
+03FF7A  01 00 6b 05 81 2a                     mov.l   @0xFFFF812A:16, er5
+03FF80  7a 20 00 ff 90 f0                     cmp.l   #0xFF90F0, er0
+03FF86  47 06                                 beq     loc_3FF8E:8
+03FF88  7a 05 00 ff 90 f0                     mov.l   #0xFF90F0, er5
+03FF8E  fc 00                                 mov.b   #0, r4l
+03FF90  6e 8c 00 01                           mov.b   r4l, @(1:16,er0)
+03FF94  6e dc 00 01                           mov.b   r4l, @(1:16,er5)
+03FF98  54 70                                 rts
+
+### grep er\d+, @\(0x1[A-D]:16,er\d\)
+00EB04  sub_EAD2@EAD2            mov.l   er1, @(0x1A:16,er0)
+01DCF2  sub_1DCA6@1DCA6          mov.l   er4, @(0x1A:16,er0)
+01DD2E  sub_1DCA6@1DCA6          mov.l   er4, @(0x1A:16,er0)
+01DD78  sub_1DCA6@1DCA6          mov.l   er4, @(0x1A:16,er0)
+01DEBE  sub_1DE50@1DE50          mov.l   er4, @(0x1A:16,er0)
+01E01A  sub_1DF7A@1DF7A          mov.l   er4, @(0x1A:16,er0)
+01E04E  sub_1DF7A@1DF7A          mov.l   er6, @(0x1A:16,er0)
+01E0B8  sub_1E094@1E094          mov.l   er4, @(0x1A:16,er0)
+01E1D4  -                        mov.l   er6, @(0x1A:16,er0)
+01E2B8  sub_1E260@1E260          mov.l   er5, @(0x1A:16,er0)
+01E2FC  sub_1E260@1E260          mov.l   er4, @(0x1A:16,er0)
+023276  sub_231F2@231F2          mov.l   er4, @(0x1A:16,er0)
+025134  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+025154  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+02516E  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+025180  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+025A14  sub_259B2@259B2          mov.l   er4, @(0x1A:16,er0)
+025A4C  sub_259B2@259B2          mov.l   er4, @(0x1A:16,er0)
+025E14  sub_25D72@25D72          mov.l   er4, @(0x1A:16,er0)
+025E5C  sub_25D72@25D72          mov.l   er4, @(0x1A:16,er0)
+02EA54  sub_2EA3E@2EA3E          mov.l   er4, @(0x1A:16,er0)
+03D248  sub_3D022@3D022          mov.l   er4, @(0x1A:16,er1)
+03FC06  sub_3FB0C@3FB0C          mov.l   er4, @(0x1A:16,er6)
+07511E  sub_75114@75114          mov.l   er1, @(0x1A:16,er0)
+0751F4  sub_75160@75160          mov.l   er1, @(0x1A:16,er0)
+075296  sub_75160@75160          mov.l   er1, @(0x1A:16,er0)
+075338  sub_75160@75160          mov.l   er1, @(0x1A:16,er0)
+0753DA  sub_753D4@753D4          mov.l   er1, @(0x1A:16,er0)
+07547C  sub_753D4@753D4          mov.l   er1, @(0x1A:16,er0)
+
+### grep r\d[lh]?, @\(0x1[A-D]:16,er\d\)
+00EAF8  sub_EAD2@EAD2            mov.b   r4h, @(0x1A:16,er2)
+00EB04  sub_EAD2@EAD2            mov.l   er1, @(0x1A:16,er0)
+00EB3C  sub_EAD2@EAD2            mov.b   r4l, @(0x1D:16,er2)
+00EB7A  sub_EAD2@EAD2            mov.b   r3l, @(0x1B:16,er2)
+01DC34  sub_1DBC8@1DBC8          mov.b   r4l, @(0x1C:16,er0)
+01DCF2  sub_1DCA6@1DCA6          mov.l   er4, @(0x1A:16,er0)
+01DD2E  sub_1DCA6@1DCA6          mov.l   er4, @(0x1A:16,er0)
+01DD78  sub_1DCA6@1DCA6          mov.l   er4, @(0x1A:16,er0)
+01DEBE  sub_1DE50@1DE50          mov.l   er4, @(0x1A:16,er0)
+01E01A  sub_1DF7A@1DF7A          mov.l   er4, @(0x1A:16,er0)
+01E04E  sub_1DF7A@1DF7A          mov.l   er6, @(0x1A:16,er0)
+01E0B8  sub_1E094@1E094          mov.l   er4, @(0x1A:16,er0)
+01E18E  sub_1E110@1E110          mov.w   r4, @(0x1A:16,er0)
+01E1D4  -                        mov.l   er6, @(0x1A:16,er0)
+01E2B8  sub_1E260@1E260          mov.l   er5, @(0x1A:16,er0)
+01E2FC  sub_1E260@1E260          mov.l   er4, @(0x1A:16,er0)
+01E37A  sub_1E30A@1E30A          mov.w   r4, @(0x1A:16,er0)
+01E4F6  sub_1E4EC@1E4EC          mov.w   r5, @(0x1A:16,er0)
+023276  sub_231F2@231F2          mov.l   er4, @(0x1A:16,er0)
+025134  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+025154  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+02516E  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+025180  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+025A14  sub_259B2@259B2          mov.l   er4, @(0x1A:16,er0)
+025A4C  sub_259B2@259B2          mov.l   er4, @(0x1A:16,er0)
+025E14  sub_25D72@25D72          mov.l   er4, @(0x1A:16,er0)
+025E5C  sub_25D72@25D72          mov.l   er4, @(0x1A:16,er0)
+02EA54  sub_2EA3E@2EA3E          mov.l   er4, @(0x1A:16,er0)
+03D248  sub_3D022@3D022          mov.l   er4, @(0x1A:16,er1)
+03FC06  sub_3FB0C@3FB0C          mov.l   er4, @(0x1A:16,er6)
+03FDFE  sub_3FD48@3FD48          mov.b   r4h, @(0x1A:16,er5)
+03FE06  sub_3FD48@3FD48          mov.b   r4l, @(0x1B:16,er5)
+03FE0E  sub_3FD48@3FD48          mov.b   r4l, @(0x1C:16,er5)
+03FE24  sub_3FD48@3FD48          mov.b   r4l, @(0x1D:16,er5)
+04A502  sub_4A4D0@4A4D0          mov.b   r4l, @(0x1B:16,er5)
+04A62A  sub_4A5C8@4A5C8          mov.b   r4l, @(0x1A:16,er3)
+0506C8  sub_5066E@5066E          mov.b   r6l, @(0x1A:16,er3)
+050770  sub_50748@50748          mov.b   r4l, @(0x1B:16,er3)
+054774  sub_5469C@5469C          mov.b   r4l, @(0x1B:16,er3)
+0547A0  sub_5469C@5469C          mov.b   r4l, @(0x1B:16,er3)
+05498C  sub_548BE@548BE          mov.b   r4l, @(0x1A:16,er3)
+054A0A  sub_548BE@548BE          mov.b   r4l, @(0x1A:16,er3)
+054B7E  sub_54AE2@54AE2          mov.b   r4l, @(0x1A:16,er3)
+054BC6  sub_54AE2@54AE2          mov.b   r4l, @(0x1A:16,er3)
+07511E  sub_75114@75114          mov.l   er1, @(0x1A:16,er0)
+0751F4  sub_75160@75160          mov.l   er1, @(0x1A:16,er0)
+075296  sub_75160@75160          mov.l   er1, @(0x1A:16,er0)
+075338  sub_75160@75160          mov.l   er1, @(0x1A:16,er0)
+0753DA  sub_753D4@753D4          mov.l   er1, @(0x1A:16,er0)
+07547C  sub_753D4@753D4          mov.l   er1, @(0x1A:16,er0)
+
+### grep r\d, @\(0x1[A-D]:16,er\d\)
+00EB04  sub_EAD2@EAD2            mov.l   er1, @(0x1A:16,er0)
+01DCF2  sub_1DCA6@1DCA6          mov.l   er4, @(0x1A:16,er0)
+01DD2E  sub_1DCA6@1DCA6          mov.l   er4, @(0x1A:16,er0)
+01DD78  sub_1DCA6@1DCA6          mov.l   er4, @(0x1A:16,er0)
+01DEBE  sub_1DE50@1DE50          mov.l   er4, @(0x1A:16,er0)
+01E01A  sub_1DF7A@1DF7A          mov.l   er4, @(0x1A:16,er0)
+01E04E  sub_1DF7A@1DF7A          mov.l   er6, @(0x1A:16,er0)
+01E0B8  sub_1E094@1E094          mov.l   er4, @(0x1A:16,er0)
+01E18E  sub_1E110@1E110          mov.w   r4, @(0x1A:16,er0)
+01E1D4  -                        mov.l   er6, @(0x1A:16,er0)
+01E2B8  sub_1E260@1E260          mov.l   er5, @(0x1A:16,er0)
+01E2FC  sub_1E260@1E260          mov.l   er4, @(0x1A:16,er0)
+01E37A  sub_1E30A@1E30A          mov.w   r4, @(0x1A:16,er0)
+01E4F6  sub_1E4EC@1E4EC          mov.w   r5, @(0x1A:16,er0)
+023276  sub_231F2@231F2          mov.l   er4, @(0x1A:16,er0)
+025134  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+025154  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+02516E  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+025180  sub_2511E@2511E          mov.l   er4, @(0x1A:16,er0)
+025A14  sub_259B2@259B2          mov.l   er4, @(0x1A:16,er0)
+025A4C  sub_259B2@259B2          mov.l   er4, @(0x1A:16,er0)
+025E14  sub_25D72@25D72          mov.l   er4, @(0x1A:16,er0)
+025E5C  sub_25D72@25D72          mov.l   er4, @(0x1A:16,er0)
+02EA54  sub_2EA3E@2EA3E          mov.l   er4, @(0x1A:16,er0)
+03D248  sub_3D022@3D022          mov.l   er4, @(0x1A:16,er1)
+03FC06  sub_3FB0C@3FB0C          mov.l   er4, @(0x1A:16,er6)
+07511E  sub_75114@75114          mov.l   er1, @(0x1A:16,er0)
+0751F4  sub_75160@75160          mov.l   er1, @(0x1A:16,er0)
+075296  sub_75160@75160          mov.l   er1, @(0x1A:16,er0)
+075338  sub_75160@75160          mov.l   er1, @(0x1A:16,er0)
+0753DA  sub_753D4@753D4          mov.l   er1, @(0x1A:16,er0)
+07547C  sub_753D4@753D4          mov.l   er1, @(0x1A:16,er0)
+
+### grep e\d, @\(0x1[A-D]:16,er\d\)
+
+### grep , @\(8:16,er6\)
+0261EA  sub_26172@26172          mov.b   r3l, @(8:16,er6)
+03FBBA  sub_3FB0C@3FB0C          mov.l   er4, @(8:16,er6)
+
+### grep , @\(9:16,er6\)
+
+### grep , @\(0xA:16,er6\)
+0202D4  sub_20290@20290          mov.w   r1, @(0xA:16,er6)
+
+### grep , @\(0xB:16,er6\)

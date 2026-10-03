@@ -1,0 +1,27 @@
+### func sub_3F62E@03F62E 03F62E-03F636 
+03F62E  6a 10 a9 ee 73 00               btst    #0, @0xFFFFA9EE:16
+03F634  46 20                           bne     loc_3F656:8
+
+### func sub_3F636@03F636 03F636-03F656 
+03F636  01 00 6f 65 00 02               mov.l   @(2:16,er6), er5
+03F63C  68 5b                           mov.b   @er5, r3l
+03F63E  69 64                           mov.w   @er6, r4
+03F640  1c bc                           cmp.b   r3l, r4l
+03F642  47 02                           beq     loc_3F646:8
+03F644  44 0a                           bcc     loc_3F650:8
+03F646  0c 4b                           mov.b   r4h, r3l
+03F648  6a 18 aa e1 72 20               bclr    #2, @0xFFFFAAE1:16
+03F64E  40 02                           bra     loc_3F652:8
+03F650  0a 0b                           inc.b   r3l
+03F652  68 db                           mov.b   r3l, @er5
+03F654  54 70                           rts
+
+### callers 0230FC
+0143A8  t1  -                        .long sub_230FC
+
+### callers 0231C2
+0231D6  t19  sub_231C2@0231C2         beq     sub_231C2:8
+0231DE  t19  sub_231C2@0231C2         beq     sub_231C2:8
+0231E2  t19  sub_231C2@0231C2         beq     sub_231C2:8
+0231E6  t19  sub_231C2@0231C2         beq     sub_231C2:8
+0143C8  t1  -                        .long sub_231C2

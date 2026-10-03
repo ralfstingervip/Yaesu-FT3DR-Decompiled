@@ -1,0 +1,88 @@
+# FT3DR MAIN (H8S) frequency-plan tables.  All frequencies are 8-digit BCD in units of 10 Hz.
+table	file_off	index	lower_MHz	upper_MHz	a	b
+# vco_divider  file 0x037E54  9 records of 10 bytes {u32 BCD lower, u32 BCD upper, u8 a, u8 b}
+#   LO -> VCO output divider. b: 1=/2 2=/4 3=/8 4=/16 5=/32 (map at 0x37EAE = 00 02 04 08 10 20). a=1 halves it again. Implies a 1050-2100 MHz VCO and continuous LO 46.875-999.995 MHz.
+vco_divider	037E54	0	46.875000	65.620000	0	5
+vco_divider	037E5E	1	65.625000	99.995000	1	5
+vco_divider	037E68	2	100.000000	131.245000	0	4
+vco_divider	037E72	3	131.250000	209.995000	1	4
+vco_divider	037E7C	4	210.000000	262.495000	0	3
+vco_divider	037E86	5	262.500000	419.995000	1	3
+vco_divider	037E90	6	420.000000	524.995000	0	2
+vco_divider	037E9A	7	525.000000	840.995000	1	2
+vco_divider	037EA4	8	841.000000	999.995000	0	1
+# frontend_a  file 0x0327AA  10 records of 10 bytes {u32 BCD lower, u32 BCD upper, u8 a, u8 b}
+#   front-end / filter band select, part 1 (codes 1-10)
+frontend_a	0327AA	0	1.800000	29.995000	0	1
+frontend_a	0327B4	1	30.000000	87.995000	0	2
+frontend_a	0327BE	2	88.000000	107.995000	0	3
+frontend_a	0327C8	3	108.000000	129.995000	0	4
+frontend_a	0327D2	4	130.000000	139.995000	0	5
+frontend_a	0327DC	5	140.000000	149.995000	0	6
+frontend_a	0327E6	6	150.000000	173.995000	0	7
+frontend_a	0327F0	7	174.000000	209.995000	0	8
+frontend_a	0327FA	8	210.000000	249.995000	0	9
+frontend_a	032804	9	250.000000	299.995000	0	10
+# frontend_a2  file 0x032812  5 records of 10 bytes {u32 BCD lower, u32 BCD upper, u8 a, u8 b}
+#   front-end / filter band select, part 2 (codes 11-15)
+frontend_a2	032812	0	300.000000	379.995000	0	11
+frontend_a2	03281C	1	380.000000	437.995000	0	12
+frontend_a2	032826	2	438.000000	442.995000	0	13
+frontend_a2	032830	3	443.000000	459.995000	0	14
+frontend_a2	03283A	4	460.000000	539.995000	0	15
+# frontend_b  file 0x032C28  10 records of 10 bytes {u32 BCD lower, u32 BCD upper, u8 a, u8 b}
+#   second front-end band map to 999.995 MHz (codes 1-3,5-11)
+frontend_b	032C28	0	1.800000	29.995000	0	1
+frontend_b	032C32	1	30.000000	75.995000	0	2
+frontend_b	032C3C	2	76.000000	107.995000	0	3
+frontend_b	032C46	3	108.000000	136.995000	0	5
+frontend_b	032C50	4	137.000000	173.995000	0	6
+frontend_b	032C5A	5	174.000000	221.995000	0	7
+frontend_b	032C64	6	222.000000	419.995000	0	8
+frontend_b	032C6E	7	420.000000	469.995000	0	9
+frontend_b	032C78	8	470.000000	769.995000	0	10
+frontend_b	032C82	9	770.000000	999.995000	0	11
+# frontend_c  file 0x032CA4  10 records of 10 bytes {u32 BCD lower, u32 BCD upper, u8 a, u8 b}
+#   third front-end band map, 470/803 MHz split
+frontend_c	032CA4	0	1.800000	29.995000	0	1
+frontend_c	032CAE	1	30.000000	75.995000	0	2
+frontend_c	032CB8	2	76.000000	107.995000	0	3
+frontend_c	032CC2	3	108.000000	136.995000	0	5
+frontend_c	032CCC	4	137.000000	173.995000	0	6
+frontend_c	032CD6	5	174.000000	221.995000	0	7
+frontend_c	032CE0	6	222.000000	419.995000	0	8
+frontend_c	032CEA	7	420.000000	469.995000	0	9
+frontend_c	032CF4	8	470.000000	802.995000	0	10
+frontend_c	032CFE	9	803.000000	999.995000	0	11
+# frontend_d  file 0x032D20  10 records of 10 bytes {u32 BCD lower, u32 BCD upper, u8 a, u8 b}
+#   fourth front-end band map
+frontend_d	032D20	0	1.800000	29.995000	0	1
+frontend_d	032D2A	1	30.000000	87.995000	0	2
+frontend_d	032D34	2	88.000000	107.995000	0	3
+frontend_d	032D3E	3	108.000000	136.995000	0	5
+frontend_d	032D48	4	137.000000	173.995000	0	6
+frontend_d	032D52	5	174.000000	221.995000	0	7
+frontend_d	032D5C	6	222.000000	419.995000	0	8
+frontend_d	032D66	7	420.000000	469.995000	0	9
+frontend_d	032D70	8	470.000000	802.995000	0	10
+frontend_d	032D7A	9	803.000000	999.995000	0	11
+# band_108_230  file 0x035118  4 records of 10 bytes {u32 BCD lower, u32 BCD upper, u8 a, u8 b}
+#   108-229.995 MHz sub-map
+band_108_230	035118	0	108.000000	119.995000	0	1
+band_108_230	035122	1	120.000000	173.995000	0	2
+band_108_230	03512C	2	174.000000	221.995000	0	3
+band_108_230	035136	3	222.000000	229.995000	0	4
+# rx_inhibit  file 0x020C78  5 records of 10 bytes {u32 BCD lower, u32 BCD upper, u8 a, u8 b}
+#   RX inhibit / cellular-block ranges
+rx_inhibit	020C78	0	380.000000	382.995000	0	1
+rx_inhibit	020C82	1	412.000000	415.995000	0	2
+rx_inhibit	020C8C	2	810.000000	845.995000	0	3
+rx_inhibit	020C96	3	860.000000	900.995000	0	4
+rx_inhibit	020CA0	4	915.000000	960.995000	0	5
+# ars_2m  file 0x020CEE  5 records of 10 bytes {u32 BCD lower, u32 BCD upper, u8 a, u8 b}
+#   2 m repeater-output sub-bands for automatic repeater shift (b=1/2 = shift direction)
+ars_2m	020CEE	0	145.100000	145.495000	0	1
+ars_2m	020CF8	1	146.000000	146.395000	0	2
+ars_2m	020D02	2	146.600000	146.995000	0	1
+ars_2m	020D0C	3	147.000000	147.395000	0	2
+ars_2m	020D16	4	147.600000	147.995000	0	1

@@ -1,0 +1,16 @@
+gate	image	gate_address	condition	unlocks	feature_address	status
+Boot-hold USB personality	MAIN	0x002200 (in sub_20FA)	held-key port @0xFFFF4C:8 masked &0x7F == 0x7D (internal key 0x11 via sub_100E4), polled 200x	selector @0xFF813A=1; alt USB init	0x078106	Confirmed
+  - default (no key)	MAIN	0x002214/0x002218	no key within 200 polls	vendor personality VID 0x26AA/PID 0x0001	sub_54BF8+sub_54C44 -> desc 0x055818	Confirmed
+  - held-key	MAIN	0x00221E	port 0x7D held	CDC-ACM virtual COM port VID 0x26AA/PID 0x0020	sub_55FFE+0x078106 -> RAM desc 0xFF640E/0xFF649F	Confirmed
+Boot-key action dispatch	MAIN	0x0031C6 (sub_3182)	boot-key index @0xFFA9EF matched from table dword_10216 (11 keys 0F,1F,5F,7B,77,6F,7E,73,7D,37,..)	per-index action	sub_10444 for index 6	Confirmed
+  - index 6 (port 0x7E)	MAIN	0x0031CE	hold key -> port 0x7E at power-on	settings/VFO default reset (0xFF8Fxx/90xx/91xx)	sub_10444	Confirmed
+DSP WRITE MODE (boot screen)	SUB	0xFFF0D6ED (sub_FFF0D6D9)	applied byte @0x00008C4E == 8	DSP firmware write screen (Push DISP Key!/Loading/Complete)	sub_FFF0DE56	Confirmed(gate)
+  - source of the 8	SUB	0xFFEEB0AB (sub_FFEEB057)	applied[0x8C4E] = stored[0x8E47]; no SUB writer of const 8; MAIN supplies via IPC	(MAIN-side trigger unknown)	stored 0x00008E47	Inferred
+RAM DISPLAY (menu row+screen)	SUB	0xFFF09602 / 0xFFF0A873	bit7 of settings byte @0x00008E4D	extra OPTION row + 4-page RAM monitor	sub_FFF0A86D	Confirmed (MENU)
+WX ALERT (menu row removal)	SUB	0xFFF09623 (sub_FFF095E3)	market flag @0x00008C53 == 0 removes it	US-only NOAA weather alert	menu_table[4] item 14	Confirmed (MENU)
+Region / band coverage	MAIN	sub_52C8C 0x052C94	dest index settings byte @0xFF9E1F (default 0x1D) -> table @0x3EA2 -> dest block	USA/JPN/EXP + per-dest band table @0x0000F5F0	Confirmed
+  - expanded-RX/TX soft unlock	both	n/a	NONE FOUND: no MARS/CAP/EXPAND/CELL/UNLOCK vocab; no key/menu changes dest at runtime	n/a	n/a	Not found (whole-image)
+DATA-jack clone/control API	MAIN	sub_6B986 (vector 130 RX ISR)	bytes arrive on DATA-jack SCI; opcode @0xFF1AC9	clone/backup + RAM read/write; can DMA-dump RAM and soft-reset	sub_6B9AC(V,M) -> sub_6BAC8(B,C,E,F,S,N,W)	Confirmed
+  - extended letter protocol	MAIN	0x058098	letter opcode + fixed record length in r5	memory read/write record set (A,B,C,E,F,G,H,L,M,P,Q,R,S,T,U,V,0,a,m,v)	0x058098	Confirmed
+Password / operator lock	SUB	sub_FFEE803D 0xFFEE805B	UI state applied[0x8C4D]==0xF0	password entry/lock screen (user CONFIG feature)	sub_FFEE80A9	Confirmed
+Update (boot) mode	both	reset-time mode pins (hardware)	3-position DATA-jack switch (Main/Sub/normal); app never reads it	Renesas boot loader (USB Direct)	n/a	Confirmed (prior)

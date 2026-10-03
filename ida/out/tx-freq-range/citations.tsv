@@ -1,0 +1,93 @@
+addr	hex	label	claim
+034e42	01 00 6b 05 aa ae 7a 06 00 ff 92 ce 5e 03 f5 ee 44 12 01 00 6b 05 aa ae 7a 06 00 ff 92 d6 5e 03 f5 ee 45 0e 6e 0c 00 86 70 4c 6e 8c 00 86 fc 00 40 0c 6e 0c 00 86 72 4c 6e 8c 00 86 fc 01 54 70	sub_34E42	allow if FFAAAE in FF92CE or FF92D6 inclusive; r4l 0/1; er0+0x86 bit 4
+03f5ee	01 00 69 64 1f c5 45 08 01 00 6f 64 00 04 1f d4 54 70	sub_3F5EE	C clear iff lo <= value <= hi
+034dc2	55 04 55 7c 54 70	sub_34DC2	bsr builder; bsr sub_34E42; rts returns the check Z
+034e82	55 06 5e 03 4e 42 54 70	sub_34E82	bsr sub_34E8A; jsr sub_34E42; rts
+034dc8	01 00 6f 04 00 1a 01 00 6b 84 aa ae 6e 0c 00 46 73 0c 46 4a 6e 0b 00 15 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 03 4e 32	sub_34DC8-head	copy er0+0x1A to FFAAAE; bit0 of +0x46 skips shift; index +0x15
+034e32	00 03 4e 26 00 03 4d f2 00 03 4e 06 00 03 4e 1a	jt-34E32	pointers 034E26 034DF2 034E06 034E1A
+034df2	7a 05 00 ff aa ae 0f 86 7a 16 00 00 00 1e 5e 03 f9 4c 40 20	shift-sub	BCD subtract er0+0x1E via sub_3F94C
+034e06	7a 05 00 ff aa ae 0f 86 7a 16 00 00 00 1e 5e 03 f9 24 40 0c	shift-add	BCD add er0+0x1E via sub_3F924
+034e1a	01 00 6f 04 00 1e 01 00 6b 84 aa ae	shift-replace	FFAAAE = @(0x1E,er0)
+034e26	7a 05 00 ff aa ae 5e 03 25 fa 54 70	call-325FA	er5=#FFAAAE; jsr sub_325FA; rts
+03f924	fc 00 08 cc 6f 53 00 02	bcd-add-head	clear C then addx/daa
+03f94c	fc 00 08 cc 6f 53 00 02 6f 64 00 02 1e cb 1f 0b 1e 43 1f 03 6f d3 00 02 69 53 69 64 1e cb 1f 0b 1e 43 1f 03 69 d3 54 70	sub_3F94C	packed-BCD subtract, subx/das
+025e98	6e 0c 00 46 72 0c	bclr-46.0	one writer clears er0+0x46 bit 0
+0325fa	6e 0b 00 04 55 50 47 4c	sub_325FA-head	load er0+4; bsr sub_32650; beq rts
+03264e	54 70	sub_325FA-rts	live return, no store to the frequency
+032646	01 00 69 94	skipped-store	mov.l er4,@er1 not reached from the live beq
+032650	6a 0c 80 0f f4 01 46 12 ab 08 47 04 ab 0b 46 0a 6a 0c 80 11 46 04 fc 02 40 02 fc 00 54 70	sub_32650	mov #1,r4h clears Z; bne taken; return r4l 0
+03f5b2	01 00 6d f2 6d 62 79 0a 00 00 6d 63 01 00 69 64 1f c5 45 0a 01 00 6f 64 00 04 1f d4 44 12 0a a6 1b 53 46 e8 6f 63 00 08 01 00 6d 72 fc 01 40 0a 6f 63 00 08 01 00 6d 72 fc 00 54 70	sub_3F5B2	stride/count row walker; hit r4l 0 and payload at +8
+020c48	00 0a 00 03	map-20C48-hdr	stride 10, count 3
+020c4c	82 40 00 00 84 89 95 00 00 00	map-20C48-r0	824.00000-848.99500 pay 0000
+020c56	86 90 00 00 89 39 95 00 00 01	map-20C48-r1	869.00000-893.99500 pay 0001
+020c60	94 01 00 00 96 50 95 00 00 02	map-20C48-r2	940.10000-965.09500 pay 0002
+020c6a	00 0a 00 06	map-20C6A-hdr	stride 10, count 6
+020c6e	25 30 00 00 27 59 95 00 00 00	map-20C6A-r0	253.00000-275.99500 pay 0000
+020c78	38 00 00 00 38 29 95 00 00 01	map-20C6A-r1	380.00000-382.99500 pay 0001
+020c82	41 20 00 00 41 59 95 00 00 02	map-20C6A-r2	412.00000-415.99500 pay 0002
+020c8c	81 00 00 00 84 59 95 00 00 03	map-20C6A-r3	810.00000-845.99500 pay 0003
+020c96	86 00 00 00 90 09 95 00 00 04	map-20C6A-r4	860.00000-900.99500 pay 0004
+020ca0	91 50 00 00 96 09 95 00 00 05	map-20C6A-r5	915.00000-960.99500 pay 0005
+01e21a	82 30 86 80 94 01	words-1E21A	823.00000 868.00000 940.10000 MHz high words
+01e22c	25 20 37 90 41 10 80 90 85 90 91 40	words-1E22C	252.00000 379.00000 411.00000 809.00000 859.00000 914.00000
+034e8a	01 00 6b 04 b3 92 01 00 6b 84 aa ae 6a 0b b3 9c 7a 63 00 00 00 ff 10 73 78 b0 6b 26 00 03 4e de 59 60	sub_34E8A-head	FFB392 -> FFAAAE; index FFB39C via 034EDE
+034eac	7a 05 00 ff aa ae 7a 06 00 ff b3 96 5e 03 f9 4c 40 1e	staged-sub	BCD subtract FFB396
+034ebe	7a 05 00 ff aa ae 7a 06 00 ff b3 96 5e 03 f9 24 40 0c	staged-add	BCD add FFB396
+034ed0	01 00 6b 04 b3 96 01 00 6b 84 aa ae	staged-replace	FFAAAE = @FFB396
+034edc	54 70	staged-keep-rts	index 0 rts; FFAAAE stays FFB392
+034ede	00 03 4e dc 00 03 4e ac 00 03 4e be 00 03 4e d0	jt-34EDE	pointers 034EDC 034EAC 034EBE 034ED0
+0224e0	81 2a	load-FF812A	mov.l @FF812A, er0
+032fa2	fc 0e f4 00 7a 05 00 ff 90 f4 7a 06 00 ff 8e c8 7b d4 59 8f 0d 44 46 f8 6a 0c 90 f5 ac 01 46 10 7a 00 00 ff 90 f0 5e 03 a2 d0 01 00 6b 00 81 2a 6a 18 8e a6 72 00 54 70	sub_32FA2	returns er0=[FF812A]
+033136	6a 10 aa 37 73 10 47 40 5e 03	sub_33136-head	FFAA37 bit1 clear beqs to rts; er0 unchanged
+03317e	54 70	sub_33136-rts	bit-clear return
+03f4a2	6a 0c 80 0f f4 01 47 22 ac 06 47 1e 6a 04 80 11 47 18 7a 06 00 00 f6 72 7a 05 00 ff 92 ce 55 cc 7a 05 00 ff 92 d6 55 c4 40 1c 7a 06 00 00 f0 ae 7a 05 00 ff 92 ce 55 a4 7a 06 00 00 f0 be 7a 05 00 ff 92 d6 55 96 54 70	sub_3F4A2	FF800F==6 or FF8011==0 copies F0A2; else F672
+002dc8	5e 03 f4 a2 54 70	fill-call	sole jsr sub_3F4A2 then rts
+002d7c	5e 03 2b dc	sub_2D7C-entry	callers 002B3E and 073B26; falls through to the fill
+002b3e	5e 00 2d 7c	call-2D7C-a	jsr sub_2D7C
+073b26	5e 00 2d 7c	call-2D7C-b	jsr sub_2D7C
+03f48e	01 00 6d 64 01 00 69 d4 01 00 6d 64 01 00 6f d4 00 04 54 70	sub_3F48E	copy two longs, er6 post-increments
+03f47e	6a 0c 80 0f f4 01 f4 00 79 03 00 24 52 43 0a b6	sub_3F47E	FF800F * 0x24 added to er6, falls into the copy
+00f672	14 00 00 00 17 40 00 00 42 00 00 00 47 00 00 00	F672	fixed windows 140-174 and 420-470 MHz
+03478e	7a 06 00 ff 92 ce	other-reader-A	mov.l #FF92CE elsewhere; not this check
+035d9c	7a 06 00 ff 92 ce	other-reader-B	mov.l #FF92CE elsewhere; not this check
+0224e6	6a 0c 89 92 ac 0a 46 12 5e 03 4d c2 46 06 5e 03 2f f4 40 10 5e 03 31 36 40 4e 5e 03 31 36 5e 03 4d c2 46 44 55 6e	tx-request-calls	FF8992==0x0A alternate and the 022504 jsr/bne
+02250a	55 6e 6a 18	tx-allow-continue	bsr sub_2257A; setup continues
+022522	fc ff 6a 8c aa e0	tx-allow-tone	FFAAE0=0xFF
+022540	fc 01 6a 8c 94 c0	tx-allow-state	FF94C0=1
+02254e	fc 02 6a 8c 94 c0 fc 1d 6a 8c aa e0 6a 0c 94 c0 ac 01 54 70	tx-block	FF94C0=2; FFAAE0=0x1D; cmp #1; rts with Z clear
+022696	5e 03 4d c2 46 54	sub_22676-call	jsr sub_34DC2; bne 0226F0
+0226f0	fc 02 6a 8c 94 c0 fc 1d 6a 8c aa e0	sub_22676-block	FF94C0=2; FFAAE0=0x1D
+01c96c	5e 03 4d c2 46 1a	call-01C96C	jsr sub_34DC2; bne
+01c9ae	5e 03 4d c2 54 70	call-01C9AE	jsr sub_34DC2; rts
+02f6b2	5e 03 4d c2 5e 03 25 90	call-02F6B2	jsr sub_34DC2; next jsr does not test Z
+030234	5e 03 4d c2 46 30	call-030234	jsr sub_34DC2; bne
+03023a	6a 18 aa d1 70 00 fc 05	allow-03023A	bset #0 @FFAAD1 on allow
+0311a0	5e 03 4d c2 5e 03 25 90	call-0311A0	jsr sub_34DC2; next jsr does not test Z
+031cc6	5e 03 4d c2 46 30	call-031CC6	jsr sub_34DC2; bne
+037be8	5e 03 4d c2 46 08	call-037BE8	jsr sub_34DC2; bne
+037bfc	7a 24 05 00 00 00 44 08 7a 04 05 00 00 00 40 06 01 00 6f 04 00 42	block-037BFC	cmp.l #0x05000000; below that loads the constant into er4
+068202	5e 03 4d c2 46 30	call-068202	jsr sub_34DC2; bne
+06ce38	5e 03 4d c2 46 70	call-06CE38	jsr sub_34DC2; bne
+06d0de	5e 03 4d c2 46 0c	call-06D0DE	jsr sub_34DC2; bne
+06d0e4	fc 01 6a 8c b3 e4 5e 01	allow-06D0DE	FFB3E4=1
+025b98	5e 03 4e 82 46 0a	call-025B98	jsr sub_34E82; bne
+025fd0	5e 03 4e 82 58 60 01 54	call-025FD0	jsr sub_34E82; bne disp16
+010674	6e 5c 00 86 73 4c 47 84	bit4-reader	btst #4 of er5+0x86; beq away when clear
+010684	6a 0c bb 93 46 06 fc 01 6a 8c	bit4-fall	FFBB93=1 when er5+0x90==2 and FFBB93==0
+00f0ae	14 40 00 00 14 60 00 00	F0A2-d0+0C	copied pair for dest 0
+00f0be	43 00 00 00 44 00 00 00	F0A2-d0+1C	copied pair for dest 0
+00f0d2	14 40 00 00 14 80 00 00	F0A2-d1+0C	copied pair for dest 1
+00f0e2	43 00 00 00 45 00 00 00	F0A2-d1+1C	copied pair for dest 1
+00f0f6	14 40 00 00 14 60 00 00	F0A2-d2+0C	copied pair for dest 2
+00f106	43 00 00 00 44 00 00 00	F0A2-d2+1C	copied pair for dest 2
+00f11a	14 40 00 00 14 60 00 00	F0A2-d3+0C	copied pair for dest 3
+00f12a	43 00 00 00 44 00 00 00	F0A2-d3+1C	copied pair for dest 3
+00f13e	14 40 00 00 14 60 00 00	F0A2-d4+0C	copied pair for dest 4
+00f14e	43 20 00 00 43 80 00 00	F0A2-d4+1C	copied pair for dest 4
+00f162	14 40 00 00 14 80 00 00	F0A2-d5+0C	copied pair for dest 5
+00f172	43 00 00 00 45 00 00 00	F0A2-d5+1C	copied pair for dest 5
+00f186	12 00 00 00 22 19 95 00	F0A2-d6+0C	copied pair for dest 6
+00f196	30 00 00 00 57 99 95 00	F0A2-d6+1C	copied pair for dest 6
+00f1aa	14 40 00 00 14 60 00 00	F0A2-d7+0C	copied pair for dest 7
+00f1ba	43 00 00 00 44 00 00 00	F0A2-d7+1C	copied pair for dest 7
+349073	53 49 4d 50 4c 45 58 00 2d 52 50 54 00 2b 52 50 54 00 44 55 50 4c 45 58 00	SUB-shift-names	SIMPLEX -RPT +RPT DUPLEX bytes, file offset

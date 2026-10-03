@@ -1,0 +1,245 @@
+
+;==== range 3A120-3A240
+
+; ---- func 3A120
+03A120  01306df0         stm.l   er0-er3, @-sp   ; <- 0xdcac,0x75160,0x75ec0
+03A124  551a             bsr     sub_3A140:8
+03A126  5e03ab80         jsr     sub_3AB80:24
+03A12A  01306d73         ldm.l   @sp+, er0-er3
+03A12E  5470             rts
+
+; ---- func 3A130
+03A130  01306df0         stm.l   er0-er3, @-sp   ; <- 0x2215c
+03A134  550a             bsr     sub_3A140:8
+03A136  5e03ad20         jsr     sub_3AD20:24
+03A13A  01306d73         ldm.l   @sp+, er0-er3
+03A13E  5470             rts
+
+; ---- func 3A140
+03A140  79060540         mov.w   #0x540, r6   ; <- 0x3a124,0x3a134
+03A144  7a0000002940     mov.l   #0x2940, er0
+03A14A  7a0100ff8188     mov.l   #0xFF8188, er1
+03A150  5470             rts
+
+; ---- func 3A152
+03A152  01306df0         stm.l   er0-er3, @-sp   ; <- 0xde94,0xdec0,0x201d0,0x2025e,0x202c8,0x202de
+03A156  551a             bsr     sub_3A172:8
+03A158  5e03ab80         jsr     sub_3AB80:24
+03A15C  01306d73         ldm.l   @sp+, er0-er3
+03A160  5470             rts
+
+; ---- func 3A162
+03A162  01306df0         stm.l   er0-er3, @-sp   ; <- 0xdfc8
+03A166  550a             bsr     sub_3A172:8
+03A168  5e03ad20         jsr     sub_3AD20:24
+03A16C  01306d73         ldm.l   @sp+, er0-er3
+03A170  5470             rts
+
+; ---- func 3A172
+03A172  790600c8         mov.w   #0xC8, r6   ; <- 0x3a156,0x3a166
+03A176  5261             mulxu.w r6, er1
+03A178  7a1100001680     add.l   #0x1680, er1
+03A17E  0f90             mov.l   er1, er0
+03A180  7a0100ff86c8     mov.l   #0xFF86C8, er1
+03A186  6a10817e7300     btst    #0, @0xFFFF817E:16
+03A18C  4706             beq     locret_3A194:8
+03A18E  7a0100ff8790     mov.l   #0xFF8790, er1
+03A194  5470             rts
+
+; ---- func 3A196
+03A196  01306df0         stm.l   er0-er3, @-sp   ; <- 0xdee4,0x2026e,0x204f0,0x20644
+03A19A  550a             bsr     sub_3A1A6:8
+03A19C  5e03ab80         jsr     sub_3AB80:24
+03A1A0  01306d73         ldm.l   @sp+, er0-er3
+03A1A4  5470             rts
+
+; ---- func 3A1A6
+03A1A6  790600c8         mov.w   #0xC8, r6   ; <- 0x3a19a
+03A1AA  5261             mulxu.w r6, er1
+03A1AC  7a1100001680     add.l   #0x1680, er1
+03A1B2  0f90             mov.l   er1, er0
+03A1B4  7a0100ff8858     mov.l   #0xFF8858, er1
+03A1BA  5470             rts
+
+; ---- func 3A1BC
+03A1BC  01306df0         stm.l   er0-er3, @-sp   ; <- 0x2023e,0x2032c,0x20b5a
+03A1C0  69d3             mov.w   r3, @er5
+03A1C2  79060002         mov.w   #2, r6
+03A1C6  790400c8         mov.w   #0xC8, r4
+03A1CA  5241             mulxu.w r4, er1
+03A1CC  7a1100001680     add.l   #0x1680, er1
+03A1D2  0f90             mov.l   er1, er0
+03A1D4  6a10817e7300     btst    #0, @0xFFFF817E:16
+03A1DA  470e             beq     loc_3A1EA:8
+03A1DC  0fd4             mov.l   er5, er4
+03A1DE  7a3400ff8790     sub.l   #0xFF8790, er4
+03A1E4  0ac0             add.l   er4, er0
+03A1E6  0fd1             mov.l   er5, er1
+03A1E8  400c             bra     loc_3A1F6:8
+03A1EA  0fd4             mov.l   er5, er4   ; <- 0x3a1da
+03A1EC  7a3400ff86c8     sub.l   #0xFF86C8, er4
+03A1F2  0ac0             add.l   er4, er0
+03A1F4  0fd1             mov.l   er5, er1
+03A1F6  5e03ad20         jsr     sub_3AD20:24
+03A1FA  01306d73         ldm.l   @sp+, er0-er3
+03A1FE  5470             rts
+
+; ---- func 3A200
+03A200  01306df0         stm.l   er0-er3, @-sp   ; <- 0x2036c
+03A204  69d3             mov.w   r3, @er5
+03A206  79060002         mov.w   #2, r6
+03A20A  790400c8         mov.w   #0xC8, r4
+03A20E  5241             mulxu.w r4, er1
+03A210  7a1100001680     add.l   #0x1680, er1
+03A216  0f90             mov.l   er1, er0
+03A218  0fd4             mov.l   er5, er4
+03A21A  7a3400ff8858     sub.l   #0xFF8858, er4
+03A220  0ac0             add.l   er4, er0
+03A222  0fd1             mov.l   er5, er1
+03A224  5e03ad20         jsr     sub_3AD20:24
+03A228  01306d73         ldm.l   @sp+, er0-er3
+03A22C  5470             rts
+
+; ---- func 3A22E
+03A22E  01306df0         stm.l   er0-er3, @-sp   ; <- 0x20242,0x202ee,0x2040c,0x2057a
+03A232  6a10817e7300     btst    #0, @0xFFFF817E:16
+03A238  4710             beq     loc_3A24A:8
+03A23A  79090000         mov.w   #0, e1
+03A23E  0a91             add.l   er1, er1
+
+;==== range 3D360-3D3C0
+03D360  0036             db
+03D362  5e01cbe6         jsr     sub_1CBE6:24
+03D366  01006d73         pop.l   er3
+03D36A  fc01             mov.b   #1, r4l
+03D36C  5470             rts
+
+; ---- func 3D36E
+03D36E  01306df0         stm.l   er0-er3, @-sp
+03D372  551a             bsr     sub_3D38E:8
+03D374  5e03ab80         jsr     sub_3AB80:24
+03D378  01306d73         ldm.l   @sp+, er0-er3
+03D37C  5470             rts
+
+; ---- func 3D37E
+03D37E  01306df0         stm.l   er0-er3, @-sp   ; <- 0xe1a2
+03D382  550a             bsr     sub_3D38E:8
+03D384  5e03ad20         jsr     sub_3AD20:24
+03D388  01306d73         ldm.l   @sp+, er0-er3
+03D38C  5470             rts
+
+; ---- func 3D38E
+03D38E  f300             mov.b   #0, r3h   ; <- 0x3d372,0x3d382,0x3d3ac,0x3d3da
+03D390  79060008         mov.w   #8, r6
+03D394  5263             mulxu.w r6, er3
+03D396  7a130000b800     add.l   #0xB800, er3
+03D39C  0fb0             mov.l   er3, er0
+03D39E  7a0100ffaa10     mov.l   #0xFFAA10, er1
+03D3A4  5470             rts
+
+; ---- func 3D3A6
+03D3A6  01306df0         stm.l   er0-er3, @-sp
+03D3AA  6df3             push.w  r3
+03D3AC  55e0             bsr     sub_3D38E:8
+03D3AE  7a0100ffac9a     mov.l   #0xFFAC9A, er1
+03D3B4  5e03ab80         jsr     sub_3AB80:24
+03D3B8  6d73             pop.w   r3
+03D3BA  fe02             mov.b   #2, r6l
+03D3BC  7a0000ffaa10     mov.l   #0xFFAA10, er0
+
+;==== range 3DE00-3DF40
+03DE00  7a0000002e80     mov.l   #0x2E80, er0
+03DE06  79060020         mov.w   #0x20, r6 ; ' '
+03DE0A  0d34             mov.w   r3, r4
+03DE0C  5264             mulxu.w r6, er4
+03DE0E  0ac0             add.l   er4, er0
+03DE10  7a0100ffac76     mov.l   #0xFFAC76, er1
+03DE16  5e03ab80         jsr     sub_3AB80:24
+03DE1A  01306d73         ldm.l   @sp+, er0-er3
+03DE1E  5470             rts
+
+; ---- func 3DE20
+03DE20  01306df0         stm.l   er0-er3, @-sp   ; <- 0xef8c
+03DE24  79060048         mov.w   #0x48, r6 ; 'H'
+03DE28  7a000001a000     mov.l   #loc_1A000, er0
+03DE2E  7a0100ff4726     mov.l   #0xFF4726, er1
+03DE34  5e03bdac         jsr     sub_3BDAC:24
+03DE38  79060898         mov.w   #0x898, r6
+03DE3C  7a000001a080     mov.l   #(loc_1A07C+4), er0
+03DE42  7a0100ff476e     mov.l   #0xFF476E, er1
+03DE48  5e03bdac         jsr     sub_3BDAC:24
+03DE4C  01306d73         ldm.l   @sp+, er0-er3
+03DE50  5470             rts
+
+; ---- func 3DE52
+03DE52  01306df0         stm.l   er0-er3, @-sp   ; <- 0xe56e
+03DE56  79060048         mov.w   #0x48, r6 ; 'H'
+03DE5A  7a000001a000     mov.l   #loc_1A000, er0
+03DE60  7a0100ff4726     mov.l   #0xFF4726, er1
+03DE66  5e03bf4c         jsr     sub_3BF4C:24
+03DE6A  79060898         mov.w   #0x898, r6
+03DE6E  7a000001a080     mov.l   #(loc_1A07C+4), er0
+03DE74  7a0100ff476e     mov.l   #0xFF476E, er1
+03DE7A  5e03bf4c         jsr     sub_3BF4C:24
+03DE7E  01306d73         ldm.l   @sp+, er0-er3
+03DE82  5470             rts
+
+; ---- func 3DE84
+03DE84  01306df0         stm.l   er0-er3, @-sp   ; <- 0x3a3b8
+03DE88  7a000001a000     mov.l   #loc_1A000, er0
+03DE8E  7a0100ff4726     mov.l   #0xFF4726, er1
+03DE94  403a             bra     loc_3DED0:8
+
+; ---- func 3DE96
+03DE96  01306df0         stm.l   er0-er3, @-sp   ; <- 0x3a832
+03DE9A  7a000001a080     mov.l   #(loc_1A07C+4), er0
+03DEA0  7a0100ff476e     mov.l   #0xFF476E, er1
+03DEA6  402a             bra     loc_3DED2:8
+
+; ---- func 3DEA8
+03DEA8  01306df0         stm.l   er0-er3, @-sp   ; <- 0x3a2f4
+03DEAC  6e0b0003         mov.b   @(3:16,er0), r3l
+03DEB0  7a000001a018     mov.l   #loc_1A018, er0
+03DEB6  7a0100ff473e     mov.l   #0xFF473E, er1
+03DEBC  6a10817e7300     btst    #0, @0xFFFF817E:16
+03DEC2  470c             beq     loc_3DED0:8
+03DEC4  7a000001a030     mov.l   #loc_1A030, er0
+03DECA  7a0100ff4756     mov.l   #0xFF4756, er1
+03DED0  f300             mov.b   #0, r3h
+03DED2  79060002         mov.w   #2, r6
+03DED6  0d34             mov.w   r3, r4
+03DED8  5264             mulxu.w r6, er4
+03DEDA  0ac0             add.l   er4, er0
+03DEDC  0ac1             add.l   er4, er1
+03DEDE  691c             mov.w   @er1, e4
+03DEE0  6a10817e7300     btst    #0, @0xFFFF817E:16
+03DEE6  470a             beq     loc_3DEF2:8
+03DEE8  6a048ed8         mov.b   @0xFFFF8ED8:16, r4h
+03DEEC  6a0c8ed9         mov.b   @0xFFFF8ED9:16, r4l
+03DEF0  4008             bra     loc_3DEFA:8
+03DEF2  6a048ed6         mov.b   @0xFFFF8ED6:16, r4h   ; <- 0x3dee6
+03DEF6  6a0c8ed7         mov.b   @0xFFFF8ED7:16, r4l
+03DEFA  1dc4             cmp.w   e4, r4
+03DEFC  4706             beq     loc_3DF04:8
+03DEFE  6994             mov.w   r4, @er1
+03DF00  5e03bf4c         jsr     sub_3BF4C:24
+03DF04  01306d73         ldm.l   @sp+, er0-er3
+03DF08  5470             rts
+
+; ---- func 3DF0A
+03DF0A  01306df0         stm.l   er0-er3, @-sp   ; <- 0x3a376
+03DF0E  7a000001a000     mov.l   #loc_1A000, er0
+03DF14  7a0100ff4726     mov.l   #0xFF4726, er1
+03DF1A  403a             bra     loc_3DF56:8
+
+; ---- func 3DF1C
+03DF1C  01306df0         stm.l   er0-er3, @-sp   ; <- 0x3a5c2,0x3a604
+03DF20  7a000001a080     mov.l   #(loc_1A07C+4), er0
+03DF26  7a0100ff476e     mov.l   #0xFF476E, er1
+03DF2C  402a             bra     loc_3DF58:8
+
+; ---- func 3DF2E
+03DF2E  01306df0         stm.l   er0-er3, @-sp   ; <- 0x3a2ba
+03DF32  6e0b0003         mov.b   @(3:16,er0), r3l
+03DF36  7a000001a018     mov.l   #loc_1A018, er0
+03DF3C  7a0100ff473e     mov.l   #0xFF473E, er1

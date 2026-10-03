@@ -1,0 +1,6 @@
+cell	side	role	set_sites	values	gate_on	tx_effect
+0x12CB8	SUB	BT/SCO link-state, 2nd gate on CKPD->E6 PTT path	=2 FFF3862D (BT on) / FFF38660 (BT off helper); =1 FFF38F7B (SCO up)	0 none / 1 SCO-just-up / 2 BT active-link	CKPD toggle (sub_FFF39216) sends E6 only if [1229D]==0x20 OR [12CB8]==2	permissive: when ==2, lets headset button key TX even if MAIN status byte [1229D] != 0x20
+0x12CBC	SUB	SCO audio-link state tracked by E6 toggle	=2 FFF38FBC/FFF3926E/FFF392FC; =3 FFF39059/FFF3935D..	2=keyed / 3=unkeyed	E6 toggle direction in sub_FFF39216	direct: drives E6 payload 0/1 (PTT) to MAIN
+0x12CBA	SUB	BT link-state A, tracked by E5 (7 sites)	=1 FFF394A9 (code1,[1251E] in 5..6); =2 FFF39516/teardown	1/2	E5 send condition	NONE on MAIN: E5 dest FFBB92 + flag BA92.b4 never read (doc 108, refscan om2)
+0x8A86	SUB	GPS-mode / power-save flag (mirror of 0x12180)	=1 FFEDCE95; =0 FFEDCEB9	0 normal / 1 slow-GPS mode	MAIN opcode F3 (F301/F3C0/F3C1), frame[5]==0xF3, frame[6] in {1,0xC0,0xC1}, frame[0x18]==3	indirect: when ==1, E1 GPS relay suppressed AND TPU3 reprogrammed slow (TGRA 0xB71A @FFF36BE2); SUB->MAIN tick slows -> E6 PTT frames delayed but NOT blocked; MAIN TOT still backstops
+0x12180	SUB	mirror of 0x8A86 (same set/clear sites)	=1 FFEDCE8C; =0 FFEDCEB0	0/1	same as 0x8A86	same as 0x8A86

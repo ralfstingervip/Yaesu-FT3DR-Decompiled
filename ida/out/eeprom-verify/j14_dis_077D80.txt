@@ -1,0 +1,77 @@
+077D80 U [00 20] mov.w   #0x20, r0 ; ' '
+077D82 C [40 02] bra     loc_77D86:8
+077D84 C [19 00] sub.w   r0, r0
+077D86 C [64 08] or.w    r0, e0
+077D88 C [6b a8 00 ff bc 66] mov.w   e0, @0xFFBC66:32
+077D8E C [54 70] rts
+077D90 C [01 10 6d f2] stm.l   er2-er3, @-sp
+077D94 C [0f 93] mov.l   er1, er3
+077D96 C [0c 0a] mov.b   r0h, r2l
+077D98 C [0c 82] mov.b   r0l, r2h
+077D9A C [0c 80] mov.b   r0l, r0h
+077D9C C [0c a8] mov.b   r2l, r0l
+077D9E C [55 ca] bsr     sub_77D6A:8
+077DA0 C [0c 22] mov.b   r2h, r2h
+077DA2 C [46 0e] bne     loc_77DB2:8
+077DA4 C [01 58 03 48 00 ff bc 68] mov.w   @er3, @0xFFBC68:32
+077DAC C [5e 03 34 ca] jsr     sub_334CA:24
+077DB0 C [54 13] rts/l   er2-er3
+077DB2 C [5e 03 35 32] jsr     sub_33532:24
+077DB6 C [54 13] rts/l   er2-er3
+; ---- func 077DB8 sub_77DB8
+077DB8 C [01 30 6d f2] stm.l   er2-er5, @-sp
+077DBC C [6d f6] push.w  r6
+077DBE C [1b 87] subs    #2, sp
+077DC0 C [0f 95] mov.l   er1, er5
+077DC2 C [0c 84] mov.b   r0l, r4h
+077DC4 C [18 cc] sub.b   r4l, r4l
+077DC6 C [17 50] extu.w  r0
+077DC8 C [0b 50] inc.w   #1, r0
+077DCA C [4a 02] bpl     loc_77DCE:8
+077DCC C [0b 50] inc.w   #1, r0
+077DCE C [11 90] shar.w  r0
+077DD0 C [0d 0a] mov.w   r0, e2
+077DD2 C [4f 4e] ble     loc_77E22:8
+077DD4 C [19 22] sub.w   r2, r2
+077DD6 C [0c c1] mov.b   r4l, r1h
+077DD8 C [81 08] add.b   #8, r1h
+077DDA C [c1 a0] or.b    #0xA0, r1h
+077DDC C [0c 18] mov.b   r1h, r0l
+077DDE C [e8 e0] and.b   #0xE0, r0l
+077DE0 C [17 50] extu.w  r0
+077DE2 C [0d 08] mov.w   r0, e0
+077DE4 C [10 18] shll.w  e0
+077DE6 C [0c 18] mov.b   r1h, r0l
+077DE8 C [e8 1f] and.b   #0x1F, r0l
+077DEA C [64 08] or.w    r0, e0
+077DEC C [79 48 00 20] or.w    #0x20, e0
+077DF0 C [6b a8 00 ff bc 66] mov.w   e0, @0xFFBC66:32
+077DF6 C [5e 03 35 32] jsr     sub_33532:24
+077DFA C [6b 28 00 ff bc 68] mov.w   @0xFFBC68:32, e0
+077E00 C [0d 86] mov.w   e0, r6
+077E02 C [69 f8] mov.w   e0, @sp
+077E04 C [0d 21] mov.w   r2, r1
+077E06 C [10 11] shll.w  r1
+077E08 C [17 f1] exts.l  er1
+077E0A C [0a d1] add.l   er5, er1
+077E0C C [0d 80] mov.w   e0, r0
+077E0E C [68 90] mov.b   r0h, @er1
+077E10 C [1c 4c] cmp.b   r4h, r4l
+077E12 C [44 04] bcc     loc_77E18:8
+077E14 C [6e 9e 00 01] mov.b   r6l, @(1:16,er1)
+077E18 C [0a 0c] inc.b   r4l
+077E1A C [0c ca] mov.b   r4l, r2l
+077E1C C [17 52] extu.w  r2
+077E1E C [1d a2] cmp.w   e2, r2
+077E20 C [4d b4] blt     loc_77DD6:8
+077E22 C [0b f7] inc.l   #2, sp
+077E24 C [6d 76] pop.w   r6
+077E26 C [54 35] rts/l   er2-er5
+; ---- func 077E28 sub_77E28
+077E28 C [01 30 6d f2] stm.l   er2-er5, @-sp
+077E2C C [01 00 6d f6] push.l  er6
+077E30 C [79 37 00 10] sub.w   #0x10, r7
+077E34 C [0f 96] mov.l   er1, er6
+077E36 C [0c 84] mov.b   r0l, r4h
+077E38 C [0f f2] mov.l   sp, er2
+077E3A C [7a 01 00 07 b2 60] mov.l   #dword_7B260, er1

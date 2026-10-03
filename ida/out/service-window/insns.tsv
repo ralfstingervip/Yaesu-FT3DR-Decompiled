@@ -1,0 +1,300 @@
+addr	len	hex	kind	text
+078106	6	7a 00 00 fe e0 10	normal	mov.l #0xfee010,er0
+07810C	2	0f c9	normal	mov.l #0x4,er1
+07810E	4	01 0d 00 00	normal	mov.l #0x0,@er0
+078112	2	0a 90	normal	add.l er1,er0
+078114	6	7a 20 00 fe e2 0c	normal	cmp.l #0xfee20c,er0
+07811A	2	43 f2	cond	bls .-14 (0x7810e)
+07811C	4	6a 08 ee 04	normal	mov.b @0xee04:16,r0l
+078120	2	17 60	normal	extu.l #2,er0
+078122	4	03 98 10 30	normal	shll.l #0x18,er0
+078126	4	6a 09 ee 05	normal	mov.b @0xee05:16,r1l
+07812A	2	17 61	normal	extu.l #2,er1
+07812C	2	10 f9	normal	shll.l #16,er1
+07812E	4	01 f0 64 10	normal	or.l er1,er0
+078132	4	6a 09 ee 06	normal	mov.b @0xee06:16,r1l
+078136	2	17 61	normal	extu.l #2,er1
+078138	2	10 79	normal	shll.l #8,er1
+07813A	4	01 f0 64 10	normal	or.l er1,er0
+07813E	6	7a 40 00 08 20 00	normal	or.l #0x82000,er0
+078144	8	01 00 6b a0 00 ff 62 f8	normal	mov.l er0,@0xff62f8:32
+07814C	2	18 99	normal	sub.b r1l,r1l
+07814E	2	1a 80	normal	sub.l er0,er0
+078150	4	5e 07 84 5a	call	jsr @0x7845a:24
+078154	6	6a 18 ee 2d 70 20	normal	bset #0x2,@0xee2d:16
+07815A	2	54 70	stop	rts 
+07815C	4	01 00 6d f2	normal	mov.l er2,@-er7
+078160	6	7a 02 00 ff 62 88	normal	mov.l #0xff6288,er2
+078166	6	01 00 6f 21 00 44	normal	mov.l @(0x44:16,er2),er1
+07816C	6	01 00 6f 20 00 40	normal	mov.l @(0x40:16,er2),er0
+078172	2	1f 81	normal	cmp.l er0,er1
+078174	2	47 06	cond	beq .+6 (0x7817c)
+078176	4	5e 07 68 a8	call	jsr @0x768a8:24
+07817A	2	40 2e	stop	bra .+46 (0x781aa)
+07817C	8	01 00 6b 20 00 ff 63 58	normal	mov.l @0xff6358:32,er0
+078184	2	68 08	normal	mov.b @er0,r0l
+078186	2	17 50	normal	extu.w r0
+078188	6	6b 21 00 ff 63 f8	normal	mov.w @0xff63f8:32,r1
+07818E	2	1d 01	normal	cmp.w r0,r1
+078190	2	46 18	cond	bne .+24 (0x781aa)
+078192	6	6a 10 ee 00 73 40	normal	btst #0x4,@0xee00:16
+078198	2	47 10	cond	beq .+16 (0x781aa)
+07819A	6	6a 28 00 ff 63 60	normal	mov.b @0xff6360:32,r0l
+0781A0	4	6a 88 ee 2c	normal	mov.b r0l,@0xee2c:16
+0781A4	6	6b f0 00 ff 63 f8	normal	mov.w #0x0,@0xff63f8:32
+0781AA	6	01 00 6f 21 00 54	normal	mov.l @(0x54:16,er2),er1
+0781B0	6	01 00 6f 20 00 50	normal	mov.l @(0x50:16,er2),er0
+0781B6	2	1f 81	normal	cmp.l er0,er1
+0781B8	2	47 0a	cond	beq .+10 (0x781c4)
+0781BA	6	7a 00 00 ff 62 d8	normal	mov.l #0xff62d8,er0
+0781C0	4	5e 07 6f c8	call	jsr @0x76fc8:24
+0781C4	2	54 02	stop	rts/l er2
+0781FC	4	01 f0 64 01	normal	or.l er0,er1
+078200	6	7a 41 00 08 20 00	normal	or.l #0x82000,er1
+078206	8	01 00 6b a1 00 ff 62 f8	normal	mov.l er1,@0xff62f8:32
+07820E	2	18 99	normal	sub.b r1l,r1l
+078210	2	1a 80	normal	sub.l er0,er0
+078212	4	5e 07 84 5a	call	jsr @0x7845a:24
+078216	6	6a 18 ee 2d 70 20	normal	bset #0x2,@0xee2d:16
+07821C	2	54 70	stop	rts 
+07821E	2	01 80	normal	sleep 
+078220	2	54 70	stop	rts 
+078222	2	18 88	normal	sub.b r0l,r0l
+078224	2	38 8a	normal	mov.b r0l,@0x8a:8
+078226	2	f8 08	normal	mov.b #0x8,r0l
+078228	2	38 88	normal	mov.b r0l,@0x88:8
+07822A	2	f8 0c	normal	mov.b #0xc,r0l
+07822C	2	38 89	normal	mov.b r0l,@0x89:8
+07822E	2	18 88	normal	sub.b r0l,r0l
+078230	2	0a 08	normal	inc r0l
+078232	2	a8 ff	normal	cmp.b #0xff,r0l
+078234	2	45 fa	cond	bcs .-6 (0x78230)
+078236	2	f8 70	normal	mov.b #0x70,r0l
+078238	2	38 8a	normal	mov.b r0l,@0x8a:8
+07823A	2	54 70	stop	rts 
+07823C	2	18 88	normal	sub.b r0l,r0l
+07823E	2	38 8a	normal	mov.b r0l,@0x8a:8
+078240	2	f8 08	normal	mov.b #0x8,r0l
+078242	2	38 88	normal	mov.b r0l,@0x88:8
+078244	2	f8 0c	normal	mov.b #0xc,r0l
+078246	2	38 89	normal	mov.b r0l,@0x89:8
+078248	2	18 88	normal	sub.b r0l,r0l
+07824A	2	0a 08	normal	inc r0l
+07824C	2	a8 ff	normal	cmp.b #0xff,r0l
+07824E	2	45 fa	cond	bcs .-6 (0x7824a)
+078250	2	f8 70	normal	mov.b #0x70,r0l
+078252	2	38 8a	normal	mov.b r0l,@0x8a:8
+078254	2	54 70	stop	rts 
+078260	2	0d 08	normal	mov.w r0,e0
+078262	2	19 11	normal	sub.w r1,r1
+078264	2	0d 00	normal	mov.w r0,r0
+078266	2	47 12	cond	beq .+18 (0x7827a)
+078268	8	78 12 6a 20 00 ff 63 ac	normal	mov.b @(0xff63ac:32,r1.w),r0h
+078270	4	6a 80 ee 32	normal	mov.b r0h,@0xee32:16
+078274	2	0b 51	normal	inc.w #1,r1
+078276	2	1d 81	normal	cmp.w e0,r1
+078278	2	45 ee	cond	bcs .-18 (0x78268)
+07827A	2	54 70	stop	rts 
+07827C	4	01 30 6d f2	normal	stm.l er2-er5,@-sp
+078280	4	01 00 6d f6	normal	mov.l er6,@-er7
+078284	4	6a 09 ee 04	normal	mov.b @0xee04:16,r1l
+078288	2	17 61	normal	extu.l #2,er1
+07828A	2	0f 92	normal	mov.l er1,er2
+07828C	4	03 98 10 32	normal	shll.l #0x18,er2
+078290	4	6a 08 ee 05	normal	mov.b @0xee05:16,r0l
+078294	2	17 60	normal	extu.l #2,er0
+078296	2	10 f8	normal	shll.l #16,er0
+078298	4	01 f0 64 02	normal	or.l er0,er2
+07829C	4	6a 08 ee 06	normal	mov.b @0xee06:16,r0l
+0782A0	2	17 60	normal	extu.l #2,er0
+0782A2	2	10 78	normal	shll.l #8,er0
+0782A4	4	01 f0 64 02	normal	or.l er0,er2
+0782A8	6	7a 42 00 08 20 00	normal	or.l #0x82000,er2
+0782AE	8	01 00 6b a2 00 ff 62 f8	normal	mov.l er2,@0xff62f8:32
+0782B6	4	6a 09 ee 00	normal	mov.b @0xee00:16,r1l
+0782BA	2	0f 94	normal	mov.l er1,er4
+0782BC	4	03 98 10 34	normal	shll.l #0x18,er4
+0782C0	4	6a 08 ee 01	normal	mov.b @0xee01:16,r0l
+0782C4	2	17 60	normal	extu.l #2,er0
+0782C6	2	10 f8	normal	shll.l #16,er0
+0782C8	4	01 f0 64 04	normal	or.l er0,er4
+0782CC	4	6a 08 ee 02	normal	mov.b @0xee02:16,r0l
+0782D0	2	17 60	normal	extu.l #2,er0
+0782D2	2	10 78	normal	shll.l #8,er0
+0782D4	4	01 f0 64 04	normal	or.l er0,er4
+0782D8	4	01 f0 66 24	normal	and.l er2,er4
+0782DC	2	18 aa	normal	sub.b r2l,r2l
+0782DE	6	6a 29 00 ff 62 46	normal	mov.b @0xff6246:32,r1l
+0782E4	2	a9 ff	normal	cmp.b #0xff,r1l
+0782E6	2	47 3a	cond	beq .+58 (0x78322)
+0782E8	6	7a 05 00 ff 62 42	normal	mov.l #0xff6242,er5
+0782EE	2	0f d6	normal	mov.l er5,er6
+0782F0	2	0f c0	normal	mov.l er4,er0
+0782F2	4	01 00 69 61	normal	mov.l @er6,er1
+0782F6	4	01 f0 66 10	normal	and.l er1,er0
+0782FA	2	47 10	cond	beq .+16 (0x7830c)
+0782FC	6	01 00 6f 62 00 06	normal	mov.l @(0x6:16,er6),er2
+078302	4	6e 69 00 04	normal	mov.b @(0x4:16,er6),r1l
+078306	2	0f c0	normal	mov.l er4,er0
+078308	2	5d 20	call	jsr @er2
+07830A	2	40 16	stop	bra .+22 (0x78322)
+07830C	2	0a 0a	normal	inc r2l
+07830E	2	0c a9	normal	mov.b r2l,r1l
+078310	4	01 cc 50 a1	normal	mulxu.b #0xa,r1
+078314	2	17 71	normal	extu.l er1
+078316	2	0a d1	normal	add.l er5,er1
+078318	2	0f 96	normal	mov.l er1,er6
+07831A	4	6e 10 00 04	normal	mov.b @(0x4:16,er1),r0h
+07831E	2	a0 ff	normal	cmp.b #0xff,r0h
+078320	2	46 ce	cond	bne .-50 (0x782f0)
+078322	4	6a 08 ee 00	normal	mov.b @0xee00:16,r0l
+078326	4	6a 01 ee 01	normal	mov.b @0xee01:16,r1h
+07832A	4	6a 08 ee 02	normal	mov.b @0xee02:16,r0l
+07832E	4	01 00 6d 76	normal	mov.l @er7+,er6
+078332	2	54 35	stop	rts/l er2-er5
+078334	4	01 20 6d f4	normal	stm.l er4-er6,@-sp
+078338	2	0f 95	normal	mov.l er1,er5
+07833A	2	0f 84	normal	mov.l er0,er4
+07833C	4	01 01 69 00	normal	mov.l @(0x4:2,er0),er0
+078340	2	68 08	normal	mov.b @er0,r0l
+078342	2	17 50	normal	extu.w r0
+078344	2	0d 06	normal	mov.w r0,r6
+078346	2	47 2a	cond	beq .+42 (0x78372)
+078348	4	01 02 69 40	normal	mov.l @(0x8:2,er4),er0
+07834C	2	68 01	normal	mov.b @er0,r1h
+07834E	4	01 00 69 50	normal	mov.l @er5,er0
+078352	2	68 81	normal	mov.b r1h,@er0
+078354	4	01 00 69 51	normal	mov.l @er5,er1
+078358	4	01 03 69 50	normal	mov.l @(0xc:2,er5),er0
+07835C	2	1f 81	normal	cmp.l er0,er1
+07835E	2	45 06	cond	bcs .+6 (0x78366)
+078360	4	01 08 25 05	normal	mov.l @(0x8:2,er5),@er5
+078364	2	40 08	stop	bra .+8 (0x7836e)
+078366	2	0f 98	normal	mov.l #0x1,er0
+078368	2	0a 81	normal	add.l er0,er1
+07836A	4	01 00 69 d1	normal	mov.l er1,@er5
+07836E	2	1b 56	normal	dec.w #1,r6
+078370	2	46 d6	cond	bne .-42 (0x78348)
+078372	4	6e 49 00 0d	normal	mov.b @(0xd:16,er4),r1l
+078376	4	6a 89 ee 2c	normal	mov.b r1l,@0xee2c:16
+07837A	2	54 26	stop	rts/l er4-er6
+07837C	4	01 20 6d f4	normal	stm.l er4-er6,@-sp
+078380	2	0f 96	normal	mov.l er1,er6
+078382	2	0f 84	normal	mov.l er0,er4
+078384	4	01 01 69 00	normal	mov.l @(0x4:2,er0),er0
+078388	2	68 08	normal	mov.b @er0,r0l
+07838A	2	17 50	normal	extu.w r0
+07838C	2	0d 0d	normal	mov.w r0,e5
+07838E	2	47 36	cond	beq .+54 (0x783c6)
+078390	4	01 01 69 61	normal	mov.l @(0x4:2,er6),er1
+078394	4	01 00 69 60	normal	mov.l @er6,er0
+078398	2	1f 81	normal	cmp.l er0,er1
+07839A	2	47 2a	cond	beq .+42 (0x783c6)
+07839C	2	68 1d	normal	mov.b @er1,r5l
+07839E	4	01 02 69 40	normal	mov.l @(0x8:2,er4),er0
+0783A2	2	68 8d	normal	mov.b r5l,@er0
+0783A4	4	01 01 69 61	normal	mov.l @(0x4:2,er6),er1
+0783A8	4	01 03 69 60	normal	mov.l @(0xc:2,er6),er0
+0783AC	2	1f 81	normal	cmp.l er0,er1
+0783AE	2	45 0a	cond	bcs .+10 (0x783ba)
+0783B0	4	01 02 69 60	normal	mov.l @(0x8:2,er6),er0
+0783B4	4	01 01 69 e0	normal	mov.l er0,@(0x4:2,er6)
+0783B8	2	40 08	stop	bra .+8 (0x783c2)
+0783BA	2	0f 98	normal	mov.l #0x1,er0
+0783BC	2	0a 81	normal	add.l er0,er1
+0783BE	4	01 01 69 e1	normal	mov.l er1,@(0x4:2,er6)
+0783C2	2	1b 5d	normal	dec.w #1,e5
+0783C4	2	46 ca	cond	bne .-54 (0x78390)
+0783C6	4	6e 49 00 0c	normal	mov.b @(0xc:16,er4),r1l
+0783CA	4	6a 89 ee 2c	normal	mov.b r1l,@0xee2c:16
+0783CE	4	01 01 69 41	normal	mov.l @(0x4:2,er4),er1
+0783D2	2	68 18	normal	mov.b @er1,r0l
+0783D4	2	17 50	normal	extu.w r0
+0783D6	2	19 d0	normal	sub.w e5,r0
+0783D8	2	54 26	stop	rts/l er4-er6
+0783DA	4	01 20 6d f4	normal	stm.l er4-er6,@-sp
+0783DE	2	0f 94	normal	mov.l er1,er4
+0783E0	2	0f 86	normal	mov.l er0,er6
+0783E2	8	01 00 6b 20 00 ff 63 30	normal	mov.l @0xff6330:32,er0
+0783EA	2	68 01	normal	mov.b @er0,r1h
+0783EC	2	46 3c	cond	bne .+60 (0x7842a)
+0783EE	4	01 01 69 41	normal	mov.l @(0x4:2,er4),er1
+0783F2	4	01 00 69 40	normal	mov.l @er4,er0
+0783F6	2	1f 81	normal	cmp.l er0,er1
+0783F8	2	42 30	cond	bhi .+48 (0x7842a)
+0783FA	2	1f 81	normal	cmp.l er0,er1
+0783FC	2	47 28	cond	beq .+40 (0x78426)
+0783FE	4	01 00 69 65	normal	mov.l @er6,er5
+078402	4	01 01 69 60	normal	mov.l @(0x4:2,er6),er0
+078406	2	1f 85	normal	cmp.l er0,er5
+078408	2	47 1c	cond	beq .+28 (0x78426)
+07840A	4	01 78 01 05	normal	mov.b @er1,@er5
+07840E	2	0f 98	normal	mov.l #0x1,er0
+078410	4	01 09 06 10	normal	add.l er0,@er6
+078414	4	01 01 69 41	normal	mov.l @(0x4:2,er4),er1
+078418	2	0a 81	normal	add.l er0,er1
+07841A	4	01 01 69 c1	normal	mov.l er1,@(0x4:2,er4)
+07841E	4	01 00 69 40	normal	mov.l @er4,er0
+078422	2	1f 81	normal	cmp.l er0,er1
+078424	2	46 d8	cond	bne .-40 (0x783fe)
+078426	2	19 00	normal	sub.w r0,r0
+078428	2	54 26	stop	rts/l er4-er6
+07842A	2	0f 10	normal	mov.w #0x1,r0
+07842C	2	54 26	stop	rts/l er4-er6
+07842E	4	01 00 6d f2	normal	mov.l er2,@-er7
+078432	2	0f 82	normal	mov.l er0,er2
+078434	4	6e 09 00 01	normal	mov.b @(0x1:16,er0),r1l
+078438	2	17 51	normal	extu.w r1
+07843A	2	68 20	normal	mov.b @er2,r0h
+07843C	2	18 88	normal	sub.b r0l,r0l
+07843E	2	64 10	normal	or.w r1,r0
+078440	2	54 02	stop	rts/l er2
+078442	4	01 00 6d f2	normal	mov.l er2,@-er7
+078446	2	0f 82	normal	mov.l er0,er2
+078448	2	0f 99	normal	mov.l #0x1,er1
+07844A	2	0a 92	normal	add.l er1,er2
+07844C	4	6e 29 ff ff	normal	mov.b @(0xffff:16,er2),r1l
+078450	2	17 51	normal	extu.w r1
+078452	2	68 20	normal	mov.b @er2,r0h
+078454	2	18 88	normal	sub.b r0l,r0l
+078456	2	64 10	normal	or.w r1,r0
+078458	2	54 02	stop	rts/l er2
+07845A	4	79 00 00 32	normal	mov.w #0x32,r0
+07845E	4	5e 07 82 60	call	jsr @0x78260:24
+078462	6	01 7d 40 cd ee 04	normal	mov.b #0xcd,@0xee04:16
+078468	4	6a d0 ee 05	normal	mov.b #0x0,@0xee05:16
+07846C	4	6a d0 ee 06	normal	mov.b #0x0,@0xee06:16
+078470	4	6a 08 ee 2d	normal	mov.b @0xee2d:16,r0l
+078474	2	e8 fc	normal	and.b #0xfc,r0l
+078476	4	6a 88 ee 2d	normal	mov.b r0l,@0xee2d:16
+07847A	6	6a 18 ee 2f 70 10	normal	bset #0x1,@0xee2f:16
+078480	4	6a 08 ee 04	normal	mov.b @0xee04:16,r0l
+078484	2	17 60	normal	extu.l #2,er0
+078486	4	03 98 10 30	normal	shll.l #0x18,er0
+07848A	4	6a 09 ee 05	normal	mov.b @0xee05:16,r1l
+07848E	2	17 61	normal	extu.l #2,er1
+078490	2	10 f9	normal	shll.l #16,er1
+078492	4	01 f0 64 10	normal	or.l er1,er0
+078496	4	6a 09 ee 06	normal	mov.b @0xee06:16,r1l
+07849A	2	17 61	normal	extu.l #2,er1
+07849C	2	10 79	normal	shll.l #8,er1
+07849E	4	01 f0 64 10	normal	or.l er1,er0
+0784A2	6	7a 40 00 08 20 00	normal	or.l #0x82000,er0
+0784A8	8	01 00 6b a0 00 ff 62 f8	normal	mov.l er0,@0xff62f8:32
+0784B0	4	6a d0 ee 08	normal	mov.b #0x0,@0xee08:16
+0784B4	4	6a d0 ee 09	normal	mov.b #0x0,@0xee09:16
+0784B8	4	6a d4 ee 0a	normal	mov.b #0x4,@0xee0a:16
+0784BC	2	54 70	stop	rts 
+078508	6	7a 01 00 fe e0 08	normal	mov.l #0xfee008,er1
+07850E	6	7a 00 00 ff 62 88	normal	mov.l #0xff6288,er0
+078514	4	01 01 69 81	normal	mov.l er1,@(0x4:2,er0)
+078518	4	01 00 69 81	normal	mov.l er1,@er0
+07851C	2	f9 10	normal	mov.b #0x10,r1l
+07851E	6	01 00 6f 81 00 54	normal	mov.l er1,@(0x54:16,er0)
+078524	6	01 00 6f 81 00 50	normal	mov.l er1,@(0x50:16,er0)
+07852A	2	f1 e1	normal	mov.b #0xe1,r1h
+07852C	6	01 00 6f 81 00 44	normal	mov.l er1,@(0x44:16,er0)
+078532	6	01 00 6f 81 00 40	normal	mov.l er1,@(0x40:16,er0)
+078538	6	6a f1 00 ff 62 40	normal	mov.b #0x1,@0xff6240:32
+07853E	6	6b f0 00 ff 63 f8	normal	mov.w #0x0,@0xff63f8:32
+078544	2	54 70	stop	rts 

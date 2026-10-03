@@ -1,0 +1,14 @@
+# K1 follow-up: candidate demotion of MAIN 0x054AE2-0x054BF7. Published final4 masks are NOT changed; this is the alternative.
+# entry edge (folded one-descent, full mode): seed "fnindex 054AE2" (H9 FNSEED, fnindex validated start 054AE2-054BF8); no predecessor (pred = none)
+# whole-image scope 0x000000-0x07B753 (incl. closed window, decode only): BE32 ptr to 054AC0/054AE2/054AE4/054AF0 = 0; jmp/jsr abs24 = 0; oracle flow edge from outside 054AC0-054C11 = 1 (002214 jsr @0x54bf8 -> 054BF8 only); TAB/ARR/vector/I6-I15 seed/K1a/K1b slot into range = 0; mov.l #imm 0x54Axx/0x54Bxx = 0
+# physical entry: fall-through 054ADE (mov.b @0xa51a:16,r2l = 6a 0a a5 1a, sets N) -> 054AE2 (bmi .+12 = 4b 0c), inside the H9-demoted, unreferenced 054AC0-054AE1 (starts jsr @0x54568:24 = 5e 05 45 68)
+item	start	end_excl	len	proven_final4	named_final4	reached_without_fnindex_seed	verdict
+range	054AC0	054AE2	34	0	34	0	already unproven (H9 demoted.tsv line 793); routine head, 0 inbound refs
+range	054AE2	054BF8	278	278	278	0	INVALID entry: fnindex seed only; fall-through from unproven 054ADE; rts at 054BF6
+range	054BF8	054C12	26	26	26	26	VALID: jsr @0x54bf8:24 at 002214 (5e 05 4b f8), reached
+total	metric	published	alternative	delta	note
+total	MAIN proven final4	368624	368346	-278	demote 054AE2-054BF7
+total	MAIN proven final3	368366	368088	-278	same bytes were in final3
+total	MAIN proven final4, K1b-J4-only variant	368454	368176	-278
+total	MAIN named final4 (I12 convention: demoted code stays typed)	497451	497451	0	headline unchanged 961714 / 1029972 = 93.373%
+total	MAIN named final4 (if also removed from named)	497451	497173	-278	headline 961436 / 1029972 = 93.346%

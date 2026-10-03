@@ -1,0 +1,14 @@
+id	finding	status	address	bytes	note
+1	Vector 71 = IRQ7 -> sub_29CA; vector 74 = IRQ10 -> sub_2A60	Confirmed	0x00011C / 0x000128	00 00 29 ca / 00 00 2a 60	IER = 0x0480 at 0x0023DA
+2	IRQ7 is pin P17: initial edge sense from PORT1 (FFFF40) b7, P1ICR = 0x80	Confirmed (code); pin name Inferred (H8SX/1668R map, pc-07)	0x002398 / 0x0023B0	79 03 40 00 2c 40 ec 80 ... / fc 80 6a 8c fb 90	ISCRL bits 15:14
+3	IRQ10 is pin P62: initial edge sense from PORT6 (FFFF45) b2, P6ICR = 0x04	Confirmed (code); pin name Inferred	0x0023B6 / 0x0023CE	79 03 00 10 2c 45 ec 04 ... / fc 04 6a 8c fb 95	ISCRH bits 5:4
+4	Both ISRs are quadrature decoders: flip own edge sense every edge, direction from PORTF (FFFF4E) b3 (IRQ7) / b1 (IRQ10)	Confirmed	0x0029E4 / 0x002A6C	2c 4e 6a 10 81 70 73 00 ... / 2c 4e 6a 10 81 70 73 10 ...	latch = 0x80 | dir
+5	IRQ7 latch gated by FF817F.b0 (only setter 0x004888) and a 4-tick TGI5A debounce FF94B9; edge flip always runs. IRQ10 has neither	Confirmed	0x0029D6 / 0x004888 / 0x002A44	6a 10 81 7f 73 00 47 2a 6a 0c 94 b9 46 24	gate meaning Unknown
+6	FF89B5 = DIAL KNOB CHANGE (F396) selects which latch makes event 13 (DIAL) and which sets AA38.b6 (other knob); default 1	Confirmed	0x00FB40 / 0x00E634 / 0x00A210	6a 2c 00 ff 89 b5 46 1c / fc 01 6a 8c 89 b5 / 79 04 f3 96	value 0: IRQ7=DIAL; value 1: IRQ10=DIAL
+7	SUB F396 screen draws a dual concentric knob sprite and labels its two parts VOL/DIAL by value	Confirmed	FFF052D7..FFF05339	fb 32 8c 0a ed ff ... fb 42 a7 91 f4 ff ...	value 0: VOL@y0x64 DIAL@y0x85; value 1: DIAL@y0x64 VOL@y0x85
+8	Label y 0x64 sits beside the small upper knob (sprite y 77-132); y 0x85 beside the wide lower ring (y 133-174)	Inferred (strong; geometry, x/y roles Confirmed in blit and renderer)	FFED0A8C / FFEF19C5 / FFEFA894	60 00 62 00 ea f9 cb ff ...	sprite_FFED0A8C.png
+9	IRQ10 = upper (inner, small) knob; IRQ7 = lower (outer, wide) ring	Inferred (strong) from 6+7+8	-	-	consistent for both setting values
+10	Function per setting: default (1) IRQ10 = DIAL, IRQ7 = VOL; value 0 swaps	Confirmed (strings VOL/DIAL + MAIN latch selection)	0xFFF491A7 / 0x00FB64 / 0x00FB72	56 4f 4c 00 44 49 41 4c 00	-
+11	AA38.b6 (VOL function) -> sub_10A30 -> sub_1E744: record +0x6C stepped 0..0x1F by A9EE.b0, mapped by 32-entry taper 0x3A68 to A99A/A99B	Confirmed (code); "AF volume" Inferred (strong)	0x0107B0 / 0x010A40 / 0x01E752 / 0x01E796 / 0x003A68	6a 10 aa 38 73 60 46 14 / 5e 01 e7 44 ... / 00 1f 00 ff aa 56	-
+12	A998..A99F are shadows of an 8-channel serial DAC bit-banged by sub_3490 on PBDR (FFFF5A) b5 load / b1 clock / b0 data, 12-bit word = 4-bit address + 8-bit value	Confirmed (code); part Unknown	0x003490 / 0x0034AA / 0x00356C	6e 1a a9 98 ... / 6e 12 35 6c 10 52 10 52 fe 0c ... / 08 04 0c 02 0a 06 0e 01	A99A = index 2, A99B = index 3
+13	In software standby both knob IRQs are disabled (IER = SSIER = 0x0808: IRQ11 + IRQ3)	Confirmed	0x002874	79 04 08 08 6b 84 fb ce 79 04 08 08 6b 84 ff 34	knobs cannot wake the radio

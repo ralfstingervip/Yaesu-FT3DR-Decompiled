@@ -1,0 +1,15 @@
+target	target_role	caller	caller_region	kind	gate / root
+076FC8	SCI-C TX pump (fn 076FC8-07711E)	0781C0	WINDOW	call	only caller; inside CLOSED window
+076FC8	SCI-C TX pump	-	-	BE32ptr	0 pointer-table refs (whole image)
+07711E	SCI-C RX bridge handler (fn 07711E-0771AE)	0561B0	outside	call	SCI-C ISR sub_5615C bridge branch (0xFF813A!=0)
+05615C	SCI-C ISR (ERI/RXI, fn 05615C-0561C2)	000250	outside	vector	INTB slot 148 (SCI-C ERI)
+05615C	SCI-C ISR	000254	outside	vector	INTB slot 149 (SCI-C RXI)
+078106	window: generic serial engine init	002234	outside	call	reset sub_20FA bridge-strap branch (0xFFFF4C&0x7F==0x7D)
+07827C	window: USB ISR trampoline	054EB0	outside	call	USB ISR sub_54D50 when 0xFF813A!=0
+07815C	window: queue pump tick	05DD12	outside	call	DSP-WRITE state machine sub_5DD00 (state>=5)
+078222	window: SCI-C async reconfig	05DD9E	outside	call	DSP-WRITE state machine sub_5DD00 (state 3)
+0768A8	module helper (fn 0768A8-0768C8)	078176	WINDOW	call	window call into module
+0768A8	module helper	07B4EC	WINDOW	BE32ptr	pointer inside CLOSED window
+0781C0	window: pump caller	05DD12/054EB0/002234	outside	(via window)	window reached only via the 4 gated edges above
+056450	P3DR bit0 test -> DSP shutdown	0562F8	outside	jump	in dispatcher fn 056272-05645C
+056272	stack-A/DSP dispatcher	0030B8	outside	call	scheduler (002C76 -> reset/main 002092)

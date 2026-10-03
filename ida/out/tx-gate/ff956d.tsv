@@ -1,0 +1,31 @@
+kind	addr	function	bytes	disasm / action	evidence
+tier	0x003576	sub_3576	6a 0c 94 b8 46 f8 fc 02 6a 8c 94 b8	runs only when FF94B8==0 (5 ms ISR 0x002A30 decrements FF94B8; reload 2) => 10 ms tier	Confirmed
+tier	0x003582	sub_3576	79 06 00 58 7a 05 00 ff 95 36	byte array FF9536..FF958D (0x58 bytes) dec-to-zero every 10 ms; FF956D = FF9536+0x37	Confirmed
+tier	0x00359A	sub_3576	79 06 00 1c 7a 05 00 ff 95 b2	word array FF95B2..FF95CD (14 words) every 10 ms	Confirmed
+tier	0x0035D6	sub_3576	79 06 00 24 7a 05 00 ff 95 8e	FF9534 reload 10 => 100 ms: byte array FF958E..FF95B1, word array FF95CE..FF95E9	Confirmed
+tier	0x00362A	sub_3576	79 06 00 0e 7a 05 00 ff 95 ea	FF9535 reload 10 => 1 s: word array FF95EA..FF95F7; then BADB seconds 0..59	Confirmed
+decrement	0x00358C	sub_3576	68 5c 47 04 1a 0c 68 dc	the only decrement of FF956D (pointer loop, no abs16 dec exists)	Confirmed (whole-image abs16/abs32 scan: 0 other refs)
+write	0x02F622	sub_2F5EE	fc 02 6a 8c 95 6d	FF956D=2 in band-A re-init/retune (sub_3266E,sub_48B86,sub_32FDA,sub_30A66; 0x93=0); FF9580=2 too if FF8EA0.b7	Confirmed
+write	0x03111E	sub_310E8	fc 02 6a 8c 95 6d	band-B twin of sub_2F5EE: FF9580=2 always, FF956D=2 only if FF8EA0.b7 (dual)	Confirmed
+write	0x0341E4	sub_341C6	fc 02 6a 8c 95 6d	with redraw/retune flags 8F6C/8F75/8F6D (band A block); also FF9580=2 for band B	Confirmed
+write	0x03421A	sub_341C6	fc 02 6a 8c 95 6d	same, when FF8122==FF9190	Confirmed
+write	0x03429A	sub_341C6	fc 02 6a 8c 95 6d	same, FF8EA0.b6/b7 clear arm	Confirmed
+write	0x0342BE	sub_341C6	fc 02 6a 8c 95 6d	same	Confirmed
+write	0x0342D2	sub_342C4	fc 02 6a 8c 95 6d	8F75=1, 8F6D=FF, FF956D=2 (caller sub_21348 0x0213A2)	Confirmed
+write	0x034316	sub_34300	fc 02 6a 8c 95 6d	8F6C/8F75/8F6D (caller sub_1E9F8 0x01EA04)	Confirmed
+write	0x03433A	sub_34300	fc 02 6a 8c 95 6d	same, FF8122==FF9190 arm	Confirmed
+write	0x034860	sub_34838	fc 02 6a 8c 95 6d	TX setup: band field 0x8D = shift class 0/1/4 from fields 0x12/0x46; 0x94=2; called from sub_34782 (TX FSM 0->1)	Confirmed
+write	0x039436	sub_3941A	fc 02 6a 8c 95 6d	on FFA9E3.b0 event: A9AD=0, FF953C=5, FF956D=2, 8F70=2, A9E5=3 (callers sub_2D4A4, sub_2E0DE, sub_33D54)	Confirmed
+read	0x02FA7C	sub_2FA7C	6a 0c 95 6d 46 62	band-A RX state 1: while nonzero -> 0x90=2 (closed) and return; when zero sample 0xFFFF4D b3	Confirmed
+read	0x03497C	sub_34966	6a 0c 95 6d 58 60 00 f6	TX FSM state 1: while nonzero return (TX held off); when zero sample 0xFFFF4D b3	Confirmed
+reload	-	-	-	only constant #2 at all 12 write sites; no setting byte feeds it	Confirmed
+time	-	-	-	2 ticks x 10 ms = 10..20 ms (phase of the 10 ms tier)	Confirmed (timebase per doc 76)
+expiry	-	-	-	no action of its own; it only gates when 0xFFFF4D b3 (band A) is sampled	Confirmed
+verdict	-	-	-	FF956D = band-A post-retune settle/hold-off (10-20 ms) before trusting the band-A RF status line; NOT a TOT and not a key debounce	Inferred (role) from Confirmed sites
+sibling	FF9580	-	-	band-B twin (same value 2, read at 0x031524 sub_31524 before sampling 0xFFFF4D b2)	Confirmed
+sibling	FF9568	-	fc 04 6a 8c 95 68	band-A line-lost hang: #4 = 30..40 ms at 0x034D36, 0x0347F8, 0x034822 (TX FSM); #0x14 = 190..200 ms at 0x02F6F8 (sub_2F69E, band-A RX state 0); read 0x02FAC6, 0x034A70, 0x034D50	Confirmed
+TOT	FF95EA	sub_34F24	fc 1e 50 c3 ... 6b 83 95 ea	the real TOT: word in 1 s tier = FF89BA x 30 s (+10 s if FF8DDE!=0); see tx-inhibits.tsv	Confirmed
+other	FF953D	sub_FC9C	6a 8c 95 3d	PTT DELAY counter (10 ms tier) = byte[0x00FCDC+FF89B0] = 0/20/50/100/200 ms	Confirmed
+other	FF9591	sub_2FA7C	fc 1e 6a 8c 95 91	band RX hold 0x1E = 3.0 s or 3 = 0.3 s (100 ms tier)	Confirmed (bytes); meaning Unknown
+other	FF9597	sub_35872	fc 23 6a 8c 95 97	0x23 = 3.5 s (100 ms tier) after digital voice TX start; read 0x035A2A sub_35A04	Confirmed
+other	FF95A2	0x05EC0A	-	0x14 = 2.0 s (100 ms tier), BB94 script hold (doc 57 "~2 s" confirmed)	Confirmed

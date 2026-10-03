@@ -1,0 +1,568 @@
+### dis 7860-78C0 f3_sender_table
+007860  00 00 4e 36                           .long sub_4E36
+007864  00 00 4e 48                           .long nullsub_98
+007868  00 00 4e 4a                           .long sub_4E4A
+00786C  00 00 4e 58                           .long nullsub_99
+007870  00 00 4e 5a                           .long nullsub_100
+007874  00 00 4e 5c                           .long sub_4E5C
+007878  00 00 4e 70                           .long sub_4E70
+00787C  00 00 4e 84                           .long sub_4E84
+007880  00 00 4e 98                           .long sub_4E98
+007884  00 00 4e b4                           .long sub_4EB4
+007888  00 00 4e d2                           .long nullsub_101
+00788C  00 00 4e d4                           .long sub_4ED4
+007890  00 00 4e e2                           .long nullsub_102
+007894  00 00 4e e4                           .long sub_4EE4
+007898  00 00 4f 72                           .long sub_4F72
+00789C  00 00 50 14                           .long sub_5014
+0078A0  00 00 d3 8c                           .long sub_D38C
+0078A4  00 00 d2 de                           .long sub_D2DE
+0078A8  00 00 d5 26                           .long sub_D526
+0078AC  00 00 50 46                           .long sub_5046
+0078B0  00 00 48 92                           .long nullsub_144
+0078B4  00 00 48 92                           .long nullsub_144
+0078B8  00 00 48 92                           .long nullsub_144
+0078BC  00 00 48 92                           .long nullsub_144
+
+### func sub_3CDA0@3CDA0 3CDA0-3CDBE 
+03CDA0  01 30 6d f0                           stm.l   er0-er3, @-sp
+03CDA4  79 06 00 8e                           mov.w   #0x8E, r6
+03CDA8  7a 00 00 01 ea 00                     mov.l   #loc_1EA00, er0
+03CDAE  7a 01 00 ff aa ea                     mov.l   #0xFFAAEA, er1
+03CDB4  5e 03 bf 4c                           jsr     sub_3BF4C:24
+03CDB8  01 30 6d 73                           ldm.l   @sp+, er0-er3
+03CDBC  54 70                                 rts
+
+### func sub_73412@73412 73412-734B0 
+073412  6a 10 89 20 73 00                     btst    #0, @0xFFFF8920:16
+073418  58 70 00 8c                           beq     loc_734A8:16
+07341C  6a 0c 89 bb                           mov.b   @0xFFFF89BB:16, r4l
+073420  58 60 00 84                           bne     loc_734A8:16
+073424  6a 10 89 20 73 70                     btst    #7, @0xFFFF8920:16
+07342A  47 7c                                 beq     loc_734A8:8
+07342C  6a 0c 94 c0                           mov.b   @0xFFFF94C0:16, r4l
+073430  ac 01                                 cmp.b   #1, r4l
+073432  47 58                                 beq     loc_7348C:8
+073434  6a 10 8e a0 73 70                     btst    #7, @0xFFFF8EA0:16
+07343A  47 0a                                 beq     loc_73446:8
+07343C  6a 0c a9 ac                           mov.b   @0xFFFFA9AC:16, r4l
+073440  ac ff                                 cmp.b   #0xFF, r4l
+073442  47 48                                 beq     loc_7348C:8
+073444  40 12                                 bra     loc_73458:8
+073446  6a 10 8e a0 73 60                     btst    #6, @0xFFFF8EA0:16
+07344C  47 0a                                 beq     loc_73458:8
+07344E  6a 0c a9 ac                           mov.b   @0xFFFFA9AC:16, r4l
+073452  ac ff                                 cmp.b   #0xFF, r4l
+073454  47 36                                 beq     loc_7348C:8
+073456  40 18                                 bra     loc_73470:8
+073458  6a 0c a9 ad                           mov.b   @0xFFFFA9AD:16, r4l
+07345C  ac ff                                 cmp.b   #0xFF, r4l
+07345E  47 2c                                 beq     loc_7348C:8
+073460  6a 10 bb 8f 73 60                     btst    #6, @0xFFFFBB8F:16
+073466  47 08                                 beq     loc_73470:8
+073468  6a 0c bc 6f                           mov.b   @0xFFFFBC6F:16, r4l
+07346C  ac 00                                 cmp.b   #0, r4l
+07346E  47 1c                                 beq     loc_7348C:8
+073470  6a 0c 95 a1                           mov.b   @0xFFFF95A1:16, r4l
+073474  46 38                                 bne     locret_734AE:8
+073476  6a 10 bb 8f 73 70                     btst    #7, @0xFFFFBB8F:16
+07347C  46 30                                 bne     locret_734AE:8
+07347E  6a 18 81 7e 70 10                     bset    #1, @0xFFFF817E:16
+073484  6a 18 bb 8f 70 70                     bset    #7, @0xFFFFBB8F:16
+07348A  40 22                                 bra     locret_734AE:8
+07348C  fc 64                                 mov.b   #0x64, r4l ; 'd'
+07348E  6a 8c 95 a1                           mov.b   r4l, @0xFFFF95A1:16
+073492  6a 10 bb 8f 73 70                     btst    #7, @0xFFFFBB8F:16
+073498  47 14                                 beq     locret_734AE:8
+07349A  6a 18 81 7e 70 10                     bset    #1, @0xFFFF817E:16
+0734A0  6a 18 bb 8f 72 70                     bclr    #7, @0xFFFFBB8F:16
+0734A6  40 06                                 bra     locret_734AE:8
+0734A8  6a 18 bb 8f 72 70                     bclr    #7, @0xFFFFBB8F:16
+0734AE  54 70                                 rts
+
+### func sub_734B0@734B0 734B0-734BE 
+0734B0  fc c8                                 mov.b   #0xC8, r4l
+0734B2  6a 8c 95 a1                           mov.b   r4l, @0xFFFF95A1:16
+0734B6  6a 18 bb 8f 72 70                     bclr    #7, @0xFFFFBB8F:16
+0734BC  54 70                                 rts
+
+### func sub_2C0A0@2C0A0 2C0A0-2C0C0 
+02C0A0  55 1e                                 bsr     sub_2C0C0:8
+02C0A2  5e 07 32 74                           jsr     sub_73274:24
+02C0A6  fc 02                                 mov.b   #2, r4l
+02C0A8  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16
+02C0AC  fc 03                                 mov.b   #3, r4l
+02C0AE  6a 8c 8e af                           mov.b   r4l, @0xFFFF8EAF:16
+02C0B2  fc 01                                 mov.b   #1, r4l
+02C0B4  6a 8c 8f 5b                           mov.b   r4l, @0xFFFF8F5B:16
+02C0B8  fc 1e                                 mov.b   #0x1E, r4l
+02C0BA  6e 8c 00 01                           mov.b   r4l, @(1:16,er0)
+02C0BE  54 70                                 rts
+
+### func sub_2C0D4@2C0D4 2C0D4-2C0FA 
+02C0D4  6a 0c bb 8e                           mov.b   @0xFFFFBB8E:16, r4l
+02C0D8  46 0e                                 bne     loc_2C0E8:8
+02C0DA  55 e4                                 bsr     sub_2C0C0:8
+02C0DC  5e 02 c1 60                           jsr     sub_2C160:24
+02C0E0  fc 01                                 mov.b   #1, r4l
+02C0E2  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16
+02C0E6  40 10                                 bra     locret_2C0F8:8
+02C0E8  ac 01                                 cmp.b   #1, r4l
+02C0EA  46 08                                 bne     loc_2C0F4:8
+02C0EC  fc 00                                 mov.b   #0, r4l
+02C0EE  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16
+02C0F2  40 04                                 bra     locret_2C0F8:8
+02C0F4  5e 03 ff a0                           jsr     sub_3FFA0:24
+02C0F8  54 70                                 rts
+
+### func sub_2C0FA@2C0FA 2C0FA-2C102 
+02C0FA  6a 18 bb 8f 70 00                     bset    #0, @0xFFFFBB8F:16
+02C100  54 70                                 rts
+
+### func sub_2C19C@2C19C 2C19C-2C1AA 
+02C19C  fc 02                                 mov.b   #2, r4l
+02C19E  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16
+02C1A2  fc 03                                 mov.b   #3, r4l
+02C1A4  6a 8c 8e af                           mov.b   r4l, @0xFFFF8EAF:16
+02C1A8  54 70                                 rts
+
+### callers 2C0A0
+02C130  t1  -                        .long sub_2C0A0
+02C13C  t1  -                        .long sub_2C0A0
+
+### callers 2C0D4
+02C1B4  t17  sub_2C1AA@2C1AA          jsr     sub_2C0D4:24
+02C12C  t1  -                        .long sub_2C0D4
+02C138  t1  -                        .long sub_2C0D4
+
+### callers 2C0FA
+02C134  t1  -                        .long sub_2C0FA
+02C140  t1  -                        .long sub_2C0FA
+
+### callers 2C19C
+02C1E4  t1  -                        .long sub_2C19C
+
+### callers 73072
+06FD82  t17  sub_6FD82@6FD82          jsr     sub_73072:24
+
+### callers 73412
+073072  t17  sub_73072@73072          jsr     sub_73412:24
+
+### callers D526
+004826  t17  sub_45F6@45F6            jsr     @er6
+004DEE  t17  sub_4D92@4D92            jsr     @er6
+006C3C  t17  sub_6B84@6B84            jsr     @er6
+006C78  t17  sub_6B84@6B84            jsr     @er6
+006E9C  t17  sub_6E9A@6E9A            jsr     @er6
+0078A8  t1  -                        .long sub_D526
+
+### callers 7FAA
+006920  t17  sub_6914@6914            jsr     sub_7FAA:24
+
+### refrange FF8EAF-FF8EB0
+00D32E  6a 0c 8e af                           mov.b   @0xFFFF8EAF:16, r4l  | sub_D2FC@D2FC            ref=FF8EAF
+00D334  6a 0c 8e b0                           mov.b   @0xFFFF8EB0:16, r4l  | sub_D2FC@D2FC            ref=FF8EB0
+00D36C  6a 0c 8e af                           mov.b   @0xFFFF8EAF:16, r4l  | sub_D2FC@D2FC            ref=FF8EAF
+00D466  6a 0c 8e af                           mov.b   @0xFFFF8EAF:16, r4l  | sub_D43C@D43C            ref=FF8EAF
+02C0AE  6a 8c 8e af                           mov.b   r4l, @0xFFFF8EAF:16  | sub_2C0A0@2C0A0          ref=FF8EAF
+02C1A4  6a 8c 8e af                           mov.b   r4l, @0xFFFF8EAF:16  | sub_2C19C@2C19C          ref=FF8EAF
+0730A4  6a 0c 8e af                           mov.b   @0xFFFF8EAF:16, r4l  | sub_7309C@7309C          ref=FF8EAF
+0730AE  6a 8c 8e af                           mov.b   r4l, @0xFFFF8EAF:16  | sub_7309C@7309C          ref=FF8EAF
+0730D2  6a 8c 8e af                           mov.b   r4l, @0xFFFF8EAF:16  | sub_730D0@730D0          ref=FF8EAF
+0731E4  6a 8c 8e b0                           mov.b   r4l, @0xFFFF8EB0:16  | sub_731C0@731C0          ref=FF8EB0
+073226  6a 8c 8e b0                           mov.b   r4l, @0xFFFF8EB0:16  | sub_731C0@731C0          ref=FF8EB0
+073268  6a 0c 8e b0                           mov.b   @0xFFFF8EB0:16, r4l  | sub_73268@73268          ref=FF8EB0
+07327A  6a 8c 8e b0                           mov.b   r4l, @0xFFFF8EB0:16  | sub_73274@73274          ref=FF8EB0
+07329A  6a 8c 8e af                           mov.b   r4l, @0xFFFF8EAF:16  | sub_73280@73280          ref=FF8EAF
+0732E6  6a 8c 8e af                           mov.b   r4l, @0xFFFF8EAF:16  | sub_732C8@732C8          ref=FF8EAF
+07332A  6a 8c 8e af                           mov.b   r4l, @0xFFFF8EAF:16  | sub_73310@73310          ref=FF8EAF
+0733D0  6a 8c 8e b0                           mov.b   r4l, @0xFFFF8EB0:16  | sub_73358@73358          ref=FF8EB0
+
+### refrange FFBB8E-FFBB90
+007E4E  6a 10 bb 8f 77 70                     bld     #7, @0xFFFFBB8F:16  | sub_7E32@7E32            ref=FFBB8F
+00D38C  6a 10 bb 8f 73 00                     btst    #0, @0xFFFFBB8F:16  | sub_D38C@D38C            ref=FFBB8F
+00D396  6a 0c bb 8e                           mov.b   @0xFFFFBB8E:16, r4l  | sub_D38C@D38C            ref=FFBB8E
+00D3F2  6a 0c bb 8e                           mov.b   @0xFFFFBB8E:16, r4l  | sub_D38C@D38C            ref=FFBB8E
+00D474  6a 0c bb 8e                           mov.b   @0xFFFFBB8E:16, r4l  | sub_D43C@D43C            ref=FFBB8E
+00D488  6a 0c bb 8e                           mov.b   @0xFFFFBB8E:16, r4l  | sub_D43C@D43C            ref=FFBB8E
+00D4B4  6a 18 bb 8f 72 00                     bclr    #0, @0xFFFFBB8F:16  | sub_D38C@D38C            ref=FFBB8F
+00D4BA  6a 18 bb 8f 70 10                     bset    #1, @0xFFFFBB8F:16  | sub_D38C@D38C            ref=FFBB8F
+02C0A8  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_2C0A0@2C0A0          ref=FFBB8E
+02C0D4  6a 0c bb 8e                           mov.b   @0xFFFFBB8E:16, r4l  | sub_2C0D4@2C0D4          ref=FFBB8E
+02C0E2  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_2C0D4@2C0D4          ref=FFBB8E
+02C0EE  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_2C0D4@2C0D4          ref=FFBB8E
+02C0FA  6a 18 bb 8f 70 00                     bset    #0, @0xFFFFBB8F:16  | sub_2C0FA@2C0FA          ref=FFBB8F
+02C19E  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_2C19C@2C19C          ref=FFBB8E
+03926A  6a 18 bb 8f 70 60                     bset    #6, @0xFFFFBB8F:16  | sub_391C0@391C0          ref=FFBB8F
+0392D2  6a 18 bb 8f 72 60                     bclr    #6, @0xFFFFBB8F:16  | sub_391C0@391C0          ref=FFBB8F
+073076  6a 0b bb 90                           mov.b   @0xFFFFBB90:16, r3l  | sub_73072@73072          ref=FFBB90
+0730B8  6a 8c bb 90                           mov.b   r4l, @0xFFFFBB90:16  | sub_7309C@7309C          ref=FFBB90
+0730C4  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_7309C@7309C          ref=FFBB8E
+0730CA  6a 8c bb 90                           mov.b   r4l, @0xFFFFBB90:16  | sub_7309C@7309C          ref=FFBB90
+0730DC  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_730D0@730D0          ref=FFBB8E
+0730E2  6a 8c bb 90                           mov.b   r4l, @0xFFFFBB90:16  | sub_730D0@730D0          ref=FFBB90
+073106  6a 8c bb 90                           mov.b   r4l, @0xFFFFBB90:16  | sub_730E8@730E8          ref=FFBB90
+07311E  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_7310C@7310C          ref=FFBB8E
+073124  6a 8c bb 90                           mov.b   r4l, @0xFFFFBB90:16  | sub_7310C@7310C          ref=FFBB90
+07312A  6a 10 bb 8f 73 10                     btst    #1, @0xFFFFBB8F:16  | sub_7312A@7312A          ref=FFBB8F
+07313A  6a 0c bb 8e                           mov.b   @0xFFFFBB8E:16, r4l  | sub_7312A@7312A          ref=FFBB8E
+073140  6a 0b bb 8e                           mov.b   @0xFFFFBB8E:16, r3l  | sub_7312A@7312A          ref=FFBB8E
+0731B8  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_73172@73172          ref=FFBB8E
+0732A0  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_73280@73280          ref=FFBB8E
+0732F2  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_732C8@732C8          ref=FFBB8E
+07330A  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_732C8@732C8          ref=FFBB8E
+073330  6a 8c bb 8e                           mov.b   r4l, @0xFFFFBB8E:16  | sub_73310@73310          ref=FFBB8E
+073352  6a 8c bb 90                           mov.b   r4l, @0xFFFFBB90:16  | sub_7333A@7333A          ref=FFBB90
+073370  6a 18 bb 8f 72 10                     bclr    #1, @0xFFFFBB8F:16  | sub_73358@73358          ref=FFBB8F
+073460  6a 10 bb 8f 73 60                     btst    #6, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+073476  6a 10 bb 8f 73 70                     btst    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+073484  6a 18 bb 8f 70 70                     bset    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+073492  6a 10 bb 8f 73 70                     btst    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+0734A0  6a 18 bb 8f 72 70                     bclr    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+0734A8  6a 18 bb 8f 72 70                     bclr    #7, @0xFFFFBB8F:16  | sub_73412@73412          ref=FFBB8F
+0734B6  6a 18 bb 8f 72 70                     bclr    #7, @0xFFFFBB8F:16  | sub_734B0@734B0          ref=FFBB8F
+
+### refrange FFAAEA-FFAAEB
+00D358  6a 0b aa ea                           mov.b   @0xFFFFAAEA:16, r3l  | sub_D2FC@D2FC            ref=FFAAEA
+00D3EE  6a 0b aa eb                           mov.b   @0xFFFFAAEB:16, r3l  | sub_D38C@D38C            ref=FFAAEB
+00D404  6a 0b aa ea                           mov.b   @0xFFFFAAEA:16, r3l  | sub_D38C@D38C            ref=FFAAEA
+00D426  6a 0b aa ea                           mov.b   @0xFFFFAAEA:16, r3l  | sub_D38C@D38C            ref=FFAAEA
+00D45E  6a 0b aa ea                           mov.b   @0xFFFFAAEA:16, r3l  | sub_D43C@D43C            ref=FFAAEA
+00D47C  6a 0c aa ea                           mov.b   @0xFFFFAAEA:16, r4l  | sub_D43C@D43C            ref=FFAAEA
+00E100  6a 8c aa ea                           mov.b   r4l, @0xFFFFAAEA:16  | sub_DEFA@DEFA            ref=FFAAEA
+00E104  6a 8c aa eb                           mov.b   r4l, @0xFFFFAAEB:16  | sub_DEFA@DEFA            ref=FFAAEB
+015DFC  6a 0c aa ea                           mov.b   @0xFFFFAAEA:16, r4l  | sub_15CCE@15CCE          ref=FFAAEA
+019CDA  6a 0a aa ea                           mov.b   @0xFFFFAAEA:16, r2l  | sub_19CDA@19CDA          ref=FFAAEA
+02C162  6a 8c aa eb                           mov.b   r4l, @0xFFFFAAEB:16  | sub_2C160@2C160          ref=FFAAEB
+02C1AA  6a 0c aa ea                           mov.b   @0xFFFFAAEA:16, r4l  | sub_2C1AA@2C1AA          ref=FFAAEA
+03CD90  7a 01 00 ff aa ea                     mov.l   #0xFFAAEA, er1  | sub_3CD82@3CD82          ref=FFAAEA
+03CDAE  7a 01 00 ff aa ea                     mov.l   #0xFFAAEA, er1  | sub_3CDA0@3CDA0          ref=FFAAEA
+0731E8  6a 18 aa eb 62 c0                     bclr    r4l, @0xFFFFAAEB:16  | sub_731C0@731C0          ref=FFAAEB
+0731FE  6a 0c aa ea                           mov.b   @0xFFFFAAEA:16, r4l  | sub_731C0@731C0          ref=FFAAEA
+07322A  6a 18 aa eb 62 c0                     bclr    r4l, @0xFFFFAAEB:16  | sub_731C0@731C0          ref=FFAAEB
+073230  6a 0c aa ea                           mov.b   @0xFFFFAAEA:16, r4l  | sub_731C0@731C0          ref=FFAAEA
+073236  6a 8c aa ea                           mov.b   r4l, @0xFFFFAAEA:16  | sub_731C0@731C0          ref=FFAAEA
+073260  6a 8c aa ea                           mov.b   r4l, @0xFFFFAAEA:16  | sub_731C0@731C0          ref=FFAAEA
+073376  6a 0c aa ea                           mov.b   @0xFFFFAAEA:16, r4l  | sub_73358@73358          ref=FFAAEA
+07337E  6a 8c aa ea                           mov.b   r4l, @0xFFFFAAEA:16  | sub_73358@73358          ref=FFAAEA
+
+### refrange FFAD68-FFAD68
+002ACA  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_2AA0@2AA0            ref=FFAD68
+002ADC  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_2AA0@2AA0            ref=FFAD68
+002B0A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2AA0@2AA0            ref=FFAD68
+002B1C  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_2AA0@2AA0            ref=FFAD68
+003104  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_30E0@30E0            ref=FFAD68
+003220  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_320E@320E            ref=FFAD68
+00324E  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_323C@323C            ref=FFAD68
+003770  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_3756@3756            ref=FFAD68
+003780  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_3756@3756            ref=FFAD68
+004DB8  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_4D92@4D92            ref=FFAD68
+004DC0  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_4D92@4D92            ref=FFAD68
+004DCC  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_4D92@4D92            ref=FFAD68
+004F72  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_4F72@4F72            ref=FFAD68
+004F86  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_4F72@4F72            ref=FFAD68
+00518E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_518E@518E            ref=FFAD68
+005196  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_518E@518E            ref=FFAD68
+0053E8  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_53C4@53C4            ref=FFAD68
+00548C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_548C@548C            ref=FFAD68
+0054A0  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_548C@548C            ref=FFAD68
+005588  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_5588@5588            ref=FFAD68
+0055D6  6a 03 ad 68                           mov.b   @0xFFFFAD68:16, r3h  | sub_5588@5588            ref=FFAD68
+005656  6a 03 ad 68                           mov.b   @0xFFFFAD68:16, r3h  | sub_5634@5634            ref=FFAD68
+005ADC  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_5ADC@5ADC            ref=FFAD68
+005C08  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_5BA0@5BA0            ref=FFAD68
+005D36  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_5D36@5D36            ref=FFAD68
+0060A4  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_60A4@60A4            ref=FFAD68
+006166  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_60A4@60A4            ref=FFAD68
+0080C2  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_807A@807A            ref=FFAD68
+0097BC  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_9792@9792            ref=FFAD68
+009806  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_97DC@97DC            ref=FFAD68
+00986A  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_9834@9834            ref=FFAD68
+00989A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_9834@9834            ref=FFAD68
+0098F4  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_98CA@98CA            ref=FFAD68
+00994C  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_9922@9922            ref=FFAD68
+0099B0  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_997A@997A            ref=FFAD68
+009AA0  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_9A8E@9A8E            ref=FFAD68
+009AC0  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_9A8E@9A8E            ref=FFAD68
+00A17E  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_A160@A160            ref=FFAD68
+00A304  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_A2E2@A2E2            ref=FFAD68
+00A364  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_A342@A342            ref=FFAD68
+00A39C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_A342@A342            ref=FFAD68
+00A442  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_A40E@A40E            ref=FFAD68
+00A57E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_A55A@A55A            ref=FFAD68
+00A5F2  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_A55A@A55A            ref=FFAD68
+00A948  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_A926@A926            ref=FFAD68
+00D40A  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_D38C@D38C            ref=FFAD68
+00D4FE  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_D38C@D38C            ref=FFAD68
+010544  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_10528@10528          ref=FFAD68
+010C8E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_10C00@10C00          ref=FFAD68
+0148BE  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_148A0@148A0          ref=FFAD68
+014B6A  6a 84 ad 68                           mov.b   r4h, @0xFFFFAD68:16  | sub_14B54@14B54          ref=FFAD68
+014C08  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_14C02@14C02          ref=FFAD68
+014C20  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_14C1A@14C1A          ref=FFAD68
+014C2E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_14C28@14C28          ref=FFAD68
+014C3E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_14C3E@14C3E          ref=FFAD68
+014C60  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_14C3E@14C3E          ref=FFAD68
+014DC2  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_14DB6@14DB6          ref=FFAD68
+0151F4  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_151EC@151EC          ref=FFAD68
+01520E  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_15206@15206          ref=FFAD68
+01523E  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1522E@1522E          ref=FFAD68
+015270  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_15260@15260          ref=FFAD68
+0152AA  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | -                        ref=FFAD68
+0152B8  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | -                        ref=FFAD68
+0152C8  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | -                        ref=FFAD68
+0152E2  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_152D4@152D4          ref=FFAD68
+015302  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_152F4@152F4          ref=FFAD68
+015326  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15318@15318          ref=FFAD68
+01533A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15334@15334          ref=FFAD68
+015352  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15342@15342          ref=FFAD68
+01535E  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15342@15342          ref=FFAD68
+015364  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15364@15364          ref=FFAD68
+01536E  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15364@15364          ref=FFAD68
+0153C0  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_153BA@153BA          ref=FFAD68
+0153D2  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_153BA@153BA          ref=FFAD68
+0153DA  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_153BA@153BA          ref=FFAD68
+0153E6  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_153E6@153E6          ref=FFAD68
+0153F0  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_153E6@153E6          ref=FFAD68
+015450  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1544A@1544A          ref=FFAD68
+01545A  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1544A@1544A          ref=FFAD68
+015462  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1544A@1544A          ref=FFAD68
+0154A2  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15468@15468          ref=FFAD68
+015536  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15528@15528          ref=FFAD68
+01555A  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15528@15528          ref=FFAD68
+015594  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15586@15586          ref=FFAD68
+0155B8  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_155B2@155B2          ref=FFAD68
+015606  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_155EC@155EC          ref=FFAD68
+01566C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15666@15666          ref=FFAD68
+015684  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15674@15674          ref=FFAD68
+01568C  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15674@15674          ref=FFAD68
+0156A6  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_156A6@156A6          ref=FFAD68
+0156B0  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_156A6@156A6          ref=FFAD68
+0156D8  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_156D2@156D2          ref=FFAD68
+01570E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15700@15700          ref=FFAD68
+015734  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15726@15726          ref=FFAD68
+01575E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15750@15750          ref=FFAD68
+01578E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1577A@1577A          ref=FFAD68
+0157E2  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_157D2@157D2          ref=FFAD68
+015808  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15802@15802          ref=FFAD68
+01584E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15840@15840          ref=FFAD68
+01589C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1588E@1588E          ref=FFAD68
+0158D0  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_158CA@158CA          ref=FFAD68
+0158F4  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_158DE@158DE          ref=FFAD68
+01593A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_158DE@158DE          ref=FFAD68
+015956  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15948@15948          ref=FFAD68
+015962  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15948@15948          ref=FFAD68
+0159A4  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15994@15994          ref=FFAD68
+0159D0  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_159C2@159C2          ref=FFAD68
+0159FC  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_159C2@159C2          ref=FFAD68
+015A10  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15A02@15A02          ref=FFAD68
+015A2E  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15A02@15A02          ref=FFAD68
+015A56  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_159C2@159C2          ref=FFAD68
+015A8C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15A78@15A78          ref=FFAD68
+015A9C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15A96@15A96          ref=FFAD68
+015AAC  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15A96@15A96          ref=FFAD68
+015B34  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15B26@15B26          ref=FFAD68
+015B54  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15B26@15B26          ref=FFAD68
+015B74  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15B66@15B66          ref=FFAD68
+015B82  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15B66@15B66          ref=FFAD68
+015B94  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15B66@15B66          ref=FFAD68
+015BB4  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15BA6@15BA6          ref=FFAD68
+015BBC  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15BA6@15BA6          ref=FFAD68
+015C30  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15C30@15C30          ref=FFAD68
+015C42  6a 04 ad 68                           mov.b   @0xFFFFAD68:16, r4h  | sub_15C30@15C30          ref=FFAD68
+015C56  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15C30@15C30          ref=FFAD68
+015CBA  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_15CB8@15CB8          ref=FFAD68
+015DC6  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15CCE@15CCE          ref=FFAD68
+015DF6  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15CCE@15CCE          ref=FFAD68
+015E20  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_15E1E@15E1E          ref=FFAD68
+015E6C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | -                        ref=FFAD68
+016100  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_160F0@160F0          ref=FFAD68
+01612C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1612C@1612C          ref=FFAD68
+016270  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1626A@1626A          ref=FFAD68
+016276  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1626A@1626A          ref=FFAD68
+016288  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1627E@1627E          ref=FFAD68
+016294  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1627E@1627E          ref=FFAD68
+0162A2  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_162A2@162A2          ref=FFAD68
+0162AC  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_162A2@162A2          ref=FFAD68
+0162BE  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_162B8@162B8          ref=FFAD68
+016346  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_16340@16340          ref=FFAD68
+01639A  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | -                        ref=FFAD68
+0163EA  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_163CC@163CC          ref=FFAD68
+0167A0  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1679A@1679A          ref=FFAD68
+0167F0  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_167F0@167F0          ref=FFAD68
+016804  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_167F0@167F0          ref=FFAD68
+016A5E  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_16A56@16A56          ref=FFAD68
+016A64  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_16A56@16A56          ref=FFAD68
+016C56  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_16C56@16C56          ref=FFAD68
+017120  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | -                        ref=FFAD68
+0171E2  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_171D2@171D2          ref=FFAD68
+0172BC  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_172BC@172BC          ref=FFAD68
+0172FA  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_172F4@172F4          ref=FFAD68
+01734A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1734A@1734A          ref=FFAD68
+01749E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | -                        ref=FFAD68
+017518  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | -                        ref=FFAD68
+017538  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | -                        ref=FFAD68
+017B26  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_17B0A@17B0A          ref=FFAD68
+017B4C  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_17B0A@17B0A          ref=FFAD68
+017B8A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_17B5E@17B5E          ref=FFAD68
+017B9A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_17B5E@17B5E          ref=FFAD68
+017BA6  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_17B5E@17B5E          ref=FFAD68
+017BB0  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_17B5E@17B5E          ref=FFAD68
+017BB8  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_17B5E@17B5E          ref=FFAD68
+017BBE  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_17B5E@17B5E          ref=FFAD68
+017BD0  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_17B5E@17B5E          ref=FFAD68
+017BF4  6a 0d ad 68                           mov.b   @0xFFFFAD68:16, r5l  | sub_17B5E@17B5E          ref=FFAD68
+017E90  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_17E8A@17E8A          ref=FFAD68
+017EBC  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_17EB6@17EB6          ref=FFAD68
+017ED8  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_17EB6@17EB6          ref=FFAD68
+017EFE  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_17EFE@17EFE          ref=FFAD68
+017F16  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_17EFE@17EFE          ref=FFAD68
+017F34  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_17EFE@17EFE          ref=FFAD68
+017F5C  6a 0d ad 68                           mov.b   @0xFFFFAD68:16, r5l  | sub_17EFE@17EFE          ref=FFAD68
+018046  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_18040@18040          ref=FFAD68
+018074  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | -                        ref=FFAD68
+018096  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_18090@18090          ref=FFAD68
+018120  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_180DA@180DA          ref=FFAD68
+0181BC  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_181B6@181B6          ref=FFAD68
+0181EA  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_181B6@181B6          ref=FFAD68
+018284  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_18276@18276          ref=FFAD68
+01846C  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_18464@18464          ref=FFAD68
+01848E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1848E@1848E          ref=FFAD68
+0184AE  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1848E@1848E          ref=FFAD68
+0184C4  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1848E@1848E          ref=FFAD68
+0184F4  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_184E8@184E8          ref=FFAD68
+018528  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_184E8@184E8          ref=FFAD68
+0185CE  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_185CE@185CE          ref=FFAD68
+018680  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1865A@1865A          ref=FFAD68
+0186AA  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1865A@1865A          ref=FFAD68
+0186B4  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1865A@1865A          ref=FFAD68
+0186BC  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1865A@1865A          ref=FFAD68
+01880E  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_18808@18808          ref=FFAD68
+0188AE  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_188A8@188A8          ref=FFAD68
+01894E  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1890C@1890C          ref=FFAD68
+018956  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1890C@1890C          ref=FFAD68
+018A82  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_18A7C@18A7C          ref=FFAD68
+018AE0  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_18AD2@18AD2          ref=FFAD68
+018C6A  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_18C46@18C46          ref=FFAD68
+018C72  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_18C46@18C46          ref=FFAD68
+018C9A  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_18C46@18C46          ref=FFAD68
+018D18  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_18D12@18D12          ref=FFAD68
+018D7A  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_18D74@18D74          ref=FFAD68
+018F54  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_18F4E@18F4E          ref=FFAD68
+018FD8  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_18FD8@18FD8          ref=FFAD68
+018FFE  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_18FD8@18FD8          ref=FFAD68
+01904E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1903C@1903C          ref=FFAD68
+019076  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_19070@19070          ref=FFAD68
+0191B8  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_19158@19158          ref=FFAD68
+019D4A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19D4A@19D4A          ref=FFAD68
+019D60  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19D60@19D60          ref=FFAD68
+019D9E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19D74@19D74          ref=FFAD68
+019DC0  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19D74@19D74          ref=FFAD68
+019DD2  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19D74@19D74          ref=FFAD68
+019DD8  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_19D74@19D74          ref=FFAD68
+019DF0  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_19DDE@19DDE          ref=FFAD68
+019E74  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19E6C@19E6C          ref=FFAD68
+019F3A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19F3A@19F3A          ref=FFAD68
+019F4E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19F3A@19F3A          ref=FFAD68
+019FA8  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19F8A@19F8A          ref=FFAD68
+019FD8  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_19F8A@19F8A          ref=FFAD68
+01A0EA  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1A0DC@1A0DC          ref=FFAD68
+01A176  6a 8b ad 68                           mov.b   r3l, @0xFFFFAD68:16  | sub_1A0DC@1A0DC          ref=FFAD68
+01A182  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | -                        ref=FFAD68
+01A19E  6a 8b ad 68                           mov.b   r3l, @0xFFFFAD68:16  | -                        ref=FFAD68
+01A28C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | -                        ref=FFAD68
+01A496  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1A490@1A490          ref=FFAD68
+01A4D4  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1A4CE@1A4CE          ref=FFAD68
+01A4F4  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1A4EE@1A4EE          ref=FFAD68
+01A5D2  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1A5CC@1A5CC          ref=FFAD68
+01A610  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1A60A@1A60A          ref=FFAD68
+01A630  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1A62A@1A62A          ref=FFAD68
+01A78E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1A754@1A754          ref=FFAD68
+01A794  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1A754@1A754          ref=FFAD68
+01A902  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1A8E4@1A8E4          ref=FFAD68
+01A908  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1A8E4@1A8E4          ref=FFAD68
+01A954  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_1A90E@1A90E          ref=FFAD68
+01A95A  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1A90E@1A90E          ref=FFAD68
+01AA4C  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_1AA46@1AA46          ref=FFAD68
+01CEEE  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1CEC4@1CEC4          ref=FFAD68
+01F95E  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1F950@1F950          ref=FFAD68
+01F9A4  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1F996@1F996          ref=FFAD68
+01FC32  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_1FC22@1FC22          ref=FFAD68
+021AC6  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_21A76@21A76          ref=FFAD68
+026A96  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_262E4@262E4          ref=FFAD68
+028A10  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_28A10@28A10          ref=FFAD68
+028A36  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_28A36@28A36          ref=FFAD68
+028A70  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_28A6E@28A6E          ref=FFAD68
+028A96  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_28A88@28A88          ref=FFAD68
+0298F2  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_298D8@298D8          ref=FFAD68
+029B1E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_29B1E@29B1E          ref=FFAD68
+029B92  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_29B1E@29B1E          ref=FFAD68
+029BBC  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_29BBC@29BBC          ref=FFAD68
+029CDC  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_29CDC@29CDC          ref=FFAD68
+029CFE  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_29CFE@29CFE          ref=FFAD68
+029D24  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_29D24@29D24          ref=FFAD68
+029E2C  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_29E2C@29E2C          ref=FFAD68
+029FEA  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_29FEA@29FEA          ref=FFAD68
+02A5AA  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_2A594@2A594          ref=FFAD68
+02A5CA  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2A5CA@2A5CA          ref=FFAD68
+02A70E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2A70E@2A70E          ref=FFAD68
+02A7D4  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2A7CC@2A7CC          ref=FFAD68
+02A898  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2A898@2A898          ref=FFAD68
+02A8DA  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2A8C6@2A8C6          ref=FFAD68
+02A8FC  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2A8C6@2A8C6          ref=FFAD68
+02A92E  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2A92E@2A92E          ref=FFAD68
+02A98A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2A95A@2A95A          ref=FFAD68
+02A9CA  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_2A99E@2A99E          ref=FFAD68
+02A9FE  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_2A9FE@2A9FE          ref=FFAD68
+04F566  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_4F564@4F564          ref=FFAD68
+04F9A6  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_4F9A4@4F9A4          ref=FFAD68
+04FBEC  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_4FBE6@4FBE6          ref=FFAD68
+04FBF4  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_4FBE6@4FBE6          ref=FFAD68
+04FC0C  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_4FBFE@4FBFE          ref=FFAD68
+04FC40  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_4FBFE@4FBFE          ref=FFAD68
+04FC84  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_4FBFE@4FBFE          ref=FFAD68
+04FE6E  6a 0d ad 68                           mov.b   @0xFFFFAD68:16, r5l  | sub_4FE66@4FE66          ref=FFAD68
+04FF86  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_4FF10@4FF10          ref=FFAD68
+04FFA8  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_4FF10@4FF10          ref=FFAD68
+05002C  6a 0d ad 68                           mov.b   @0xFFFFAD68:16, r5l  | sub_5002A@5002A          ref=FFAD68
+0508A4  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_50894@50894          ref=FFAD68
+05097A  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_5095A@5095A          ref=FFAD68
+050ADA  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_50AD8@50AD8          ref=FFAD68
+050B0A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_50B0A@50B0A          ref=FFAD68
+050B3A  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_50B38@50B38          ref=FFAD68
+050B54  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | -                        ref=FFAD68
+050BCA  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_50BC8@50BC8          ref=FFAD68
+050BFC  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_50BE0@50BE0          ref=FFAD68
+050C02  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_50C02@50C02          ref=FFAD68
+050CA0  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_50C9C@50C9C          ref=FFAD68
+050CD8  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_50CD6@50CD6          ref=FFAD68
+050D2C  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | -                        ref=FFAD68
+050D68  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_50D64@50D64          ref=FFAD68
+0526A4  6a 0d ad 68                           mov.b   @0xFFFFAD68:16, r5l  | sub_526A2@526A2          ref=FFAD68
+05E0EE  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_5E0E8@5E0E8          ref=FFAD68
+05E21E  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_5E218@5E218          ref=FFAD68
+05E23C  6a 8a ad 68                           mov.b   r2l, @0xFFFFAD68:16  | sub_5E218@5E218          ref=FFAD68
+05E2A6  6a 8a ad 68                           mov.b   r2l, @0xFFFFAD68:16  | sub_5E26C@5E26C          ref=FFAD68
+05E2BC  6a 8a ad 68                           mov.b   r2l, @0xFFFFAD68:16  | sub_5E26C@5E26C          ref=FFAD68
+05E2CE  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | -                        ref=FFAD68
+05E456  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_5E44E@5E44E          ref=FFAD68
+05E876  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_5E862@5E862          ref=FFAD68
+05E88C  6a 0b ad 68                           mov.b   @0xFFFFAD68:16, r3l  | sub_5E862@5E862          ref=FFAD68
+05E8D2  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_5E8BE@5E8BE          ref=FFAD68
+069B9A  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_69B94@69B94          ref=FFAD68
+069BEA  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_69BE4@69BE4          ref=FFAD68
+069C28  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_69C22@69C22          ref=FFAD68
+06CEEA  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_6CEC4@6CEC4          ref=FFAD68
+06FD30  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_6FD0C@6FD0C          ref=FFAD68
+06FD3C  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_6FD0C@6FD0C          ref=FFAD68
+06FD4C  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_6FD0C@6FD0C          ref=FFAD68
+06FD70  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_6FD56@6FD56          ref=FFAD68
+06FD7C  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_6FD56@6FD56          ref=FFAD68
+0702BA  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_7029C@7029C          ref=FFAD68
+070310  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_70302@70302          ref=FFAD68
+07326E  6a 8c ad 68                           mov.b   r4l, @0xFFFFAD68:16  | sub_73268@73268          ref=FFAD68
+073274  6a 0c ad 68                           mov.b   @0xFFFFAD68:16, r4l  | sub_73274@73274          ref=FFAD68
+073382  6a 0a ad 68                           mov.b   @0xFFFFAD68:16, r2l  | sub_73358@73358          ref=FFAD68
+
+### dis 7E2C-7E32 voxtab
+007E2C  00                                    .byte    0

@@ -1,0 +1,27 @@
+0021f0 C 3c a0                          mov.b   r4l, @0xA0:8                               
+0021f2 C 3c a1                          mov.b   r4l, @0xA1:8                               
+0021f4 C 5e 00 24 6c                    jsr     sub_246C:24                                
+0021f8 C fc 00                          mov.b   #0, r4l                                    
+0021fa C 6a 8c 81 3a                    mov.b   r4l, @0xFFFF813A:16                        
+0021fe C fe c8                          mov.b   #0xC8, r6l                                 
+002200 C 2c 4c                          mov.b   @0x4C:8, r4l                               <- 220a
+002202 C ec 7f                          and.b   #0x7F, r4l                                 
+002204 C ac 7d                          cmp.b   #0x7D, r4l ; '}'                           
+002206 C 47 16                          beq     loc_221E:8                                 
+002208 C 1a 0e                          dec.b   r6l                                        
+00220a C 46 f4                          bne     loc_2200:8                                 
+00220c C 6a 8c 81 3b                    mov.b   r4l, @0xFFFF813B:16                        
+002210 C a9 00                          cmp.b   #0, r1l                                    
+002212 C 46 04                          bne     loc_2218:8                                 
+002214 C 5e 05 4b f8                    jsr     sub_54BF8:24                               
+002218 C 5e 05 4c 44                    jsr     sub_54C44:24                               <- 2212
+00221c C 40 22                          bra     loc_2240:8                                 
+00221e C 6a 8c 81 3b                    mov.b   r4l, @0xFFFF813B:16                        <- 2206
+002222 C fc 01                          mov.b   #1, r4l                                    
+002224 C 6a 8c 81 3a                    mov.b   r4l, @0xFFFF813A:16                        
+002228 C 5e 05 5f fe                    jsr     sub_55FFE:24                               
+00222c C 01 30 6d f0                    stm.l   er0-er3, @-sp                              
+002230 C 01 20 6d f4                    stm.l   er4-er6, @-sp                              
+002234 C 5e 07 81 06                    jsr     loc_78106:24                               
+002238 C 01 20 6d 76                    ldm.l   @sp+, er4-er6                              
+00223c C 01 30 6d 73                    ldm.l   @sp+, er0-er3                              

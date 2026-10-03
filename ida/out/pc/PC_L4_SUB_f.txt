@@ -1,0 +1,101 @@
+job PC_L4_SUB f
+; ==== sub_FFEF036F FFEF036F-FFEF0385 ====
+FFEF036F  mov.l   #1D3B8h, r1
+FFEF0375  bsr.w   sub_FFEEFA9E
+FFEF0378  mov.l   #8C4Ch, r14
+FFEF037E  movu.b  [r14], r15
+FFEF0380  add     #1, r15
+FFEF0382  mov.b   r15, [r14]
+FFEF0384  rts
+
+; ==== sub_FFEF039B FFEF039B-FFEF03BC ====
+FFEF039B  mov.l   #12Ch, r3
+FFEF039F  mov.l   #0, r2
+FFEF03A1  mov.l   #8C4Dh, r1
+FFEF03A7  bsr.a   sub_FFEFB29A
+FFEF03AB  mov.l   #12Ch, r3
+FFEF03AF  mov.l   #0, r2
+FFEF03B1  mov.l   #8E46h, r1
+FFEF03B7  bsr.a   sub_FFEFB29A
+FFEF03BB  rts
+
+; ==== sub_FFEFB268 FFEFB268-FFEFB29A ====
+FFEFB268  add     #-14h, sp, sp
+FFEFB26B  mov.l   r1, 14h+var_4[sp]
+FFEFB26D  mov.l   r2, 14h+var_8[sp]
+FFEFB26F  mov.l   r3, 14h+var_C[sp]
+FFEFB271  mov.l   14h+var_8[sp], 14h+var_14[sp]
+FFEFB274  mov.l   14h+var_4[sp], 14h+var_10[sp]
+FFEFB278  bra.b   loc_FFEFB292
+FFEFB27A  mov.l   14h+var_14[sp], r1
+FFEFB27C  mov.l   14h+var_10[sp], r2
+FFEFB27E  mov.b   [r1], [r2]
+FFEFB280  mov.l   14h+var_10[sp], r1
+FFEFB282  add     #1, r1
+FFEFB284  mov.l   r1, 14h+var_10[sp]
+FFEFB286  mov.l   14h+var_14[sp], r1
+FFEFB288  add     #1, r1
+FFEFB28A  mov.l   r1, 14h+var_14[sp]
+FFEFB28C  mov.l   14h+var_C[sp], r1
+FFEFB28E  sub     #1, r1
+FFEFB290  mov.l   r1, 14h+var_C[sp]
+FFEFB292  mov.l   14h+var_C[sp], r1
+FFEFB294  cmp     #0, r1
+FFEFB296  bne.b   loc_FFEFB27A
+FFEFB298  rtsd    #5
+
+; ==== sub_FFEFB29A FFEFB29A-FFEFB2C2 ====
+FFEFB29A  add     #-10h, sp, sp
+FFEFB29D  mov.l   r1, 10h+var_4[sp]
+FFEFB29F  mov.b   r2, 10h+var_5[sp]
+FFEFB2A1  mov.l   r3, 10h+var_C[sp]
+FFEFB2A3  mov.l   10h+var_4[sp], 10h+var_10[sp]
+FFEFB2A6  bra.b   loc_FFEFB2BA
+FFEFB2A8  movu.b  10h+var_5[sp], r1
+FFEFB2AA  mov.l   10h+var_10[sp], r2
+FFEFB2AC  mov.b   r1, [r2]
+FFEFB2AE  mov.l   10h+var_10[sp], r1
+FFEFB2B0  add     #1, r1
+FFEFB2B2  mov.l   r1, 10h+var_10[sp]
+FFEFB2B4  mov.l   10h+var_C[sp], r1
+FFEFB2B6  sub     #1, r1
+FFEFB2B8  mov.l   r1, 10h+var_C[sp]
+FFEFB2BA  mov.l   10h+var_C[sp], r1
+FFEFB2BC  cmp     #0, r1
+FFEFB2BE  bne.b   loc_FFEFB2A8
+FFEFB2C0  rtsd    #4
+
+; ==== xrefs TO FFEF039B ====
+  FFEDEF65 sub_FFEDEF41           bsr.a   sub_FFEF039B
+; (1)
+
+; ==== xrefs TO FFEFB268 ====
+  FFEE68B4 sub_FFEE6899           bsr.a   sub_FFEFB268
+  FFEE9362 sub_FFEE9282           bsr.a   sub_FFEFB268
+  FFEE9371 sub_FFEE9282           bsr.a   sub_FFEFB268
+  FFEEFD72 sub_FFEEFD64           bsr.a   sub_FFEFB268
+  FFEF0395 sub_FFEF0385           bsr.a   sub_FFEFB268
+  FFF03CFE sub_FFF03AD8           bsr.a   sub_FFEFB268
+  FFF03D7F sub_FFF03AD8           bsr.a   sub_FFEFB268
+  FFF0C9F8 sub_FFF0C9E3           bsr.a   sub_FFEFB268
+; (8)
+
+; ==== xrefs TO FFEFB29A ====
+  FFEDE532 sub_FFEDE523           bsr.a   sub_FFEFB29A
+  FFEDEE10 sub_FFEDEDDA           bsr.a   sub_FFEFB29A
+  FFEDEF38 sub_FFEDEEFC           bsr.a   sub_FFEFB29A
+  FFEDF686 sub_FFEDF677           bsr.a   sub_FFEFB29A
+  FFEDF6BB sub_FFEDF677           bsr.a   sub_FFEFB29A
+  FFEE5310 sub_FFEE52EF           bsr.a   sub_FFEFB29A
+  FFEE573D sub_FFEE56EC           bsr.a   sub_FFEFB29A
+  FFEE586B sub_FFEE56EC           bsr.a   sub_FFEFB29A
+  FFEEFA7F sub_FFEEFA75           bsr.a   sub_FFEFB29A
+  FFEEFA90 sub_FFEEFA75           bsr.a   sub_FFEFB29A
+  FFEF03A7 sub_FFEF039B           bsr.a   sub_FFEFB29A
+  FFEF03B7 sub_FFEF039B           bsr.a   sub_FFEFB29A
+  FFF03963 sub_FFF03948           bsr.a   sub_FFEFB29A
+  FFF0396F sub_FFF03948           bsr.a   sub_FFEFB29A
+  FFF0C314 sub_FFF0C2A1           bsr.a   sub_FFEFB29A
+  FFF3CC97 sub_FFF3CAD0           bsr.a   sub_FFEFB29A
+; (16)
+

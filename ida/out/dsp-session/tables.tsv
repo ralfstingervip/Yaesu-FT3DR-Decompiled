@@ -1,0 +1,15 @@
+table	entries	index_var	dispatcher	selected_by	status	purpose
+05AF92	14	FFB0A9	05AF70 (jmp, from tick 056304)	B0A4.b2==0 (init not done)	live	14-step init script after the DSP's unsolicited 9F
+05B19A	2	FFB0CA	05B184 (jmp, from tick 05632E)	B0C9.b6 (B0C9.b7 set at 019962)	live	resend own 16 header
+05B1F8	4	FFB0AF	05B1A2 (jsr, from tick 056368)	B0AE.b0 (B0AE.b7 set by 05B208, called at 056D44 and 06973A); needs B0DC>=0x041E	live	push ID lists 15 01 / 15 11
+05B39E	4	FFB0BF	05B388 via 05B310[0] and [1]	B0BE=0 or 1	dead	B0BE is never 1; 0 is not dispatched
+05B458	35	FFB0BF	05B442 via 05B310[2..5]	B0BE=0x02 (05A1BE: B11E=0)	live	TX session, header DT=0
+05BCE4	35	FFB0BF	05BCCE via 05B310[6]	B0BE=0x06	dead	no writer stores 6
+05BDA8	25	FFB0BF	05BD92 via 05B310[7..10]	B0BE=0x0A (05A28A: B11E=1)	live	TX session, data FR message
+05BFBC	35	FFB0BF	05BFA6 via 05B310[11..14,16..19]	B0BE=0x0B (B11E=2) or 0x10 (B11E=3)	live	TX session, header DT=2 or 3
+05C06A	37	FFB0BF	05C048 via 05B310[22]	B0BE=0x16 (06CF30); starts at step 4	live	host-link data session
+05C1A4	23	FFB0BF	none	-	dead	no 32-bit reference anywhere in the image; variant of 05C200
+05C200	21	FFB0BF	05C18E via 05B310[23]	B0BE=0x17 (06D052)	live	automatic data reply session
+05C368	35	FFB0BF	05C352 via 05B310[15] and [20]	B0BE=0x0F or 0x14	dead	no writer stores 0x0F or 0x14
+05C40A	11	FFB0BF	05C3F4 via 05B310[21]	B0BE=0x15 (05A2F8)	live	1C 03 session (caller 0359C8 when B0CC.b0)
+05EBD2	14	FFB0BF	tick 0563A8 (jsr)	FFBB94!=0 (set at 0349E8)	live	short TX session without payload

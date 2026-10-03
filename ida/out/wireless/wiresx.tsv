@@ -1,0 +1,80 @@
+# WIRES-X and the MAIN DATA-jack framed protocol. COMPLETE - frame format, personality
+# selector, connect-result states and DTMF separateness all confirmed with disasm.
+# MAIN image addresses are base 0; SUB image addresses are mapped at 0xFFC00000.
+kind	item	addr	file_off	evidence
+frame	start byte 0x01 (SOH)	0006B884	06B884	mov.b #1 test then buf[0]=0x01, count=1, checksum seeded with 0x01
+frame	byte[1] = command letter (ASCII)	0006BAD6	06BAD6	mov.b @0xFF1AC9 then cmp against 'B','C','F','E','S','N','W','V'
+frame	bytes[2..5] = data length, 4 ASCII hex digits	0006CB5E	06CB5E	header decoded when 9 bytes are in; result stored at 0xFFFFB3CA
+frame	total frame length = 9 + length_field	0006B862	06B862	r4 = [0xFFFFB3CA] + 9 ; completion when received count == r4
+frame	trailer byte 0x04 (EOT)	0006B8A0	06B8A0	buf[n-3] must equal 0x04
+frame	trailer = 2 ASCII hex checksum digits	0006B8AC	06B8AC	sub_6CB40 converts the ASCII hex pair; compared with the running 8-bit sum
+frame	checksum = 8-bit sum of bytes 0x01..0x04 inclusive	0006B874	06B874	[0xFFFFB3DC] += byte for every byte; cs-hi subtracted back out at 0006B8B4
+buffer	frame assembly buffer	00FF1AC8	-	RAM; indexed by the count at 0xFFFFB3C4
+buffer	SCI receive ring 0xFF27C8..0xFF29C8 (512 bytes)	000451B8	0451B8	set up by sub_45186; wrap test at 0006B81E
+cmd	V = identity / version	0006BB08	06BB08	template at 0006C538
+cmd	M = mode	0006B9FE	06B9FE	cmp.b #0x4D; handled via sub_6C652 / sub_6C680 then sub_6BE34
+cmd	B	0006BE9C	06BE9C	template at 0006C598 (01 'B' "0001" '0' 04)
+cmd	C	0006BEF6	06BEF6	template at 0006C5A2 (01 'C' "000B" 11 bytes 04)
+cmd	E	0006BB22	06BB22	handler sub_6C850 then sub_6BF6C; template at 0006C5B2
+cmd	F	0006BB2E	06BB2E	handler sub_6C686 then sub_6BF44; template at 0006C5BC
+cmd	S	0006BB18	06BB18	handler sub_6C8E8 then sub_6BF8C; template at 0006C5C2
+cmd	N	0006BFB4	06BFB4	template at 0006C5F8
+cmd	W = position / route record (72 data bytes)	0006BD0A	06BD0A	template at 0006C602
+cmd	H = periodic status (30 data bytes)	0006C1A6	06C1A6	template header at 0006C5CA; status characters built in sub_6BB6E
+cmd	R = data record, 3 lengths 0x61/0x89/0xBB (97/137/187)	0006C362	06C362	templates at 0006C5D0, 0006C5D8, 0006C5E0
+cmd	P	-	06C5EC	template 01 'P' "000B" 11 bytes 04
+tmpl	01 'V' "0030" "FT3D" + 24sp + "20180418" + "0" + 7sp + "0C01" 04	0006C538	06C538	48 data bytes, matches the length field
+tmpl	01 'V' "0020" "FT2D    JPN     Ver0202 20180418" 04	0006C570	06C570	32 data bytes, legacy model template
+bulk	DMAC-driven bulk transmit into the SCI TDR	0006B91A	06B91A	src 0xFEE000 -> dst 0xFFFE93 (TDR), count in er3, DMABCR/DMACR at 0xFFFC40..0xFFFC58, 0xFFFD22 = 0xA2
+bulk	DMA-complete interrupt clears SCR.TIE	0006B986	06B986	bclr #7 @0xFFFFFE92 then rte
+port	SCI SMR/BRR/SCR/TDR/SSR/RDR = 0xFFFE90..0xFFFE95	00045186	045186	sub_45186 configures it and installs the frame handler
+port	BRR table {0x67,0x33,0x19,0x0C} = 4800/9600/19200/38400 bps	000452C2	0452C2	indexed by [0xFFFF8C27]; phi = 16 MHz, SMR = 0 (8N1)
+port	alternate mode: BRR fixed 0x0C = 38400 bps	00045206	045206	taken when [0xFFFF8DDE] != 0, and it calls sub_6B700 to install the frame handler
+port	second SCI at 0xFFFF60, BRR 0x0C = 38400 bps 8N1	0004556E	04556E	sub_4556E
+ui	"WIRES-X         "	00008264	008264	18-byte stride table, referenced from 000081C2
+ui	"WIRES-X NODE    "	00008276	008276
+ui	"Detect : Signal "	00008288	008288
+ui	"Detect : DG-ID  "	0000829A	00829A
+ui	"LED : ON        " / "LED : OFF       "	000082AC	0082AC
+ui	"TX ERROR        "	000082D0	0082D0
+ui	"WIRES-X DIRECT  " / "WIRES-X DIRECT *"	000082E2	0082E2
+ui	"LEVEL           "	00008306	008306
+ui	"MUTE : OFF/ALL/RX/TX"	00008318	008318	four 18-byte entries
+ui	"WIRES-X PDN     "	00008A70	008A70	referenced from 00008A9C
+ui	"WIRES-X NODE    " (second copy)	00008A82	008A82
+ui	"WiRES   " node/room name field	0005ECE6	05ECE6	8 characters
+ui	"L-NODE"	00066B2E	066B2E	local node label
+menu	SUB menu category 7 = WIRES-X, 5 items	FFED7524	2D7524	(count=5, first=FFC3E26D) in the category table at FFED74EC
+menu	RPT/WIRES FREQ	FFC3E26D	03E26D	SUB setup label table, 20-byte stride
+menu	SEARCH SETUP	FFC3E281	03E281
+menu	EDIT CATEGORY TAG	FFC3E295	03E295
+menu	REMOVE ROOM/NODE	FFC3E2A9	03E2A9
+menu	DG-ID	FFC3E2BD	03E2BD
+sub_ui	"(WIRES-X)"	FFF48860	348860	SUB image
+sub_ui	"RPT/WIRES "	FFF4A77B	34A77B	SUB image
+sub_ui	"CATEGORY "	FFF4A796	34A796	SUB image
+sub_ui	"ROOM/NODE :"	FFF4A7A7	34A7A7	SUB image
+sub_ui	"SEARCH & DIRECT"	FFC3E88E	03E88E	SUB image
+sub_ui	"LOCAL NEWS"	FFC3E871	03E871	SUB image
+sub_ui	"UPLOAD  " / "DOWNLOAD"	FFC3E87C	03E87C	SUB image
+sub_ui	"Searching" / "No Device"	FFF4AB4A	34AB4A	SUB image, shared with the Bluetooth device list
+sub_ui	"UPLOAD" / "DOWNLOAD" / "SEND"	FFF4AB5C	34AB5C	SUB image
+sub_ui	"ADD TO CATEGORY"	FFF4AD44	34AD44	SUB image
+sub_ui	"No Matches" / "Not Accepted" / "Busy Error" / "Offline Error"	FFF4AA9C	34AA9C	SUB image, WIRES-X connect/search result strings
+sub_ui	"Connected" / "Not Connected"	FFF4AA84	34AA84	SUB image
+sub_ui	"DG-ID TX  :" / "DG-ID RX  :" / "DG-ID: "	FFF48E93	348E93	SUB image
+sel	personality selector: sign bit of [0xFFFF8DDE]	0006B7B2	06B7B2	bmi taken -> PDN branch (sub_6B700 install); not taken -> clone branch
+sel	clone/PC personality (8DDE bit7 clear): V cmd software-resets radio	0006B7DC	06B7DC	jsr sub_2648; orc #0x80,ccr; jmp 0x2050 ; also 06BB08
+sel	WIRES-X PDN personality (8DDE bit7 set): install frame handler + node flags	0006B7EE	06B7EE	jsr sub_6B700; bset #1 @0xFFFF817E; [0xFFB3E5]=1
+sel	8DDE gates the WIRES-X node display strings	000081B6	0081B6	mov.b @0xFFFF8DDE; beq -> skip; else eepmov 0x8264 ("WIRES-X") -> disp buf 0xFFB05A
+wxstate	connect-result renderer (SUB), state-code switch	FFF0B84D	30B84D	each arm centers (mul #0x0E, /2) then draws via sub_FFEF1B23
+wxstate	state 0x09 -> "Connected"	FFF4AA84	34AA84	arm at FFF0B84D
+wxstate	state 0x0D -> "Not Connected"	FFF4AA8E	34AA8E	arm at FFF0B88C
+wxstate	state 0x0A -> "Busy Error"	FFF4AA9C	34AA9C	arm at FFF0B8CB
+wxstate	"Offline Error"	FFF4AAA7	34AAA7	arm at FFF0B90A (ref FFF0B92C)
+wxstate	"Not Accepted"	FFF4AAB5	34AAB5	ref FFF0B96B
+wxstate	"No Matches"	FFF4AAC2	34AAC2	ref FFF0B9F2
+dtmf	DTMF is autodial, NOT WIRES-X: menu labels DTMF MODE / DTMF MEMORY (SUB)	FFC3E0F1	03E0F1	adjacent to BELL/DCS/PAGER analog-FM signalling, not WIRES-X category 7
+dtmf	DTMF 16-symbol charset "0123456789ABCD*#-" (MAIN)	0000C8D4	00C8D4	indexed by keyed digit code
+dtmf	DTMF display builder sub_C814 (MAIN)	0000C814	00C814	mov.b @0xFFFFAC08 -> and.l #0xFF -> mov.b @(0xC8D4,er4) -> display "DTMF -X"
+dtmf	DTMF keyed-digit state	FFFFAC07	-	AC07 position, AC08 digit code, AC09 mode bit (MAIN RAM regs)

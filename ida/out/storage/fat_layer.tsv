@@ -1,0 +1,46 @@
+item	value	status	mapped_ea	file_off	evidence
+filesystem	FAT12, FAT16 and FAT32, read-write, with FAT32 FSInfo support	confirmed	-	-	see the rows below
+exfat	detected then explicitly REJECTED	confirmed	FFF23E3B	323E3B	fat_id_fstype sets type=0x40 for "EXFAT" at BS+3, then "cmp #40h / bne" returns -1
+fstype_enum	0x0C=FAT12, 0x10=FAT16, 0x20=FAT32, 0x40=exFAT (i.e. the FAT bit width as an integer: 12/16/32/64)	confirmed	FFF23DF8	323DF8	mov.b #0Ch/#10h/#20h/#40h into fs+0x10
+fn_fat_id_fstype	sub_FFF23DBA - boot-sector filesystem-type identifier	confirmed	FFF23DBA	323DBA	memcmp(BS+0x03,"EXFAT",5), memcmp(BS+0x52,"FAT32",5), memcmp(BS+0x36,"FAT12",5), memcmp(BS+0x36,"FAT16",5)
+bootsector_offsets	BS_OEMName +0x03, BS_FilSysType +0x36 (FAT12/16), BS_FilSysType32 +0x52 (FAT32)	confirmed	FFF23DCA	323DCA	add #3 / add #52h / add #36h before each memcmp
+fn_fat_id_fstype2	sub_FFF23ED6 - second copy of the same test, called from the mount/format path at FFF35634	confirmed	FFF23ED6	323ED6	same four memcmps
+signature_55AA	checked: sector[0x1FE]==0x55 && sector[0x1FF]==0xAA	confirmed	FFF23E8F	323E8F	movu.b 1FEh[r1],r14 / cmp #55h ; movu.b 1FFh[r1] / cmp #-56h
+fn_fsinfo_check	sub_FFF23E4C - FAT32 FSInfo sector validator, called from FFF35676	confirmed	FFF23E4C	323E4C	memcmp(sec+0x000,"RRaA",4), memcmp(sec+0x1E4,"rrAa",4), then the 0x55AA trailer
+fsinfo_free_count	read from FSInfo +0x1E8 (FSI_Free_Count / FSI_Nxt_Free)	confirmed	FFF23EB4	323EB4	add #1E8h, r1, r1 then bsr sub_FFF2ED1A
+free_space	"Free space" / "Used space" / "Capacity" menu items exist	confirmed	FFF4A470	34A470	strings at 0xFFF4A465 / 0xFFF4A470 / 0xFFF4A47B
+str_EXFAT	"EXFAT"	confirmed	FFF4AE14	34AE14	-
+str_FAT32	"FAT32"	confirmed	FFF4AE1A	34AE1A	-
+str_FAT12	"FAT12"	confirmed	FFF4AE20	34AE20	-
+str_FAT16	"FAT16"	confirmed	FFF4AE26	34AE26	-
+str_RRaA	"RRaA" (FSI_LeadSig) x2 at 0xFFF4AE2C and 0xFFF4AE50	confirmed	FFF4AE2C	34AE2C	second copy reached through a pointer at 0xFFEDA790
+str_rrAa	"rrAa" (FSI_StrucSig) x2 at 0xFFF4AE31 and 0xFFF4AE55	confirmed	FFF4AE31	34AE31	second copy reached through a pointer at 0xFFEDA794
+badchars_any	"\/:*?\"<>|" - characters illegal in any FAT name	confirmed	FFF4ADDC	34ADDC	reached through a pointer variable at 0xFFEDA724
+badchars_83	"+,;=[]" - characters illegal in an 8.3 short name but legal in an LFN	confirmed	FFF4ADF0	34ADF0	loaded byte-by-byte into a stack array by sub_FFF20958 (90 bytes), called from FFF20BD6/20CCD/20D89/20E9D
+lfn_support	present (inferred): the firmware maintains two distinct illegal-character sets, one for any name and one specific to 8.3, which is only meaningful if long names are also handled	inferred	FFF20958	320958	sub_FFF20958 plus sub_FFF20912 (an 8.3-style checksum over 10 bytes: add, rotate right through bit 7 - the FAT LFN DIR_Name checksum algorithm)
+lfn_checksum	sub_FFF20912 computes sum = ror8(sum) + name[i] over 11 bytes - this is exactly the FAT long-filename DIR_Name checksum	confirmed	FFF20912	320912	shll #7 / shlr #1 / or, looped i<10 then one more byte
+dirent_template_CEN	a 13-byte template "        CEN\0\0" (8 spaces + "CEN") is smovf-copied into a directory-entry-shaped stack buffer	confirmed	FFF226E9	3226E9	mov.l #0Dh, r3 ; mov.l #aCen, r2 ; smovf - second copy at FFF22B61; meaning of "CEN" UNRESOLVED
+fn_open_a	sub_FFF226CA (1027 bytes) - callers FFF226B4, FFF29EE3, FFF2A039, FFF2A296, FFF2A2F7, FFF2A360, FFF2D5B8, FFF3244D, FFF32661, FFF32925	confirmed	FFF226CA	3226CA	uses the CEN template
+fn_open_b	sub_FFF22B3B (2264 bytes) - callers FFF22B23, FFF29F86, FFF2A0DE, FFF2A271, FFF2A2D6, FFF2A33B, FFF2D659, FFF324F1, FFF32711, FFF32903	confirmed	FFF22B3B	322B3B	uses the CEN template
+format_impl	FORMAT writes real FAT volumes, all three widths	confirmed	FFF35A08	335A08	see the next four rows
+fn_mkfs_init_fat	sub_FFF35A08: memset a 512-byte sector then memcpy the reserved FAT entries, then write one sector at fat_start+rsvd	confirmed	FFF35A08	335A08	switch on fs_type 0x0C / 0x10 / 0x20
+fat12_init_entries	F8 FF FF (3 bytes) = FAT[0]=0xFF8, FAT[1]=0xFFF	confirmed	FFC3E94B	03E94B	referenced at FFF35A42 with length 3
+fat16_init_entries	F8 FF FF FF (4 bytes) = FAT[0]=0xFFF8, FAT[1]=0xFFFF	confirmed	FFC3E947	03E947	referenced at FFF35A5F with length 4
+fat32_init_entries	F8 FF FF 0F  FF FF FF 0F  FF FF FF 0F (12 bytes) = FAT[0]=0x0FFFFFF8, FAT[1]=EOC, FAT[2]=EOC (root dir)	confirmed	FFC3E93B	03E93B	referenced at FFF35A7C with length 12
+fn_mkfs_bootsector	sub_FFF35D0B (527 bytes) - selects and writes one of two boot-sector templates	confirmed	FFF35D0B	335D0B	references both templates
+bs_template_fat16	0xFFC3E8A3, 0x3E bytes: EB 00 90 / OEMName=8 spaces / RsvdSecCnt=1 / NumFATs=2 / RootEntCnt=512 / Media=0xF8 / DrvNum=0x80 / BootSig=0x29 / VolLab="NO NAME    " / FilSysType="FAT16   "	confirmed	FFC3E8A3	03E8A3	referenced at FFF35D44
+bs_template_fat32	0xFFC3E8E1, 0x5A bytes: EB 00 90 / OEMName=8 spaces / NumFATs=2 / Media=0xF8 / RootClus=2 / FSInfo=1 / BkBootSec=6 / DrvNum=0x80 / BootSig=0x29 / VolLab="NO NAME    " / FilSysType="FAT32   "	confirmed	FFC3E8E1	03E8E1	referenced at FFF35E32
+format_menu	"FORMAT" setup label at 0xFFC3E70D, "FORMAT?" confirm popup at 0xFFF4AB88 (dispatched by sub_FFF0C46F)	confirmed	FFC3E70D	03E70D	the label immediately precedes "USB CAMERA" at 0xFFC3E709+0x14
+directory_creation	sub_FFF3B8DE walks pathtab_bare[0..6] (NULL-terminated) building "local tree, not in this repo"+name and calling mkdir for each	confirmed	FFF3B8DE	33B8DE	mov.l #pathtab_bare, r14 ; indexed load ; smovu into the buffer at RAM 0x00010862 ; bsr sub_FFF12BF9
+mkdir_fn	sub_FFF12BF9	confirmed	FFF12BF9	312BF9	called once per directory by sub_FFF3B8DE
+volume_check_fn	sub_FFF12B18 (mount / card-ready test, returns 0 on success)	confirmed	FFF12B18	312B18	called before the directory loop
+library_origin	Yaesu/third-party FAT layer plumbed into the Renesas CC-RX standard library's stdio; NOT ELM FatFs	confirmed	FFEE1780	2E1780	sub_FFEE1780 is the CC-RX lowsrc.c _INIT_IOLIB: it freopen()s "local tree, not in this repo", "local tree, not in this repo", "local tree, not in this repo" into FILE objects at RAM 0x000696B0 / 0x000696F8 / 0x00069740, _iob[] at 0x0001CE14, count at 0xFFED8974
+stdio_freopen	sub_FFF45496	confirmed	FFF45496	345496	called three times by _INIT_IOLIB with (name, mode, FILE*)
+stdio_fclose	sub_FFF454C5	confirmed	FFF454C5	3454C5	called from the _CLOSEALL loop sub_FFEE1868
+printf_impl	full C printf present: length-modifier set "hjltzL", "0123456789abcdef", "0123456789ABCDEF", "false", "true"	confirmed	FFF4B01C	34B01C	referenced at FFF4618A
+memcmp_fn	sub_FFF4557D	confirmed	FFF4557D	34557D	used by every FAT string comparison above
+memcpy_fn	sub_FFF2E478	confirmed	FFF2E478	32E478	used by mkfs_init_fat
+memset_fn	sub_FFF2E4AF	confirmed	FFF2E4AF	32E4AF	used by mkfs_init_fat with length 0x200
+sector_write_fn	sub_FFF35454(dev, lba, count, buf)	confirmed	FFF35454	335454	called by mkfs_init_fat
+fopen_modes_present	"r", "w", "a", "r+" - three separate copies of the mode-string set	confirmed	FFF4ADAC	34ADAC	0xFFF4ADAC-B4, 0xFFF4ADD0-D9, 0xFFF4AE43-46, 0xFFF4B017; each copy belongs to a different feature group
+read_write	READ-WRITE. Write proven three ways: SDHI BWE (buffer-write-enable) handling, the mkfs sector writer, and "w"/"a"/"r+" fopen modes	confirmed	FFF33AA7	333AA7	sub_FFF33AA7 clears SDSTS2 bit 9 (BWE) as well as bit 8 (BRE)

@@ -1,0 +1,22 @@
+token	direction	format_string	fmt_addr	sender_fn	receive_handler	meaning	evidence
+SCAN	tx+rx	SCAN=%d\r\n	FFF4AEB5	FFF3976A, FFF39800	classifier A idx1 -> FFF3AD3E	start/stop discovery or scan mode, numeric argument	call sites FFF397C5, FFF39825
+LINK	tx+rx	LINK=0\r\n	FFF4AEBF	FFF399F9, FFF39A53	classifier A idx2 -> FFF3ADEC	drop link	FFF39A23, FFF39A5D
+LINK	tx+rx	LINK=1\r\n	FFF4AF7D	FFF3B00E	classifier A idx2	link up / connect last device	FFF3B01A
+LINK	tx+rx	LINK=%c%c%c%c%c%c%c%c%c%c%c%c\r\n	FFF4AF5D	FFF3AF89	classifier A idx2	connect to a 48-bit BD_ADDR given as 12 ASCII hex chars	FFF3AFD4
+SCOL	tx+rx	SCOL=1\r\n	FFF4AEC8	FFF39ABC	classifier A idx3 -> FFF3AE7C	open the SCO (synchronous voice) link	FFF39ADB
+SCOL	tx+rx	SCOL=0\r\n	FFF4AED1	FFF39B27, FFF39B86	classifier A idx3	close the SCO voice link	FFF39B5D, FFF39B90
+TXAT	tx+rx	TXAT=%d\r\n	FFF4AEDA	FFF39BAF, FFF39C11	classifier A idx4 -> FFF3AE90	transmit-path audio attenuation / level, numeric	FFF39BE8, FFF39C48
+PINF	tx+rx	PINF=0\r\n	FFF4AF86	FFF3B04F	classifier A idx5 -> FFF3AEF9	paired-device info query / empty reply	FFF3B05B
+PINF	tx+rx	PINF=0,%c%c%c%c%c%c%c%c%c%c%c%c\r\n	FFF4AF8F	FFF3B090	classifier A idx5	paired-device record: index 0 plus a 12-hex-char BD_ADDR	FFF3B0DB
+HELL	tx+rx	HELL%c\r\n	FFF4AEEC	FFF3A414	classifier B idx1 -> FFF3A414	presence/handshake ("hello"); argument is 'O' or an ASCII digit	FFF3A468; FFF3A41A cmp 'O', FFF3A423/42C cmp '0'..'9'
+PAIR	tx+rx	PAIR=0\r\n	FFF4AF11	FFF3A639	classifier B idx2 -> FFF3A639	pairing: no device / abort	FFF3A678
+PAIR	tx+rx	PAIR=%c%c%c%c\r\n	FFF4AF1A	FFF3A639	classifier B idx2	pairing with a 4-character field (PIN or index)	FFF3A75F
+FIND	tx+rx	FIND=OVER\r\n	FFF4AEF5	FFF3A493	classifier B idx3 -> FFF3A493	discovery finished	FFF3A4B9
+FIND	tx+rx	FIND=%c%c%c%c\r\n	FFF4AF01	FFF3A493	classifier B idx3	discovery result, 4-character field	FFF3A622
+ERAT	tx+rx	ERAT=	FFF4AF34	FFF3A833	classifier B idx4 -> FFF3A833	error-rate / earpiece attenuation report; followed by %c bytes then \r\n	FFF3A849, FFF3A873, FFF3A8A1
+RXAT	tx+rx	RXAT=	FFF4AF4B	FFF3A95B	classifier B idx5 -> FFF3A95B	receive-path audio attenuation; followed by %c bytes then \r\n	FFF3A972, FFF3A9AF, FFF3A9CA
+SCOI	tx+rx	SCOI=%c\r\n	FFF4AF2A	FFF3A79B	classifier B idx6 -> FFF3A79B	SCO link indication / initiation, single-character argument	FFF3A7B7
+ERRO	rx	ERROR\r\n	FFF4AEE4	FFF3A3A7	classifier B idx7 -> FFF3A8C9	generic error; also sent by the radio when a line matches no token	FFF3A404
+ERRO	tx	ERROR+SCOI	FFF4AF40	FFF3A8C9	-	error specifically on the SCO indication	FFF3A927
+(ack)	tx	ACK ERROR\r\n	FFF4AF51	FFF3AA8E	-	negative acknowledgement	FFF3AC7B
+(sep)	-	\r\n	FFF4AF3D	-	-	line terminator used to close ERAT=/RXAT= sequences	FFF3A8A1, FFF3A9CA

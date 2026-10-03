@@ -1,0 +1,841 @@
+job BOOT_IPC_SUB proc rx min FFC00000 max 100000000 funcs 699
+
+== SUB reset path (0xFFC00000, 40 insns) ==
+FFC00000  mvtc    #6A8FCh, usp
+FFC00007  mvtc    #6B8FCh, isp
+FFC0000E  mov.l   #off_FFFFFF80, r14
+FFC00014  mvtc    r14, extb
+FFC00017  mov.l   #off_FFED8A70, r14
+FFC0001D  mvtc    r14, intb
+FFC00020  mov.l   #100h, r14
+FFC00024  mvtc    r14, fpsw
+FFC00027  bsr.a   sub_FFF45DBC
+FFC0002B  nop
+FFC0002C  mov.l   #10000h, r14
+FFC00031  mvtc    r14, psw
+FFC00034  mov.l   #0, r1
+FFC00036  bsr.a   sub_FFF36C53
+FFC0003A  brk
+FFC0003B  rts
+FFC0003C  (undecodable FF)
+FFC0003D  (undecodable FF)
+FFC0003E  (undecodable FF)
+FFC0003F  (undecodable FF)
+FFC00040  (undecodable FF)
+FFC00041  (undecodable FF)
+FFC00042  (undecodable FF)
+FFC00043  (undecodable FF)
+FFC00044  (undecodable FF)
+FFC00045  (undecodable FF)
+FFC00046  (undecodable FF)
+FFC00047  (undecodable FF)
+FFC00048  (undecodable FF)
+FFC00049  (undecodable FF)
+FFC0004A  (undecodable FF)
+FFC0004B  (undecodable FF)
+FFC0004C  (undecodable FF)
+FFC0004D  (undecodable FF)
+FFC0004E  (undecodable FF)
+FFC0004F  (undecodable FF)
+FFC00050  (undecodable FF)
+FFC00051  (undecodable FF)
+FFC00052  (undecodable FF)
+FFC00053  (undecodable FF)
+
+== sub_FFF45DBC (first call from reset, 80 insns) ==
+FFF45DBC  pushm   r1-r5
+FFF45DBE  mov.l   #unk_FFED8A58, r4
+FFF45DC4  mov.l   #off_FFED8A70, r5
+FFF45DCA  mov.l   #0, r2
+FFF45DCC  bra.b   loc_FFF45DDC
+FFF45DCE  mov.l   [r4+], r1
+FFF45DD1  mov.l   [r4+], r3
+FFF45DD4  cmp     r1, r3
+FFF45DD6  bleu.b  loc_FFF45DDC
+FFF45DD8  sub     r1, r3
+FFF45DDA  sstr.b
+FFF45DDC  cmp     r4, r5
+FFF45DDE  bgtu.b  loc_FFF45DCE
+FFF45DE0  mov.l   #off_FFED8A34, r4
+FFF45DE6  mov.l   #unk_FFED8A58, r5
+FFF45DEC  bra.b   loc_FFF45DFF
+FFF45DEE  mov.l   [r4+], r2
+FFF45DF1  mov.l   [r4+], r3
+FFF45DF4  mov.l   [r4+], r1
+FFF45DF7  cmp     r2, r3
+FFF45DF9  bleu.b  loc_FFF45DFF
+FFF45DFB  sub     r2, r3
+FFF45DFD  smovf
+FFF45DFF  cmp     r4, r5
+FFF45E01  bgtu.b  loc_FFF45DEE
+FFF45E03  popm    r1-r5
+FFF45E05  rts
+FFF45E06  mov.l   r1, r14
+FFF45E08  sstr.b
+FFF45E0A  mov.l   r14, r1
+FFF45E0C  rts
+FFF45E0D  pushm   r6-r10
+FFF45E0F  add     #0, r1, r6
+FFF45E12  mov.l   #-1, r7
+FFF45E15  bne.b   loc_FFF45E40
+FFF45E17  mov.l   #0, r6
+FFF45E19  mov.l   #1CE14h, r8
+FFF45E1F  mov.l   #unk_FFED8974, r9
+FFF45E25  mov.l   r6, r10
+FFF45E27  cmp     [r9].l, r6
+FFF45E2A  bge.b   loc_FFF45E8B
+FFF45E2C  mov.l   [r8], r1
+FFF45E2E  cmp     #0, r1
+FFF45E30  beq.s   loc_FFF45E3A
+FFF45E31  bsr.w   sub_FFF45E0D
+FFF45E34  cmp     #0, r1
+FFF45E36  bpz.b   loc_FFF45E3A
+FFF45E38  mov.l   r7, r10
+FFF45E3A  add     #4, r8
+FFF45E3C  add     #1, r6
+FFF45E3E  bra.b   loc_FFF45E27
+FFF45E40  movu.w  [r6], r14
+FFF45E42  mov.l   #0, r10
+FFF45E44  btst    #0Dh, r14
+FFF45E46  beq.b   loc_FFF45E8B
+FFF45E48  mov.l   4[r6], r10
+FFF45E4B  mov.l   #0, r9
+FFF45E4D  mov.l   0Ch[r6], r3
+FFF45E4F  add     r9, r10, r2
+FFF45E52  cmp     r3, r2
+FFF45E54  bgeu.b  loc_FFF45E79
+FFF45E56  mov.b   3[r6], r1
+FFF45E58  sub     r2, r3
+FFF45E5A  bsr.a   sub_FFEE1958
+FFF45E5E  cmp     #0, r1
+FFF45E60  ble.b   loc_FFF45E66
+FFF45E62  add     r1, r9
+FFF45E64  bra.b   loc_FFF45E4D
+FFF45E66  mov.l   4[r6], r10
+FFF45E69  mov.l   r7, r1
+FFF45E6B  mov.l   r10, 0Ch[r6]
+FFF45E6E  mov.l   r10, 14h[r6]
+FFF45E71  mov.l   r10, 2Ch[r6]
+FFF45E74  bset    #1, 1[r6].b
+FFF45E77  bra.b   loc_FFF45E8A
+FFF45E79  mov.l   4[r6], r10
+FFF45E7C  mov.l   #0, r1
+FFF45E7E  mov.l   r10, 0Ch[r6]
+FFF45E81  mov.l   r10, 14h[r6]
+FFF45E84  mov.l   r10, 2Ch[r6]
+
+== SUB real ISR handlers ==
+
+-- vec 44 -> FFF32CA7 --
+FFF32CA7  pushm   r14-r15
+FFF32CA9  pushm   r1-r5
+FFF32CAB  bsr.a   sub_FFF33AA7
+FFF32CAF  popm    r1-r5
+FFF32CB1  popm    r14-r15
+FFF32CB3  rte
+FFF32CB5  rts
+FFF32CB6  sub     #4, sp
+FFF32CB8  mov.l   #0, [sp]
+FFF32CBB  mov.l   #0, r1
+FFF32CBD  rtsd    #1
+FFF32CBF  mov.l   #8C107h, r14
+FFF32CC4  bset    #7, [r14].b
+FFF32CC6  mov.l   #8C027h, r14
+FFF32CCB  bset    #7, [r14].b
+FFF32CCD  mov.l   #8C067h, r14
+FFF32CD2  bset    #5, [r14].b
+FFF32CD4  mov.l   #8C067h, r14
+FFF32CD9  bset    #6, [r14].b
+FFF32CDB  mov.l   #8C067h, r14
+FFF32CE0  bset    #7, [r14].b
+FFF32CE2  mov.l   #8C068h, r14
+FFF32CE7  bset    #0, [r14].b
+FFF32CE9  mov.l   #8C068h, r14
+FFF32CEE  bset    #1, [r14].b
+FFF32CF0  mov.l   #8C06Ch, r14
+FFF32CF5  bset    #2, [r14].b
+FFF32CF7  mov.l   #8C06Ch, r14
+FFF32CFC  bset    #3, [r14].b
+FFF32CFE  mov.l   #8C06Ch, r14
+FFF32D03  bset    #4, [r14].b
+FFF32D05  mov.l   #8C0ECh, r14
+FFF32D0A  bset    #2, [r14].b
+FFF32D0C  mov.l   #8C0ECh, r14
+FFF32D11  bset    #3, [r14].b
+FFF32D13  mov.l   #8C0ECh, r14
+FFF32D18  bset    #4, [r14].b
+FFF32D1A  mov.l   #8C107h, r14
+FFF32D1F  bclr    #7, 18h[r14].b
+FFF32D22  mov.l   #8C107h, r14
+
+-- vec 58 -> FFEDB7E7 --
+FFEDB7E7  pushm   r14-r15
+FFEDB7E9  pushm   r1-r5
+FFEDB7EB  sub     #4, sp
+FFEDB7ED  mov.l   #8A002h, r1
+FFEDB7F2  btst    #6, [r1].b
+FFEDB7F4  beq.b   loc_FFEDB84F
+FFEDB7F6  mov.l   #8A002h, r1
+FFEDB7FB  mov.b   2[r1], 3[sp]
+FFEDB7FF  mov.l   #38h, r1 ; '8'
+FFEDB802  tst     3[sp], r1
+FFEDB806  beq.b   loc_FFEDB821
+FFEDB808  mov.l   #-39h, r1
+FFEDB80B  and     3[sp], r1
+FFEDB80E  mov.b   r1, 3[sp]
+FFEDB810  mov.l   #-40h, r1
+FFEDB813  or      3[sp], r1
+FFEDB816  mov.b   r1, 3[sp]
+FFEDB818  mov.l   #8A002h, r1
+FFEDB81D  mov.b   3[sp], 2[r1]
+FFEDB821  mov.l   #8A002h, r1
+FFEDB826  mov.b   3[r1], 2[sp]
+FFEDB82A  mov.l   #12D20h, r1
+FFEDB830  mov.l   4[r1], r1
+FFEDB832  cmp     #0, r1
+FFEDB834  beq.b   loc_FFEDB84F
+FFEDB836  mov.l   #12D20h, r2
+FFEDB83C  movu.w  0Ah[r2], r1
+FFEDB83E  mov.l   4[r2], r4
+FFEDB840  mov.l   #1, r3
+FFEDB842  add     #2, sp, r2
+FFEDB845  jsr     r4
+FFEDB847  add     #4, sp
+FFEDB849  popm    r1-r5
+FFEDB84B  popm    r14-r15
+FFEDB84D  rte
+FFEDB84F  add     #4, sp
+FFEDB851  popm    r1-r5
+FFEDB853  popm    r14-r15
+FFEDB855  rte
+FFEDB857  pushm   r14-r15
+
+-- vec 59 -> FFEDB857 --
+FFEDB857  pushm   r14-r15
+FFEDB859  pushm   r1-r5
+FFEDB85B  sub     #4, sp
+FFEDB85D  mov.w   #0, [sp]
+FFEDB860  mov.l   #12D20h, r1
+FFEDB866  mov.l   [r1], r1
+FFEDB868  cmp     #0, r1
+FFEDB86A  beq.b   loc_FFEDB87F
+FFEDB86C  mov.l   #12D20h, r2
+FFEDB872  movu.w  8[r2], r1
+FFEDB874  mov.l   [r2], r4
+FFEDB876  mov.l   #1, r3
+FFEDB878  add     #3, sp, r2
+FFEDB87B  jsr     r4
+FFEDB87D  mov.w   r1, [sp]
+FFEDB87F  movu.w  [sp], r1
+FFEDB881  cmp     #0, r1
+FFEDB883  beq.b   loc_FFEDB896
+FFEDB885  mov.l   #8A002h, r1
+FFEDB88A  mov.b   3[sp], 1[r1]
+FFEDB88E  add     #4, sp
+FFEDB890  popm    r1-r5
+FFEDB892  popm    r14-r15
+FFEDB894  rte
+FFEDB896  mov.l   #8A002h, r1
+FFEDB89B  bclr    #7, [r1].b
+FFEDB89D  add     #4, sp
+FFEDB89F  popm    r1-r5
+FFEDB8A1  popm    r14-r15
+FFEDB8A3  rte
+FFEDB8A5  sub     #4, sp
+FFEDB8A7  mov.w   #0, 4+var_4[sp]
+FFEDB8AA  mov.l   #12D20h, r14
+FFEDB8B0  mov.l   [r14], r14
+FFEDB8B2  cmp     #0, r14
+FFEDB8B4  beq.b   loc_FFEDB8C9
+FFEDB8B6  mov.l   #12D20h, r2
+FFEDB8BC  movu.w  8[r2], r1
+FFEDB8BE  mov.l   [r2], r14
+FFEDB8C0  mov.l   #1, r3
+
+-- vec 62 -> FFEDBBD3 --
+FFEDBBD3  pushm   r14-r15
+FFEDBBD5  pushm   r1-r5
+FFEDBBD7  sub     #4, sp
+FFEDBBD9  mov.l   #8A042h, r1
+FFEDBBDE  btst    #6, [r1].b
+FFEDBBE0  beq.b   loc_FFEDBC3B
+FFEDBBE2  mov.l   #8A042h, r1
+FFEDBBE7  mov.b   2[r1], 3[sp]
+FFEDBBEB  mov.l   #38h, r1 ; '8'
+FFEDBBEE  tst     3[sp], r1
+FFEDBBF2  beq.b   loc_FFEDBC0D
+FFEDBBF4  mov.l   #-39h, r1
+FFEDBBF7  and     3[sp], r1
+FFEDBBFA  mov.b   r1, 3[sp]
+FFEDBBFC  mov.l   #-40h, r1
+FFEDBBFF  or      3[sp], r1
+FFEDBC02  mov.b   r1, 3[sp]
+FFEDBC04  mov.l   #8A042h, r1
+FFEDBC09  mov.b   3[sp], 2[r1]
+FFEDBC0D  mov.l   #8A042h, r1
+FFEDBC12  mov.b   3[r1], 2[sp]
+FFEDBC16  mov.l   #12D20h, r1
+FFEDBC1C  mov.l   10h[r1], r1
+FFEDBC1E  cmp     #0, r1
+FFEDBC20  beq.b   loc_FFEDBC3B
+FFEDBC22  mov.l   #12D20h, r2
+FFEDBC28  movu.w  16h[r2], r1
+FFEDBC2A  mov.l   10h[r2], r4
+FFEDBC2C  mov.l   #1, r3
+FFEDBC2E  add     #2, sp, r2
+FFEDBC31  jsr     r4
+FFEDBC33  add     #4, sp
+FFEDBC35  popm    r1-r5
+FFEDBC37  popm    r14-r15
+FFEDBC39  rte
+FFEDBC3B  add     #4, sp
+FFEDBC3D  popm    r1-r5
+FFEDBC3F  popm    r14-r15
+FFEDBC41  rte
+FFEDBC43  pushm   r14-r15
+
+-- vec 63 -> FFEDBC43 --
+FFEDBC43  pushm   r14-r15
+FFEDBC45  pushm   r1-r5
+FFEDBC47  sub     #4, sp
+FFEDBC49  mov.w   #0, [sp]
+FFEDBC4C  mov.l   #12D20h, r1
+FFEDBC52  mov.l   0Ch[r1], r1
+FFEDBC54  cmp     #0, r1
+FFEDBC56  beq.b   loc_FFEDBC6B
+FFEDBC58  mov.l   #12D20h, r2
+FFEDBC5E  movu.w  14h[r2], r1
+FFEDBC60  mov.l   0Ch[r2], r4
+FFEDBC62  mov.l   #1, r3
+FFEDBC64  add     #3, sp, r2
+FFEDBC67  jsr     r4
+FFEDBC69  mov.w   r1, [sp]
+FFEDBC6B  movu.w  [sp], r1
+FFEDBC6D  cmp     #0, r1
+FFEDBC6F  beq.b   loc_FFEDBC82
+FFEDBC71  mov.l   #8A042h, r1
+FFEDBC76  mov.b   3[sp], 1[r1]
+FFEDBC7A  add     #4, sp
+FFEDBC7C  popm    r1-r5
+FFEDBC7E  popm    r14-r15
+FFEDBC80  rte
+FFEDBC82  mov.l   #8A042h, r1
+FFEDBC87  bclr    #7, [r1].b
+FFEDBC89  add     #4, sp
+FFEDBC8B  popm    r1-r5
+FFEDBC8D  popm    r14-r15
+FFEDBC8F  rte
+FFEDBC91  sub     #4, sp
+FFEDBC93  mov.w   #0, 4+var_4[sp]
+FFEDBC96  mov.l   #12D20h, r1
+FFEDBC9C  mov.l   0Ch[r1], r1
+FFEDBC9E  cmp     #0, r1
+FFEDBCA0  beq.b   loc_FFEDBCB5
+FFEDBCA2  mov.l   #12D20h, r2
+FFEDBCA8  movu.w  14h[r2], r1
+FFEDBCAA  mov.l   0Ch[r2], r4
+FFEDBCAC  mov.l   #1, r3
+
+-- vec 80 -> FFEDC025 --
+FFEDC025  pushm   r14-r15
+FFEDC027  pushm   r1-r5
+FFEDC029  sub     #4, sp
+FFEDC02B  mov.b   #0, 3[sp]
+FFEDC02E  mov.b   #0, 2[sp]
+FFEDC031  mov.l   #8A062h, r1
+FFEDC036  btst    #6, [r1].b
+FFEDC038  beq.b   loc_FFEDC093
+FFEDC03A  mov.l   #8A062h, r1
+FFEDC03F  mov.b   2[r1], 3[sp]
+FFEDC043  mov.l   #38h, r1 ; '8'
+FFEDC046  tst     3[sp], r1
+FFEDC04A  beq.b   loc_FFEDC065
+FFEDC04C  mov.l   #-39h, r1
+FFEDC04F  and     3[sp], r1
+FFEDC052  mov.b   r1, 3[sp]
+FFEDC054  mov.l   #-40h, r1
+FFEDC057  or      3[sp], r1
+FFEDC05A  mov.b   r1, 3[sp]
+FFEDC05C  mov.l   #8A062h, r1
+FFEDC061  mov.b   3[sp], 2[r1]
+FFEDC065  mov.l   #8A062h, r1
+FFEDC06A  mov.b   3[r1], 2[sp]
+FFEDC06E  mov.l   #12D20h, r1
+FFEDC074  mov.l   1Ch[r1], r1
+FFEDC076  cmp     #0, r1
+FFEDC078  beq.b   loc_FFEDC093
+FFEDC07A  mov.l   #12D20h, r2
+FFEDC080  movu.w  22h[r2], r1
+FFEDC082  mov.l   1Ch[r2], r4
+FFEDC084  mov.l   #1, r3
+FFEDC086  add     #2, sp, r2
+FFEDC089  jsr     r4
+FFEDC08B  add     #4, sp
+FFEDC08D  popm    r1-r5
+FFEDC08F  popm    r14-r15
+FFEDC091  rte
+FFEDC093  add     #4, sp
+FFEDC095  popm    r1-r5
+FFEDC097  popm    r14-r15
+
+-- vec 81 -> FFEDC09B --
+FFEDC09B  pushm   r14-r15
+FFEDC09D  pushm   r1-r5
+FFEDC09F  sub     #4, sp
+FFEDC0A1  mov.b   #0, 3[sp]
+FFEDC0A4  mov.w   #0, [sp]
+FFEDC0A7  mov.w   #0, [sp]
+FFEDC0AA  mov.l   #12D20h, r1
+FFEDC0B0  mov.l   18h[r1], r1
+FFEDC0B2  cmp     #0, r1
+FFEDC0B4  beq.b   loc_FFEDC0C9
+FFEDC0B6  mov.l   #12D20h, r2
+FFEDC0BC  movu.w  20h[r2], r1
+FFEDC0BE  mov.l   18h[r2], r4
+FFEDC0C0  mov.l   #1, r3
+FFEDC0C2  add     #3, sp, r2
+FFEDC0C5  jsr     r4
+FFEDC0C7  mov.w   r1, [sp]
+FFEDC0C9  movu.w  [sp], r1
+FFEDC0CB  cmp     #0, r1
+FFEDC0CD  beq.b   loc_FFEDC0E0
+FFEDC0CF  mov.l   #8A062h, r1
+FFEDC0D4  mov.b   3[sp], 1[r1]
+FFEDC0D8  add     #4, sp
+FFEDC0DA  popm    r1-r5
+FFEDC0DC  popm    r14-r15
+FFEDC0DE  rte
+FFEDC0E0  mov.l   #8A062h, r1
+FFEDC0E5  bclr    #7, [r1].b
+FFEDC0E7  add     #4, sp
+FFEDC0E9  popm    r1-r5
+FFEDC0EB  popm    r14-r15
+FFEDC0ED  rte
+FFEDC0EF  sub     #4, sp
+FFEDC0F1  mov.w   #0, 4+var_4[sp]
+FFEDC0F4  mov.l   #12D20h, r1
+FFEDC0FA  mov.l   18h[r1], r1
+FFEDC0FC  cmp     #0, r1
+FFEDC0FE  beq.b   loc_FFEDC113
+FFEDC100  mov.l   #12D20h, r2
+FFEDC106  movu.w  20h[r2], r1
+
+-- vec 110 -> FFEDBCDD --
+FFEDBCDD  pushm   r14-r15
+FFEDBCDF  pushm   r1-r5
+FFEDBCE1  mov.l   #87630h, r1
+FFEDBCE6  mov.l   [r1], r1
+FFEDBCE8  shll    #1Fh, r1
+FFEDBCEA  shlr    #1Fh, r1
+FFEDBCEC  cmp     #1, r1
+FFEDBCEE  bne.s   loc_FFEDBCF2
+FFEDBCEF  bsr.w   sub_FFEDB8A5
+FFEDBCF2  mov.l   #87630h, r1
+FFEDBCF7  mov.l   [r1], r1
+FFEDBCF9  shll    #1Eh, r1
+FFEDBCFB  shlr    #1Fh, r1
+FFEDBCFD  cmp     #1, r1
+FFEDBCFF  bne.s   loc_FFEDBD03
+FFEDBD00  bsr.w   sub_FFEDB7B6
+FFEDBD03  mov.l   #87630h, r1
+FFEDBD08  mov.l   [r1], r1
+FFEDBD0A  shll    #1Bh, r1
+FFEDBD0C  shlr    #1Fh, r1
+FFEDBD0E  cmp     #1, r1
+FFEDBD10  bne.s   loc_FFEDBD14
+FFEDBD11  bsr.w   sub_FFEDBC91
+FFEDBD14  mov.l   #87630h, r1
+FFEDBD19  mov.l   [r1], r1
+FFEDBD1B  shll    #1Ah, r1
+FFEDBD1D  shlr    #1Fh, r1
+FFEDBD1F  cmp     #1, r1
+FFEDBD21  bne.s   loc_FFEDBD25
+FFEDBD22  bsr.w   sub_FFEDBBA2
+FFEDBD25  mov.l   #87630h, r1
+FFEDBD2A  mov.l   [r1], r1
+FFEDBD2C  shll    #19h, r1
+FFEDBD2E  shlr    #1Fh, r1
+FFEDBD30  cmp     #1, r1
+FFEDBD32  bne.s   loc_FFEDBD36
+FFEDBD33  bsr.w   sub_FFEDC0EF
+FFEDBD36  mov.l   #87630h, r1
+FFEDBD3B  mov.l   [r1], r1
+FFEDBD3D  shll    #18h, r1
+
+-- vec 111 -> FFF32C99 --
+FFF32C99  pushm   r14-r15
+FFF32C9B  pushm   r1-r5
+FFF32C9D  bsr.a   sub_FFF32A29
+FFF32CA1  popm    r1-r5
+FFF32CA3  popm    r14-r15
+FFF32CA5  rte
+FFF32CA7  pushm   r14-r15
+FFF32CA9  pushm   r1-r5
+FFF32CAB  bsr.a   sub_FFF33AA7
+FFF32CAF  popm    r1-r5
+FFF32CB1  popm    r14-r15
+FFF32CB3  rte
+FFF32CB5  rts
+FFF32CB6  sub     #4, sp
+FFF32CB8  mov.l   #0, [sp]
+FFF32CBB  mov.l   #0, r1
+FFF32CBD  rtsd    #1
+FFF32CBF  mov.l   #8C107h, r14
+FFF32CC4  bset    #7, [r14].b
+FFF32CC6  mov.l   #8C027h, r14
+FFF32CCB  bset    #7, [r14].b
+FFF32CCD  mov.l   #8C067h, r14
+FFF32CD2  bset    #5, [r14].b
+FFF32CD4  mov.l   #8C067h, r14
+FFF32CD9  bset    #6, [r14].b
+FFF32CDB  mov.l   #8C067h, r14
+FFF32CE0  bset    #7, [r14].b
+FFF32CE2  mov.l   #8C068h, r14
+FFF32CE7  bset    #0, [r14].b
+FFF32CE9  mov.l   #8C068h, r14
+FFF32CEE  bset    #1, [r14].b
+FFF32CF0  mov.l   #8C06Ch, r14
+FFF32CF5  bset    #2, [r14].b
+FFF32CF7  mov.l   #8C06Ch, r14
+FFF32CFC  bset    #3, [r14].b
+FFF32CFE  mov.l   #8C06Ch, r14
+FFF32D03  bset    #4, [r14].b
+FFF32D05  mov.l   #8C0ECh, r14
+FFF32D0A  bset    #2, [r14].b
+FFF32D0C  mov.l   #8C0ECh, r14
+
+-- vec 123 -> FFF32DFB --
+FFF32DFB  pushm   r14-r15
+FFF32DFD  pushm   r1-r5
+FFF32DFF  bsr.a   sub_FFF33122
+FFF32E03  popm    r1-r5
+FFF32E05  popm    r14-r15
+FFF32E07  rte
+FFF32E09  sub     #4, sp
+FFF32E0B  mov.l   #82200h, r14
+FFF32E10  mov.b   #0, [r14]
+FFF32E13  bsr.w   sub_FFF32EA4
+FFF32E16  mov.l   #820D0h, r1
+FFF32E1B  mov.b   #0, 0Ch[r1]
+FFF32E1E  mov.l   #87205h, r14
+FFF32E23  bclr    #4, [r14].b
+FFF32E25  mov.l   #87205h, r14
+FFF32E2A  bclr    #3, 0Ah[r14].b
+FFF32E2D  mov.l   #87205h, r14
+FFF32E32  mov.b   #2Ch, 207h[r14] ; ','
+FFF32E37  mov.l   #87205h, r14
+FFF32E3C  movu.b  127h[r14], r15
+FFF32E40  or      #5, r15
+FFF32E42  and     #0F5h, r15
+FFF32E46  mov.b   r15, 127h[r14]
+FFF32E4A  mov.l   #87205h, r14
+FFF32E4F  movu.b  176h[r14], r15
+FFF32E53  bset    #2, r15
+FFF32E55  and     #0F4h, r15
+FFF32E59  mov.b   r15, 176h[r14]
+FFF32E5D  mov.l   #820D0h, r1
+FFF32E62  mov.w   #-80h, 4[r1]
+FFF32E65  mov.l   #820D0h, r14
+FFF32E6A  mov.w   #-6DFFh, [r14]
+FFF32E6E  mov.l   #820D0h, r1
+FFF32E73  mov.b   #0, 0Fh[r1]
+FFF32E76  mov.l   #820D0h, r14
+FFF32E7B  bset    #0, 0Fh[r14].b
+FFF32E7E  mov.l   #820D0h, r1
+FFF32E83  mov.b   #10h, 3[r1]
+FFF32E86  mov.l   #87205h, r14
+FFF32E8B  bset    #4, [r14].b
+
+-- vec 126 -> FFEF1E28 --
+FFEF1E28  push.l  r1
+FFEF1E2A  mov.l   #8281Eh, r1
+FFEF1E2F  movu.b  [r1], r1
+FFEF1E31  pop     r1
+FFEF1E33  rte
+FFEF1E35  mov.l   #8720Fh, r14
+FFEF1E3A  bset    #6, [r14].b
+FFEF1E3C  mov.l   #8281Ch, r14
+FFEF1E41  bset    #0, [r14].b
+FFEF1E43  mov.l   #8281Ch, r1
+FFEF1E48  mov.b   #11h, 1[r1]
+FFEF1E4B  rts
+FFEF1E4C  mov.l   #8720Fh, r14
+FFEF1E51  bclr    #6, [r14].b
+FFEF1E53  mov.l   #8281Ch, r14
+FFEF1E58  bclr    #0, [r14].b
+FFEF1E5A  mov.l   #8281Ch, r1
+FFEF1E5F  mov.b   #0, 1[r1]
+FFEF1E62  rts
+FFEF1E63  sub     #4, sp
+FFEF1E65  mov.l   #8281Eh, r14
+FFEF1E6A  movu.b  [r14], r14
+FFEF1E6C  shlr    #4, r14
+FFEF1E6E  and     #1, r14
+FFEF1E70  cmp     #1, r14
+FFEF1E72  bne.s   loc_FFEF1E77
+FFEF1E73  mov.b   #1, 4+var_2[sp]
+FFEF1E76  bra.s   loc_FFEF1E7A
+FFEF1E77  mov.b   #0, 4+var_2[sp]
+FFEF1E7A  mov.b   4+var_2[sp], 4+var_1[sp]
+FFEF1E7E  movu.b  4+var_1[sp], r1
+FFEF1E80  movu.b  r1, r1
+FFEF1E82  rtsd    #1
+FFEF1E84  add     #-14h, sp, sp
+FFEF1E87  mov.l   r1, 10h[sp]
+FFEF1E89  mov.w   8[r1], 4[sp]
+FFEF1E8D  mov.l   10h[sp], r1
+FFEF1E8F  mov.w   6[r1], 6[sp]
+FFEF1E93  mov.w   #0, 0Ah[sp]
+FFEF1E96  bra.b   loc_FFEF1EE3
+
+-- vec 128 -> FFF32C1E --
+FFF32C1E  pushm   r1-r2
+FFF32C20  mov.l   #69538h, r1
+FFF32C26  mov.l   [r1], r2
+FFF32C28  add     #1, r2
+FFF32C2A  mov.l   r2, [r1]
+FFF32C2C  mov.l   #88155h, r1
+FFF32C31  bclr    #0, [r1].b
+FFF32C33  popm    r1-r2
+FFF32C35  rte
+FFF32C37  sub     #8, sp
+FFF32C39  mov.l   r1, 8+var_4[sp]
+FFF32C3B  mov.l   #69538h, r14
+FFF32C41  mov.l   [r14], 8+var_8[sp]
+FFF32C43  mov.l   #69538h, r14
+FFF32C49  mov.l   [r14], r14
+FFF32C4B  sub     [sp].l, r14
+FFF32C4E  cmp     8+var_4[sp].l, r14
+FFF32C52  bltu.b  loc_FFF32C43
+FFF32C54  rtsd    #2
+FFF32C56  add     #-18h, sp, sp
+FFF32C59  mov.l   r1, 14h[sp]
+FFF32C5B  mov.l   r2, 10h[sp]
+FFF32C5D  mov.l   r3, 0Ch[sp]
+FFF32C5F  mov.l   r4, 8[sp]
+FFF32C61  mov.w   1Ch[sp], 6[sp]
+FFF32C65  mov.l   #68030h, r14
+FFF32C6B  mov.b   #0, [r14]
+FFF32C6E  mov.l   #6832Ch, r5
+FFF32C74  mov.l   r14, [r5]
+FFF32C76  mov.l   #off_FFED7EB0, r1
+FFF32C7C  mov.l   r1, 4[r5]
+FFF32C7E  mov.w   6[sp], r15
+FFF32C81  mov.l   8[sp], r4
+FFF32C83  mov.l   0Ch[sp], r3
+FFF32C85  mov.l   10h[sp], r2
+FFF32C87  mov.l   14h[sp], r1
+FFF32C89  sub     #8, sp
+FFF32C8B  mov.l   r5, 4[sp]
+FFF32C8D  mov.w   r15, [sp]
+FFF32C8F  bsr.a   sub_FFF35844
+
+-- vec 129 -> FFF39E77 --
+FFF39E77  pushm   r1-r2
+FFF39E79  sub     #8, sp
+FFF39E7B  mov.w   #0, 6[sp]
+FFF39E7E  mov.w   #0, 6[sp]
+FFF39E81  bra.b   loc_FFF39ECC
+FFF39E83  movu.w  6[sp], r1
+FFF39E85  shll    #3, r1
+FFF39E87  mov.l   #6836Ch, r2
+FFF39E8D  add     r1, r2
+FFF39E8F  mov.l   4[r2], r1
+FFF39E91  cmp     [r2].l, r1
+FFF39E94  bgeu.b  loc_FFF39EAB
+FFF39E96  movu.w  6[sp], r1
+FFF39E98  shll    #3, r1
+FFF39E9A  mov.l   #6836Ch, r2
+FFF39EA0  add     r1, r2
+FFF39EA2  mov.l   [r2], r1
+FFF39EA4  cmp     #0, r1
+FFF39EA6  beq.s   loc_FFF39EAB
+FFF39EA7  mov.l   #1, [sp]
+FFF39EAA  bra.s   loc_FFF39EAE
+FFF39EAB  mov.l   #0, [sp]
+FFF39EAE  mov.l   [sp], r1
+FFF39EB0  cmp     #0, r1
+FFF39EB2  beq.b   loc_FFF39EC6
+FFF39EB4  movu.w  6[sp], r1
+FFF39EB6  shll    #3, r1
+FFF39EB8  mov.l   #6836Ch, r2
+FFF39EBE  add     r1, r2
+FFF39EC0  mov.l   4[r2], r1
+FFF39EC2  add     #1, r1
+FFF39EC4  mov.l   r1, 4[r2]
+FFF39EC6  mov.w   6[sp], r1
+FFF39EC8  add     #1, r1
+FFF39ECA  mov.w   r1, 6[sp]
+FFF39ECC  movu.w  6[sp], r1
+FFF39ECE  cmp     #7, r1
+FFF39ED0  blt.b   loc_FFF39E83
+FFF39ED2  add     #8, sp
+FFF39ED4  popm    r1-r2
+
+-- vec 134 -> FFF15A18 --
+FFF15A18  pushm   r14-r15
+FFF15A1A  pushm   r1-r5
+FFF15A1C  add     #-18h, sp, sp
+FFF15A1F  mov.b   #0, 17h[sp]
+FFF15A22  mov.b   #0, 16h[sp]
+FFF15A25  mov.w   #0, 14h[sp]
+FFF15A28  add     #14h, sp, r2
+FFF15A2B  mov.l   #0, r1
+FFF15A2D  bsr.w   sub_FFF15967
+FFF15A30  movu.w  14h[sp], r1
+FFF15A32  add     #-800h, r1, r1
+FFF15A36  mov.w   r1, 14h[sp]
+FFF15A38  mov.w   14h[sp], r1
+FFF15A3A  shll    #4, r1
+FFF15A3C  mov.w   r1, 14h[sp]
+FFF15A3E  mov.l   #20278h, r1
+FFF15A44  movu.w  4[r1], r1
+FFF15A46  cmp     #3, r1
+FFF15A48  bne.w   loc_FFF15C1C
+FFF15A4B  mov.l   #20278h, r1
+FFF15A51  movu.w  114h[r1], r1
+FFF15A54  cmp     #2, r1
+FFF15A56  beq.w   loc_FFF15B32
+FFF15A59  cmp     #1, r1
+FFF15A5B  bne.w   loc_FFF15C1C
+FFF15A5E  mov.l   #20278h, r1
+FFF15A64  movu.w  120h[r1], r1
+FFF15A67  cmp     #0, r1
+FFF15A69  beq.w   loc_FFF15C1C
+FFF15A6C  movu.w  14h[sp], r1
+FFF15A6E  mov.b   r1, 17h[sp]
+FFF15A70  movu.w  14h[sp], r1
+FFF15A72  shlr    #8, r1
+FFF15A74  mov.b   r1, 16h[sp]
+FFF15A76  mov.l   #20278h, r1
+FFF15A7C  mov.l   118h[r1], r1
+FFF15A7F  cmp     #17FFEh, r1
+FFF15A84  bleu.b  loc_FFF15A89
+FFF15A86  bra.w   loc_FFF15C1C
+FFF15A89  mov.l   #20278h, r1
+
+-- vec 135 -> FFEE11B8 --
+FFEE11B8  pushm   r14-r15
+FFEE11BA  pushm   r1-r5
+FFEE11BC  setpsw  i
+FFEE11BE  mov.l   #88115h, r1
+FFEE11C3  btst    #0, [r1].b
+FFEE11C5  beq.s   loc_FFEE11CD
+FFEE11C6  mov.l   #88115h, r1
+FFEE11CB  bclr    #0, [r1].b
+FFEE11CD  mov.l   #124D4h, r1
+FFEE11D3  mov.w   [r1], r2
+FFEE11D5  add     #1, r2
+FFEE11D7  mov.w   r2, [r1]
+FFEE11D9  bsr.a   sub_FFF36CAB
+FFEE11DD  popm    r1-r5
+FFEE11DF  popm    r14-r15
+FFEE11E1  rte
+FFEE11E3  sub     #4, sp
+FFEE11E5  mov.l   #0, 4+var_4[sp]
+FFEE11E8  bra.b   loc_FFEE121D
+FFEE11EA  mov.l   4+var_4[sp], r1
+FFEE11EC  mul     #0Ch, r1
+FFEE11EE  mov.l   #1CDE4h, r14
+FFEE11F4  add     r1, r14
+FFEE11F6  mov.w   #0, [r14]
+FFEE11F9  mov.l   4+var_4[sp], r1
+FFEE11FB  mul     #0Ch, r1
+FFEE11FD  mov.l   #1CDE4h, r2
+FFEE1203  add     r1, r2
+FFEE1205  mov.l   #0, 4[r2]
+FFEE1208  mov.l   4+var_4[sp], r1
+FFEE120A  mul     #0Ch, r1
+FFEE120C  mov.l   #1CDE4h, r2
+FFEE1212  add     r1, r2
+FFEE1214  mov.l   #0, 8[r2]
+FFEE1217  mov.l   4+var_4[sp], r1
+FFEE1219  add     #1, r1
+FFEE121B  mov.l   r1, 4+var_4[sp]
+FFEE121D  mov.l   4+var_4[sp], r1
+FFEE121F  cmp     #4, r1
+FFEE1221  blt.b   loc_FFEE11EA
+
+-- vec 136 -> FFF36C1C --
+FFF36C1C  pushm   r14-r15
+FFF36C1E  pushm   r1-r5
+FFF36C20  setpsw  i
+FFF36C22  mov.l   #88145h, r1
+FFF36C27  btst    #0, [r1].b
+FFF36C29  beq.s   loc_FFF36C31
+FFF36C2A  mov.l   #88145h, r1
+FFF36C2F  bclr    #0, [r1].b
+FFF36C31  mov.l   #88100h, r1
+FFF36C36  bclr    #3, [r1].b
+FFF36C38  mov.l   #88145h, r1
+FFF36C3D  add     #1, r1
+FFF36C3F  mov.w   #0, [r1]
+FFF36C42  bsr.a   sub_FFF36CA2
+FFF36C46  mov.l   #88100h, r1
+FFF36C4B  bset    #3, [r1].b
+FFF36C4D  popm    r1-r5
+FFF36C4F  popm    r14-r15
+FFF36C51  rte
+FFF36C53  sub     #4, sp
+FFF36C55  mov.b   r1, 4+var_1[sp]
+FFF36C57  clrpsw  i
+FFF36C59  bsr.a   sub_FFF36CC0
+FFF36C5D  bsr.a   sub_FFF14194
+FFF36C61  bsr.a   sub_FFF12A75
+FFF36C65  bsr.a   sub_FFEE11E3
+FFF36C69  bsr.a   sub_FFEDAB4C
+FFF36C6D  bsr.a   sub_FFEDF777
+FFF36C71  bsr.a   sub_FFEE1393
+FFF36C75  bsr.a   sub_FFEDC16C
+FFF36C79  bsr.a   sub_FFEDE2D1
+FFF36C7D  bsr.a   sub_FFEDEEF1
+FFF36C81  bsr.a   sub_FFF37443
+FFF36C85  bsr.a   sub_FFF14DD0
+FFF36C89  bsr.a   sub_FFF395DF
+FFF36C8D  bsr.a   sub_FFEDF1CE
+FFF36C91  bsr.a   sub_FFF37590
+FFF36C95  setpsw  i
+FFF36C97  bsr.w   sub_FFF36C9C
+FFF36C9A  rtsd    #1
+
+-- vec 210 -> FFF1527B --
+FFF1527B  pushm   r14-r15
+FFF1527D  pushm   r1-r5
+FFF1527F  add     #-20h, sp, sp
+FFF15282  mov.b   #0, 1Fh[sp]
+FFF15285  mov.b   #0, 1Eh[sp]
+FFF15288  mov.w   #0, 1Ch[sp]
+FFF1528B  mov.w   #0, 1Ah[sp]
+FFF1528E  mov.l   #20278h, r1
+FFF15294  movu.w  [r1], r1
+FFF15296  cmp     #1, r1
+FFF15298  bne.w   loc_FFF1563F
+FFF1529B  mov.l   #20278h, r1
+FFF152A1  movu.w  114h[r1], r1
+FFF152A4  cmp     #2, r1
+FFF152A6  beq.w   loc_FFF1546D
+FFF152A9  cmp     #1, r1
+FFF152AB  bne.w   loc_FFF1563F
+FFF152AE  mov.l   #20278h, r1
+FFF152B4  movu.w  120h[r1], r1
+FFF152B7  cmp     #1, r1
+FFF152B9  bne.w   loc_FFF1563F
+FFF152BC  mov.l   #20278h, r1
+FFF152C2  mov.l   118h[r1], r1
+FFF152C5  cmp     #0, r1
+FFF152C7  bne.b   loc_FFF1533B
+FFF152C9  mov.l   #20278h, r1
+FFF152CF  mov.l   10Ch[r1], r2
+FFF152D2  cmp     108h[r1].l, r2
+FFF152D6  bgeu.b  loc_FFF1533B
+FFF152D8  mov.w   #0, [sp]
+FFF152DB  mov.l   #20278h, r1
+FFF152E1  add     #6, r1
+FFF152E3  mov.l   r1, 4[sp]
+FFF152E5  mov.l   #20278h, r1
+FFF152EB  mov.l   108h[r1], 8[sp]
+FFF152EF  mov.l   #20278h, r1
+FFF152F5  mov.l   10Ch[r1], r2
+FFF152F8  add     11Ch[r1].l, r2
+FFF152FC  mov.l   r2, 10h[sp]
+FFF152FE  mov.l   #20278h, r1

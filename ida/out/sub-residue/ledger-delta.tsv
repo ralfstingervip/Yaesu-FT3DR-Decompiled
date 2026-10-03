@@ -1,0 +1,12 @@
+item	bytes	note
+SUB window (denominator, unchanged)	524288	0xFFED0000-0xFFF50000
+SUB window code (H8+H10, unchanged)	464166	headline rule; I10 confirms, delta 0
+SUB typed data (H8, unchanged)	56289	delta 0
+code+typed (unchanged)	520455	464166+56289; matches lane brief
+residue (unchanged)	3833	524288-520455; = this lane's residue.tsv sum
+  residue: dead-app functions (52)	3692	Confirmed dead: 0 LE32, 0 LE24/prefix across 4MB, not a vector target, no rel-branch, not a switch target
+  residue: code fragments/stubs (7 runs)	43	unreferenced well-formed code/stub bytes
+  residue: dup-prologue slivers (49)	98	2B 60 40 each, never targeted
+I10 net delta to headline/denominator	0	classification lane; no byte reclassified across the code|typed|residue boundary
+COMPANION: past-window code FFF50000-FFF508F5	2293	tail of sub_FFF4FABD; OUTSIDE denominator
+COMPANION: past-window data FFF508F5-FFF509DE	233	JPEG de-zigzag + IDCT cosines + switch tbl; OUTSIDE denominator

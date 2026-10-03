@@ -1,0 +1,78 @@
+038330 C 5e 01 e7 9c                    jsr     sub_1E79C:24                               
+038334 C 6a 0c aa 34                    mov.b   @0xFFFFAA34:16, r4l                        
+038338 C ec f0                          and.b   #0xF0, r4l                                 
+03833a C 6a 8c aa 34                    mov.b   r4l, @0xFFFFAA34:16                        
+03833e C fc 00                          mov.b   #0, r4l                                    
+038340 C 6a 8c aa e8                    mov.b   r4l, @0xFFFFAAE8:16                        
+038344 C 6a 18 a9 e3 70 70              bset    #7, @0xFFFFA9E3:16                         
+03834a C 6a 18 a9 e3 72 20              bclr    #2, @0xFFFFA9E3:16                         
+038350 C 6a 18 aa e1 72 10              bclr    #1, @0xFFFFAAE1:16                         
+038356 C fc 00                          mov.b   #0, r4l                                    
+038358 C 6a 8c aa e0                    mov.b   r4l, @0xFFFFAAE0:16                        
+03835c C 54 70                          rts                                                
+
+;---- func 0x3835e..0x38380  sub_3835E
+03835e C 6a 0a aa e0                    mov.b   @0xFFFFAAE0:16, r2l                        <- 2c9a,2cac,2cfe,3162,38ac,38be,3914,39fe,3a16,3a62
+038362 C 47 06                          beq     loc_3836A:8                                
+038364 C aa ff                          cmp.b   #0xFF, r2l                                 
+038366 C 47 b8                          beq     loc_38320:8                                
+038368 C 55 38                          bsr     sub_383A2:8                                
+03836a C 6a 0b aa e8                    mov.b   @0xFFFFAAE8:16, r3l                        <- 38362
+03836e C 7a 63 00 00 00 ff              and.l   #0xFF, er3                                 
+038374 C 10 73                          shll.l  #2, er3                                    
+038376 C 78 b0 6b 26 00 03 83 80        mov.l   @(off_38380:32,er3), er6                   
+03837e C 59 60                          jmp     @er6                                       
+038380 d 00 03 84 c2                    .long sub_384C2                                    <- 38376
+038384 d 00 03 84 ba                    .long sub_384BA                                    
+038388 d 00 03 85 94                    .long sub_38594                                    
+03838c d 00 03 86 86                    .long sub_38686                                    
+038390 d 00 03 87 74                    .long nullsub_130                                  
+038394 d 00 03 87 76                    .long nullsub_131                                  
+038398 d 00 03 87 76                    .long nullsub_131                                  
+03839c d 4f                             .byte 0x4F ; O                                     <- 383ac
+03839d d 1e                             .byte 0x1E                                         
+03839e d 35                             .byte 0x35 ; 5                                     
+03839f d 5d                             .byte 0x5D ; ]                                     
+0383a0 d ff                             .byte 0xFF                                         
+0383a1 d 00                             .byte    0                                         
+
+;---- func 0x383a2..0x38410  sub_383A2
+0383a2 C 6a 0c 89 97                    mov.b   @0xFFFF8997:16, r4l                        <- 38368
+0383a6 C ac 01                          cmp.b   #1, r4l                                    
+0383a8 C 47 5e                          beq     loc_38408:8                                
+0383aa C 0c ab                          mov.b   r2l, r3l                                   
+0383ac C 7a 05 00 03 83 9c              mov.l   #unk_3839C, er5                            
+0383b2 C 5e 03 f7 68                    jsr     sub_3F768:24                               
+0383b6 C 47 50                          beq     loc_38408:8                                
+0383b8 C 6a 0c 89 97                    mov.b   @0xFFFF8997:16, r4l                        
+0383bc C ac 00                          cmp.b   #0, r4l                                    
+0383be C 47 04                          beq     loc_383C4:8                                
+0383c0 C aa 19                          cmp.b   #0x19, r2l                                 
+0383c2 C 46 44                          bne     loc_38408:8                                
+0383c4 C 6a 0c aa e8                    mov.b   @0xFFFFAAE8:16, r4l                        <- 383be
+0383c8 C 47 30                          beq     loc_383FA:8                                
+0383ca C 6a 0c fe c3                    mov.b   @0xFFFFFEC3:16, r4l                        
+0383ce C ec f0                          and.b   #0xF0, r4l                                 
+0383d0 C 6a 8c fe c3                    mov.b   r4l, @0xFFFFFEC3:16                        
+0383d4 C 6a 18 aa e1 72 30              bclr    #3, @0xFFFFAAE1:16                         
+0383da C 5e 01 e7 9c                    jsr     sub_1E79C:24                               
+0383de C 6a 0c aa 34                    mov.b   @0xFFFFAA34:16, r4l                        
+0383e2 C ec f0                          and.b   #0xF0, r4l                                 
+0383e4 C 6a 8c aa 34                    mov.b   r4l, @0xFFFFAA34:16                        
+0383e8 C fc 00                          mov.b   #0, r4l                                    
+0383ea C 6a 8c aa e8                    mov.b   r4l, @0xFFFFAAE8:16                        
+0383ee C 6a 18 a9 e3 70 70              bset    #7, @0xFFFFA9E3:16                         
+0383f4 C 6a 18 a9 e3 72 20              bclr    #2, @0xFFFFA9E3:16                         
+0383fa C fa 00                          mov.b   #0, r2l                                    <- 383c8
+0383fc C 6a 18 aa e1 72 10              bclr    #1, @0xFFFFAAE1:16                         
+038402 C fc 00                          mov.b   #0, r4l                                    
+038404 C 6a 8c aa e0                    mov.b   r4l, @0xFFFFAAE0:16                        
+038408 C fc 00                          mov.b   #0, r4l                                    <- 383a8,383b6,383c2
+03840a C 6a 8c aa e8                    mov.b   r4l, @0xFFFFAAE8:16                        
+03840e C 54 70                          rts                                                
+
+;---- func 0x38410..0x384b8  sub_38410
+038410 C fc 00                          mov.b   #0, r4l                                    <- 384e2
+038412 C 6a 8c aa e7                    mov.b   r4l, @0xFFFFAAE7:16                        
+038416 C 6a 18 aa e1 72 30              bclr    #3, @0xFFFFAAE1:16                         
+03841c C 6a 10 89 96 77 00              bld     #0, @0xFFFF8996:16                         

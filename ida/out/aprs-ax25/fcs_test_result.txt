@@ -1,0 +1,18 @@
+T1 reference CRC-16/X.25("123456789") = 0x906E (catalogue 0x906E) PASS
+T2 firmware TX encoder sub_49494 on "123456789": 17 out bytes, decoded 11 bytes, emitted FCS = 0x906E (lo byte first: 6E 90) PASS
+T3 firmware RX check sub_4986A on "123456789"+6E 90: r2 = 0xB8F0 (accept iff 0xB8F0) PASS
+T4 UI frame (55 B): ref FCS 0xEA8F, firmware-encoded FCS 0xEA8F, payload round-trip ok, closing flags seen 5 -> PASS
+T5 RX check on that frame: r2 = 0xB8F0 PASS
+T6 RX check after a 1-bit corruption: r2 = 0xEF36 (must NOT be 0xB8F0) PASS
+T7 2000 random frames (15..323 B, half 9600-mode tails, 1/7 all-0xFF): 0 mismatches PASS
+RESULT: ALL PASS
+image @049892: 79 0a 08 84 ok
+image @0494A8: 79 0a 08 84 ok
+image @049904: 79 22 b8 f0 ok
+image @0494B0: 17 12 ok
+catalogue CRC-16/X.25('123456789') ref=0x906E (expect 0x906E)
+firmware-form FCS bytes on air: 6e 90 (expect 6e 90)
+firmware RX residue r2=0xB8F0 (accept iff 0xB8F0)
+UI frame 55 B: ref FCS 0xEA8F, firmware FCS bytes 8f ea -> PASS
+corrupted frame residue 0x07F6 (must differ from 0xB8F0)
+PYTHON RESULT: ALL PASS

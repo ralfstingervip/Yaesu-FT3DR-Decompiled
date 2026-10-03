@@ -1,0 +1,25 @@
+kind	item	offset	size	meaning	confidence	evidence
+frame	CPU>DSP command	0	1	opcode	confirmed	MAIN 0x58FB0 sub_58FA2 reads buf[0] at 0xFFB13E to pick the length
+frame	CPU>DSP command	1	N-2	payload, opcode-specific	confirmed	builders in 0x59000-0x5EC00 write 0xFFB13F onward
+frame	CPU>DSP command	N-1	1	checksum = 8-bit sum of bytes 0..N-2	confirmed	MAIN 0x58FE0-0x58FEE loop adds every byte then stores the total at @er6
+length	32 bytes (0x20)	-	-	default frame size	confirmed	MAIN 0x4838E mov.l #0x20,er4 -> DMAC count 0xFFFC2C; 0x58FCE mov.b #0x0F (15 words + 1 byte + csum)
+length	96 bytes (0x60)	-	-	opcodes 0x15, 0x16, 0x19 always; 0x0C-0x0E when MAIN RAM 0xFF8DDE != 0	confirmed	MAIN 0x48374-0x4839C and 0x58FB4-0x58FD2
+frame	DSP>CPU response	0	1	opcode	confirmed	MAIN 0x5698C / 0x569A6 read 0xFFB0E0
+frame	DSP>CPU response	1	N-2	payload	confirmed	MAIN 0x56A04 reads 0xFFB0E1/0xFFB0E2 for opcode 0x9F
+frame	DSP>CPU response	N-1	1	checksum = 8-bit sum of bytes 0..N-2	confirmed	MAIN 0x56976-0x56982: running sum 0xFFB0DB compared with the last byte, mismatch -> NAK
+frame	CPU>DSP ACK	0	1	0x20	confirmed	MAIN 0x58F66 mov.b #0x20,r4h then 0x58F6C mov.w r4,@0xFFB1A0
+frame	CPU>DSP ACK	1	1	the opcode being acknowledged (copy of 0xFFB0E0)	confirmed	MAIN 0x58F68 mov.b @0xFFB0E0,r4l
+frame	CPU>DSP ACK	2	29	zero	confirmed	MAIN 0x58F30-0x58F64 zero-fills 0xFFB1A0..0xFFB1BF
+frame	CPU>DSP ACK	31	1	checksum = 0x20 + opcode	confirmed	MAIN 0x58F70 add.b r4h,r4l then 0x58F72 mov.b r4l,@0xFFB1BF
+frame	CPU>DSP NAK	0	1	0x10	confirmed	MAIN 0x58F22 mov.b #0x10,r4h, same builder tail
+negative	no start delimiter	-	-	there is no 0x61 start byte and no 16-bit length field; the length is derived from the opcode alone	confirmed	sub_4834E 0x48372-0x483A2 and sub_58FA2 0x58FB0-0x58FD2 are the only places a length is chosen
+negative	no TLV	-	-	payload layout is opcode-specific fixed fields, not type-length-value	confirmed	every builder writes fixed byte offsets 0xFFB13F.. with no length prefix
+canned	VER? packet in ROM	0x0005901E	32	1F 02 00*29 21	confirmed	MAIN file 0x5901E..0x5903D; checksum 0x21 = 0x1F + 0x02
+canned	STOP ENCODE packet in ROM	0x0005903E	32	18 00*30 18	confirmed	MAIN file 0x5903E..0x5905D; checksum 0x18
+buffer	command TX buffer	0xFFB13E	32 or 96	checksum lands at 0xFFB15D (32-byte) or 0xFFB19D (96-byte)	confirmed	sub_58FA2; sub_5A0CA zeroes 0xFFB13E/0xFFB15E/0xFFB17E
+buffer	TX frame pointer	0xFFB13A	4	points at 0xFFB13E, or ROM 0x5901E / 0x5903E for the two canned packets	confirmed	sub_58FA2 0x58FDA, sub_58F86 0x58F8C, sub_58F94 0x58F9A
+buffer	ACK/NAK TX buffer	0xFFB1A0	32	checksum at 0xFFB1BF	confirmed	sub_58F2A / sub_58EE6
+buffer	receive buffer	0xFFB0E0	32 or 96	0xFFB0DE = byte index, 0xFFB0DB = running checksum	confirmed	sub_5683E 0x56966-0x5697C
+buffer	DSP version word	0xFFB0DC	2	payload bytes 1..2 of response 0x9F	confirmed	sub_5683E 0x56A04-0x56A0C
+buffer	ASCII trace output	0xFF2DC8	-	human-readable CPU>DSP / DSP>CPU trace text	confirmed	sub_5A482 0x5A488 and 15 further sites
+buffer	trace mode byte	0xFF8C28	1	value 3 or 5 selects a raw hex dump instead of the symbolic decode	confirmed	0x5A49C, 0x5A524, 0x5A810, 0x5AD8C

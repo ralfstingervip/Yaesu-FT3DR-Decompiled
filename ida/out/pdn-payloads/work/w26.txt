@@ -1,0 +1,456 @@
+025e80  6e 8c 00 14              mov.b   r4l, @(0x14:16,er0)                  
+025e84  6a 0c b3 9c              mov.b   @0xFFFFB39C:16, r4l                  
+025e88  6e 8c 00 15              mov.b   r4l, @(0x15:16,er0)                  
+025e8c  01 00 6b 04 b3 96        mov.l   @0xFFFFB396:16, er4                  
+025e92  01 00 6f 84 00 1e        mov.l   er4, @(0x1E:16,er0)                  
+025e98  6e 0c 00 46              mov.b   @(0x46:16,er0), r4l                  <- 25e54
+025e9c  72 0c                    bclr    #0, r4l                              
+025e9e  6e 8c 00 46              mov.b   r4l, @(0x46:16,er0)                  
+025ea2  5e 01 c0 50              jsr     sub_1C050:24                         
+025ea6  fc 00                    mov.b   #0, r4l                              <- 25db0
+025ea8  40 02                    bra     locret_25EAC:8                       
+025eaa  fc 01                    mov.b   #1, r4l                              <- 25d7c,25dd2
+025eac  54 70                    rts                                          <- 25ea8
+
+;---- func 0x25eae..0x2611a
+025eae  7a 02 00 ff 1a d1        mov.l   #0xFF1AD1, er2                       <- 6c652
+025eb4  6c 2c                    mov.b   @er2+, r4l                           
+025eb6  ac 46                    cmp.b   #0x46, r4l ; 'F'                     
+025eb8  47 7a                    beq     loc_25F34:8                          
+025eba  ac 30                    cmp.b   #0x30, r4l ; '0'                     
+025ebc  58 60 02 6c              bne     loc_2612C:16                         
+025ec0  5e 04 b8 12              jsr     sub_4B812:24                         
+025ec4  58 b0 02 64              bmi     loc_2612C:16                         
+025ec8  7a 02 00 ff 1a d5        mov.l   #0xFF1AD5, er2                       
+025ece  6c 2c                    mov.b   @er2+, r4l                           
+025ed0  ac 2e                    cmp.b   #0x2E, r4l ; '.'                     
+025ed2  58 60 02 56              bne     loc_2612C:16                         
+025ed6  5e 04 b8 12              jsr     sub_4B812:24                         
+025eda  58 b0 02 4e              bmi     loc_2612C:16                         
+025ede  7a 01 00 ff b3 92        mov.l   #0xFFB392, er1                       
+025ee4  7a 02 00 ff 1a d2        mov.l   #0xFF1AD2, er2                       
+025eea  5e 02 5b ac              jsr     sub_25BAC:24                         
+025eee  fc 30                    mov.b   #0x30, r4l ; '0'                     
+025ef0  6c 2e                    mov.b   @er2+, r6l                           
+025ef2  18 ce                    sub.b   r4l, r6l                             
+025ef4  ee 0f                    and.b   #0xF, r6l                            
+025ef6  fd 0a                    mov.b   #0xA, r5l                            
+025ef8  50 d6                    mulxu.b r5l, r6                              
+025efa  68 2d                    mov.b   @er2, r5l                            
+025efc  18 cd                    sub.b   r4l, r5l                             
+025efe  ed 0f                    and.b   #0xF, r5l                            
+025f00  08 de                    add.b   r5l, r6l                             
+025f02  7a 66 00 00 00 ff        and.l   #0xFF, er6                           
+025f08  10 36                    shll.l  er6                                  
+025f0a  78 60 6b 25 00 02 5b e2  mov.w   @(word_25BE2:32,er6), r5             
+025f12  6b 85 b3 94              mov.w   r5, @0xFFFFB394:16                   
+025f16  78 60 6b 25 00 02 5c aa  mov.w   @(word_25CAA:32,er6), r5             
+025f1e  6a 8d b3 9b              mov.b   r5l, @0xFFFFB39B:16                  
+025f22  01 00 6b 05 b3 92        mov.l   @0xFFFFB392:16, er5                  
+025f28  5e 03 f5 22              jsr     sub_3F522:24                         
+025f2c  58 60 01 fc              bne     loc_2612C:16                         
+025f30  5e 02 61 72              jsr     sub_26172:24                         
+025f34  6a 2c 00 ff 1a db        mov.b   @0xFF1ADB:32, r4l                    <- 25eb8
+025f3a  ac 46                    cmp.b   #0x46, r4l ; 'F'                     
+025f3c  58 70 00 b6              beq     loc_25FF6:16                         
+025f40  ac 2b                    cmp.b   #0x2B, r4l ; '+'                     
+025f42  47 04                    beq     loc_25F48:8                          
+025f44  ac 2d                    cmp.b   #0x2D, r4l ; '-'                     
+025f46  46 76                    bne     loc_25FBE:8                          
+025f48  79 0c 00 09              mov.w   #9, e4                               <- 25f42
+025f4c  7a 05 00 ff 1a dc        mov.l   #0xFF1ADC, er5                       
+025f52  7a 06 00 02 61 30        mov.l   #a00000000, er6; "000.00000"         
+025f58  6c 54                    mov.b   @er5+, r4h                           <- 25f62
+025f5a  6c 6c                    mov.b   @er6+, r4l; "000.00000"              
+025f5c  1c 4c                    cmp.b   r4h, r4l                             
+025f5e  46 06                    bne     loc_25F66:8                          
+025f60  1b 5c                    dec.w   #1, e4                               
+025f62  46 f4                    bne     loc_25F58:8                          
+025f64  40 58                    bra     loc_25FBE:8                          
+025f66  7a 02 00 ff 1a db        mov.l   #0xFF1ADB, er2                       <- 25f5e
+025f6c  6c 2c                    mov.b   @er2+, r4l                           
+025f6e  fb 02                    mov.b   #2, r3l                              
+025f70  ac 2b                    cmp.b   #0x2B, r4l ; '+'                     
+025f72  47 02                    beq     loc_25F76:8                          
+025f74  fb 01                    mov.b   #1, r3l                              
+025f76  6a 8b b3 9c              mov.b   r3l, @0xFFFFB39C:16                  <- 25f72
+025f7a  5e 04 b8 12              jsr     sub_4B812:24                         
+025f7e  4b 3e                    bmi     loc_25FBE:8                          
+025f80  7a 02 00 ff 1a df        mov.l   #0xFF1ADF, er2                       
+025f86  6c 2c                    mov.b   @er2+, r4l                           
+025f88  ac 2e                    cmp.b   #0x2E, r4l ; '.'                     
+025f8a  46 32                    bne     loc_25FBE:8                          
+025f8c  5e 04 b8 12              jsr     sub_4B812:24                         
+025f90  4b 2c                    bmi     loc_25FBE:8                          
+025f92  7a 01 00 ff b3 96        mov.l   #0xFFB396, er1                       
+025f98  7a 02 00 ff 1a dc        mov.l   #0xFF1ADC, er2                       
+025f9e  5e 02 5b ac              jsr     sub_25BAC:24                         
+025fa2  fc 30                    mov.b   #0x30, r4l ; '0'                     
+025fa4  6c 26                    mov.b   @er2+, r6h                           
+025fa6  18 c6                    sub.b   r4l, r6h                             
+025fa8  10 46                    shll.b  #2, r6h                              
+025faa  10 46                    shll.b  #2, r6h                              
+025fac  6c 2e                    mov.b   @er2+, r6l                           
+025fae  18 ce                    sub.b   r4l, r6l                             
+025fb0  ee 0f                    and.b   #0xF, r6l                            
+025fb2  14 6e                    or.b    r6h, r6l                             
+025fb4  68 9e                    mov.b   r6l, @er1                            
+025fb6  0b 01                    adds    #1, er1                              
+025fb8  fc 00                    mov.b   #0, r4l                              
+025fba  68 9c                    mov.b   r4l, @er1                            
+025fbc  40 12                    bra     loc_25FD0:8                          
+025fbe  fc 00                    mov.b   #0, r4l                              <- 25f46,25f64,25f7e,25f8a,25f90
+025fc0  6a 8c b3 9c              mov.b   r4l, @0xFFFFB39C:16                  
+025fc4  7a 04 00 00 00 00        mov.l   #0, er4                              
+025fca  01 00 6b 84 b3 96        mov.l   er4, @0xFFFFB396:16                  
+025fd0  5e 03 4e 82              jsr     sub_34E82:24                         <- 25fbc
+025fd4  58 60 01 54              bne     loc_2612C:16                         
+025fd8  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  
+025fdc  4b 0a                    bmi     loc_25FE8:8                          
+025fde  5e 02 5d 72              jsr     sub_25D72:24                         
+025fe2  58 60 01 46              bne     loc_2612C:16                         
+025fe6  40 0e                    bra     loc_25FF6:8                          
+025fe8  01 00 6b 05 b3 92        mov.l   @0xFFFFB392:16, er5                  <- 25fdc
+025fee  5e 03 f5 22              jsr     sub_3F522:24                         
+025ff2  58 60 01 36              bne     loc_2612C:16                         
+025ff6  6a 2c 00 ff 1a e5        mov.b   @0xFF1AE5:32, r4l                    <- 25f3c,25fe6
+025ffc  ac 46                    cmp.b   #0x46, r4l ; 'F'                     
+025ffe  47 1c                    beq     loc_2601C:8                          
+026000  ac 30                    cmp.b   #0x30, r4l ; '0'                     
+026002  47 06                    beq     loc_2600A:8                          
+026004  ac 31                    cmp.b   #0x31, r4l ; '1'                     
+026006  47 02                    beq     loc_2600A:8                          
+026008  fc 30                    mov.b   #0x30, r4l ; '0'                     
+02600a  6a 04 8d de              mov.b   @0xFFFF8DDE:16, r4h                  <- 26002,26006
+02600e  4b 0c                    bmi     loc_2601C:8                          
+026010  77 0c                    bld     #0, r4l                              
+026012  6e 0c 00 12              mov.b   @(0x12:16,er0), r4l                  
+026016  67 5c                    bst     #5, r4l                              
+026018  6e 8c 00 12              mov.b   r4l, @(0x12:16,er0)                  
+02601c  6a 2c 00 ff 1a e6        mov.b   @0xFF1AE6:32, r4l                    <- 25ffe,2600e
+026022  ac 46                    cmp.b   #0x46, r4l ; 'F'                     
+026024  47 1e                    beq     loc_26044:8                          
+026026  ac 31                    cmp.b   #0x31, r4l ; '1'                     
+026028  47 0c                    beq     loc_26036:8                          
+02602a  fb 02                    mov.b   #2, r3l                              
+02602c  ac 32                    cmp.b   #0x32, r4l ; '2'                     
+02602e  47 08                    beq     loc_26038:8                          
+026030  fb 03                    mov.b   #3, r3l                              
+026032  ac 33                    cmp.b   #0x33, r4l ; '3'                     
+026034  47 02                    beq     loc_26038:8                          
+026036  fb 00                    mov.b   #0, r3l                              <- 26028
+026038  fb 00                    mov.b   #0, r3l                              <- 2602e,26034
+02603a  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  
+02603e  4b 04                    bmi     loc_26044:8                          
+026040  6e 8b 00 16              mov.b   r3l, @(0x16:16,er0)                  
+026044  7a 02 00 ff 1a e7        mov.l   #0xFF1AE7, er2                       <- 26024,2603e
+02604a  68 2c                    mov.b   @er2, r4l                            
+02604c  ac 46                    cmp.b   #0x46, r4l ; 'F'                     
+02604e  47 2a                    beq     loc_2607A:8                          
+026050  5e 02 61 3e              jsr     sub_2613E:24                         
+026054  46 18                    bne     loc_2606E:8                          
+026056  fe 00                    mov.b   #0, r6l                              
+026058  7a 05 00 00 58 5a        mov.l   #0x585A, er5                         
+02605e  6d 54                    mov.w   @er5+, r4                            <- 2606c
+026060  11 54                    shlr.w  #2, r4                               
+026062  11 54                    shlr.w  #2, r4                               
+026064  1d 34                    cmp.w   r3, r4                               
+026066  47 08                    beq     loc_26070:8                          
+026068  0a 0e                    inc.b   r6l                                  
+02606a  ae 32                    cmp.b   #0x32, r6l ; '2'                     
+02606c  45 f0                    bcs     loc_2605E:8                          
+02606e  fe 0c                    mov.b   #0xC, r6l                            <- 26054
+026070  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  <- 26066
+026074  4b 04                    bmi     loc_2607A:8                          
+026076  6e 8e 00 17              mov.b   r6l, @(0x17:16,er0)                  
+02607a  7a 02 00 ff 1a ea        mov.l   #0xFF1AEA, er2                       <- 2604e,26074
+026080  68 2c                    mov.b   @er2, r4l                            
+026082  ac 46                    cmp.b   #0x46, r4l ; 'F'                     
+026084  47 26                    beq     loc_260AC:8                          
+026086  5e 02 61 3e              jsr     sub_2613E:24                         
+02608a  46 14                    bne     loc_260A0:8                          
+02608c  fe 00                    mov.b   #0, r6l                              
+02608e  7a 05 00 00 50 72        mov.l   #0x5072, er5                         
+026094  6d 54                    mov.w   @er5+, r4                            <- 2609e
+026096  1d 34                    cmp.w   r3, r4                               
+026098  47 08                    beq     loc_260A2:8                          
+02609a  0a 0e                    inc.b   r6l                                  
+02609c  ae 68                    cmp.b   #0x68, r6l ; 'h'                     
+02609e  45 f4                    bcs     loc_26094:8                          
+0260a0  fe 00                    mov.b   #0, r6l                              <- 2608a
+0260a2  6a 0c 8d de              mov.b   @0xFFFF8DDE:16, r4l                  <- 26098
+0260a6  4b 04                    bmi     loc_260AC:8                          
+0260a8  6e 8e 00 18              mov.b   r6l, @(0x18:16,er0)                  
+0260ac  6a 2c 00 ff 1a ed        mov.b   @0xFF1AED:32, r4l                    <- 26084,260a6
+0260b2  ac 46                    cmp.b   #0x46, r4l ; 'F'                     
+0260b4  47 10                    beq     loc_260C6:8                          
+0260b6  ac 30                    cmp.b   #0x30, r4l ; '0'                     
+0260b8  47 06                    beq     loc_260C0:8                          
+0260ba  ac 31                    cmp.b   #0x31, r4l ; '1'                     
+0260bc  47 02                    beq     loc_260C0:8                          
+0260be  fc 30                    mov.b   #0x30, r4l ; '0'                     
+0260c0  ec 01                    and.b   #1, r4l                              <- 260b8,260bc
+0260c2  6a 8c b3 d3              mov.b   r4l, @0xFFFFB3D3:16                  
+0260c6  7a 02 00 ff 1a ee        mov.l   #0xFF1AEE, er2                       <- 260b4
+0260cc  68 2c                    mov.b   @er2, r4l                            
+0260ce  ac 46                    cmp.b   #0x46, r4l ; 'F'                     
+0260d0  47 12                    beq     loc_260E4:8                          
+0260d2  6c 23                    mov.b   @er2+, r3h                           
+0260d4  68 2b                    mov.b   @er2, r3l                            
+0260d6  5e 06 cb 40              jsr     sub_6CB40:24                         
+0260da  ab 80                    cmp.b   #0x80, r3l                           
+0260dc  45 02                    bcs     loc_260E0:8                          
+0260de  fb 00                    mov.b   #0, r3l                              
+0260e0  6a 8b b3 d4              mov.b   r3l, @0xFFFFB3D4:16                  <- 260dc
+0260e4  6a 2c 00 ff 1a f0        mov.b   @0xFF1AF0:32, r4l                    <- 260d0
+0260ea  ac 46                    cmp.b   #0x46, r4l ; 'F'                     
+0260ec  47 24                    beq     loc_26112:8                          
+0260ee  ac 30                    cmp.b   #0x30, r4l ; '0'                     
+0260f0  45 04                    bcs     loc_260F6:8                          
+0260f2  ac 34                    cmp.b   #0x34, r4l ; '4'                     
+0260f4  45 02                    bcs     loc_260F8:8                          
+0260f6  fc 33                    mov.b   #0x33, r4l ; '3'                     <- 260f0
+0260f8  6a 0e 8d de              mov.b   @0xFFFF8DDE:16, r6l                  <- 260f4
+0260fc  4b 14                    bmi     loc_26112:8                          
+0260fe  ec 03                    and.b   #3, r4l                              
+026100  7a 64 00 00 00 ff        and.l   #0xFF, er4                           
+026106  78 40 6a 2c 00 02 61 3a  mov.b   @(byte_2613A:32,er4), r4l            
+02610e  6e 8c 00 13              mov.b   r4l, @(0x13:16,er0)                  
+026112  fc 31                    mov.b   #0x31, r4l ; '1'                     <- 260ec,260fc
+026114  6a ac 00 ff 1b 11        mov.b   r4l, @0xFF1B11:32                    
+
+;---- func 0x2611a..0x26130
+02611a  6a 0c 8d df              mov.b   @0xFFFF8DDF:16, r4l                  <- 6c680
+02611e  ec 01                    and.b   #1, r4l                              
+026120  8c 30                    add.b   #0x30, r4l ; '0'                     
+026122  6a ac 00 ff 1b 12        mov.b   r4l, @0xFF1B12:32                    
+026128  fc 00                    mov.b   #0, r4l                              
+02612a  40 02                    bra     locret_2612E:8                       
+02612c  fc 01                    mov.b   #1, r4l                              <- 25ebc,25ec4,25ed2,25eda,25f2c,25fd4,25fe2,25ff2
+02612e  54 70                    rts                                          <- 2612a
+026130  30 30 30 2e 30 30 30 30 30 00 .ascii "000.00000"<0>                        <- 25f52,25f5a
+02613a  03                       .byte 3                                      <- 26106
+02613b  02                       .byte    2                                   
+02613c  01                       .byte    1                                   
+02613d  00                       .byte    0                                   
+
+;---- func 0x2613e..0x26172
+02613e  fc 30                    mov.b   #0x30, r4l ; '0'                     <- 26050,26086
+026140  6c 23                    mov.b   @er2+, r3h                           
+026142  a3 30                    cmp.b   #0x30, r3h ; '0'                     
+026144  45 28                    bcs     loc_2616E:8                          
+026146  a3 3a                    cmp.b   #0x3A, r3h ; ':'                     
+026148  44 24                    bcc     loc_2616E:8                          
+02614a  18 c3                    sub.b   r4l, r3h                             
+02614c  6c 24                    mov.b   @er2+, r4h                           
+02614e  a4 30                    cmp.b   #0x30, r4h ; '0'                     
+026150  45 1c                    bcs     loc_2616E:8                          
+026152  a4 3a                    cmp.b   #0x3A, r4h ; ':'                     
+026154  44 18                    bcc     loc_2616E:8                          
+026156  18 c4                    sub.b   r4l, r4h                             
+026158  10 44                    shll.b  #2, r4h                              
+02615a  10 44                    shll.b  #2, r4h                              
+02615c  6c 2b                    mov.b   @er2+, r3l                           
+02615e  ab 30                    cmp.b   #0x30, r3l ; '0'                     
+026160  45 0c                    bcs     loc_2616E:8                          
+026162  ab 3a                    cmp.b   #0x3A, r3l ; ':'                     
+026164  44 08                    bcc     loc_2616E:8                          
+026166  18 cb                    sub.b   r4l, r3l                             
+026168  14 4b                    or.b    r4h, r3l                             
+02616a  fc 00                    mov.b   #0, r4l                              
+02616c  40 02                    bra     locret_26170:8                       
+02616e  fc 01                    mov.b   #1, r4l                              <- 26144,26148,26150,26154,26160,26164
+026170  54 70                    rts                                          <- 2616c
+
+;---- func 0x26172..0x261f0
+026172  79 04 00 0a              mov.w   #0xA, r4                             <- 25f30
+026176  7a 05 00 02 61 f0        mov.l   #a000000000, er5; "0000.00000"       
+02617c  7a 06 00 ff 1a d1        mov.l   #0xFF1AD1, er6                       
+026182  7b d4 59 8f              eepmov.w                                     <- 26188
+026186  0d 44                    mov.w   r4, r4                               
+026188  46 f8                    bne     loc_26182:8                          
+02618a  7a 05 00 ff b3 92        mov.l   #0xFFB392, er5                       
+026190  7a 06 00 ff 1a d2        mov.l   #0xFF1AD2, er6                       
+026196  6c 53                    mov.b   @er5+, r3h                           <- 26228,2624c
+026198  0c 3b                    mov.b   r3h, r3l                             
+02619a  11 43                    shlr.b  #2, r3h                              
+02619c  11 43                    shlr.b  #2, r3h                              
+02619e  c3 30                    or.b    #0x30, r3h                           
+0261a0  6e e3 00 00              mov.b   r3h, @(0:16,er6)                     
+0261a4  eb 0f                    and.b   #0xF, r3l                            
+0261a6  cb 30                    or.b    #0x30, r3l                           
+0261a8  6e eb 00 01              mov.b   r3l, @(1:16,er6)                     
+0261ac  6c 53                    mov.b   @er5+, r3h                           
+0261ae  0c 3b                    mov.b   r3h, r3l                             
+0261b0  11 43                    shlr.b  #2, r3h                              
+0261b2  11 43                    shlr.b  #2, r3h                              
+0261b4  c3 30                    or.b    #0x30, r3h                           
+0261b6  6e e3 00 02              mov.b   r3h, @(2:16,er6)                     
+0261ba  eb 0f                    and.b   #0xF, r3l                            
+0261bc  cb 30                    or.b    #0x30, r3l                           
+0261be  6e eb 00 04              mov.b   r3l, @(4:16,er6)                     
+0261c2  6c 53                    mov.b   @er5+, r3h                           
+0261c4  0c 3b                    mov.b   r3h, r3l                             
+0261c6  11 43                    shlr.b  #2, r3h                              
+0261c8  11 43                    shlr.b  #2, r3h                              
+0261ca  c3 30                    or.b    #0x30, r3h                           
+0261cc  6e e3 00 05              mov.b   r3h, @(5:16,er6)                     
+0261d0  eb 0f                    and.b   #0xF, r3l                            
+0261d2  cb 30                    or.b    #0x30, r3l                           
+0261d4  6e eb 00 06              mov.b   r3l, @(6:16,er6)                     
+0261d8  68 53                    mov.b   @er5, r3h                            
+0261da  0c 3b                    mov.b   r3h, r3l                             
+0261dc  11 43                    shlr.b  #2, r3h                              
+0261de  11 43                    shlr.b  #2, r3h                              
+0261e0  c3 30                    or.b    #0x30, r3h                           
+0261e2  6e e3 00 07              mov.b   r3h, @(7:16,er6)                     
+0261e6  eb 0f                    and.b   #0xF, r3l                            
+0261e8  cb 30                    or.b    #0x30, r3l                           
+0261ea  6e eb 00 08              mov.b   r3l, @(8:16,er6)                     
+0261ee  54 70                    rts                                          
+0261f0  30 30 30 30 2e 30 30 30 30 30 .ascii "0000.00000"                          <- 26176
+0261fa  6e 0c 00 46              mov.b   @(0x46:16,er0), r4l                  <- 6c3f6
+0261fe  73 0c                    btst    #0, r4l                              
+026200  46 0a                    bne     loc_2620C:8                          
+026202  0f 85                    mov.l   er0, er5                             
+026204  7a 15 00 00 00 42        add.l   #0x42, er5 ; 'B'                     
+02620a  40 16                    bra     loc_26222:8                          
+02620c  fc 31                    mov.b   #0x31, r4l ; '1'                     <- 26200
+02620e  6a ac 00 fe e0 4b        mov.b   r4l, @0xFEE04B:32                    
+026214  6a ac 00 fe e0 4c        mov.b   r4l, @0xFEE04C:32                    
+02621a  0f 85                    mov.l   er0, er5                             
+02621c  7a 15 00 00 00 1a        add.l   #0x1A, er5                           
+026222  7a 06 00 fe e0 0a        mov.l   #0xFEE00A, er6                       <- 2620a
+026228  5e 02 61 96              jsr     loc_26196:24                         
+02622c  6e 0c 00 15              mov.b   @(0x15:16,er0), r4l                  
+026230  47 1e                    beq     loc_26250:8                          
+026232  ac 02                    cmp.b   #2, r4l                              
+026234  47 08                    beq     loc_2623E:8                          
+026236  fc 2d                    mov.b   #0x2D, r4l ; '-'                     
+026238  6a ac 00 fe e0 13        mov.b   r4l, @0xFEE013:32                    
+02623e  0f 85                    mov.l   er0, er5                             <- 26234
+026240  7a 15 00 00 00 1e        add.l   #0x1E, er5                           
+026246  7a 06 00 fe e0 14        mov.l   #0xFEE014, er6                       
+02624c  5e 02 61 96              jsr     loc_26196:24                         
+026250  fb 00                    mov.b   #0, r3l                              <- 26230
+026252  6e 0c 00 12              mov.b   @(0x12:16,er0), r4l                  
+026256  77 5c                    bld     #5, r4l                              
+026258  67 0b                    bst     #0, r3l                              
+02625a  cb 30                    or.b    #0x30, r3l                           
+02625c  6a ab 00 fe e0 1d        mov.b   r3l, @0xFEE01D:32                    
+026262  f5 30                    mov.b   #0x30, r5h ; '0'                     
+026264  fd 30                    mov.b   #0x30, r5l ; '0'                     
+026266  6a 0c 8e d7              mov.b   @0xFFFF8ED7:16, r4l                  
+02626a  47 16                    beq     loc_26282:8                          
+02626c  0c cd                    mov.b   r4l, r5l                             
+02626e  fc 10                    mov.b   #0x10, r4l                           
+026270  f5 00                    mov.b   #0, r5h                              
+026272  51 c5                    divxu.b r4l, r5                              
+026274  a5 0a                    cmp.b   #0xA, r5h                            
+026276  45 06                    bcs     loc_2627E:8                          
+026278  85 37                    add.b   #0x37, r5h ; '7'                     
+02627a  cd 30                    or.b    #0x30, r5l                           
+02627c  40 04                    bra     loc_26282:8                          
+02627e  c5 30                    or.b    #0x30, r5h                           <- 26276
+026280  cd 30                    or.b    #0x30, r5l                           
+026282  6a ad 00 fe e0 26        mov.b   r5l, @0xFEE026:32                    <- 2626a,2627c
+026288  6a a5 00 fe e0 27        mov.b   r5h, @0xFEE027:32                    
+02628e  6e 0c 00 13              mov.b   @(0x13:16,er0), r4l                  
+026292  7a 64 00 00 00 ff        and.l   #0xFF, er4                           
+026298  78 40 6a 2c 00 02 62 e0  mov.b   @(byte_262E0:32,er4), r4l            
+0262a0  6a ac 00 fe e0 28        mov.b   r4l, @0xFEE028:32                    
+0262a6  79 04 00 20              mov.w   #0x20, r4 ; ' '                      
+0262aa  7a 05 00 fe e0 09        mov.l   #0xFEE009, er5                       
+0262b0  7a 06 00 fe e0 29        mov.l   #0xFEE029, er6                       
+0262b6  7b d4 59 8f              eepmov.w                                     <- 262bc
+0262ba  0d 44                    mov.w   r4, r4                               
+0262bc  46 f8                    bne     loc_262B6:8                          
+0262be  6a 0c 8d df              mov.b   @0xFFFF8DDF:16, r4l                  
+0262c2  ec 01                    and.b   #1, r4l                              
+0262c4  8c 30                    add.b   #0x30, r4l ; '0'                     
+0262c6  6a ac 00 fe e0 4a        mov.b   r4l, @0xFEE04A:32                    
+0262cc  fb 00                    mov.b   #0, r3l                              
+0262ce  6a 10 8d e0 77 70        bld     #7, @0xFFFF8DE0:16                   
+0262d4  67 0b                    bst     #0, r3l                              
+0262d6  cb 30                    or.b    #0x30, r3l                           
+0262d8  6a ab 00 fe e0 4d        mov.b   r3l, @0xFEE04D:32                    
+0262de  54 70                    rts                                          
+0262e0  33                       .byte 0x33                                   <- 26298
+0262e1  32                       .byte 0x32 ; 2                               
+0262e2  31                       .byte 0x31 ; 1                               
+0262e3  30                       .byte 0x30 ; 0                               
+
+;---- func 0x262e4..0x266e8
+0262e4  6b 04 bb c8              mov.w   @0xFFFFBBC8:16, r4                   <- fba8
+0262e8  46 50                    bne     loc_2633A:8                          
+0262ea  6a 0c bb c7              mov.b   @0xFFFFBBC7:16, r4l                  
+0262ee  58 70 03 ec              beq     locret_266DE:16                      
+0262f2  ac 01                    cmp.b   #1, r4l                              
+0262f4  47 04                    beq     loc_262FA:8                          
+0262f6  58 00 03 e4              bra     locret_266DE:16                      
+0262fa  6a 0c 95 4b              mov.b   @0xFFFF954B:16, r4l                  <- 262f4
+0262fe  58 60 03 dc              bne     locret_266DE:16                      
+026302  6a 10 a9 ee 73 60        btst    #6, @0xFFFFA9EE:16                   
+026308  47 18                    beq     loc_26322:8                          
+02630a  6b 03 bb c4              mov.w   @0xFFFFBBC4:16, r3                   
+02630e  5e 02 6f 48              jsr     sub_26F48:24                         
+026312  6a 18 a9 ee 72 60        bclr    #6, @0xFFFFA9EE:16                   
+026318  6a 18 a9 ee 70 70        bset    #7, @0xFFFFA9EE:16                   
+02631e  58 00 03 bc              bra     locret_266DE:16                      
+026322  6a 18 a9 ee 70 70        bset    #7, @0xFFFFA9EE:16                   <- 26308
+026328  6a 0c bb c6              mov.b   @0xFFFFBBC6:16, r4l                  
+02632c  6a 8c a9 ed              mov.b   r4l, @0xFFFFA9ED:16                  
+026330  fc 02                    mov.b   #2, r4l                              
+026332  6a 8c bb c7              mov.b   r4l, @0xFFFFBBC7:16                  
+026336  58 00 03 a4              bra     locret_266DE:16                      
+02633a  79 04 00 00              mov.w   #0, r4                               <- 262e8
+02633e  6b 84 bb c8              mov.w   r4, @0xFFFFBBC8:16                   
+026342  6a 0a bb d3              mov.b   @0xFFFFBBD3:16, r2l                  
+026346  58 70 03 54              beq     loc_2669E:16                         
+02634a  6a 04 bb d1              mov.b   @0xFFFFBBD1:16, r4h                  
+02634e  6a 0c bb d2              mov.b   @0xFFFFBBD2:16, r4l                  
+026352  6b 2c 00 ff 3d 74        mov.w   @0xFF3D74:32, e4                     
+026358  01 00 6b 02 bb d4        mov.l   @0xFFFFBBD4:16, er2                  
+02635e  5e 02 8f 52              jsr     sub_28F52:24                         
+026362  58 60 03 78              bne     locret_266DE:16                      
+026366  6a 04 bb d1              mov.b   @0xFFFFBBD1:16, r4h                  
+02636a  6a 0c bb d2              mov.b   @0xFFFFBBD2:16, r4l                  
+02636e  6b 2c 00 ff 3d 74        mov.w   @0xFF3D74:32, e4                     
+026374  79 2c fc 00              cmp.w   #0xFC00, e4                          
+026378  47 22                    beq     loc_2639C:8                          
+02637a  79 2c fe 00              cmp.w   #0xFE00, e4                          
+02637e  47 1c                    beq     loc_2639C:8                          
+026380  79 2c ff ff              cmp.w   #0xFFFF, e4                          
+026384  47 16                    beq     loc_2639C:8                          
+026386  1d c4                    cmp.w   e4, r4                               
+026388  58 60 03 40              bne     loc_266CC:16                         
+02638c  6a 0e 94 c0              mov.b   @0xFFFF94C0:16, r6l                  
+026390  ae 01                    cmp.b   #1, r6l                              
+026392  46 08                    bne     loc_2639C:8                          
+026394  5e 02 8f b8              jsr     sub_28FB8:24                         
+026398  58 60 03 42              bne     locret_266DE:16                      
+02639c  01 00 6b 02 bb d4        mov.l   @0xFFFFBBD4:16, er2                  <- 26378,2637e,26384,26392
+0263a2  79 24 f0 03              cmp.w   #0xF003, r4                          
+0263a6  58 70 03 5c              beq     loc_26706:16                         
+0263aa  79 24 f0 04              cmp.w   #0xF004, r4                          
+0263ae  58 70 03 7a              beq     loc_2672C:16                         
+0263b2  79 24 f0 06              cmp.w   #0xF006, r4                          
+0263b6  58 70 03 7e              beq     loc_26738:16                         
+0263ba  79 24 f0 09              cmp.w   #0xF009, r4                          
+0263be  58 70 03 f8              beq     loc_267BA:16                         
+0263c2  79 24 f0 0a              cmp.w   #0xF00A, r4                          
+0263c6  58 70 03 fc              beq     loc_267C6:16                         
+0263ca  79 24 f0 0b              cmp.w   #0xF00B, r4                          
+0263ce  58 70 04 00              beq     loc_267D2:16                         
+0263d2  79 24 f1 00              cmp.w   #0xF100, r4                          
+0263d6  58 70 04 04              beq     loc_267DE:16                         
+0263da  79 24 f1 01              cmp.w   #0xF101, r4                          
+0263de  58 70 04 32              beq     loc_26814:16                         
+0263e2  79 24 f1 15              cmp.w   #0xF115, r4                          
+0263e6  58 70 04 2a              beq     loc_26814:16                         
+0263ea  79 24 f1 14              cmp.w   #0xF114, r4                          
+0263ee  58 70 04 22              beq     loc_26814:16                         
+0263f2  79 24 f1 03              cmp.w   #0xF103, r4                          
+0263f6  58 70 04 38              beq     loc_26832:16                         
+0263fa  79 24 f1 04              cmp.w   #0xF104, r4                          
+0263fe  58 70 05 24              beq     sub_26926:16                         

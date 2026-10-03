@@ -1,0 +1,16 @@
+hop	main_addr	routine	buffer	size	note
+1 over-air frames -> DSP	SCI-C 0xFFFF88	DSP link (doc52)	-	32/96 B frames	C4FM data-FR blocks; DSP reassembles channel data
+2 DSP RX reassembly	0x056B8A dispatch	dsp_rx_frame 0x056A94	0xFEF962	<=1040 B/msg	data-FR msg assembled, class+letter at 0xFEF963/64 (I4)
+3 class store	0x057FC0 / 0x058440	cls_57FC0 / cls_58440	0xFF07A4 (N) / 0xFF1440 (G)	<=1037 B	completed msg copied to class store
+4 picture msg processor	0x05ED18	n_msg_proc	-	-	state machine on 0xFFB25F / 0xFFB263
+4a picture header	0x05F330	hdr_cd (letter c/d)	0xFFB1DE/E3/F0/203, 0xFFB208	size u32	fills ID/callsign/pos/date; blkcount=ceil(size/0x400)->0xFFB25A
+4b picture data block	0x05F458	blk_b (letter b)	0xFF5006	0x400 B	copies block from 0xFF07F2; sum->0xFFB1D4; 0xFFBC48=0xFF5006; trig 0xFFBC55=1
+5 FFFF push machine	0x055BCA disp; 0x055F84/96/FF0	push_rx (0xFFBC57 0->1->2)	0xFF5006->SUB	256 B frames	sub_55F96 -> sub_B610 @0x55FDE
+6 FFFF frame build	0x00B610 / 0x00B6B6	sub_B610/sub_B6B6	SCI-D 0xFFF610	0x116 B wire	opcode 0xFFFF, blk#/total/32b sum (0xFFBC40/42/44)
+7 SUB block receive	0xFFEDC976	FFFF handler (doc51)	0x070E1000+(n-1)*256	256 B	CS6 graphics RAM, JPEG decoder input
+8 SUB JPEG decode	0xFFEDE804 -> 0xFFF4B084	jpeg_decode (doc34/51)	0x070E1000 -> 0x070BB800	in 0x14000 / out 0x25800	baseline JPEG -> 320x240 RGB565
+9 SUB LCD preview	0x06000000 (CS5)	LCD ctrl (doc51)	framebuffer	320x240	F000/F001 on/off
+10 user confirm save	0x02ACAA -> 0x055A70	ui_confirm -> save_rx	0xFFBC52=3	-	bset 0xFFBA81 bit1 then jsr sub_55A70
+11 SD create request	0x0710C4 -> 0x0710DE	sub_710C4/710DE	tmpl 0x71326	op1 param4 dir5	create w, data from SUB 0x070E1000, PHOTO, size 0xFFB208
+12 SD request transmit	0x00D53A -> 0x071196 -> 0x00B6B6	sd_send	opcode 0xFC00	0x98+ B	MAIN->SUB SCI-D
+13 SUB f_open/f_write	0xFFF162CD / 0xFFF1898D	f_open/f_write (doc34)	local tree, not in this repo<id5>0<nnnnn>.jpg	= 0xFFB208	raw JPEG from 0x070E1000; dir table local tree, not in this repo @0xFFF4AD9D

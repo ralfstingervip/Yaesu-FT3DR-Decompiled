@@ -1,0 +1,31 @@
+addr	side	name	role
+FFEDB131	SUB	sci0_rx_assemble	SCI0 RX byte handler: assembles bytes into channel ring slot (ch table 0x12CD8, stride 0x18), per-byte
+FFF36CA2	SUB	ipc_pump	main-loop IPC pump: bsr dequeue (FFEDC1F6) then bsr FFEDEF97
+FFEDC1F6	SUB	ring_dequeue	dequeue one 300-byte slot; mirrors opcode bytes to 0x84C8/0x84C9; copies slot to pending 0x8E46 via FFEF0385
+FFEF0385	SUB	slot_to_pending	memcpy(0x8E46, slot, 0x12C) via sub_FFEFB268
+FFEDC5EE	SUB	link_entry	calls FFEDC615 then the link-layer dispatcher FFEDC976
+FFEDC976	SUB	link_dispatch	link-layer frame dispatcher: F00F power-down, FC00/FE00/FFFF/FFxx block protocol, F3D5/F3D6, common header +7..9, enqueue
+FFEDD0D4	SUB	classifier_enqueue	enqueue N bytes into the 4-slot classifier ring (write idx 0x84C6, read idx 0x84C7, slot stride 0x12C, data +0x8016, len +0x800E)
+FFEDC493	SUB	reply_FFFE	abort block state + send 2-byte FF FE reply to MAIN via FFEDD182 (type 0xE2)
+FFEDC4DD	SUB	block_readback	FE00 handler: read block n from ext RAM 0x070E1000 and transmit it back to MAIN via FFEDD182 (type 0xFF)
+FFEDD182	SUB	sub_to_main_tx	SUB->MAIN frame transmitter (writes reply buffer at 0x84CA, type code in r1)
+FFF3BC97	SUB	apply_FC00	FC00 bulk apply: unpack channel/band/settings record from frame into working struct 0x12534 and name buffers 0x10C66..0x11B66
+FFF38338	SUB	apply_F3D5	F3D5 handler: copy identity/name fields to 0x1032D/0x1033A, validate vs ROM template FFF38B7E (clone/pair handshake step)
+FFF38107	SUB	apply_F3D6	F3D6 handler: copy fields to 0x10358/0x1034B, validate vs ROM FFF38BDA, send ack frames (FFEDD528) from 0x10369
+FFEDE298	SUB	lcd_cmd	write command byte (r1) to LCD controller at 0x06000000, bracketed by 0x8C028.2 strobe
+FFEF2022	SUB	lcd_display_off	F000: load 0x28 -> lcd_cmd (display OFF)
+FFEF201A	SUB	lcd_display_on	F001: load 0x29 -> lcd_cmd (display ON)
+FFEDE259	SUB	f0_state	F0 case 0/1: write r1 to state byte 0x8A8A
+FFF3CAD0	SUB	jpeg_load_display	load image file in 0x400 chunks to 0x070E1000, decode (FFEDE804) to framebuffer 0x070BB800, blit to LCD
+FFEDE804	SUB	jpeg_decode	JPEG decode: input 0x070E1000 (0x14000), output 0x070BB800 (0x25800), clamp routine FFF4C9D1
+FFEF032D	SUB	fb_surface_init	init draw-surface descriptor 0x1D3B8: base 0x07000000, 320x240 (0x140 x 0xF0)
+FFEF04F7	SUB	draw_prim	drawing primitive onto the 0x07000000 framebuffer surface
+FFEF1EFA	SUB	fb_to_lcd_blit	program EXDMAC (0x00082800): dest = LCD 0x06000000, push framebuffer region to panel
+B6B6	MAIN	ipc_send	frame builder/sender from 0xFF3D72 mailbox; special-cases FC00/F3D5/>=FE00; DMA ch0 to SCI_6
+B610	MAIN	send_FFFF_block	FFFF block-write sender: total 0x116, len 0x10C (=256 payload), block# 0xFFBC40, total# 0xFFBC42, 32-bit cksum 0xFFBC44 at frame +0x0F; src ptr in er5
+B5CE	MAIN	send_FE00_req	FE00 block-readback request: carries 0xFFBC40 (block) and 0xFFBC42 (total)
+B572	MAIN	send_FD00	FD00 sender (adjacent bulk opcode)
+D53A	MAIN	send_FC00	FC00 bulk-settings sender via payload filler 71196
+71196	MAIN	fill_FC00	FC00 payload filler (settings/memory record)
+55976	MAIN	block_src_select	selects 256-byte source buffer among 0xFF5806/5906/5A06/5B06, calls B610
+559F4	MAIN	block_flush	flushes remaining bytes (0xFFB098 counter) via B610

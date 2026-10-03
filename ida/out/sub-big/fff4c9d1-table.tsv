@@ -1,0 +1,50 @@
+#  Resolved dispatch of sub_FFF4C9D1 (JPEG MCU YCbCr->RGB565 output callback).
+#  There is NO computed-jump / jump-address table in this function: get_switch_info
+#  returns nothing, there are zero register-indirect jumps, and the 10,210-byte body
+#  is 4,286 instructions with 0 data items. "Dispatch" = a 3-level cmp/branch ladder.
+#  Exit hubs:  FFF4CC24 = "return 0" (success)   FFF4C9EA = "return -1" (reject/error)
+#  Epilogue:   FFF4CC26 = rtsd #104h, r6-r13
+#  Discriminants:
+#    L1 = arg1->[0x42]  (upsample/output-stride selector: 1 => x4 path, else => x2 path)
+#    L2 = arg2->[0x04]  (number of image components: 1=grayscale, 2, 3=YCbCr)
+#    L3 = r14           (chroma vertical/horizontal sampling factor sub-case: 0/1/2)
+#
+level	test_ea	discriminant	cmp_value	branch	target	target_role	confidence
+L1	FFF4C9F8	arg1->[0x42]	1	bne	FFF4DEA7	not-1 -> SECOND HALF (horizontal upsample x2; uses shll#1 bound)	Confirmed
+L1	FFF4C9F8	arg1->[0x42]	1	(fall)	FFF4C9FD	==1  -> FIRST  HALF (horizontal upsample x4; uses shll#2 bound)	Confirmed
+L2a	FFF4CA91	arg2->[0x04]	3	bne	FFF4CC29	!=3 -> try N==1	Confirmed
+L2a	FFF4CA91	arg2->[0x04]	3	(fall)	FFF4CA96	==3 -> 3-component (YCbCr) field-validate then convert	Confirmed
+L2a	FFF4CC29	arg2->[0x04]	1	bne	FFF4CD26	!=1 -> N==2 block	Confirmed
+L2a	FFF4CC29	arg2->[0x04]	1	(fall)	FFF4CC2E	==1 -> 1-component (grayscale) copy/convert	Confirmed
+L2a	FFF4CD26	arg2->[0x04]	(else 2)	-	FFF4CD26	==2 -> 2-component block	Confirmed
+L3	FFF4CAC6	r14 (samp)	0	bne	FFF4CB7D	sampling!=0 -> x2 pixel-replication store	Inferred
+L3	FFF4CEA9	r14 (samp)	1	bne	FFF4DB90	sampling!=1 -> alt block	Inferred
+L3	FFF4DB90	r14 (samp)	2	bne	FFF4C9EA	sampling not in {1,2} -> return -1 (reject)	Confirmed
+L3	FFF4CE20	r14 (samp)	2	bra	FFF4C9EA	sub-case guard -> return -1	Confirmed
+exit	FFF4CF19	r1	0	bra	FFF4CC24	end of case -> return 0	Confirmed
+rung	FFF4CF6B	r2	2	bra	FFF4D26F	inner geometry branch	Inferred
+exit	FFF4D461	r1	0	bra	FFF4CC24	end of case -> return 0	Confirmed
+rung	FFF4D494	r1	0	bra	FFF4D70C	inner geometry branch	Inferred
+rung	FFF4D49E	r1	2	bra	FFF4D66C	inner geometry branch	Inferred
+exit	FFF4D77A	r1	0	bra	FFF4CC24	end of case -> return 0	Confirmed
+rung	FFF4D96F	r4	0	beq	FFF4DB23	inner geometry branch	Inferred
+rung	FFF4D9A0	r3	0	beq	FFF4DACC	inner geometry branch	Inferred
+exit	FFF4DBCB	r6	0	bra	FFF4CC24	end of case -> return 0	Confirmed
+rung	FFF4DC03	r13	2	bra	FFF4DDCC	inner geometry branch	Inferred
+L2b	FFF4DF3E	arg2->[0x04]	3	bne	FFF4E1C1	2nd half: !=3 -> try N==1	Confirmed
+L3	FFF4DF73	r14 (samp)	0	bne	FFF4E02A	sampling!=0 -> alt block	Inferred
+L3	FFF4E12F	r14 (samp)	1	bne	FFF4EEE3	sampling!=1 -> alt block	Inferred
+exit	FFF4E189	r1	0	bra	FFF4CC24	end of case -> return 0	Confirmed
+rung	FFF4E1B5	r2	0	bra	FFF4E3E0	inner geometry branch	Inferred
+L2b	FFF4E1C1	arg2->[0x04]	1	bne	FFF4E2BE	2nd half: !=1 -> N==2 block	Confirmed
+L3	FFF4E3B8	r14 (samp)	2	bra	FFF4C9EA	sub-case guard -> return -1	Confirmed
+rung	FFF4E3E2	r2	2	bra	FFF4E6C6	inner geometry branch	Inferred
+exit	FFF4E881	r1	0	bra	FFF4CC24	end of case -> return 0	Confirmed
+rung	FFF4E899	r1	0	bra	FFF4EAEE	inner geometry branch	Inferred
+rung	FFF4E8A2	r1	2	bra	FFF4EA58	inner geometry branch	Inferred
+exit	FFF4EB34	r1	0	bra	FFF4CC24	end of case -> return 0	Confirmed
+rung	FFF4ED03	r3	0	beq	FFF4EE9E	inner geometry branch	Inferred
+rung	FFF4ED33	r2	0	beq	FFF4EE4A	inner geometry branch	Inferred
+L3	FFF4EEE3	r14 (samp)	2	bne	FFF4C9EA	sampling not in {1,2} -> return -1 (reject)	Confirmed
+rung	FFF4EF35	r5	0	bra	FFF4F186	inner geometry branch	Inferred
+rung	FFF4EF3C	r5	2	bra	FFF4F0F5	inner geometry branch	Inferred

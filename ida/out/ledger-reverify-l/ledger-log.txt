@@ -1,0 +1,200 @@
+PASS MAIN sha256 prefix | derived 8e3ecd05409b2c31 | expected 8e3ecd05409b2c31 
+PASS SUB sha256 prefix | derived b93570b3c2f69ccb | expected b93570b3c2f69ccb 
+PASS MAIN image tail 0x07B754.. all 0xFF | derived True | expected True 
+PASS final4 proven length | derived 1048576 | expected 1048576 
+PASS final4 proven values in {0,1} | derived True | expected True 
+PASS final4 proven popcount | derived 368624 | expected 368624 
+PASS final4 proven bytes set at/above 0x07B754 | derived 0 | expected 0 
+INFO final4 proven sha256 | 3a45f1f46b36a47f 
+PASS final4 named length | derived 1048576 | expected 1048576 
+PASS final4 named values in {0,1} | derived True | expected True 
+PASS final4 named popcount | derived 497451 | expected 497451 
+PASS final4 named bytes set at/above 0x07B754 | derived 0 | expected 0 
+INFO final4 named sha256 | 2b8255b683ca474a 
+PASS final5 proven length | derived 1048576 | expected 1048576 
+PASS final5 proven values in {0,1} | derived True | expected True 
+PASS final5 proven popcount | derived 369214 | expected 369214 
+PASS final5 proven bytes set at/above 0x07B754 | derived 0 | expected 0 
+INFO final5 proven sha256 | 0d5492ce5de1500b 
+PASS final5 named length | derived 1048576 | expected 1048576 
+PASS final5 named values in {0,1} | derived True | expected True 
+PASS final5 named popcount | derived 498319 | expected 498319 
+PASS final5 named bytes set at/above 0x07B754 | derived 0 | expected 0 
+INFO final5 named sha256 | 0bff9e2d27f9c121 
+PASS final6 proven length | derived 1048576 | expected 1048576 
+PASS final6 proven values in {0,1} | derived True | expected True 
+PASS final6 proven popcount | derived 364786 | expected 364786 
+PASS final6 proven bytes set at/above 0x07B754 | derived 0 | expected 0 
+INFO final6 proven sha256 | ecd7deaf54da6d21 
+PASS final6 named length | derived 1048576 | expected 1048576 
+PASS final6 named values in {0,1} | derived True | expected True 
+PASS final6 named popcount | derived 501656 | expected 501656 
+PASS final6 named bytes set at/above 0x07B754 | derived 0 | expected 0 
+INFO final6 named sha256 | fe8f60996e0a5852 
+PASS final6 proven sha256 prefix (README) | derived ecd7deaf54da6d21 | expected ecd7deaf54da6d21 
+PASS final6 named sha256 prefix (README) | derived fe8f60996e0a5852 | expected fe8f60996e0a5852 
+PASS final4 proven subset of named | derived 0 | expected 0 
+PASS final5 proven subset of named | derived 0 | expected 0 
+PASS final6 proven subset of named | derived 0 | expected 0 
+PASS content length 0x07B754 | derived 505684 | expected 505684 
+PASS 0x054AE2-0x054BF7 length | derived 278 | expected 278 
+PASS 0x054AE2-0x054BF7 fully proven in final4 | derived 278 | expected 278 
+PASS doc 95 heads count | derived 336 | expected 336 
+PASS doc 95 heads tile 0x078106-0x078546 | derived True | expected True 
+PASS doc 95 heads hex == image | derived 0 | expected 0 
+PASS window code bytes not in final4 proven | derived 868 | expected 868 
+PASS window ranges (count) | derived 13 | expected 13 
+INFO window ranges | 07810C-07815B 0781A4-0781A9 0781C4-078221 07823C-07825F 078268-078279 07827C-078333 07833C-07837B 078384-0783D9 0783EE-07842D 078440-078441 078448-078459 078462-078507 078514-078545 
+PASS window ranges clear in final4 named | derived 0 | expected 0 
+PASS final5 proven == final4 - 054AE2..054BF7 + window (byte-identical) | derived True | expected True 
+PASS final5 named == final4 + window (byte-identical) | derived True | expected True 
+PASS final4 \ final5 proven | derived 278 | expected 278 
+PASS final5 \ final4 proven | derived 868 | expected 868 
+PASS final5 \ final4 named | derived 868 | expected 868 
+PASS final4 \ final5 named | derived 0 | expected 0 
+PASS K1 builder seeds I8 list (0x034CCE,0x00327E,0x00328A,0x00329C,0x077DB8,0x077FC6,0x078086) present | derived True | expected True 
+PASS K1 builder COMBINED = EX6 + I8X + I9X + I15X | derived True | expected True 
+INFO K1b touch helpers | 02853E:N=3 028562:N=4 028586:N=5 0285AA:N=6 0285CE:N=7 0285F2:N=8 028616:N=9 02863A:N=10 02865E:N=11 028682:N=19 0286A6:N=23 
+descent: with fnindex seeds ... 0.2
+PASS K1 rule rebuild: (h9_proven | folded descent) - I12 == final4 proven | derived True | expected True | my driver reproduces K1's mask
+INFO H9 fnindex seeds | 3239 
+descent: without fnindex ... 1.3
+descent: without fnindex + 6 edges ... 2.8
+descent: without fnindex + 8 entries ... 4.3
+PASS fnindex-only bytes (P4 & with-fn & ~without-fn) | derived 4850 | expected 4850 
+PASS fnindex-only runs | derived 94 | expected 94 
+PASS fnindex-only == fnindex-only-runs.tsv (byte-identical) | derived True | expected True 
+PASS recovered by 6 new edges (B) | derived 108 | expected 108 
+PASS rec_runs.tsv == recovered (byte-identical) | derived True | expected True 
+PASS drop (fnindex-only, not recovered) bytes | derived 4742 | expected 4742 
+PASS drop runs | derived 89 | expected 89 
+PASS drop_runs.tsv == drop (byte-identical) | derived True | expected True 
+PASS drop includes 0x054AE2-0x054BF7 (already out of final5) | derived True | expected True 
+PASS drop bytes still in final5 | derived 4464 | expected 4464 
+PASS hand restore length 0x066FBE-0x066FC7 + 0x06726A-0x067283 | derived 36 | expected 36 
+PASS hand-restore bytes inside drop | derived 36 | expected 36 
+PASS 8-entry descent reaches exactly the 36 restored bytes beyond the 6-edge run (within FO) | derived True | expected True 
+PASS final6 proven == final5 - drop + 36 (byte-identical, from my descent) | derived True | expected True 
+PASS final6 proven == final5 - (fnindex-only & ~8-entry descent) | derived True | expected True 
+PASS final5 - final6 proven | derived 4428 | expected 4428 
+PASS final6 \ final5 proven | derived 0 | expected 0 
+PASS per-lane L2 (<0x030000) | derived 884 | expected 884 
+PASS per-lane L3 (0x030000-0x04FFFF) | derived 2532 | expected 2532 
+PASS per-lane L4 (>=0x050000) | derived 1012 | expected 1012 
+INFO L2 runs.tsv | 36 runs / 938 B; classes ['DATA-MISTYPED', 'DEAD', 'REACHED', 'SPLIT-TAIL'] 
+INFO L2 REACHED rows | 018250+18 018ABE+20 01A094+8 01A0A4+8 
+INFO L3 runs.tsv | 31 runs / 2532 B; classes ['DATA-MISTYPED', 'DEAD', 'SPLIT-TAIL'] 
+INFO L3 REACHED rows | none 
+INFO L4 runs.tsv | 27 runs / 1380 B; classes ['ALREADY-DEMOTED', 'DATA-MISTYPED', 'DEAD', 'REACHED', 'SPLIT-TAIL', 'WINDOW-ONLY'] 
+INFO L4 REACHED rows | 05E8E0+18 066FB4+20 067250+52 
+PASS lane runs.tsv total runs / bytes (L2+L3+L4) | derived (94, 4850) | expected (94, 4850) 
+PASS REACHED bytes L2 + L4 (RESUME: 144 B) | derived (54, 90, 144) | expected (54, 90, 144) 
+PASS data-mistyped bytes per lane L2/L3/L4 (README 80/144/26) | derived (80, 144, 26) | expected (80, 144, 26) 
+PASS L4 DEAD + SPLIT-TAIL (README 696) | derived 696 | expected 696 
+PASS L4 WINDOW-ONLY rows (README 290 USB-module bytes) | derived 290 | expected 290 
+PASS REACHED 144 = recovered by 6 edges 108 + hand 36 | derived 144 | expected 144 
+PASS L2 runs bytes - REACHED == L2 net drop | derived 884 | expected 884 
+PASS L3 runs bytes - REACHED == L3 net drop | derived 2532 | expected 2532 
+PASS L4 runs bytes - REACHED - ALREADY-DEMOTED == L4 net drop | derived 1012 | expected 1012 
+PASS L4 USB-module demotions 0x077CC2(206)+0x07778C(84) | derived 290 | expected 290 
+PASS dropped run 03C668 len | derived 820 | expected 820 
+PASS dropped run 046210 len | derived 472 | expected 472 
+PASS dropped run 045F88 len | derived 50 | expected 50 
+PASS dropped run 01C4D2 len | derived 194 | expected 194 
+PASS dropped run 077CC2 len | derived 206 | expected 206 
+PASS dropped run 07778C len | derived 84 | expected 84 
+PASS final4-proven bytes not reached by full descent (B) | derived 1692 | expected 1692 
+PASS ... runs | derived 80 | expected 80 
+PASS largest three | derived 05C8DC:218 0460C2:110 03D0EE:98 | expected 05C8DC:218 0460C2:110 03D0EE:98 
+PASS caller 06AB1C P4=1, full descent=0 | derived (1, 0) | expected (1, 0) 
+PASS caller 06AB2A P4=1, full descent=0 | derived (1, 0) | expected (1, 0) 
+PASS caller 06AB36 P4=1, full descent=0 | derived (1, 0) | expected (1, 0) 
+PASS caller 06AE04 P4=1, full descent=0 | derived (1, 0) | expected (1, 0) 
+PASS caller 06AE10 P4=1, full descent=0 | derived (1, 0) | expected (1, 0) 
+PASS caller 062808 P4=1, full descent=0 | derived (1, 0) | expected (1, 0) 
+PASS caller 06723A P4=1, full descent=0 | derived (1, 0) | expected (1, 0) 
+PASS proven-unreached-runs.tsv == P4 & ~descent (byte-identical) | derived True | expected True 
+INFO stale-head byte 006A0C: P4/MK/P6/N6 | (0, 0, 0, 1) 
+INFO stale-head byte 006A0D: P4/MK/P6/N6 | (0, 0, 0, 1) 
+INFO stale-head byte 0077F8: P4/MK/P6/N6 | (0, 0, 0, 1) 
+INFO stale-head byte 0077F9: P4/MK/P6/N6 | (0, 0, 0, 1) 
+PASS jsr @0x015206 sites (5e 01 52 06) | derived 14 | expected 14 
+PASS 0x015224 = jsr @er1 (5d 10) | derived 5d10 | expected 5d10 
+PASS er1 load 018276 = mov.l #018250,er1 and jsr @0x15206 at +6 | derived ('7a0100018250', '5e015206', 1, 1) | expected ('7a0100018250', '5e015206', 1, 1) 
+PASS er1 load 018AD2 = mov.l #018ABE,er1 and jsr @0x15206 at +6 | derived ('7a0100018abe', '5e015206', 1, 1) | expected ('7a0100018abe', '5e015206', 1, 1) 
+PASS er1 load 018BE8 = mov.l #01A094,er1 and jsr @0x15206 at +6 | derived ('7a010001a094', '5e015206', 1, 1) | expected ('7a010001a094', '5e015206', 1, 1) 
+PASS er1 load 05E862 = mov.l #05E8E0,er1 and jsr @0x15206 at +6 | derived ('7a010005e8e0', '5e015206', 1, 1) | expected ('7a010005e8e0', '5e015206', 1, 1) 
+INFO abs24 jsr @066FB4 sites (P6 proven) | 062808(1) 06723A(1) 06AB1C(1) 06ADF6(1) 
+PASS abs24 jsr @066FB4 has a site in final6-proven code | derived True | expected True 
+INFO abs24 jsr @067250 sites (P6 proven) | 06280E(1) 06AB24(1) 06ADFE(1) 
+PASS abs24 jsr @067250 has a site in final6-proven code | derived True | expected True 
+INFO abs24 jsr @066FBE sites (P6 proven) | 06AB36(1) 06AE10(1) 
+PASS abs24 jsr @066FBE has a site in final6-proven code | derived True | expected True 
+INFO abs24 jsr @06726A sites (P6 proven) | 062814(0) 06AB2A(1) 06AE04(1) 
+PASS abs24 jsr @06726A has a site in final6-proven code | derived True | expected True 
+PASS 0x067246 bsr | derived 55 | expected 55 
+PASS 0x067246 bsr target | derived 06726A | expected 06726A 
+INFO refs to 0x033780/90/AC/C8 (any offset, any form) | none 
+PASS refs to 0x033780 stubs whose source byte is final5-proven | derived 0 | expected 0 
+PASS refs to 0x033780 stubs at even offsets (any mask) | derived 0 | expected 0 
+INFO service-window handler records 0x07B4B4 (stride 10: BE32 key, u16, BE32 handler) | 07B4B4:80000000->0784BE 07B4BE:05000000->0769AA 07B4C8:08000000->0768C8 07B4D2:02000000->0769AA 07B4DC:40000000->0767BE 07B4E6:10000000->0768A8 
+PASS first three handler targets (RESUME:46 names these) | derived 0784BE 0769AA 0768C8 | expected 0784BE 0769AA 0768C8 
+PASS no handler record points at 0x033780 or its stubs | derived 0 | expected 0 
+PASS 0x03C996 bytes (bra to 0x03C668) | derived ('5860fcce', '03C668') | expected ('5860fcce', '03C668') 
+PASS 0460C0 bra | derived ('406e', '046130') | expected ('406e', '046130') 
+PASS 01C27C bra | derived ('401a', '01C298') | expected ('401a', '01C298') 
+PASS 01D932 bra | derived ('4012', '01D946') | expected ('4012', '01D946') 
+INFO BE32/abs24 refs to 03C668 | none 
+PASS final6-proven abs24 callers of 03C668 are README companions and descent-unreached | derived True | expected True | none
+INFO BE32/abs24 refs to 046210 | 0460C8:5e046210(P6=1) 
+PASS final6-proven abs24 callers of 046210 are README companions and descent-unreached | derived True | expected True | 0460C8
+INFO BE32/abs24 refs to 045F88 | 04612A:5e045f88(P6=1) 
+PASS final6-proven abs24 callers of 045F88 are README companions and descent-unreached | derived True | expected True | 04612A
+INFO BE32/abs24 refs to 01C4D2 | 01C28E:5e01c4d2(P6=1) 01D93C:5e01c4d2(P6=0) 
+PASS final6-proven abs24 callers of 01C4D2 are README companions and descent-unreached | derived True | expected True | 01C28E
+INFO after-drop edges (decoded instruction at x) | 002416 mov.l #imm,er5 -> 00245C [mov.l #0x245c,er5] desc8=1; 00242E mov.l #imm,er5 -> 00245C [mov.l #0x245c,er5] desc8=1; 0025CC mov.l #imm,er5 -> 00245C [mov.l #0x245c,er5] desc8=1; 0025E4 mov.l #imm,er5 -> 00245C [mov.l #0x245c,er5] desc8=1; 0026B2 mov.l #imm,er5 -> 00245C [mov.l #0x245c,er5] desc8=1; 0026CA mov.l #imm,er5 -> 00245C [mov.l #0x245c,er5] desc8=1; 0076DA abs24 jsr -> 00CFC2 [jsr @0xcfc2:24] desc8=0; 01C28E abs24 jsr -> 01C4D2 [jsr @0x1c4d2:24] desc8=0; 01E174 mov.l #imm,er5 -> 01E22C [mov.l #0x1e22c,er5] desc8=1; 01E360 mov.l #imm,er5 -> 01E22C [mov.l #0x1e22c,er5] desc8=1; 01E5BE mov.l #imm,er6 -> 01E5EE [mov.l #0x1e5ee,er6] desc8=1; 02D6FA mov.l #imm,er5 -> 02D704 [mov.l #0x2d704,er5] desc8=1; 02D7F4 mov.l #imm,er5 -> 02D7FE [mov.l #0x2d7fe,er5] desc8=1; 02E2CE mov.l #imm,er5 -> 02E2D8 [mov.l #0x2e2d8,er5] desc8=1; 02E3C8 mov.l #imm,er5 -> 02E3D2 [mov.l #0x2e3d2,er5] desc8=1; 02E61A mov.l #imm,er5 -> 02E640 [mov.l #0x2e640,er5] desc8=1; 032630 mov.l #imm,er5 -> 01E22C [mov.l #0x1e22c,er5] desc8=1; 033B4A mov.l #imm,er5 -> 033B70 [mov.l #0x33b70,er5] desc8=1; 034004 mov.l #imm,er5 -> 03400E [mov.l #0x3400e,er5] desc8=1; 03528C mov.l #imm,er6 -> 03532A [mov.l #0x3532a,er6] desc8=1; 0352B0 mov.l #imm,er6 -> 035326 [mov.l #0x35326,er6] desc8=1; 0352CE mov.l #imm,er6 -> 035322 [mov.l #0x35322,er6] desc8=1; 0352EC mov.l #imm,er6 -> 03531E [mov.l #0x3531e,er6] desc8=1; 0460C8 abs24 jsr -> 046210 [jsr @0x46210:24] desc8=0; 0460D6 abs24 jsr -> 046290 [jsr @0x46290:24] desc8=0; 046104 abs24 jsr -> 04633C [jsr @0x4633c:24] desc8=0; 04612A abs24 jsr -> 045F88 [jsr @0x45f88:24] desc8=0; 05C57C mov.l #imm,er5 -> 05C600 [mov.l #0x5c600,er5] desc8=1; 05C5F4 mov.l #imm,er5 -> 05C600 [mov.l #0x5c600,er5] desc8=1; 062054 mov.l #imm,er5 -> 0620A6 [mov.l #0x620a6,er5] desc8=1; 062162 mov.l #imm,er5 -> 062178 [mov.l #0x62178,er5] desc8=1; 0626F0 mov.l #imm,er5 -> 062722 [mov.l #0x62722,er5] desc8=1; 062710 mov.l #imm,er5 -> 062722 [mov.l #0x62722,er5] desc8=1; 062962 mov.l #imm,er5 -> 062178 [mov.l #0x62178,er5] desc8=1; 062A40 mov.l #imm,er5 -> 062178 [mov.l #0x62178,er5] desc8=1; 066C74 mov.l #imm,er5 -> 062178 [mov.l #0x62178,er5] desc8=1; 0670EE mov.l #imm,er5 -> 067128 [mov.l #0x67128,er5] desc8=1; 06710A mov.l #imm,er5 -> 067128 [mov.l #0x67128,er5] desc8=1; 073ABA mov.l #imm,er1 -> 073908 [mov.l #0x73908,er1] desc8=1; 073AC8 mov.l #imm,er1 -> 073909 [mov.l #0x73909,er1] desc8=1; 0742F2 mov.l #imm,er5 -> 074310 [mov.l #0x74310,er5] desc8=1 
+PASS after-drop decoded call/branch edges reached by the 8-entry descent | derived 0 | expected 0 
+PASS after-drop mov.l #imm targets: lane class DATA-MISTYPED or DEAD | derived True | expected True | 35 loads
+PASS after-drop mov.l #imm into DEAD runs = L4's four vestigial er5 handlers | derived ('0620A6 062178 062722 067128', True) | expected ('0620A6 062178 062722 067128', True) 
+PASS after-drop call edges = README dead companions | derived 0076DA 01C28E 0460C8 0460D6 046104 04612A | expected 0076DA 01C28E 0460C8 0460D6 046104 04612A 
+PASS after-drop call sources unreached by the 8-entry descent | derived 0 | expected 0 
+PASS L5 residue mask length | derived 505684 | expected 505684 
+PASS L5 residue popcount | derived 7365 | expected 7365 
+PASS residue & final5 named | derived 0 | expected 0 
+PASS residue | final5 named == all content | derived True | expected True 
+PASS proposed-typing Confirmed rows | derived 522 | expected 522 
+PASS Confirmed typing bytes | derived 3337 | expected 3337 
+PASS Confirmed typing lengths sum == bytes (no overlap) | derived 3337 | expected 3337 
+PASS Confirmed typing inside residue | derived 0 | expected 0 
+PASS final6 named == final5 named | Confirmed typing (byte-identical) | derived True | expected True 
+PASS final6 named - final5 named | derived 3337 | expected 3337 
+PASS L6 +28 B (0x010CC0-0x010CC3, 0x011038-0x01104F) inside Confirmed tier | derived 28 | expected 28 
+PASS L6 +28 B clear in final5 named | derived 0 | expected 0 
+PASS Inferred typing bytes (not credited) | derived 3934 | expected 3934 
+PASS Inferred dead-code bytes | derived 2880 | expected 2880 
+PASS unnamed after final6 | derived 4028 | expected 4028 
+PASS 0x069A7F-0x069AA9 length | derived 43 | expected 43 
+PASS 0x069A7F-0x069AA9 unnamed in final6 | derived 43 | expected 43 
+INFO unnamed after final6 = Inferred + fill + 43? | 4028 = 3934 + 51 + 43 -> True 
+PASS final6 named & ~proven stale-head 4 B (0x006A0C/0x0077F8) named | derived (1, 1, 1, 1) | expected (1, 1, 1, 1) 
+PASS SUB window code (K7 headline_w2 mask) | derived 464263 | expected 464263 
+PASS headline denominator | derived 1029972 | expected 1029972 
+PASS headline numerator | derived 965919 | expected 965919 
+PASS headline % | derived 93.78 | expected 93.78 
+PASS previous headline 962,582 % | derived 93.46 | expected 93.46 
+PASS headline delta | derived 3337 | expected 3337 
+PASS MAIN named % | derived 99.20 | expected 99.20 
+PASS MAIN proven % of content | derived 72.14 | expected 72.14 
+PASS decodable 388,490 + 770 | derived 389260 | expected 389260 
+PASS window decodable 1,088 - 318 | derived 770 | expected 770 
+PASS H1_RECOUNT items_h1 code bytes in 0x078106-0x078545 (L1: 318) | derived 318 | expected 318 
+PASS doc 95 window code heads bytes | derived 1088 | expected 1088 
+PASS MAIN proven % of decodable | derived 93.71 | expected 93.71 
+PASS 369,214 - 4,428 | derived 364786 | expected 364786 
+PASS 498,319 + 3,337 | derived 501656 | expected 501656 
+PASS 368,624 - 278 + 868 | derived 369214 | expected 369214 
+PASS 497,451 + 868 | derived 498319 | expected 498319 
+PASS 884 + 2,532 + 1,012 | derived 4428 | expected 4428 
+PASS 4,742 - 278 - 36 | derived 4428 | expected 4428 
+PASS L4 1,012 = 696 + 26 + 290 | derived 1012 | expected 1012 
+PASS data-mistyped 80 + 144 + 26 | derived 250 | expected 250 

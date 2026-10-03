@@ -1,0 +1,20 @@
+func 001740 rxA_handler_171C_tail
+# idle/default dispatch targets
+func 0004AA tpu0_idle_4AA
+func 000E5E tpu2_idle_E5E
+# DCS TX handler for contrast (doc120)
+func 000706 dcs_tx_handler_706
+# DCS RX config and who calls it
+callers 0010C0
+dw 001108 10 ptr_table_1108
+dw 001880 18 window_table_1880
+# squelch consumers of result flag 8F88
+func 030310 sq_consumer_30310
+func 030410 sq_consumer_30410
+func 0304DC sq_consumer_304DC
+# TPU0/TPU2 TCR + TGRA writes: scan via grep for the register addresses
+grep 0xC0:8|0xFFFFC0|0xFFFFC8|0xFFFFE0|0xFFFFE8
+# the wide/narrow gate
+xref 89BE
+# where 0x7440 RX period gets written (doc120)
+grep #0x7440

@@ -1,0 +1,24 @@
+; first instructions of each callee outside the window (naming only)
+
+== 0768A8  callers 078176
+0768A8  6a 10 ee 00 73 40         btst #0x4,@0xee00:16
+0768AE  47 16                     beq .+22 (0x768c6)
+0768B0  7a 00 00 ff 63 54         mov.l #0xff6354,er0
+0768B6  7a 01 00 ff 62 c8         mov.l #0xff62c8,er1
+0768BC  5e 07 83 7c               jsr @0x7837c:24
+0768C0  6b a0 00 ff 63 f8         mov.w r0,@0xff63f8:32
+0768C6  54 70                     rts 
+
+== 076FC8  callers 0781C0
+076FC8  01 30 6d f2               stm.l er2-er5,@-sp
+076FCC  01 00 6d f6               mov.l er6,@-er7
+076FD0  0f 83                     mov.l er0,er3
+076FD2  7a 06 00 ff 62 88         mov.l #0xff6288,er6
+076FD8  01 00 6f 60 00 50         mov.l @(0x50:16,er6),er0
+076FDE  01 00 6f 62 00 54         mov.l @(0x54:16,er6),er2
+076FE4  1f a0                     cmp.l er2,er0
+076FE6  45 08                     bcs .+8 (0x76ff0)
+076FE8  0d 21                     mov.w r2,r1
+076FEA  0d 0a                     mov.w r0,e2
+076FEC  40 1b                     bra/s .+26 (0x77008)
+076FEE  19 1a                     sub.w r1,e2

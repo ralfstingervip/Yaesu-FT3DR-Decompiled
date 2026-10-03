@@ -1,0 +1,20 @@
+register	reg_ea	insn_ea	bit	action	peripheral_and_evidence
+MSTPCRA	00080010	FFF36CDE	13	clear	TPU (0x00088100 block) - 4 identical clears, 4 channel register groups used
+MSTPCRA	00080010	FFF36CE9	13	clear	TPU (same bit)
+MSTPCRA	00080010	FFF36CF4	13	clear	TPU (same bit)
+MSTPCRA	00080010	FFF36CFF	19	clear	R12DA D/A converter - confirmed at FFF1505C where the same bit is cleared then 0x00088045/46 and P03 ASEL are configured
+MSTPCRA	00080010	FFF36D0A	17	clear	S12AD unit 0 (0x00089000)
+MSTPCRA	00080010	FFF36D15	16	clear	S12AD1 unit 1 - confirmed at FFEE13A5 where the same bit is cleared then 0x00089100 is configured
+MSTPCRA	00080010	FFF36D41	28	clear	DMAC/DTC (0x000820C0, 0x00082200)
+MSTPCRA	00080010	FFF36D4C	9	clear	timer unit in 0x000C1200/0x000C1A00 (MTU3 family) - block identity not proven
+MSTPCRA	00080010	FFF36D57	13	clear	TPU (same bit)
+MSTPCRA	00080010	FFF36D62	15	clear	CMT unit 0 - released but no CMT0/CMT1 register is ever accessed
+MSTPCRA	00080010	FFF36D6D	15	clear	CMT unit 0 (same bit)
+MSTPCRA	00080010	FFF36D83	14	clear	CMT unit 1 (0x00088010 CMSTR1, 0x00088018 CMT3)
+MSTPCRA	00080010	FFEE13A5	16	clear	S12AD1, runtime re-release
+MSTPCRA	00080010	FFF1505C	19	clear	R12DA, runtime re-release
+MSTPCRB	00080014	FFF36D20	31	clear	SCI0 - 0x0008A000 regs, vectors 58/59, P20/P21 PFS=0x0A
+MSTPCRB	00080014	FFF36D2B	29	clear	SCI2 - 0x0008A040 regs, vectors 62/63, P12/P13 PFS=0x0A
+MSTPCRB	00080014	FFF36D78	28	clear	SCI3 - 0x0008A060 regs, vectors 80/81, P23/P25 PFS=0x0A
+MSTPCRC	00080018	-	-	NEVER ACCESSED	every MSTPCRC peripheral stays in module stop
+MSTPCRD	0008001C	FFF36D36	19	clear	peripheral not identified from this package; not USB0

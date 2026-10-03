@@ -1,0 +1,197 @@
+; row-code dispatch and tables
+#### sub containing 0x14EBE
+014E80  00 01 4D 9E             .byte 0x6B, 0x25, ROM, 1, 0x4D, 0x9E
+014E84  68 5B                   mov.b   @er5, r3l
+014E86  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014E8C  6A 0B AD 9B             mov.b   @0xFFFFAD9B:16, r3l
+014E90  68 DB                   mov.b   r3l, @er5
+014E92  5E 01 4D B6             jsr     sub_14DB6:24
+014E96  5E 01 E2 38             jsr     sub_1E238:24
+014E9A  40 04                   bra     locret_14EA0:8
+014E9C  5E 03 FF A0             jsr     sub_3FFA0:24
+014EA0  54 70                   rts
+014EA2  6A 0C B0 8A             mov.b   @0xFFFFB08A:16, r4l
+014EA6  6A 8C AD 9B             mov.b   r4l, @0xFFFFAD9B:16
+014EAA  55 12                   bsr     loc_14EBE:8
+014EAC  FC 0E                   mov.b   #0xE, r4l
+014EAE  18 CB                   sub.b   r4l, r3l
+014EB0  6A 8B B0 8B             mov.b   r3l, @0xFFFFB08B:16
+014EB4  6A 0C AD 9B             mov.b   @0xFFFFAD9B:16, r4l
+014EB8  6A 8C B0 8A             mov.b   r4l, @0xFFFFB08A:16
+014EBC  54 70                   rts
+014EBE  6A 0B 8F 2E             mov.b   @0xFFFF8F2E:16, r3l
+014EC2  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014EC8  10 73                   shll.l  #2, er3
+014ECA  78                      .byte 0x78
+014ECB  B0 6B                   subx    #0x6B, r0h
+014ECD  26 00                   mov.b   @0xFFFFFF00:8, r6h
+014ECF  01                      .byte    1
+014ED0  50 B6                   mulxu.b r3l, r6
+014ED2  59 60                   jmp     @er6
+014ED4  7A 06 00 01 51 02       mov.l   #unk_15102, er6
+014EDA  5E 03 F6 2E             jsr     sub_3F62E:24
+014EDE  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014EE4  78 30 6A 2B 00 01 51 5C mov.b   @(byte_1515C:32,er3), r3l
+014EEC  AB 69                   cmp.b   #0x69, r3l
+014EEE  58 60 01 B2             bne     locret_150A4:16
+014EF2  6A 10 89 C4 73 40       btst    #4, @0xFFFF89C4:16
+014EF8  47 DA                   beq     loc_14ED4:8
+014EFA  58 00 01 A6             bra     locret_150A4:16
+014EFE  6A 0C 8F 4F             mov.b   @0xFFFF8F4F:16, r4l
+014F02  47 42                   beq     loc_14F46:8
+014F04  AC 01                   cmp.b   #1, r4l
+014F06  47 1C                   beq     loc_14F24:8
+014F08  7A 06 00 01 51 14       mov.l   #unk_15114, er6
+014F0E  5E 03 F6 2E             jsr     sub_3F62E:24
+014F12  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014F18  78 30 6A 2B 00 01 51 80 mov.b   @(byte_15180:32,er3), r3l
+014F20  58 00 01 80             bra     locret_150A4:16
+014F24  7A 06 00 01 51 0E       mov.l   #unk_1510E, er6
+014F2A  5E 03 F6 2E             jsr     sub_3F62E:24
+014F2E  AB 04                   cmp.b   #4, r3l
+014F30  45 02                   bcs     loc_14F34:8
+014F32  40 F0                   bra     loc_14F24:8
+014F34  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014F3A  78 30 6A 2B 00 01 51 6A mov.b   @(byte_1516A:32,er3), r3l
+014F42  58 00 01 5E             bra     locret_150A4:16
+014F46  7A 06 00 01 51 08       mov.l   #unk_15108, er6
+014F4C  5E 03 F6 2E             jsr     sub_3F62E:24
+014F50  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014F56  78 30 6A 2B 00 01 51 66 mov.b   @(byte_15166:32,er3), r3l
+014F5E  58 00 01 42             bra     locret_150A4:16
+014F62  7A 06 00 01 51 1A       mov.l   #unk_1511A, er6
+014F68  5E 03 F6 2E             jsr     sub_3F62E:24
+014F6C  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014F72  78 30 6A 2B 00 01 51 86 mov.b   @(byte_15186:32,er3), r3l
+014F7A  58 00 01 26             bra     locret_150A4:16
+014F7E  7A 06 00 01 51 20       mov.l   #unk_15120, er6
+014F84  5E 03 F6 2E             jsr     sub_3F62E:24
+014F88  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014F8E  78 30 6A 2B 00 01 51 8C mov.b   @(byte_1518C:32,er3), r3l
+014F96  5E 03 EC B8             jsr     sub_3ECB8:24
+014F9A  58 60 01 06             bne     locret_150A4:16
+014F9E  AB 8F                   cmp.b   #0x8F, r3l
+014FA0  47 DC                   beq     loc_14F7E:8
+014FA2  58 00 00 FE             bra     locret_150A4:16
+014FA6  7A 06 00 01 51 26       mov.l   #unk_15126, er6
+014FAC  5E 03 F6 2E             jsr     sub_3F62E:24
+014FB0  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014FB6  78 30 6A 2B 00 01 51 9A mov.b   @(byte_1519A:32,er3), r3l
+014FBE  58 00 00 E2             bra     locret_150A4:16
+014FC2  7A 06 00 01 51 2C       mov.l   #unk_1512C, er6
+014FC8  5E 03 F6 2E             jsr     sub_3F62E:24
+014FCC  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014FD2  78 30 6A 2B 00 01 51 A0 mov.b   @(byte_151A0:32,er3), r3l
+014FDA  58 00 00 C6             bra     locret_150A4:16
+014FDE  7A 06 00 01 51 32       mov.l   #unk_15132, er6
+014FE4  5E 03 F6 2E             jsr     sub_3F62E:24
+014FE8  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014FEE  78 30 6A 2B 00 01 51 A2 mov.b   @(byte_151A2:32,er3), r3l
+014FF6  58 00 00 AA             bra     locret_150A4:16
+014FFA  7A 06 00 01 51 38       mov.l   #unk_15138, er6
+015000  5E 03 F6 2E             jsr     sub_3F62E:24
+015004  7A 63 00 00 00 FF       and.l   #0xFF, er3
+01500A  78 30 6A 2B 00 01 51 A8 mov.b   @(byte_151A8:32,er3), r3l
+015012  58 00 00 8E             bra     locret_150A4:16
+015016  7A 06 00 01 51 3E       mov.l   #unk_1513E, er6
+01501C  5E 03 F6 2E             jsr     sub_3F62E:24
+015020  7A 63 00 00 00 FF       and.l   #0xFF, er3
+015026  78 30 6A 2B 00 01 51 BE mov.b   @(0x151BE:32,er3), r3l
+01502E  40 74                   bra     locret_150A4:8
+015030  7A 06 00 01 51 44       mov.l   #unk_15144, er6
+015036  5E 03 F6 2E             jsr     sub_3F62E:24
+01503A  7A 63 00 00 00 FF       and.l   #0xFF, er3
+015040  78 30 6A 2B 00 01 51 DA mov.b   @(loc_151DA:32,er3), r3l
+015048  40 5A                   bra     locret_150A4:8
+01504A  7A 06 00 01 51 4A       mov.l   #unk_1514A, er6
+015050  5E 03 F6 2E             jsr     sub_3F62E:24
+015054  7A 63 00 00 00 FF       and.l   #0xFF, er3
+01505A  6A 10 89 C4 73 40       btst    #4, @0xFFFF89C4:16
+015060  46 04                   bne     sub_15066:8
+015062  AB 04                   cmp.b   #4, r3l
+015064  47 E4                   beq     loc_1504A:8
+015066  78 30 6A 2B 00 01 51 DE mov.b   @(loc_151DE:32,er3), r3l
+01506E  40 34                   bra     locret_150A4:8
+015070  7A 06 00 01 51 50       mov.l   #unk_15150, er6
+015076  5E 03 F6 2E             jsr     sub_3F62E:24
+01507A  7A 63 00 00 00 FF       and.l   #0xFF, er3
+015080  78 30 6A 2B 00 01 51 E4 mov.b   @(byte_151E4:32,er3), r3l
+015088  40 1A                   bra     locret_150A4:8
+01508A  7A 06 00 01 51 56       mov.l   #unk_15156, er6
+015090  5E 03 F6 2E             jsr     sub_3F62E:24
+015094  7A 63 00 00 00 FF       and.l   #0xFF, er3
+01509A  78 30 6A 2B 00 01 51 E6 mov.b   @(sub_151E6:32,er3), r3l
+0150A2  40 00                   bra     locret_150A4:8
+0150A4  54 70                   rts
+0150A6  6A 0C 8F 51             mov.b   @0xFFFF8F51:16, r4l
+0150AA  AC 04                   cmp.b   #4, r4l
+0150AC  45 06                   bcs     locret_150B4:8
+0150AE  FC 00                   mov.b   #0, r4l
+0150B0  6A 8C 8F 51             mov.b   r4l, @0xFFFF8F51:16
+0150B4  54 70                   rts
+
+#### dispatch jump table 0x150B6 (13 x u32 BE) + trailing
+  grp 0  0150B6  -> 00014ED4  sub_14EE4
+  grp 1  0150BA  -> 00014EFE  CODE?
+  grp 2  0150BE  -> 00014F62  CODE?
+  grp 3  0150C2  -> 00014F7E  sub_14F8E
+  grp 4  0150C6  -> 00014FA6  CODE?
+  grp 5  0150CA  -> 00014FC2  CODE?
+  grp 6  0150CE  -> 00014FDE  CODE?
+  grp 7  0150D2  -> 00014FFA  CODE?
+  grp 8  0150D6  -> 00015016  CODE?
+  grp 9  0150DA  -> 00015030  CODE?
+  grp10  0150DE  -> 0001504A  CODE?
+  grp11  0150E2  -> 00015070  sub_15070
+  grp12  0150E6  -> 0001508A  sub_15070
+  grp13  0150EA  -> 000C00FF  (not-code / past-end)
+  grp14  0150EE  -> 8F2E000C  (not-code / past-end)
+  grp15  0150F2  -> 00FFB08A  (not-code / past-end)
+  grp16  0150F6  -> 000200FF  CODE?
+  grp17  0150FA  -> 8F4F0002  (not-code / past-end)
+  grp18  0150FE  -> 00FFB08A  (not-code / past-end)
+
+#### param records 0x15102 (15 x {u16 cnt, u32 ram})
+  p 0  015102  cnt=0x8 ram=FFAD9B
+  p 1  015108  cnt=0x2 ram=FFAD9B
+  p 2  01510E  cnt=0x14 ram=FFAD9B
+  p 3  015114  cnt=0x4 ram=FFAD9B
+  p 4  01511A  cnt=0x5 ram=FFAD9B
+  p 5  015120  cnt=0xD ram=FFAD9B
+  p 6  015126  cnt=0x5 ram=FFAD9B
+  p 7  01512C  cnt=0x1 ram=FFAD9B
+  p 8  015132  cnt=0x4 ram=FFAD9B
+  p 9  015138  cnt=0x15 ram=FFAD9B
+  p10  01513E  cnt=0x1B ram=FFAD9B
+  p11  015144  cnt=0x3 ram=FFAD9B
+  p12  01514A  cnt=0x4 ram=FFAD9B
+  p13  015150  cnt=0x0 ram=FFAD9B
+  p14  015156  cnt=0x4 ram=FFAD9B
+
+#### row-code tables 0x1515C..0x151EC (raw)
+  8e8468403f285170c00013355f00b8b5c1b2c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d6d3454e6f7c7d001a1b4d4b644a1626272b2c527f6b5d6a6c72768f58625b5a5957bb8dbcbdbebfb4000f1415181c208b3743444f5556125e63606d71737a66909f919293a29495ac969899ae9a9b9cab9d9ea9a0a1a3a4a5a6a8a788898285871e1d1fd600b300b7d2d3d7d600
+
+#### 0x69 scan in 0x1515C..0x151EC
+  0x69 at: NONE
+
+#### OPTION gate case 0x1504A..0x1506E (RAM DISPLAY, real gate)
+01504A  7A 06 00 01 51 4A       mov.l   #unk_1514A, er6
+015050  5E 03 F6 2E             jsr     sub_3F62E:24
+015054  7A 63 00 00 00 FF       and.l   #0xFF, er3
+01505A  6A 10 89 C4 73 40       btst    #4, @0xFFFF89C4:16
+015060  46 04                   bne     sub_15066:8
+015062  AB 04                   cmp.b   #4, r3l
+015064  47 E4                   beq     loc_1504A:8
+015066  78 30 6A 2B 00 01 51 DE mov.b   @(loc_151DE:32,er3), r3l
+01506E  40 34                   bra     locret_150A4:8
+
+#### group-1 case 0x14ED4..0x14EFE (the cmp #0x69 site)
+014ED4  7A 06 00 01 51 02       mov.l   #unk_15102, er6
+014EDA  5E 03 F6 2E             jsr     sub_3F62E:24
+014EDE  7A 63 00 00 00 FF       and.l   #0xFF, er3
+014EE4  78 30 6A 2B 00 01 51 5C mov.b   @(byte_1515C:32,er3), r3l
+014EEC  AB 69                   cmp.b   #0x69, r3l
+014EEE  58 60 01 B2             bne     locret_150A4:16
+014EF2  6A 10 89 C4 73 40       btst    #4, @0xFFFF89C4:16
+014EF8  47 DA                   beq     loc_14ED4:8
+014EFA  58 00 01 A6             bra     locret_150A4:16

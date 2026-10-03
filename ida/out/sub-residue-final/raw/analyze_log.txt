@@ -1,0 +1,46 @@
+residue bytes 3736 runs 59
+code heads 172739 byte mismatches vs image 0
+DB code heads decoding as relative branches 32479 ; into residue from outside the run 0
+branch heads whose IDA target != byte-decoded target 0
+every-offset long-branch byte patterns into residue: {'bra.a': 8, 'bsr.a': 6, 'beq.w': 3, 'bra.w': 2, 'bsr.w': 2} at a DB code head: 0
+every-offset 3-byte LE hits on a residue byte 46
+3-byte hit kinds Counter({'code-bytes': 39, 'image-outside-window': 5, 'data:struct': 1, 'data:byte': 1})
+INTB load FFC00017 fbe2708aedff mvtc FFC0001D fd68ec ; EXTB load FFC0000E fbe280ffffff mvtc FFC00014 fd68ed
+vector slots 288, distinct targets 224 ; slots into residue 0
+mvtc-to-INTB/EXTB byte patterns anywhere 2 ; at DB code heads ['FFC00014 mvtc    r14, extb', 'FFC0001D mvtc    r14, intb']
+IDA switch heads 40 targets in residue 0 ; H8 switch edges 643 into residue 0
+indirect heads 359 {'jsr': 319, 'jsr|memory': 317, 'bra.l': 40, 'bra.l|not-found-in-8': 40, 'jsr|const': 2}
+indirect const sites []
+indirect constant targets ['FFEE2222->00000000', 'FFEE223D->00000000'] in residue: []
+bra.l heads without IDA switch info []
+H10 RAM-callback code addresses 1526 in residue 0
+IDA xrefs into residue from outside the run 0
+IDA operands valued inside a residue run, from outside that run 0 []
+classes {'DEAD': 59} bytes {'DEAD': 3736}
+subclass bytes {'fragment': 43, 'dead-function+split-byte FFF2A7FC': 300, 'dead-function': 3393}
+window 524288 DB code bytes 468012 DB data bytes 56276 unexplored 0 code&data 0
+typed (window - allwf) 56289 ; typed & DBcode 13 ; allwf - DBcode 0
+typed by IDA kind {'offset': 10482, 'byte': 10820, 'word': 2, 'strlit': 8280, 'struct': 26164, 'code twin inside typed pool (FFF4B077-FFF4B084)': 13, 'dword': 456, 'double': 72}
+typed semantic classes 44 sum 56289
+window                                                         524288  64 KB-aligned bracket (doc 02): code band FFEDAB4C.. + INTB + string pool; above FFF50000 erased except the 2,526 B JPEG tail FFF50000-FFF509DE
+window code, headline (H8/H10 + 49 w2 entries)                 464263  88.5511%
+  of which reach-only proven                                   457462  87.2540%
+  of which credited-unreached                                    6801  
+headline without w2                                            464165  
+gap = window - window code                                      60025  
+  typed data (window - allwf)                                   56289  incl. 13 B code twin FFF4B077-FFF4B084 kept typed
+  residue (allwf - headline_w2)                                  3736  
+    DEAD dead functions                                          3393  
+    DEAD dead function FFF2A6D1 incl. split byte FFF2A7FC         300  299 + 1
+    DEAD fragments                                                 43  
+  anything else (unexplored / non-typed non-code)                   0  
+code+typed (headline)                                          520552  99.2874%
+all-well-formed (DB code outside typed)                        467999  89.2637%
+typed groups {'switch tables in the H8 gap': 47, 'strings and string slots (incl. string-pool residual with its 37 switch tables)': 12399, 'alignment pad': 4, 'other const tables (storage driver, menu, runtime, sine/cosine, records, linker list)': 1676, 'CC-RX .data initializer images': 8015, 'graphics descriptors/records': 24708, 'UI layout / zero-heavy low tables (typed by region only)': 8416, 'INTB relocatable vector table': 1024} sum 56289
+A now: MAIN named + SUB window code (headline_w2)                                     SUB 464263 (88.5511%)  headline 965919 / 1029972 = 93.7811%
+B SUB window code + DEAD residue typed as code                                        SUB 467999 (89.2637%)  headline 969655 / 1029972 = 94.1438%
+C SUB code + typed data (named analogue, residue left out)                            SUB 520552 (99.2874%)  headline 1022208 / 1029972 = 99.2462%
+D SUB code + typed + DEAD residue (I12 convention: dead DB code counts as named)      SUB 524288 (100.0000%)  headline 1025944 / 1029972 = 99.6089%
+E strict reach: SUB 457462, MAIN proven + SUB = 822248 = 79.8321%
+K7 dead functions by mask {'residue': 3736, 'credited-unreached': 6801, 'reached': 120, 'typed-data': 13} sum 10670 ; reach_w2 bytes inside dead functions {'FFF256BD': 98, 'FFF387C9': 22}
+strict reach 457342 MAIN proven + strict 822128 79.8204%

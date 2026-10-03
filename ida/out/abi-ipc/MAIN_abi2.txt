@@ -1,0 +1,83 @@
+job ABI_IPC_MAIN  MAIN H8S arg/return register census
+functions analysed: 3899
+
+=== live-in registers in entry block (candidate ARGUMENTS) ===
+(count = # functions where ERn is read before being written)
+  er0 :   441 funcs
+  er1 :    99 funcs
+  er2 :    93 funcs
+  er3 :   302 funcs
+  er4 :    81 funcs
+  er5 :   110 funcs
+  er6 :    68 funcs
+functions with >=1 live-in reg: 868 / 3899
+
+=== last-written register before rts (candidate RETURN) ===
+  er0 :   367 funcs
+  er1 :    93 funcs
+  er2 :    56 funcs
+  er3 :   369 funcs
+  er4 :  1703 funcs
+  er5 :   153 funcs
+  er6 :   290 funcs
+
+=== caller consumption of helper returns (first reg-read after call) ===
+; --- callers of 0001C82E ---
+    00004948  next: beq     loc_497E:8
+    0000495E  next: beq     loc_496E:8
+    000074BC  next: bne     locret_7540:8
+    consume er0 written-first      28
+    consume er0 read               8
+    consume none                   8
+    consume er4 written-first      6
+    consume er1 written-first      1
+; --- callers of 0003F5EE ---
+    0001E3B2  next: bcs     loc_1E4E4:16
+    0001E5C4  next: bcs     loc_1E5E0:8
+    00021780  next: bcs     loc_21854:16
+    consume er1 written-first      30
+    consume er0 read               9
+    consume er4 written-first      9
+    consume er5 written-first      5
+    consume er6 written-first      2
+    consume er3 written-first      1
+; --- callers of 0003F5B2 ---
+    0001E12C  next: bne     locret_1E1A2:8
+    0001E160  next: bne     locret_1E1A2:8
+    0001E324  next: bne     locret_1E386:8
+    consume er5 written-first      8
+    consume er3 written-first      6
+    consume er0 read               5
+    consume none                   4
+    consume er3 read               3
+    consume er4 written-first      2
+    consume er2 written-first      2
+    consume er6 written-first      1
+    consume er0 written-first      1
+; --- callers of 0000976A ---
+    00004E52  next: rts
+    00004E6A  next: rts
+    00004E7E  next: rts
+    consume er3 written-first      42
+    consume er4 written-first      10
+    consume er0 read               6
+    consume none                   4
+    consume er0 written-first      2
+; --- callers of 0003FFA0 ---
+    00010AF4  next: mov.b   #1, r4l
+    000148E0  next: rts
+    000148EC  next: rts
+    consume er4 written-first      223
+    consume none                   80
+    consume er6 written-first      29
+    consume er0 read               28
+    consume er3 written-first      19
+    consume er5 written-first      16
+    consume er1 written-first      13
+    consume er2 written-first      9
+    consume er1 read               8
+    consume er3 read               5
+    consume er2 read               5
+    consume er4 read               4
+    consume er0 written-first      4
+    consume er6 read               3

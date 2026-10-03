@@ -1,0 +1,38 @@
+# Lane H15. MAIN<->DSP normal-mode opcodes. len = bytes on the wire incl. opcode (byte 0) and the 8-bit additive checksum (last byte).
+# status: live = builder reached from live driver/sequencer code; dead = reachable only via 0x05A33E (no code xref, no BE32 pointer) / table 0x05A3CE; none = no builder (whole-image scan of writes to 0xFFB13E).
+dir	opcode	len	builder_or_handler	status	fields (byte offsets)	purpose	evidence
+CPU>DSP	0x06	32	0x059A6E (sub_594FA r1l=6; falls into 0x059A74; no frame_finish call)	dead	b1..b6 header fields; b7.. 10-byte callsign	data sub-block type 6	only reference = table 0x05A3CE[5]; 0x059A6E f9 06 5e 05 94 fa
+CPU>DSP	0x07	32	0x059BBA	live (0x05B6AA)	b1..b6 header fields (sub_594FA); b7..b26 = 20 B (ROM 0x059C14, spaces)	data-channel sub-block, 20-byte text slot	0x059BBA f9 07; eepmov 0x14 0x59C14->0xFFB145
+CPU>DSP	0x08	32	0x059BDE	live (0x05B6E6)	b7..b21 = 15 spaces; b22..b26 = 5 B from 0xFF8060	data-channel sub-block, text + 5-byte ID	0x059BDE f9 08
+CPU>DSP	0x09	32	0x059CD6 / 0x059CE0 (via 0x059680)	live (0x05B7B0, 0x05BBEA, 0x05BE3C, 0x05BEF2)	b1..b6 fields; b7..b26 = next <=20 B of block at ptr 0xFFB128, remaining 0xFFB126	data stream chunk (20 B)	0x059CE0 f9 09; copy loop 0x059D0A
+CPU>DSP	0x0A	32	-	none	trace formatter only (0x05A556)	-	no write of 0x0A into 0xFFB13E found
+CPU>DSP	0x0B	32	0x059F40 / 0x059FE0	live (0x05B996, 0x05B9B6)	b1 = 0x00 / 0x01; b2 = 0x80 | digit (from 0xFFB0C0/0xFFB0C1 - 1)	DTMF digit (two-phase)	0x059F8E 79 0a 0b 00; 0x05A02E 79 0a 0b 01
+CPU>DSP	0x0C	96 (when 0xFF8DDE!=0)	0x05BA22	live in PDN mode only (0xFFB3D6 b2)	b1 = 0xFEEAB0[slot]; b2 = 0xFEEAB4[slot]; b3..b47 = 45 B codec payload (5 x 9 B) from 0xFEE944 + slot*45	PDN voice TX, data type 0 (5 x 72 bit)	op table 0x05BBD2 = 0C 00 0D 0E; length table 0x05BBD6 = 2D 00 41 5A
+CPU>DSP	0x0D	96 (when 0xFF8DDE!=0)	0x05BA22	live in PDN mode only	b3..b67 = 65 B (5 x 13 B)	PDN voice TX, data type 2 (5 x 104 bit)	as above
+CPU>DSP	0x0E	96 (when 0xFF8DDE!=0)	0x05BA22	live in PDN mode only	b3..b92 = 90 B (5 x 18 B)	PDN voice TX, data type 3 (5 x 144 bit)	as above
+CPU>DSP	0x10	32	0x058EE6	live (0x056A52)	b1 = rejected opcode; b31 = 0x10 + b1	NAK (bad checksum, or version word 0)	0x058F22 f4 10; 0x058F6C..0x058F72
+CPU>DSP	0x11	32	0x05905E	live (0x05AFE2 init step 0, 0x05B3B8)	b1 = 0xFF8E2A | 0x80 (| 0x02 in PDN); b2..b14 packed from settings 0xFF8E20..0xFF8E36; b15..b26 = 12 B ROM 0x00F9A8 (or 3 B from 0xFF8E3D if 0xFF8E3C == 0x69); b27 = 0xC0; b28 = 0x20 or 0x10, low 3 bits = 7; b29 = 0x10; b30 = 0xF0	configuration	0x05909A f3 11; ROM 0xF9A8 = 39 2a 2a 00 28 04 30 60 3f 6f 19 19
+CPU>DSP	0x12	32	0x059240 (entries 0x059234 / 0x059238 / 0x05923C)	live (0x05B002, 0x05B228, 0x05B266, 0x05B3D2, 0x05B4F8, 0x05B512, 0x05C14E, 0x05ECD8)	b1 = (0xFF8D85 & 0xFC) | (0xFFB11E & 3) | (!0xFFB0AA.b0) << 7; b2 = 0xFF8D86 + 0xFFB0AC bits 6/5 + mode code (0..4, sub_593C8) + b4 flag; b3 = 0xFF8D87; b5 = 0xBBF9/0xB0AC flags; b7/b8 = sub_59448; b9 = 0xFFB0CB b7; b10 = 0x3E; b12/b13 PDN flags	mode / status set	0x059286 f3 12
+CPU>DSP	0x15	96	0x05A0B4 (subtype 0x01) / 0x05A0C0 (subtype 0x11)	live (init steps 8/10; 0x05B118 / 0x05B128) only if DSP version >= 0x041E	b1 = subtype; b2.. = 18 (0x01) or 6 (0x11) records x 5 B from 0xFF4576 / 0xFF4696 (RAM stride 0x10; first byte 0xFF -> ROM 0x004C14, spaces)	callsign / ID list upload	0x05A17E fc 15; cmp.w #0x41E at 0x05B0D0
+CPU>DSP	0x16	96	0x0599BE / 0x0599FA / 0x059A1E (sub_594FA r1l=0x16)	live (0x05B5B2, 0x05B706, 0x05C10E, 0x05B656, 0x05B690)	b1..b6 header fields; b7.. 10 B destination; b17.. 10 B own callsign 0xFFA8DA; b27.. 20 B; b47.. 15 B; then 5 B ID 0xFF8060 - or a 60-B block from 0xFF0BFC (0x0599BE)	C4FM header / own-station block	0x0599BE f9 16; 0x059A08 mov.l #0xFFA8DA
+CPU>DSP	0x18	32	0x058F94 (ROM frame 0x05903E = 18, 00 x30, 18)	live (0x05BC24)	none	STOP ENCODE	bytes at 0x05903E
+CPU>DSP	0x19	96	0x059C7C / 0x059D2E (via 0x059680)	live (0x05BE8E, 0x05BF68, 0x05C264, 0x05C2BA, 0x05C30C)	b7.. up to 80 B of the 0xFFB128 block (0x059D2E: 10 B, skip 10, 10 B ...)	bulk data stream chunk	0x059C7C f9 19
+CPU>DSP	0x1A	32	0x059D94 (1A 00) / 0x059E16 (1A 01)	live (0x05B2AC, 0x05B846 / 0x05B2A6, 0x05B556)	b1 = 0 RX ENABLE, !=0 RX DISABLE	receiver enable	0x059DD4 79 04 1a 00; 0x059E52 79 04 1a 01; trace 0x05A5AE
+CPU>DSP	0x1C	32	0x05A040	live (0x05C446)	b1 = 0xFFB0B8; b2 = packed 0xFF8E2B / 0xFF8E2C or 0xFF8E2D	DATA TEXT SET	0x05A07C f3 1c
+CPU>DSP	0x1D	32	0x059E66 (1D 01) / 0x059EB6 (1D 00)	live (0x05B9DC / 0x05BA02)	b1 != 0 MUTE ON, 0 MUTE OFF	audio mute	trace 0x05A74C
+CPU>DSP	0x1F	32	0x058F86 (ROM 0x05901E = 1F 02, 00 x29, 21)	dead	b1 = 0x02	VER? query	only reference = table 0x05A3CE[0]; dispatch 0x05A3AC reachable only from 0x05A33E (0 refs); ROM 0x058FFE = 1F 01 .. 20 has 0 refs
+CPU>DSP	0x20	32	0x058F2A	live (0x056A4A)	b1 = acknowledged opcode; b31 = 0x20 + b1	ACK	0x058F66 f4 20
+CPU>DSP	0x31	32	0x05EAEE	live (init step 4, 0x05B166)	constant: 31 00 30 44 40 A0 A0	fixed configuration	0x05EB2A..0x05EB44
+CPU>DSP	0x32	32	0x05EB4E	live (init step 6, 0x05B17C; 0x05B2EA)	b1 from 0xFF8AA0; b2 = ((0xFF8ABD < 9 ? v : 0) + 3) << 4; b3 b0 = 0xFFAA35 b7	level / audio configuration	0x05EB8A f3 32
+DSP>CPU	0x86..0xBB	32 always	assembler 0x05683E	accepted start-byte range	b0 opcode; b1..b30 payload; b31 = sum(b0..b30) mod 256	-	0x056878 cmp #0x86; 0x056898 cmp #0xBC; 0x0568DE count 0x1F (only writer of 0xFFB0DA)
+DSP>CPU	0x90	32	0x0569E4	live, not ACKed	b1 = rejected opcode	NAK -> 0xFFB0A4 b6 clr, b4 set	-
+DSP>CPU	0x9A	32	0x056994	PDN mode only	-	PDN TX pacing: 0xFFB3D5 b0 = 1, next 0x0C/0D/0E sent by 0x05BA22	0x05BB84 clears b0
+DSP>CPU	0x9C	32	0x0569DC	live, ACKed	-	DATA TEXT SET -> 0xFFB12D b0 (continue 0x09/0x19 stream)	-
+DSP>CPU	0x9E	32	0x0569D4	live, ACKed	-	TERM TX -> 0xFFB12D b7	-
+DSP>CPU	0x9F	32	0x056A04	live	b1 = version hi, b2 = version lo -> 0xFFB0DC (BE word); word 0 -> NAK	DSP firmware version; only opcode accepted before version is known (0x05686C..0x056876)	0x056A04 6a 04 b0 e1; 0x056A08 6a 0c b0 e2; 0x056A0C 6b 84 b0 dc
+DSP>CPU	0xA0	32	0x0569F4	live, not ACKed	b1 = acknowledged opcode	ACK -> 0xFFB0A4 b6 clr, b5 set	-
+DSP>CPU	0xA6, 0xB6	32	sub_56A94 -> RX state table 0x056B8A	live, not ACKed	b1 bits5:4 frame kind, bits3:2 sub-kind; b3 bits1:0 data type; b1..b26 copied to 0xFEF920 (26 B)	received header (callsign slots 0xFEF926 / 0xFEF93A / 0xFEF94E)	0x057130 eepmov 0x1A 0xFFB0E1 -> 0xFEF920
+DSP>CPU	0xA7..0xAA, 0xB7..0xBA	32	sub_56A94 state handlers 0x056EE4..0x057F1A	live, not ACKed	b7..b26 = 20-byte data-channel block -> 0xFEF926 / 0xFEF93A / 0xFEF94E	received data sub-blocks	0x057312 eepmov 0x14 0xFFB0E7 -> 0xFEF93A
+DSP>CPU	0xAB, 0xBB	32	0x0568AC / 0x05689E, then sub_56A94	live, not ACKed	-	TERM RX (0xFFB115 b0 / b1; timers 0xFF957C / 0xFF958D = 0x19)	-
+DSP>CPU	0xAC, 0xAD, 0xAE	32	0x06C402 (only when 0xFF8DDE != 0)	PDN mode only, not ACKed	b3 bits1:0 data type (0 -> 9 B, 2 -> 13 B, 3 -> 18 B, 1 rejected); b7.. codec bytes; 5 frames -> 0xFEEAB8 -> 0xFEE944	PDN voice RX (codec bits for the host)	0x06C4AA..0x06C52C
+DSP>CPU	other 0x86..0xBB	32	ACK + sub_56A94	accepted and ACKed, no specific handler found	-	-	0x0569BE..0x0569D2

@@ -1,0 +1,15 @@
+# Writers of the key/button index at RAM 0xFFBBC2 (word). Read by dispatcher 0x028CBC (6b 04 bb c2).
+# Scope: whole MAIN image scanned for byte pattern "bb c2"; 88 occurrences, all abs16 refs to 0xFFBBC2.
+# Of those, exactly 3 are STORE instructions (6b 8X bb c2 = mov.w rX,@0xFFBBC2). All other 85 are loads (6b 0X) or data.
+addr	bytes	instruction	value_stored	context
+026F3C	6b 84 bb c2	mov.w r4,@0xFFBBC2	0 (r4=0)	sub_26F08 NO-HIT path: touch point in no zone -> index 0 (=none)
+026F4A	6b 83 bb c2	mov.w r3,@0xFFBBC2	matched zone idx (r3=@(8,er5))	sub_26F48: touch point hit a zone -> store that zone's button index
+026F6A	6b 84 bb c2	mov.w r4,@0xFFBBC2	0 (r4=0)	sub_26F08 NEGATIVE-idx path: zone idx<0 (bmi) -> index 0 (=none)
+# Note: file offset 0x006618 holds the dword 00 FF BB C2 = &0xFFBBC2. It is a DATA entry in a RAM-variable
+# pointer/save table (surrounded by 00FF813A, 00FFBC3D, 00FF954B, 00FFBBC8, 00FFA98C ... ), NOT an executing writer.
+#
+# Index SOURCE = touch hit-test. sub_26F08(er5=zone-table, er2=touch point X<<16|Y):
+#   r6 = @er5+ (zone count); each zone = 10 bytes: lo32=(Xmin<<16|Ymin), hi32=(Xmax<<16|Ymax), val16=button index.
+#   walk zones; first zone whose rectangle contains (X,Y) -> loc_26F42 -> store val16 to 0xFFBBC2 (sub_26F48).
+#   no match -> store 0. negative val -> store 0. Siblings: sub_26F9C stores to 0xFFBBC4 (secondary coord/hit).
+# Observed value range of 0xFFBBC2: 0 (none) .. ~45. 0=none; 1..7 control buttons; 10..19 + (idx-10) char grid; 20=space/enter region; 30+=extended on-screen keyboard keys (sub-index idx-10 -> 0xFFA9F0).

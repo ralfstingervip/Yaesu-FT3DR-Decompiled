@@ -1,0 +1,34 @@
+# M2 lane: proven-unreached runs <0x030000 (29 runs, 368 B). Source list: ida/out/l-wave-recon/proven-unreached-runs.tsv.
+# proving_rule: which analyze.py addend credits the run as proven (all = A: validated fnindex body INTERSECT items_before is_code, minus FNC).
+# verdict: REACHED / DEAD / SPLIT-TAIL / DATA-MISTYPED / UNCERTAIN. Method: whole-image inbound scan (BE32/BE24/BE16 ptr-to-start,
+# abs24 jsr/jmp, 8/16-bit rel branch+bsr, @(d,ERn), switch/jump tables, @@aa:8 vectors, RAM-cell addr-of, fall-through). All verified vs image.
+start	end_excl	len	proving_rule	verdict	tag	why	first_bytes
+0049D4	0049F0	28	A	DEAD		dead arm after reached bra .+98 (0x4a36); 0 inbound code edges whole-image	6e0c0087730c47146a0c94f5acff470c
+006A08	006A0C	4	A	DEAD		dead arm after reached bra .+18 (0x6a1a); 0 inbound code edges whole-image	6e5c006d
+006A0E	006A1A	12	A	DEAD		interior of a larger bra-skipped dead arm; 0 inbound code edges whole-image	8ea07340470655066e5c006d
+0076D8	0076E0	8	A	DEAD	companion(doc99)	stub after reached rts @0076D6; 0 inbound code edges whole-image	8b0b5e00cfc25470
+0077CE	0077F8	42	A	DEAD		dead arm after reached bra .+54 (0x7804); 0 inbound code edges whole-image	6e0c0087737c472e6a18a9f772706a10
+0077FA	007800	6	A	DEAD		interior of a larger bra-skipped dead arm; 0 inbound code edges whole-image	817e7700670c
+008D2C	008D42	22	A	DEAD		dead arm after reached bra .+88 (0x8d84); 0 inbound code edges whole-image	6a0c8ea147087a050000c284404a7a05
+00932A	009332	8	A	DATA-MISTYPED		reached 00929E 'mov.b @(0x932c:32,er4),r3l' reads run as byte table (er4 masked 0..0xFF @009298)	0504020304040400
+00C9DA	00CA2C	82	A	DEAD		dead arm after reached bra .+82 (0xca2c); 0 inbound code edges whole-image	fb007a05000048e07a04000000375e00
+0160B6	0160BA	4	A	DEAD		dead arm after reached bra .+4 (0x160ba); 0 inbound code edges whole-image	5e014bba
+0163BA	0163C6	12	A	DEAD		dead arm after reached bra .+12 (0x163c6); 0 inbound code edges whole-image	fb0c5e0162d640045e014bba
+0167EA	0167EE	4	A	DEAD		dead arm after reached bra .+4 (0x167ee); 0 inbound code edges whole-image	5e03ffa0
+016F32	016F3E	12	A	DEAD		dead arm after reached bra .+48 (0x16f62); 0 inbound code edges whole-image	7a0600016f705e03f6004024
+0180B2	0180B6	4	A	DEAD		dead arm after reached bra .+4 (0x180b6); 0 inbound code edges whole-image	5e03ffa0
+0188F0	0188F4	4	A	DEAD		dead arm after reached bra .+4 (0x188f4); 0 inbound code edges whole-image	5e03ffa0
+01895C	018960	4	A	DEAD		dead arm after reached bra .-54 (0x18926); 0 inbound code edges whole-image	5e03ffa0
+019EA0	019EAE	14	A	DEAD		dead arm after reached bra .+14 (0x19eae); 0 inbound code edges whole-image	7a0100ffad8a7a060001a1bc4000
+01A044	01A048	4	A	DEAD		dead arm after reached bra .+4 (0x1a048); 0 inbound code edges whole-image	5e03ffa0
+01A0E4	01A0EA	6	A	DEAD		dead arm after reached bra .+6 (0x1a0ea); 0 inbound code edges whole-image	7a020001a1da
+01C27E	01C294	22	A	DEAD	companion(doc99)	dead arm after reached bra .+26 (0x1c298); 0 inbound code edges whole-image	6a108ea0736047006a108ea873104606
+01C934	01C938	4	A	DEAD		dead arm after reached bra .+4 (0x1c938); 0 inbound code edges whole-image	5e019902
+01CA6C	01CA72	6	A	DEAD		dead arm after reached bra .+30 (0x1ca8a); 0 inbound code edges whole-image	5e0198dc4018
+01CF46	01CF4A	4	A	DEAD		dead arm after reached bra .+4 (0x1cf4a); 0 inbound code edges whole-image	5e03ffa0
+01FC1C	01FC20	4	A	DEAD		dead arm after reached bra .+4 (0x1fc20); 0 inbound code edges whole-image	5e01fe2e
+01FE92	01FE96	4	A	DEAD		dead arm after reached bra .+4 (0x1fe96); 0 inbound code edges whole-image	5e01fe2e
+01FFCC	01FFD0	4	A	DEAD		dead arm after reached bra .+4 (0x1ffd0); 0 inbound code edges whole-image	5e01fe2e
+0224C4	0224C6	2	A	DEAD		dead arm after reached bra .+138 (0x2254e); 0 inbound code edges whole-image	403e
+022FFE	02301E	32	A	DEAD		dead arm after reached bra .+32 (0x2301e); 0 inbound code edges whole-image	6a108ea0736047185e0210d85e02244c
+02A730	02A736	6	A	DEAD		dead arm after reached bra .+6 (0x2a736); 0 inbound code edges whole-image	5e03ffa0fc00

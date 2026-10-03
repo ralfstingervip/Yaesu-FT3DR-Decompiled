@@ -1,0 +1,9 @@
+endpoint	write_site	routine	reached	bytes_written	source	when
+EP0 IN (FFEE0C)	0x054E86	ISR vec 234, IFR0 b0	yes	up to 8 per packet	[FFB09E]++, count FFB094	continues a data stage started by sub_55144
+EP0 IN (FFEE0C)	0x055180	sub_55144	yes	first <=8 bytes	er5 argument	called only with: 0x055810 (8 B), 0x055818 (18 B), 0x05582A (9 B), [0x05584A+0] = 0x05585E (32 B), 0xFFB095 (1 B quality code)
+EP0 IN (zero length)	0x054E46 (TRG=1 with empty FIFO)	ISR vec 234, IFR0 b1	yes	0	-	status stage of D1/D2/D3 (state 4)
+EP3 IN (FFEE18)	0x05520E / 0x05521A / 0x055232	state 6 handler	yes	3	FF8184 low byte; FF89CE; 0x18/0x30/0x50 from FF89CD	when FF8184 != FF8185 or (FF89CE,code) != FF8186, and EE27 b5 clear
+EP3 IN (FFEE18)	0x05533A / 0x055346 / 0x05535E	state 7/10 handler	yes	3	same	same
+EP3 IN (FFEE18)	0x0557DC / 0x0557E8 / 0x055800	sub_557A2 (from sub_74B08, settings refresh)	yes	3	same, after forcing FF8184=1	same
+EP3 IN (FFEE18)	0x054F52 / 0x054F5E / 0x054F76	ISR vec 235 block 0x054F3A	NO (no branch reaches 0x054F3A; IER1 enables only b0,b1)	3	same	never
+EP2 IN (FFEE14)	-	-	-	-	-	no writer outside the closed window
