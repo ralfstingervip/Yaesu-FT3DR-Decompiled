@@ -1,0 +1,55 @@
+start	end	ida_name	new_name	confidence	summary
+FFEF535E	FFEF53FE	sub_FFEF535E	bandrow_draw_icon34	Confirmed	Band-row 16x16 icon from rec[0x34]&0x7F (1/2/3 -> FFECEE8C/7C/6C), bit7 blinks
+FFEF53FE	FFEF541D	dead_FFEF53FE	dead_draw_icon_ee9c	Confirmed	Unreferenced: draws icon FFECEE9C at (100,20)
+FFEF541D	FFEF5421	sub_FFEF541D	bandrow_draw_rec3e_thunk	Confirmed	Thunk to bandrow_draw_rec3e
+FFEF5421	FFEF5494	sub_FFEF5421	bandrow_draw_icon3d_b23	Confirmed	rec[0x3D] bits2-3 show/blink 12x16 icon FFECF13C
+FFEF5494	FFEF5518	sub_FFEF5494	bandrow_draw_icon3d_b01	Confirmed	rec[0x3D] bits0-1: 1 -> FFECF18C, 2 -> FFECEE9C (12x16)
+FFEF5518	FFEF55FB	sub_FFEF5518	bandrow_draw_icon3d_b45_or_dgid	Confirmed	Digital modes: DG-ID readout; else rec[0x3D] bits4-5 show/blink 12x12 icon (grey twin when dimmed)
+FFEF55FB	FFEF566C	sub_FFEF55FB	bandrow_draw_icon3d_b67	Confirmed	rec[0x3D] bits6-7 show/blink 30x14 icon FFECEECC
+FFEF566C	FFEF59E4	sub_FFEF566C	bandrow_draw_dgid	Inferred	TX/RX DG-ID 00..99 from rec[0x49]/[0x4A] with label icons and digit glyph table 0x68D24; screen-specific clears
+FFEF59E4	FFEF5E38	sub_FFEF59E4	bandrow_draw_tone_dcs	Confirmed	Tone-mode icon (rec[0x45]) + CTCSS (rec[0x46], 50 tones) or DCS (rec[0x47], 104 codes) text from flash tables FFC3D8C2/FFC3D9BC
+FFEF5E38	FFEF6023	sub_FFEF5E38	bandrow_draw_mode_icon	Confirmed	Communication-mode icon g_mode_icons[dim][mode] (rec[0x3F] 0..0x1B folded to 0..13) + 28x4 under-bar for variants; redraws DG-ID
+FFEF6023	FFEF6096	sub_FFEF6023	bandrow_draw_vol_sql	Inferred	Label (rec[1]==0 white FFED3D9C / else yellow FFECEF7C) then level bar; VOL/SQL meaning inferred from 0..31 / 0..15 ranges
+FFEF6096	FFEF631E	sub_FFEF6096	bandrow_draw_main	Confirmed	Band-row main field by display kind rec[0]: frequency, freq+16-char tag, big text, or name; sets 0x8F78
+FFEF631E	FFEF637D	sub_FFEF631E	bandrow_draw_level_bar	Confirmed	level_bar_draw(0,x,y,rec[0x40]) or (1,x,y,rec[0x41]) by rec[1]
+FFEF637D	FFEF643C	sub_FFEF637D	bandrow_draw_smeter	Inferred	Meter caption (18x18) + 150x6 scale then smeter_draw_segments
+FFEF643C	FFEF64D2	sub_FFEF643C	bandrow_draw_icon48_lo	Confirmed	rec[0x48] bits0-1 select icon g_rec48_icons[dim][0/1] (12x18) or erase
+FFEF64D2	FFEF6580	sub_FFEF64D2	bandrow_draw_aprs_baud	Inferred	rec[0x48] bits2-3 show/blink "A12"/"A96" (bit4) in 12-px RGB565 font
+FFEF6580	FFEF65E8	sub_FFEF6580	statusbar_icon_2dfc	Confirmed	(x,y,show,state): 15x22 icon FFED2DFC shown/blinking or background restored
+FFEF65E8	FFEF66C0	sub_FFEF65E8	statusbar_icon_sel8	Confirmed	(x,y,show,state): state&0x7F picks one of 8 22x22 icons (1-7,12), bit7 blink
+FFEF66C0	FFEF6764	sub_FFEF66C0	statusbar_icon_sel4	Confirmed	(x,y,show,state): state&0x7F picks one of 4 22x22 icons, bit7 blink
+FFEF6764	FFEF682C	sub_FFEF6764	header_draw_title	Confirmed	F1 screens: F1/0x0F 22-char 12-px title; else coloured bar by frame[0x6C] (2/4) + 10-char 1-bpp text at (4,26)
+FFEF682C	FFEF68A1	sub_FFEF682C	header_draw_text7	Confirmed	F1/0x0F: clear + 7 chars font12; other F1: 7 chars small numeric font
+FFEF68A1	FFEF68D5	sub_FFEF68A1	header_draw_text17	Confirmed	Clear to right edge (24 px) and draw 17 chars font12
+FFEF68D5	FFEF690B	sub_FFEF68D5	icon_draw_or_erase	Confirmed	visible==1 -> RGB565 blit (FFEF0648) else restore background over w x h; NULL no-op (330 callers)
+FFEF690B	FFEF693B	sub_FFEF690B	shape_draw_or_erase	Confirmed	visible==1 -> span-masked digit blit (FFEF0949) else span-masked BG restore (FFEF0BD4)
+FFEF693B	FFEF6A0D	sub_FFEF693B	battery_draw	Inferred	26x12 outline + (8-level) segments at absolute x, level 9 blinks, 10 adds charge mark; level = frame[0x12]
+FFEF6A0D	FFEF6A78	sub_FFEF6A0D	frame_draw_tag3	Confirmed	frame[0x24] bits2-3 show/blink the 3 chars at frame+0x25 (font12)
+FFEF6A78	FFEF6AF8	dead_FFEF6A78	dead_draw_label_composite	Confirmed	Unreferenced: 38x18 label + three 12x18 glyphs (running x starts at 0)
+FFEF6AF8	FFEF6C42	sub_FFEF6AF8	bandrow_draw_rec3e	Confirmed	rec[0x3E] 1..10 -> glyph + 38x16 suffix; 15 -> fixed 3-glyph group; dim variants
+FFEF6C42	FFEF9A49	sub_FFEF6C42	freq_draw_digits	Confirmed	Large frequency readout: 8 packed-BCD digits rec[0x30..0x33], leading-zero blanking, hidden trailing 00, decimal point, per-row digit caches 0x8F79/83/8D, blink modes rec[0x2F], six size layouts
+FFEF9A49	FFEF9A8A	sub_FFEF9A49	vol_sql_label_draw	Inferred	(x,y,kind): restore 36x14 and draw FFED3D9C (kind 0) or FFECEF7C
+FFEF9A8A	FFEF9B13	sub_FFEF9A8A	level_bar_draw	Confirmed	(kind,x,y,v): 5-px bar to x=318, grey track + v/max fill; kind0 max31 0xF980, else max15 0xFEC0
+FFEF9B13	FFEF9B22	dead_FFEF9B13	dead_stub_args5	Confirmed	Unreferenced stub: spills 5 args and returns
+FFEF9B22	FFEF9CA7	sub_FFEF9B22	smeter_draw_segments	Inferred	10 x 14x8 segments at 15-px pitch, level rec[0x43] (bit7 alt colour), blinking peak rec[0x44]; F1/03 and F3/48 alternates
+FFEF9CA7	FFEF9D01	dead_FFEF9CA7	dead_row_param	Confirmed	Unreferenced: returns 15, or 10 / 9 for dual-flag row combinations
+FFEF9D01	FFEF9D7D	sub_FFEF9D01	list_scroll_thumb_draw	Confirmed	(y_top,y_bot): white 6-px thumb at x=311 from frame[0x14..0x17] index/count
+FFEF9D7D	FFEF9E8F	sub_FFEF9D7D	bevel_box_row_draw	Confirmed	(x,y,w,h,gap,first,end): row of 3-px bevelled cell frames (0x4A69/0x2124/0x39E7)
+FFEF9E8F	FFEFA54D	sub_FFEF9E8F	screen_grid_draw	Confirmed	Grid id 0..20: black-clear + rows of bevelled cells, single-cell highlights, or bitmap tile screens (12 106x60 tiles for id 4)
+FFEFA54F	FFEFA571	sub_FFEFA54F	scroll_track_draw	Confirmed	(y_top,y_bot): grey 6-px track at x=311
+FFEFA571	FFEFA588	sub_FFEFA571	lcd_clear_black	Confirmed	Fill 320x240 with 0x0000
+FFEFA588	FFEFA747	sub_FFEFA588	screen_title_bar_draw	Confirmed	20-px 0x3186 title band, black body, white divider at screen-dependent y
+FFEFA747	FFEFA75E	sub_FFEFA747	lcd_clear_black_2	Confirmed	Twin of lcd_clear_black
+FFEFA75E	FFEFA78C	sub_FFEFA75E	lcd_clear_with_title	Confirmed	Black screen + 26-px 0x3186 title band
+FFEFA78C	FFEFA7E7	sub_FFEFA78C	rect_outline_white	Confirmed	1-px white outline of (x,y,w,h) via FFEF0553
+FFEFA7E7	FFEFA924	sub_FFEFA7E7	text_draw_mixed	Confirmed	(x,y,dbcs_mask,s): 16-byte mixed SBCS/DBCS string with 1-bpp fonts; small size on F3/D1
+FFEFA924	FFEFAA2B	sub_FFEFA924	text_draw_mixed_colour	Confirmed	Coloured variant (DBCS in colour arg, SBCS fixed 0x7BEF), always big
+FFEFAA2B	FFEFAA9D	sub_FFEFAA2B	scroll_thumb_draw	Confirmed	(x,y,w,h,total,visible,first): grey track + white proportional thumb
+FFEFAA9D	FFEFAB3E	sub_FFEFAA9D	page_thumb_draw	Confirmed	(x,y,w,h,n_a,n_b,page): grey track + white page thumb
+FFEFAB3E	FFEFAD3F	sub_FFEFAB3E	rgbtext_draw_12	Confirmed	(x,y,spacing,s,len,tint): RGB565 font 0x688BC, 12-px pitch, narrow-glyph centring, F7/F6 kerning, 0x06 glyph
+FFEFAD3F	FFEFADF3	sub_FFEFAD3F	rgbtext_draw_20	Confirmed	(x,y,spacing,s,len,tint): RGB565 font 0x68A34, 20-px pitch
+FFEFADF3	FFEFAF18	sub_FFEFADF3	rgbtext_draw_num8	Confirmed	(x,y,spacing,s,len,tint): small font 0x68BAC, only 0-9 : i k m . -, 8-px pitch
+FFEFAF18	FFEFB267	sub_FFEFAF18	rounded_panel_draw	Confirmed	(x,y,w,h): 0x3186 panel, 0xAD95 border, anti-aliased rounded corners plotted per pixel
+FFEFB267	FFEFB268	sub_FFEFB267	nop_callback	Confirmed	Bare rts; default hook in CALLBACK_REGINIT table FFECE4E4
+FFEFB268	FFEFB29A	sub_FFEFB268	memcpy_bytes	Confirmed	Byte copy (dst r1, src r2, n r3)
+FFEFB29A	FFEFB2C2	sub_FFEFB29A	memset_bytes	Confirmed	Byte fill (dst r1, value r2, n r3)
