@@ -1,0 +1,24 @@
+addr	name	width	meaning	evidence
+0x00008C4C	ui_phase	u8	per-screen phase 0..3 (init, frame, body, event loop)	every scr*_handler; layer_end FFEF036F increments it
+0x00008C4D	frame_latched	u8[300]	latched IPC frame: [0] opcode hi, [1] item code, [0x20..] values	scr*_latch_body compare/copy vs 0x8E46 (doc 38 A1)
+0x00008E46	frame_pending	u8[300]	newest received IPC frame	source side of every latch (doc 25/38)
+0x00008D79	ui_8D79	u8	cleared before every full redraw; meaning unknown	scr*_draw_all, item_draw_page
+0x00008D7A	ui_hdr_resync	u8	set by FFEF40BA when frame bytes 0x13/0x1A change; blocks ui_next_event	FFEF40BA, FFEF003F
+0x00008F72	ui_lang	u8	0 = Japanese strings/JIS glyphs, else English	draw_value_* JP/EN branches (doc 38)
+0x00008F73	ui_event	u8	last event / touch zone taken from ui_events (0xFF none)	scr*_phase3_events
+0x00008F74	ui_blink_armed	u8	one-shot flag: blink timer registered for this screen	scr2B_latch_body, scr20_latch_body
+0x00008F76	lcd_xfer_pending	u8	queued layer transfers; events wait while >0	FFEEFB84, FFEEFA9E
+0x00008A8B	pict_state	u8	picture decoder state, 2 = picture ready (Inferred)	FFEDE929 read in scr2C_phase1_frame
+0x0001D3B0	ui_events	u32[2]	64 event bits (lo 0..31, hi 32..63); bit 15 = value changed, 16+ = rows/soft keys	FFEEFEA4/FFEEFEEE set, FFEEFFEA clear, FFEF003F pick
+0x0001D3B8	ui_layer	struct	off-screen layer {flag,slot,x,y,w,h,buf@0x704B000+n*0x25800}	FFEEF9BB, FFEF032D
+0x00068854	blink_timer	struct	blink timer: +4 phase bit0, +8 lo mask, +0xC hi mask of events re-posted per tick	FFEF0163, FFEF019E, FFEF02F2, FFEF0294
+0x00068868	softkey_slot_rects	u32*[]	per-slot base of soft-key rectangles (8 B each) (doc 79)	softkey_redraw
+0x000690B0	title_glyphs_690B0	ptr[3]	bitmap glyph pointers (word 0 = width) for screen 0x29 title; also 0x690BC[5], 0x690D0[3], 0x690DC[4], 0x690EC[3] row icons	scr29_phase1_frame, scr29_draw_category_menu
+0x000690F8	title_glyphs_690F8	ptr[11]	11-glyph title of item 0xD3; 0x69124[11] for item 0x65	scr1F_phase1_title
+0x00012580	scr2C_info_height	u16[16]	info panel height by (code & 0xF)	scr2C_ev15_info
+0x00012586	kbd_field_rect	u16[6][4]	keyboard edit-field rect by kbd type	scr20_ev35_field, scr20_draw_all
+0x000125B6	item_value_rect	u16[16][16][4]	value-area rect by item code hi/lo nibble	scr1F_ev15_value
+0xFFED71A8	bit_mask_u32	u32[32]	1<<i (ROM)	bit_mask
+0xFFEC5E80	key_rects	u16[20][4]	keyboard key rectangles (ROM)	scr20_ev_key
+0xFFC3DF35	title_len_by_group	u8[13]	group title length in characters, centring on 13-px pitch (ROM)	scr1F_phase1_title (doc 08/23)
+0xFFED4050	screen_table	ptr[]	SUB screen handler table; [0x1F],[0x20],[0x29]-[0x2C] are in this range (ROM)	drefs FFED40CC/D0/F4/F8/FC, FFED4100
