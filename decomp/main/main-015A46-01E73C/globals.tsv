@@ -1,0 +1,87 @@
+addr	name	width	meaning	evidence
+FF812A	ui_rec	u32	pointer to the active band/UI record passed in er0 (rec); rec+1 = screen id, rec+0 = previous screen	doc 35 / screens.tsv header; every handler uses er0
+FF90F0	REC_B_SLOT	rec	B-slot (sub band) record; several dials refuse or branch when rec == FF90F0	sub_3FFB4, 0x016F3E, 0x017438
+FFAD68	menu_level	u8	setup-menu level: 0 = item list, 1 = item open, 2+ = editing; in text editors also the cursor column	sub_15CB8, sub_15BA6, sub_15E1E, docs 49/117
+FFAD9D	menu_ctx_live	u8	1 = edit context live, 0 = stacked in AD9E..ADA0 (nested editor)	sub_15910 (outside), sub_15A02, 0x015CBE
+FFAD9E	menu_ctx_saved_level	u8	stacked AD68	sub_15910 / sub_15A02
+FFAD9C	nested_stage	u8	nested-edit stage (1/2 select pop, other values post key 4)	sub_15BA6, sub_15C30, 0x01699E
+FFAD6A	menu_subpage	u8	setup sub-page (2 = open, AD6B = key that opened it); most setup keys are refused while nonzero	0x015A78.., 0x015C78, 0x017350
+FFAD6B	subpage_key_AD6B	u8	key/digit that opened the sub-page	0x01735C, doc 49
+FFAD98	confirm_pending	u8	BACK swallowed once after a confirm prompt (tone 0x46)	sub_15AB8/sub_15ABE, 0x018204
+FFAD99	sub_cursor_AD99	u8	sub-cursor inside the auto-reply editor (call col / text col)	sub_18D74, sub_18E6E
+FFAD81	char_mode_AD81	u8	1 = character step offers '*' (wildcard charset)	sub_189A8 / sub_189B2
+FFAD88	pw_buf_AD88	u8[6]	PASSWORD edit digits; AD8A..AD8D = 4-digit code copied to FF896C	sub_16A16, sub_1959A, 0x015DB0
+FFAD8E	seq_buf_AD8E	u8[4]	typed-digit unlock buffer compared as one long	sub_163CC, sub_19100, doc 49
+FFAD92	ui_AD92	u16	working copy of FF898C (screen 0x79 band bitmap)	0x015D88, sub_17400
+FFAD94	ui_AD94	u8	band of the record when screen 0x79 opened	0x015D80, sub_17400
+FFAD6E	text_buf_AD6E	u8[0x12]	16-char text edit buffer	sub_1609E
+FFADA2	text_ADA2	u8[60]	BEACON STATUS TEXT edit buffer	doc 14 table; sub_17F84, sub_18040
+FFADDE	ar_text_ADDE	u8[0x43]	APRS auto-reply text	doc 14; sub_18E6E, sub_18F4E
+FFA9ED	key_event	u8	key code mailbox (0xFF = consumed; 4/6 synthesized cursor keys)	doc 93; sub_3FFA0
+FFA9EE	key_flags	u8	b0 = dial direction down / CCW, b7 = long press	sub_3F600, docs 93/103
+FFA9F0	key_digit	u8	digit of a keypad key (0 = none)	doc 103; sub_162B8, sub_163CC
+FFAA30	ui_flags	u8	b6 = value changed (exit handler saves, then clears), b7 = item opened / char edited, b3 = apply lamp	sub_19158, sub_1605C, 0x015CEA
+FFAA31	ui_flags_AA31	u8	b2 = coarse step in RPT SHIFT FREQ editor (cleared on pop)	sub_16C56, sub_3FF3A
+FFAA34	ui_flags_AA34	u8	b6 = PASSWORD edited	sub_169F4, sub_1959A
+FFAA37	ui_flags_AA37	u8	b2 gates screens 0xD4/0xD5 and nullsub_30; b6 cleared by B-slot squelch	sub_1762E, sub_16EE8
+FFAA56	dial_scratch	u8	scratch byte the step records point at when a record field is edited	doc 117 record {3,4,&AA56}; 25 sites
+FFAAE0	tone_ev	u8	tone / prompt mailbox (0x39 beep preview, 0x16 unlock ok, 0x46 prompt, 0x1D reject)	doc 93; 0x016044, 0x01646A
+FFB054	edit_row_B054	u8	editor row, reset 0 on entry/exit	0x015CE0, sub_19158
+FFB055	edit_col_B055	u8	editor column, reset 1	0x015CE6, sub_19158
+FFB3F4	edit_cursor	u8	edit cursor / selected slot	doc 51; 0x015AD8, 0x015DEC
+FFB3F5	edit_cursor_max	u8	shadow of B3F4 (list selection)	0x016328, 0x018888
+FFB380	edit_sub_flags	u8	b0 = sub-edit active (BACK calls sub_214BA)	sub_15B26
+FFA4F5	list_top_A4F5	u8	first visible row of multi-row editors	sub_17C4C
+FFB091	win_mode_B091	u8	1 = page-mode window scroll	sub_17C4C, sub_17EFE
+FF9542	ui_9542	u8	cursor-blink / edit timer (0x96 after a char change)	sub_17E3C, sub_18008
+FF8F2E	setup_group	u8	0-based setup group of the item list	doc 49; sub_163CC
+FF8F2C	ui_mode_8F2C	u16	UI mode word (0x10 enables the 08030706 sequence)	sub_19100, doc 49
+FF8DDE	node_mode	u8	node / PC-keyed mode; many dials refused when nonzero	doc 93
+FF8EA0	band_sel	u8	b6 = band B active; b4 = mirror squelch to the other band	doc 93; sub_16EE8
+FF8EA6	slot_chk	u8	b0 = B record in use	doc 93; 0x015ED6
+FF8D20	comm_mode_a	u8	band-A comm mode (1 = digital: suppress reprogram request)	doc 93; 0x016188
+FF8DD5	comm_mode_b	u8	band-B comm mode	doc 93
+FF94C0	tx_state	u8	0 idle, nonzero transmitting	doc 93; sub_17210
+FFAACF	tx_req_flag	u8	reprogram code posted while transmitting	sub_17210
+FF8FE0	tsearch_a_state	u8	tone-search state band A (1 start, 3 stop)	sub_172F4, sub_19158
+FF8FE2	tsearch_a_active	u8	tone search running band A	sub_1726A
+FF90E8	tsearch_b_state	u8	tone-search state band B	sub_172F4
+FF90EA	tsearch_b_active	u8	tone search running band B	sub_1726A
+FF8920	r1_base	u8[]	EEPROM region R1 image; R1 n -> FF8920+n, EEPROM 0x580+n	sub_3CCBC; settings-bytes.tsv
+FF8AA0	r2_base	u8[]	EEPROM region R2 image; R2 n -> FF8AA0+n, EEPROM 0xC000+n	sub_3CCEC
+FF8D20	r3_base	u8[]	EEPROM region R3 image; R3 n -> FF8D20+n, EEPROM 0xD000+n	sub_3CD1C
+FF89BE	r1_set_89BE	u8	R1 0x9E bit flags (b1 SQL EXPANSION, b3 RPT ARS, b5 SCAN LAMP, b7 VFO MODE ...)	setup_toggle_89BE callers
+FF89BF	r1_set_89BF	u8	R1 0x9F bit flags (b4 BCLO ...)	sub_17768 callers
+FF89C0	r1_set_89C0	u8	R1 0xA0 bit flags (b0 MONI/T-CALL, b7 gates RPT ARS)	sub_17770 callers
+FF89C1	r1_set_89C1	u8	R1 0xA1 bit flags (b0 MEMORY WRITE, b2 MEMORY PROTECT, b3 KEY LOCK)	sub_17778 callers, doc 49
+FF89C2	r1_set_89C2	u8	R1 0xA2 bit flags (b0 password on, b1 LANGUAGE, b4 WX ALERT, b6 12/24h)	sub_17780 callers
+FF89C3	r1_set_89C3	u8	R1 0xA3 bit flags (b0 PRIORITY REVERT, b3 HOME VFO ...)	sub_17788 callers
+FF89C4	r1_set_89C4	u8	R1 0xA4 feature flags (b1/b2/b3 group13/b4 RAM DISPLAY), b0 toggled by screen 0x67	doc 35/49; sub_16E7E
+FF89C5	r1_set_89C5	u8	R1 0xA5 bit flags (b0 TARGET LOCATION, b7 LAMP field)	sub_17798 callers
+FF89A4	r1_set_89A4	u8	LCD DIMMER level	sub_161D6
+FF89B4	r1_set_89B4	u8	screens 0xD4 (b4-6) / 0xD5 (b0-2)	doc 80; sub_1762E
+FF8936	r1_set_8936	u8	DTMF memory slot	sub_1627E, sub_194E8
+FF8970	r1_sql_8970	u8	SQL LEVEL band A (8971 band B, 8972/8973 AM)	sub_16EE8, sub_19208
+FF8976	att_bitmap_8976	u8[]	per-memory-channel ANT ATT bitmap	sub_15F34, sub_19426
+FF898C	r1_set_898C_w	u16	band bitmap edited on screen 0x79	sub_17400, sub_196A0
+FF898E	r1_set_898E_w	u16	word setting 0..0x7F8 step 8 (screen 0xD6)	sub_176B0, sub_196B0
+FF896C	r1_pw_896C	u32	PASSWORD code	sub_1959A
+FF8AA2	r2_callsign_8AA2	u8[6]	APRS callsign; FF8AA8 = SSID	sub_17CFE, sub_17D90
+FF8AAB	r2_set_8AAB	u8	APRS bits (b1 SmartBeacon, b6 AUTO beacon, b0/b3/b7 AF DUAL/MUTE/GPS TIME SET)	doc 14; sub_17A50, sub_18FA2
+FF8AAE	r2_aprs_filter_8AAE	u8	APRS filter mask (8AAF b0 continues it)	doc 14; sub_177DC
+FF8AB8	aprs_pos_src	u8	position source: 0 GPS, 1/2 manual, >=3 stored slot	doc 14; sub_184E8
+FF8BCC	r2_sb_type_8BCC	u8	SmartBeaconing type (0 = off)	doc 14; sub_17A18
+FFA90C	beacon_mode_A90C	u8	beacon mode 0/1 AUTO/2 SMART	doc 14; sub_17A50
+FFA90E	sb_edit_A90E	u8[7]	SmartBeaconing parameter edit block (A90E low, A90F high speed)	sub_18262, sub_183AA
+FF8BE5	r2_digipath_8BE5	u8	DIGI PATH type (>=3 full path)	doc 38; sub_1865A
+FF8AC2	r2_digi_hop_8AC2	u8	selected hop (7-byte entries from table 0x0186F6)	sub_186CC
+FF8C1E	r2_sym_set_8C1E	u8	symbol set (3 = user)	doc 38; sub_180DA
+FF8AA1	r2_symbol_8AA1	u8	symbol code (0xC4 = user-defined)	sub_181B6
+FF8C26	r2_com_8C26	u8	COM PORT: b7 STATUS, b0 INPUT	doc 38; sub_18B1E
+FF8C2A	r2_com_8C2A	u8	COM PORT Mic-E/POSITION/WEATHER/OBJECT/ITEM bits	doc 38; sub_18AF6..
+FF8CFC	r2_ar_call_8CFC	u8[7]	auto-reply to-call (wildcards allowed)	doc 14; sub_18D74, sub_18F22
+FFA574	msg_text_A574	u8[67]	APRS message compose text (A56C/A56D call, A573 SSID)	doc 14; sub_17B5E
+FFA9CC	rtc_edit_A9CC	u8[7]	DATE & TIME edit image (BCD); A9C4 = clock image	sub_17146, sub_171D2
+FFFBA5	PORT_FBA5	u8	port pull-up register; low nibble set for screen 0x42, cleared on exit	0x015DD2, sub_19158
+FFFF52	PORT_52	u8	output port; b5 = inverse of rec+0x12.4 (RF path)	sub_160D8
+FFFE90	IO_FE90	u8	serial register zeroed before reopening the COM port (FE92 too)	sub_18B40

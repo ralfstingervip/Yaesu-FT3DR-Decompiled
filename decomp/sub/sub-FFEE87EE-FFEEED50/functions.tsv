@@ -1,0 +1,120 @@
+start	end	ida_name	new_name	confidence	summary
+FFEE87EE	FFEE8818	sub_FFEE87EE	scr06_fmenu_grid_handler	Confirmed	Screen 0x06 (F106 F-menu grid) step dispatcher via off_FFED50E0
+FFEE8818	FFEE882A	sub_FFEE8818	scr06_step0_sync	Confirmed	Step 0: full shadow sync, advance
+FFEE882A	FFEE8845	sub_FFEE882A	scr06_step1_frame	Confirmed	Step 1 / event 1: framebuffer init, header bar, title 0
+FFEE8845	FFEE8872	sub_FFEE8845	scr06_step2_full_draw	Confirmed	Step 2: full-screen region, draw all, commit
+FFEE8872	FFEE88A0	sub_FFEE8872	scr06_ev2C_redraw_grid	Confirmed	Event 0x2C: redraw the 12 grid icon slots
+FFEE88A0	FFEE8926	sub_FFEE88A0	scr06_step3_events	Confirmed	Step 3 event loop, table off_FFED50F0, bound 0x2C
+FFEE8926	FFEE8942	sub_FFEE8926	scr06_sync	Confirmed	opcode sync + field reconcile + hdr13 sync; full clears events
+FFEE8942	FFEE8A1B	sub_FFEE8942	scr06_reconcile_fields	Confirmed	Frame->shadow for 12 grid cells (0x6C+i,0x7C+i) raising event 0x2C
+FFEE8A1B	FFEE8A44	sub_FFEE8A1B	scr06_draw_all	Confirmed	Full redraw: background, status bar, operating area (type override 3), 12 slots
+FFEE8A44	FFEE8A8A	sub_FFEE8A44	scr06_draw_operating_area	Inferred	Operating-display drawer chain used behind the F-menu grid
+FFEE8A8A	FFEE8AA5	sub_FFEE8A8A	scr06_draw_12_slots	Confirmed	ui_draw_icon_slot(0..11)
+FFEE8AA5	FFEE8ADD	sub_FFEE8AA5	scr11_gps_info_handler	Confirmed	Screen 0x11 (F111 GPS info) step dispatcher via off_FFED51A4, F1 frames only
+FFEE8ADD	FFEE8AEF	sub_FFEE8ADD	scr11_step0_sync	Confirmed	Step 0: full sync
+FFEE8AEF	FFEE8C67	sub_FFEE8AEF	scr11_step1_frame	Confirmed	Static GPS page: sky-plot quadrants, SNR axes/ticks, four data panels
+FFEE8C67	FFEE8C94	sub_FFEE8C67	scr11_step2_full_draw	Confirmed	Step 2 full draw
+FFEE8C94	FFEE8CC7	sub_FFEE8C94	scr11_ev2F_skyplot	Confirmed	Event 0x2F: sky plot redraw
+FFEE8CC7	FFEE8CFC	sub_FFEE8CC7	scr11_ev30_snr_bars	Confirmed	Event 0x30: SNR bar graph redraw
+FFEE8CFC	FFEE8D38	sub_FFEE8CFC	scr11_ev31_datetime	Confirmed	Event 0x31: date/time panel (tz shadow[0x70])
+FFEE8D38	FFEE8D79	sub_FFEE8D38	scr11_ev32_latlon	Confirmed	Event 0x32: lat/lon panel
+FFEE8D79	FFEE8DB5	sub_FFEE8D79	scr11_ev33_speed	Confirmed	Event 0x33: speed panel
+FFEE8DB5	FFEE8DF3	sub_FFEE8DB5	scr11_ev34_altitude	Confirmed	Event 0x34: altitude panel
+FFEE8DF3	FFEE8E79	sub_FFEE8DF3	scr11_step3_events	Confirmed	Step 3 event loop, table off_FFED51B4, bound 0x34
+FFEE8E79	FFEE8E95	sub_FFEE8E79	scr11_sync	Confirmed	Screen 0x11 sync wrapper
+FFEE8E95	FFEE9013	sub_FFEE8E95	scr11_reconcile_fields	Confirmed	Shadow 0x6C..0x70 (show/format/units/tz) + blink arm, then GPS poll
+FFEE9013	FFEE9212	sub_FFEE9013	scr11_poll_gps_data	Confirmed	Copy GPS fix (0x1CC90 getters) into cache 0x1D284 raising per-panel events
+FFEE9212	FFEE9282	sub_FFEE9212	scr11_draw_all	Confirmed	Draw every GPS panel
+FFEE9282	FFEE9477	sub_FFEE9282	gps_draw_datetime_box	Confirmed	"HH:MM AM"/"Mmm DD" with time-zone shift and date carry
+FFEE9477	FFEE956A	sub_FFEE9477	gps_bcd_frac_to_ascii	Confirmed	BCD minute fraction -> .mmm digits or seconds (x6/10)
+FFEE956A	FFEE97B0	sub_FFEE956A	gps_draw_latlon_box	Confirmed	Lat/lon text, dd mm'ss" or dd mm.mmm', N/S E/W, blink support
+FFEE97B0	FFEE993E	sub_FFEE97B0	gps_draw_speed_box	Confirmed	Speed (BCD 0.1 kn) in knot/mph/km/h
+FFEE993E	FFEE9A8E	sub_FFEE993E	gps_draw_altitude_box	Confirmed	Altitude m or ft (double /0.3048); text pos hard-coded
+FFEE9A8E	FFEE9DA5	sub_FFEE9A8E	gps_draw_snr_bars	Confirmed	Up to 14 SNR bars by PRN, labels digits/AS/QZ
+FFEE9DA5	FFEE9E2D	sub_FFEE9DA5	gps_azimuth_sector	Confirmed	BCD azimuth (0.1 deg) -> 32 or 16 sectors
+FFEE9E2D	FFEE9F83	sub_FFEE9E2D	gps_draw_skyplot	Confirmed	Satellite markers from k_skyplot_xy[sector][ring]
+FFEE9F83	FFEE9FDB	sub_FFEE9F83	gps_apply_timezone	Confirmed	tz index (26=UTC, 30-min steps) applied to hh:mm + date
+FFEE9FDB	FFEEA0A3	sub_FFEE9FDB	gps_shift_time_halfhours	Confirmed	Add/sub half-hours; returns day carry 1/2
+FFEEA0A3	FFEEA189	sub_FFEEA0A3	gps_step_date	Confirmed	+/-1 day with month lengths and leap test
+FFEEA189	FFEEA1AE	sub_FFEEA189	is_leap_yy	Confirmed	yy!=0 && yy%4==0 (quirk: 2000 not leap)
+FFEEA1AE	FFEEA1D8	sub_FFEEA1AE	scr08_text_entry_handler	Confirmed	Screen 0x08 (F108/F109/F10A/F280) dispatcher via off_FFED5288
+FFEEA1D8	FFEEA1EA	sub_FFEEA1D8	scr08_step0_sync	Confirmed	Step 0 full sync
+FFEEA1EA	FFEEA205	sub_FFEEA1EA	scr08_step1_frame	Confirmed	Step 1: fb init, alt header bar, title 2
+FFEEA205	FFEEA232	sub_FFEEA205	scr08_step2_full_draw	Confirmed	Step 2 full draw
+FFEEA232	FFEEA265	sub_FFEEA232	scr08_ev35_entry_line	Confirmed	Event 0x35: redraw entry line (F108)
+FFEEA265	FFEEA298	sub_FFEEA265	scr08_ev36_entry_line_f280	Confirmed	Event 0x36: redraw entry line (F280)
+FFEEA298	FFEEA2D7	sub_FFEEA298	scr08_ev34_slots	Confirmed	Event 0x34: clear and redraw 20 icon slots
+FFEEA2D7	FFEEA35D	sub_FFEEA2D7	scr08_step3_events	Confirmed	Step 3 event loop, off_FFED5298, bound 0x36
+FFEEA35D	FFEEA379	sub_FFEEA35D	scr08_sync	Confirmed	Screen 0x08 sync wrapper
+FFEEA379	FFEEA67E	sub_FFEEA379	scr08_reconcile_fields	Confirmed	Entry-line cursor/mask/text and 20 slot fields; arms blink once (0x8F74)
+FFEEA67E	FFEEA6B7	sub_FFEEA67E	scr08_draw_all	Confirmed	Full redraw: entry line variant + 20 slots
+FFEEA6B7	FFEEA6B8	sub_FFEEA6B7	scr08_main_area_stub	Confirmed	rts-only main-area drawer for F1 subs 8..10
+FFEEA6B8	FFEEA74D	sub_FFEEA6B8	scr08_draw_entry_line	Confirmed	16-char line, blinking 14/28 px cursor (0xF980), DW mask
+FFEEA74D	FFEEA7BF	sub_FFEEA74D	scr08_draw_entry_line_f280	Confirmed	F280 line via FFEF1B23, cursor shadow[0x20]
+FFEEA7BF	FFEEA7DB	sub_FFEEA7BF	scr08_draw_20_slots	Confirmed	ui_draw_icon_slot(0..19)
+FFEEA7DB	FFEEA813	sub_FFEEA7DB	scr0F_info_handler	Confirmed	Screen 0x0F (F10F) dispatcher via off_FFED5374, F1 frames only
+FFEEA813	FFEEA825	sub_FFEEA813	scr0F_step0_sync	Confirmed	Step 0 full sync
+FFEEA825	FFEEA867	sub_FFEEA825	scr0F_step1_frame	Confirmed	Step 1: fb, header, separator at y=0x83, title 0x11
+FFEEA867	FFEEA894	sub_FFEEA867	scr0F_step2_full_draw	Confirmed	Step 2 full draw
+FFEEA894	FFEEA8D6	sub_FFEEA894	scr0F_ev30_field0	Confirmed	Event 0x30: 22-char field (FFEF6764)
+FFEEA8D6	FFEEA916	sub_FFEEA8D6	scr0F_ev31_field1	Confirmed	Event 0x31: 7-char field (FFEF682C)
+FFEEA916	FFEEA957	sub_FFEEA916	scr0F_ev32_field2	Confirmed	Event 0x32: 17-char row (FFEF68A1)
+FFEEA957	FFEEA998	sub_FFEEA957	scr0F_ev33_field3	Confirmed	Event 0x33: second 17-char row
+FFEEA998	FFEEAA1E	sub_FFEEA998	scr0F_step3_events	Confirmed	Step 3 event loop, off_FFED5384, bound 0x38
+FFEEAA1E	FFEEAA3A	sub_FFEEAA1E	scr0F_sync	Confirmed	Screen 0x0F sync wrapper
+FFEEAA3A	FFEEAD7B	sub_FFEEAA3A	scr0F_reconcile_fields	Confirmed	Text fields 0x70..0xAE, b7 blink flags at 0x6D..0x6F, 5 slot pairs
+FFEEAD7B	FFEEAE29	sub_FFEEAD7B	scr0F_draw_all	Confirmed	Full redraw; text fields only when shadow[0x6C]==1
+FFEEAE29	FFEEAE5E	sub_FFEEAE29	scr0F_draw_operating_area	Inferred	Operating-display drawer chain for F10F
+FFEEAE5E	FFEEAE96	sub_FFEEAE5E	scr01_main_handler	Confirmed	Screen 0x01 (F101 main operating screen) dispatcher via off_FFED5468
+FFEEAE96	FFEEAEA8	sub_FFEEAE96	scr01_step0_sync	Confirmed	Step 0 full sync
+FFEEAEA8	FFEEAEFB	sub_FFEEAEA8	scr01_step1_frame	Confirmed	Step 1: fb, header; compact variant (shadow[0x7C]) black fill + title 0x0C else 6
+FFEEAEFB	FFEEAF28	sub_FFEEAEFB	scr01_step2_full_draw	Confirmed	Step 2 full draw
+FFEEAF28	FFEEAF5E	sub_FFEEAF28	scr01_ev20_bottom_strip	Confirmed	Event 0x20 bottom strip; quirk: commits even if region failed
+FFEEAF5E	FFEEAFB5	sub_FFEEAF5E	scr01_ev27_slots	Confirmed	Event 0x27: redraw icon slot area
+FFEEAFB5	FFEEB03B	sub_FFEEAFB5	scr01_step3_events	Confirmed	Step 3 event loop, off_FFED5478, bound 0x27
+FFEEB03B	FFEEB057	sub_FFEEB03B	scr01_sync	Confirmed	Screen 0x01 sync wrapper
+FFEEB057	FFEEB275	sub_FFEEB057	scr01_reconcile_fields	Confirmed	Opcode lo, label 0x3D..0x4E (event 0x1D), 0x6C text, 0x7C layout, slots; cancels element events
+FFEEB275	FFEEB2A1	sub_FFEEB275	scr01_draw_all	Confirmed	Full redraw of the F101 screen
+FFEEB2A1	FFEEB34A	sub_FFEEB2A1	scr01_draw_operating_area	Inferred	Operating-display drawer chain for F101
+FFEEB34A	FFEEB397	sub_FFEEB34A	scr01_draw_slots	Confirmed	Icon slots 3..5 (normal) or 0..5 with clear (compact)
+FFEEB397	FFEEB8E2	sub_FFEEB397	scr01_draw_bottom_strip	Confirmed	Label, tone/SQL type, CTCSS/DCS glyphs, APRS A12/A96 or DG-ID digits
+FFEEB8E4	FFEEB941	sub_FFEEB8E4	ev_elem0F	Confirmed	Element 0x0F redraw (loc_elem0F, 0x26x0x16, FFEF4FCE)
+FFEEB941	FFEEB99E	sub_FFEEB941	ev_elem10	Confirmed	Element 0x10 redraw (FFEF5202)
+FFEEB99E	FFEEB9F8	sub_FFEEB99E	ev_elem11	Confirmed	Element 0x11 redraw (FFEF535E)
+FFEEB9F8	FFEEBA52	sub_FFEEB9F8	ev_elem12	Confirmed	Element 0x12 redraw (FFEF5421)
+FFEEBA52	FFEEBAAC	sub_FFEEBA52	ev_elem13	Confirmed	Element 0x13 redraw (FFEF5494)
+FFEEBAAC	FFEEBB19	sub_FFEEBAAC	ev_elem14_multislot	Confirmed	Element 0x14: multi-slot renderer, sets 0x8F77
+FFEEBB19	FFEEBB76	sub_FFEEBB19	ev_elem15	Confirmed	Element 0x15 redraw (FFEF5518)
+FFEEBB76	FFEEBBD0	sub_FFEEBB76	ev_elem16	Confirmed	Element 0x16 redraw (FFEF55FB)
+FFEEBBD0	FFEEBD3E	sub_FFEEBBD0	ev_elem17	Confirmed	Element 0x17 redraw (FFEF59E4); dead height computation
+FFEEBD3E	FFEEBE51	sub_FFEEBD3E	ev_elem18_pair	Confirmed	Screen-0 element 0x18 using two locators (FFEF5E38 + extras)
+FFEEBE51	FFEEBEB2	sub_FFEEBE51	ev_elem19	Confirmed	Element 0x19 redraw (FFEF6023)
+FFEEBEB2	FFEEBF13	sub_FFEEBEB2	ev_elem1A	Confirmed	Element 0x1A redraw (FFEF631E)
+FFEEBF13	FFEEBF6D	sub_FFEEBF13	ev_elem1B	Confirmed	Element 0x1B redraw (FFEF637D)
+FFEEBF6D	FFEEBFD3	sub_FFEEBF6D	ev_elem1C	Confirmed	Element 0x1C redraw (FFEF9B22)
+FFEEBFD3	FFEEC030	sub_FFEEBFD3	ev_elem1E	Confirmed	Element 0x1E redraw (FFEF643C)
+FFEEC030	FFEEC08D	sub_FFEEC030	ev_elem1F	Confirmed	Element 0x1F redraw (FFEF64D2)
+FFEEC08D	FFEEC1C9	sub_FFEEC08D	ev_main_area_redraw	Confirmed	Clear operating area and redraw by opcode (jpt_FFEEC131)
+FFEEC1C9	FFEEC232	sub_FFEEC1C9	ui_icon_layout_index	Confirmed	Icon layout index for FFEF23EE; dead store and uninit paths
+FFEEC232	FFEEC35B	sub_FFEEC232	ui_screen_type	Confirmed	Row type 1/2/3 by opcode and g_cur_event, override 0x12285
+FFEEC35B	FFEEC369	sub_FFEEC35B	ui_set_screen_type_override	Confirmed	0x12285 = arg
+FFEEC369	FFEEC3BD	dead_FFEEC369	dead_ui_layout_9_or_10	Confirmed	Uncalled; returns 9 or 10 by opcode
+FFEEC3BD	FFEEC5AB	sub_FFEEC3BD	ui_current_record	Confirmed	Pointer to current record (&shadow[0x20]/0x6C/0x7D/0x31) or NULL
+FFEEC5AB	FFEEC7E1	sub_FFEEC5AB	loc_elem0F	Confirmed	Locator x,y,colour for element 0x0F
+FFEEC7E1	FFEECAE0	sub_FFEEC7E1	loc_elem10	Confirmed	Locator for element 0x10
+FFEECAE0	FFEECC17	sub_FFEECAE0	loc_elem11	Confirmed	Locator for element 0x11
+FFEECC17	FFEECD4E	sub_FFEECC17	loc_elem12	Confirmed	Locator for element 0x12
+FFEECD4E	FFEECE85	sub_FFEECD4E	loc_elem13	Confirmed	Locator for element 0x13
+FFEECE85	FFEED16E	sub_FFEECE85	loc_elem15	Confirmed	Locator for element 0x15
+FFEED16E	FFEED293	sub_FFEED16E	loc_elem16	Confirmed	Locator for element 0x16
+FFEED293	FFEED5A7	sub_FFEED293	loc_elem17	Confirmed	Locator for element 0x17 (returns flag)
+FFEED5A7	FFEED748	sub_FFEED5A7	loc_elem1E	Confirmed	Locator for element 0x1E
+FFEED748	FFEED8E9	sub_FFEED748	loc_elem1F	Confirmed	Locator for element 0x1F
+FFEED8E9	FFEEDB0C	sub_FFEED8E9	loc_elem19	Confirmed	Locator for element 0x19
+FFEEDB0C	FFEEDD2E	sub_FFEEDB0C	loc_elem1A	Confirmed	Locator for element 0x1A
+FFEEDD2E	FFEEDF40	sub_FFEEDD2E	loc_elem1B	Confirmed	Locator for element 0x1B
+FFEEDF40	FFEEE179	sub_FFEEDF40	loc_elem1C	Confirmed	Locator for element 0x1C
+FFEEE179	FFEEE512	sub_FFEEE179	loc_main_area	Confirmed	Locator x,y,w,h of the operating area
+FFEEE512	FFEEE7AB	sub_FFEEE512	loc_multislot_layout	Confirmed	x,y and sub-layout code 0..5 for FFEF6C42 (doc 31)
+FFEEE7AB	FFEEE970	sub_FFEEE7AB	loc_FFEEE7AB	Confirmed	Locator x,y,colour used by FFEF6B10
+FFEEE970	FFEEED50	sub_FFEEE970	loc_elem18_pair	Confirmed	Two-point locator for element 0x18 (also FFEF568E)

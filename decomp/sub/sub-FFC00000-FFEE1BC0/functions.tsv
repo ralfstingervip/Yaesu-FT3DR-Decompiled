@@ -1,0 +1,205 @@
+start	end	ida_name	new_name	confidence	summary
+FFC00000	FFC0003C	reset_handler	reset_entry	Confirmed	PowerON_Reset_PC: stacks, EXTB/INTB, FPSW, _INITSCT, PSW, main(0)
+FFEDAB4C	FFEDAC17	sub_FFEDAB4C	sci_init_all	Confirmed	SCI pin/ICU reset, line formats ch0/1/2, ring descriptors from ROM FFECE4E8
+FFEDAC17	FFEDAD26	sub_FFEDAC17	sci_channel_enable	Confirmed	Open TX (mask b0) / RX (b8) of logical SCI channel, register ring callbacks
+FFEDAD26	FFEDAE05	sub_FFEDAD26	sci_channel_disable	Confirmed	Close TX/RX of logical SCI channel
+FFEDAE05	FFEDAF2D	dead_FFEDAE05	sci_config_from_string	Confirmed	Unreached: parse "rate/100,bits,stop,parity,flow" for ch0/ch1
+FFEDAF2D	FFEDB081	sub_FFEDAF2D	sci_write	Confirmed	Copy bytes into TX ring (busy-wait when full), kick TX; returns inconsistent level
+FFEDB081	FFEDB131	sub_FFEDB081	sci_tx_ring_fetch	Confirmed	TX callback: pop bytes from TX ring for the ISRs
+FFEDB131	FFEDB1EE	sub_FFEDB131	sci_rx_ring_store	Confirmed	RX callback: push received bytes into RX ring (drop when full)
+FFEDB1EE	FFEDB250	sub_FFEDB1EE	sci_rx_ring_level	Confirmed	RX ring level (free when head>=tail, used otherwise: source slip)
+FFEDB250	FFEDB300	sub_FFEDB250	sci_read	Confirmed	Non-blocking RX ring read
+FFEDB300	FFEDB4E8	sub_FFEDB300	sci_hw_init	Confirmed	ICU IPR/IR/IER/GENBL0 and SCI0/2/3 register reset, clear callback blocks
+FFEDB4E8	FFEDB63A	sub_FFEDB4E8	sci0_set_format	Confirmed	SCI0 SMR/BRR from rate table FFC00100; hangs if called with SCR live
+FFEDB63A	FFEDB690	sub_FFEDB63A	sci0_tx_open	Confirmed	Register SCI0 TX callback, SCR.TE on
+FFEDB690	FFEDB6BD	sub_FFEDB690	sci0_tx_close	Confirmed	SCI0 TIE/TE off, forget TX callback
+FFEDB6BD	FFEDB733	sub_FFEDB6BD	sci0_rx_open	Confirmed	Register SCI0 RX callback, SCR.RIE
+FFEDB733	FFEDB761	sub_FFEDB733	sci0_rx_close	Confirmed	SCI0 RIE/RE off, forget RX callback
+FFEDB761	FFEDB7B6	sub_FFEDB761	sci0_tx_kick	Confirmed	Start SCI0 TX chain if idle (TDR, TIE, TEIE)
+FFEDB7B6	FFEDB7E7	sub_FFEDB7B6	sci0_eri_handler	Confirmed	GROUPBL0 b1: clear SCI0 error flags
+FFEDB7E7	FFEDB857	vec_intb_058	sci0_rxi_isr	Confirmed	Vector 58 RXI0: byte to RX callback
+FFEDB857	FFEDB8A5	vec_intb_059	sci0_txi_isr	Confirmed	Vector 59 TXI0: next byte or TIE off
+FFEDB8A5	FFEDB8F1	sub_FFEDB8A5	sci0_tei_handler	Confirmed	GROUPBL0 b0: restart chain or TIE/TEIE off
+FFEDB8F1	FFEDBA44	sub_FFEDB8F1	sci2_set_format	Confirmed	SCI2 line format (115200 known, 500000 not)
+FFEDBA44	FFEDBA9B	sub_FFEDBA44	sci2_tx_open	Confirmed	SCI2 TX open
+FFEDBA9B	FFEDBAC8	sub_FFEDBA9B	sci2_tx_close	Confirmed	SCI2 TX close
+FFEDBAC8	FFEDBB1F	sub_FFEDBAC8	sci2_rx_open	Confirmed	SCI2 RX open
+FFEDBB1F	FFEDBB4D	sub_FFEDBB1F	sci2_rx_close	Confirmed	SCI2 RX close
+FFEDBB4D	FFEDBBA2	sub_FFEDBB4D	sci2_tx_kick	Confirmed	SCI2 TX kick
+FFEDBBA2	FFEDBBD3	sub_FFEDBBA2	sci2_eri_handler	Confirmed	GROUPBL0 b5: SCI2 error clear
+FFEDBBD3	FFEDBC43	vec_intb_062	sci2_rxi_isr	Confirmed	Vector 62 RXI2
+FFEDBC43	FFEDBC91	vec_intb_063	sci2_txi_isr	Confirmed	Vector 63 TXI2
+FFEDBC91	FFEDBCDD	sub_FFEDBC91	sci2_tei_handler	Confirmed	GROUPBL0 b4: SCI2 TEI
+FFEDBCDD	FFEDBD53	vec_intb_110	icu_groupbl0_isr	Confirmed	Vector 110 GROUPBL0 dispatcher bits 0,1,4,5,6,7
+FFEDBD53	FFEDBEB2	sub_FFEDBD53	sci3_set_format	Confirmed	SCI3 line format
+FFEDBEB2	FFEDBF0F	sub_FFEDBEB2	sci3_tx_open	Confirmed	SCI3 TX open
+FFEDBF0F	FFEDBF3F	sub_FFEDBF0F	sci3_tx_close	Confirmed	SCI3 TX close
+FFEDBF3F	FFEDBF9C	sub_FFEDBF3F	sci3_rx_open	Confirmed	SCI3 RX open
+FFEDBF9C	FFEDBFCA	sub_FFEDBF9C	sci3_rx_close	Confirmed	SCI3 RX close
+FFEDBFCA	FFEDC025	sub_FFEDBFCA	sci3_tx_kick	Confirmed	SCI3 TX kick
+FFEDC025	FFEDC09B	vec_intb_080	sci3_rxi_isr	Confirmed	Vector 80 RXI3
+FFEDC09B	FFEDC0EF	vec_intb_081	sci3_txi_isr	Confirmed	Vector 81 TXI3
+FFEDC0EF	FFEDC13B	sub_FFEDC0EF	sci3_tei_handler	Confirmed	GROUPBL0 b6: SCI3 TEI
+FFEDC13B	FFEDC16C	sub_FFEDC13B	sci3_eri_handler	Confirmed	GROUPBL0 b7: SCI3 error clear
+FFEDC16C	FFEDC1F6	sub_FFEDC16C	link_init	Confirmed	Reset deframer/queue/block counters, inter-byte timer, open ch0
+FFEDC1F6	FFEDC2E1	sub_FFEDC1F6	link_dequeue_latest	Confirmed	Drain queue keeping only newest frame -> 0x8E46, set echo
+FFEDC2E1	FFEDC3BD	sub_FFEDC2E1	link_send_gps_sentence	Confirmed	E1: relay $GPGGA/$GPRMC to MAIN, feed SD GPS log
+FFEDC3BD	FFEDC429	sub_FFEDC3BD	link_send_touch	Confirmed	E0 touch frame (pen, X, Y)
+FFEDC429	FFEDC455	sub_FFEDC429	link_send_ack	Confirmed	E3 acknowledgement (3 zero bytes)
+FFEDC455	FFEDC493	dead_FFEDC455	link_send_status_b	Confirmed	Unreached twin of link_send_status via builder b
+FFEDC493	FFEDC4DD	sub_FFEDC493	link_send_status	Confirmed	E2 status word, resets block counters
+FFEDC4DD	FFEDC5EE	sub_FFEDC4DD	link_send_block_readback	Confirmed	FF block read-back of image buffer (last block len = low byte of byte count)
+FFEDC5EE	FFEDC615	sub_FFEDC5EE	link_rx_poll	Confirmed	Tick: inter-byte timeout resync, deframe, dispatch
+FFEDC615	FFEDC976	sub_FFEDC615	link_deframe	Confirmed	Nine-state MAIN->SUB deframer with FFF0/FFF1/block-no status replies
+FFEDC976	FFEDD0D4	sub_FFEDC976	link_dispatch_frame	Confirmed	Frame dispatcher: F00F, pump priority, FFFF/FE00/FC00/F3D5, common-header actions, enqueue
+FFEDD0D4	FFEDD182	sub_FFEDD0D4	link_enqueue	Confirmed	4-slot queue, overwrite oldest; no 300-byte bound
+FFEDD182	FFEDD355	sub_FFEDD182	sub2main_frame_a	Confirmed	K2 SUB->MAIN frame builder, buffer 0x1B33A, payload 0x1B20E
+FFEDD355	FFEDD528	sub_FFEDD355	sub2main_frame_b	Confirmed	K2 builder, buffer 0x1BB3A (dead caller only)
+FFEDD528	FFEDD6FB	sub_FFEDD528	sub2main_frame_c	Confirmed	K2 builder, buffer 0x1C33A (Bluetooth E4/E5/E6)
+FFEDD6FB	FFEDD8DC	sub_FFEDD6FB	sub2main_frame_d	Confirmed	K2 builder, buffer 0x1C3BA (EA voice status), masks tick
+FFEDD8DC	FFEDDED5	sub_FFEDD8DC	sub2main_send_fe_record	Confirmed	FE SD file-operation record builder, masks tick
+FFEDDED5	FFEDDEF1	sub_FFEDDED5	lcd_seq_reset	Confirmed	LCD power sequencer reset
+FFEDDEF1	FFEDDF1A	sub_FFEDDEF1	lcd_seq_set	Confirmed	LCD sequencer state set (0..8)
+FFEDDF1A	FFEDDF28	sub_FFEDDF1A	lcd_seq_get_state	Confirmed	LCD sequencer state getter
+FFEDDF28	FFEDDF3A	sub_FFEDDF28	lcd_seq_get_done	Confirmed	LCD sequencer done flag getter
+FFEDDF3A	FFEDDF7F	sub_FFEDDF3A	lcd_seq_step	Confirmed	Run LCD sequencer state handler (table FFECE50C)
+FFEDDF7F	FFEDE10F	sub_FFEDDF7F	lcd_panel_init_sequence	Confirmed	ILI934x-class panel init: reset, EXTC, MADCTL, COLMOD, power, gamma, sleep out
+FFEDE10F	FFEDE161	sub_FFEDE10F	lcd_seq_power_on	Confirmed	Sequencer state 1: wait 2 ticks, panel init
+FFEDE161	FFEDE17A	sub_FFEDE161	lcd_seq_display_on	Confirmed	Sequencer state 2: DISPON
+FFEDE17A	FFEDE1A2	sub_FFEDE17A	lcd_clear_black	Confirmed	Full-window 76800 black pixels
+FFEDE1A2	FFEDE1F5	sub_FFEDE1A2	lcd_seq_blank	Confirmed	Sequencer state 3: clear screen, wait 0x65 ticks
+FFEDE1F5	FFEDE259	sub_FFEDE1F5	lcd_set_window	Confirmed	CASET/PASET/RAMWR
+FFEDE259	FFEDE267	sub_FFEDE259	lcd_set_display_on_flag	Confirmed	Set 0x8A8A
+FFEDE267	FFEDE278	sub_FFEDE267	lcd_get_display_on_flag	Confirmed	Get 0x8A8A
+FFEDE278	FFEDE298	sub_FFEDE278	lcd_hw_reset_pulse	Confirmed	P7.3 RESX pulse
+FFEDE298	FFEDE2B5	sub_FFEDE298	lcd_write_cmd	Confirmed	Command byte to 0x06000000 with P8.2 strobe
+FFEDE2B5	FFEDE2C3	sub_FFEDE2B5	lcd_write_data8	Confirmed	Data byte to LCD
+FFEDE2C3	FFEDE2D1	sub_FFEDE2C3	lcd_write_data16	Confirmed	Data word to LCD
+FFEDE2D1	FFEDE2FB	sub_FFEDE2D1	tpu2_delay_init	Confirmed	TPU2 1 ms compare setup
+FFEDE2FB	FFEDE33C	sub_FFEDE2FB	delay_ms	Confirmed	Busy-wait n ms on TPU2
+FFEDE33C	FFEDE387	dead_FFEDE33C	lcd_blit_fullscreen_cpu	Confirmed	Unreached CPU blit of 320x240 buffer
+FFEDE387	FFEDE3E2	sub_FFEDE387	picture_screen_step	Confirmed	Screen 0x3E step dispatcher (table FFED3F6C)
+FFEDE3E2	FFEDE3F4	sub_FFEDE3E2	picture_step0_enter	Confirmed	Latch frame, advance
+FFEDE3F4	FFEDE438	sub_FFEDE3F4	picture_step1_wait	Confirmed	Surface init for FFFF or jump to re-blit
+FFEDE438	FFEDE480	sub_FFEDE438	picture_step2_draw_waiting	Confirmed	Draw "Waiting", start UI timer 3
+FFEDE480	FFEDE523	sub_FFEDE480	picture_step3_await_transfer	Confirmed	Wait for block transfer; FFFE if none running
+FFEDE523	FFEDE590	sub_FFEDE523	picture_step4_decode	Confirmed	JPEG decode to framebuffer, FFFE on failure
+FFEDE590	FFEDE61C	sub_FFEDE590	picture_update_waiting_banner	Inferred	Redraw Waiting banner/icon when state changes
+FFEDE61C	FFEDE6C4	sub_FFEDE61C	picture_step5_blit	Confirmed	Centre and blit decoded image (halve/double rules)
+FFEDE6C4	FFEDE6F1	sub_FFEDE6C4	picture_step6_redraw	Confirmed	Redraw overlay
+FFEDE6F1	FFEDE776	sub_FFEDE6F1	picture_step7_events	Confirmed	Touch/key events 0..4 via table FFED3F8C
+FFEDE776	FFEDE792	sub_FFEDE776	picture_latch_frame	Confirmed	Shadow latch helpers, optional event reset
+FFEDE792	FFEDE793	sub_FFEDE792	nop_hook	Confirmed	Empty rts
+FFEDE793	FFEDE7D0	sub_FFEDE793	picture_reset_overlay	Confirmed	Unless FFFE: clear 0x8D79, sub_FFEF0408(0,0)
+FFEDE7D0	FFEDE804	sub_FFEDE7D0	picture_draw_waiting	Confirmed	Icon and "Waiting" text
+FFEDE804	FFEDE897	sub_FFEDE804	jpeg_decode_to_framebuffer	Confirmed	Build decoder context (0x070E1000 -> 0x070BB800), run engine
+FFEDE897	FFEDE8F8	sub_FFEDE897	jpeg_header_cb	Inferred	Decoder callback: stride 640, 2x scale for <=160x120, keep UI rendering
+FFEDE8F8	FFEDE929	sub_FFEDE8F8	blit_rgb565	Confirmed	Blit descriptor to surface
+FFEDE929	FFEDE93A	sub_FFEDE929	picture_get_state	Confirmed	Get 0x8A8B
+FFEDE93A	FFEDE96D	sub_FFEDE93A	picture_get_jpeg_span	Confirmed	Return JPEG buffer/length for SD save
+FFEDE96D	FFEDE97B	sub_FFEDE96D	picture_set_state	Confirmed	Set 0x8A8B
+FFEDE97B	FFEDE9A5	sub_FFEDE97B	align_screen_step	Confirmed	Screen 0x3F (FD00 alignment) step dispatcher
+FFEDE9A5	FFEDE9B7	sub_FFEDE9A5	align_step0_enter	Confirmed	Latch frame, advance
+FFEDE9B7	FFEDEA6A	sub_FFEDE9B7	align_step1_draw_headers	Confirmed	Draw Adj/Data/Mode headings
+FFEDEA6A	FFEDEA97	sub_FFEDEA6A	align_step2_draw_body	Confirmed	Draw alignment body
+FFEDEA97	FFEDEACC	sub_FFEDEA97	align_redraw_item	Confirmed	Event: redraw current item
+FFEDEACC	FFEDEB14	sub_FFEDEACC	align_redraw_footer	Confirmed	Event: redraw soft-key rows
+FFEDEB14	FFEDEB9A	sub_FFEDEB14	align_step3_events	Confirmed	Events 0..0x23 via table FFED3FB0
+FFEDEB9A	FFEDEBB6	sub_FFEDEB9A	align_latch_frame	Confirmed	Shadow latch with alignment field apply
+FFEDEBB6	FFEDED2C	sub_FFEDEBB6	align_apply_frame_fields	Confirmed	Apply FD00 frame fields to shadow with dirty flags
+FFEDED2C	FFEDED67	sub_FFEDED2C	align_draw_body	Confirmed	Frame, indicators, item, soft keys
+FFEDED67	FFEDED8F	sub_FFEDED67	align_draw_indicators	Inferred	Status-row icon painters
+FFEDED8F	FFEDEEF1	sub_FFEDED8F	align_draw_item	Confirmed	Label (0x12182+16*idx), value (item 13 signed), text
+FFEDEEF1	FFEDEEFC	sub_FFEDEEF1	ui_init	Confirmed	UI phase/timers/screen reset
+FFEDEEFC	FFEDEF41	sub_FFEDEEFC	ui_reset_phase	Confirmed	Phase 1, display flag 0, LCD sequencer reset, TPU3 normal
+FFEDEF41	FFEDEF97	sub_FFEDEF41	ui_reset_screen_state	Confirmed	Screen id/step/shadow reset
+FFEDEF97	FFEDEFC2	sub_FFEDEF97	ui_phase_dispatch	Confirmed	LCD sequencer step then phase handler (table FFED4040)
+FFEDEFC2	FFEDEFF9	sub_FFEDEFC2	ui_phase0_power_up	Confirmed	LCD power-on sequence then phase 2
+FFEDEFF9	FFEDF016	sub_FFEDEFF9	ui_phase1_wait_wake	Confirmed	Wake request -> reset, phase 0
+FFEDF016	FFEDF1AA	sub_FFEDF016	ui_phase2_run	Confirmed	Frame processor: classify, run screen handler, mode-change handling, render
+FFEDF1AA	FFEDF1AB	sub_FFEDF1AA	ui_phase3_idle	Confirmed	Empty rts
+FFEDF1AB	FFEDF1BD	dead_FFEDF1AB	ui_get_phase	Confirmed	Unreached getter of 0x1CC60
+FFEDF1BD	FFEDF1CE	sub_FFEDF1BD	ui_get_screen_id	Confirmed	Get 0x8A8C
+FFEDF1CE	FFEDF1D8	sub_FFEDF1CE	ui_request_wake	Confirmed	Set 0x8A8F
+FFEDF1D8	FFEDF269	sub_FFEDF1D8	ipc_classify_opcode	Confirmed	Opcode family switch F0..FF -> screen id
+FFEDF269	FFEDF2E0	sub_FFEDF269	ipc_classify_f0	Confirmed	F0xx: display on/off, screens 0x12..0x1B (F003/F004 both 0x15)
+FFEDF2E0	FFEDF36A	sub_FFEDF2E0	ipc_classify_f1	Confirmed	F1xx -> screens
+FFEDF36A	FFEDF3A7	sub_FFEDF36A	ipc_classify_f2	Confirmed	F280 -> 8, F200..F22C -> 0x1C
+FFEDF3A7	FFEDF447	sub_FFEDF3A7	ipc_classify_f3_f4	Confirmed	F3xx/F4xx -> screens (F3D5/D6 excluded)
+FFEDF447	FFEDF4B8	sub_FFEDF447	ipc_classify_f5	Confirmed	F5xx -> screens
+FFEDF4B8	FFEDF53E	sub_FFEDF4B8	ipc_classify_f6	Confirmed	F6xx -> screens; F63x -> 0x2C or picture 0x3E
+FFEDF53E	FFEDF56F	sub_FFEDF53E	ipc_classify_f7	Confirmed	F701 0x2E, F703 0x44
+FFEDF56F	FFEDF61B	sub_FFEDF56F	ipc_classify_f8	Confirmed	F8xx -> 0x30..0x3D
+FFEDF61B	FFEDF645	sub_FFEDF61B	ipc_classify_fd	Confirmed	FD00 -> 0x3F
+FFEDF645	FFEDF677	sub_FFEDF645	ipc_classify_fe_ff	Confirmed	FF01/FFFE/FFFF -> 0x3E
+FFEDF677	FFEDF6E3	sub_FFEDF677	ui_screen_change_reset	Confirmed	Reset per-screen state on screen change
+FFEDF6E3	FFEDF777	sub_FFEDF6E3	ui_mode_byte_changed	Inferred	Mode byte +0x13 family comparison vs 0x8A90
+FFEDF777	FFEDF795	sub_FFEDF777	gps_init	Confirmed	3-slot GPS timer group, reset state
+FFEDF795	FFEDF7F4	sub_FFEDF795	gps_set_power	Confirmed	GPS power (P1.5) and channel 1 on/off
+FFEDF7F4	FFEDF81A	sub_FFEDF7F4	gps_power_off	Confirmed	GPS power down and reset
+FFEDF81A	FFEDF86A	sub_FFEDF81A	gps_request_datum	Confirmed	Store requested datum
+FFEDF86A	FFEDF89E	sub_FFEDF86A	gps_request_static_nav	Confirmed	Store requested static navigation
+FFEDF89E	FFEDF8DA	sub_FFEDF89E	gps_request_dgps	Confirmed	Store requested DGPS source
+FFEDF8DA	FFEDF904	dead_FFEDF8DA	gps_init_pending	Confirmed	Unreached: 0 while $PMTK init list pending
+FFEDF904	FFEDF942	sub_FFEDF904	gps_get_gga_info	Confirmed	Accessor: quality, sats, altitude (live or default)
+FFEDF942	FFEDF972	sub_FFEDF942	gps_get_satellites	Confirmed	Accessor: satellite table 0xDA bytes
+FFEDF972	FFEDF9A6	sub_FFEDF972	gps_get_date	Confirmed	Accessor: yy mm dd
+FFEDF9A6	FFEDF9DC	sub_FFEDF9A6	gps_get_time	Confirmed	Accessor: hh mm ss
+FFEDF9DC	FFEDFA32	sub_FFEDF9DC	gps_get_position	Confirmed	Accessor: lat/lon
+FFEDFA32	FFEDFA70	sub_FFEDFA32	gps_get_course_speed	Confirmed	Accessor: course, speed, magvar
+FFEDFA70	FFEDFB3B	sub_FFEDFA70	gps_tick	Confirmed	GPS tick: assemble, parse, sequencer, freshness ageing, no-fix countdown
+FFEDFB3B	FFEDFBE2	sub_FFEDFB3B	gps_reset_state	Confirmed	GPS state reset
+FFEDFBE2	FFEDFC5D	sub_FFEDFBE2	gps_clear_fix	Confirmed	Fix struct <- ROM default, freshness cleared
+FFEDFC5D	FFEDFE33	sub_FFEDFC5D	gps_rx_assemble	Confirmed	NMEA sentence assembler with XOR checksum
+FFEDFE33	FFEDFEB9	sub_FFEDFE33	nmea_next_field	Confirmed	Next comma field into 0x8B96
+FFEDFEB9	FFEE0191	sub_FFEDFEB9	nmea_process_sentence	Confirmed	Dispatch RMC/GGA/GSA/VTG/GSV/PMTK
+FFEE0191	FFEE0360	sub_FFEE0191	nmea_classify	Confirmed	Sentence class from field 0
+FFEE0360	FFEE0364	sub_FFEE0360	nmea_skip_field	Confirmed	Skip one field
+FFEE0364	FFEE03D2	sub_FFEE0364	nmea_parse_hhmmss	Confirmed	Time field
+FFEE03D2	FFEE03FB	sub_FFEE03D2	nmea_parse_status	Confirmed	RMC status A
+FFEE03FB	FFEE045D	sub_FFEE03FB	nmea_parse_ddmmyy	Confirmed	Date field
+FFEE045D	FFEE0547	sub_FFEE045D	nmea_parse_latitude	Confirmed	ddmm.ffff (BCD fraction)
+FFEE0547	FFEE0650	sub_FFEE0547	nmea_parse_longitude	Confirmed	dddmm.ffff
+FFEE0650	FFEE067F	sub_FFEE0650	nmea_parse_ns	Confirmed	N/S flag
+FFEE067F	FFEE06A8	sub_FFEE067F	nmea_parse_ew	Confirmed	E/W flag
+FFEE06A8	FFEE06C8	sub_FFEE06A8	nmea_parse_speed	Confirmed	Speed BCD x10
+FFEE06C8	FFEE06E8	sub_FFEE06C8	nmea_parse_course	Confirmed	Course BCD x10
+FFEE06E8	FFEE0708	sub_FFEE06E8	nmea_parse_magvar	Confirmed	Magnetic variation BCD x10
+FFEE0708	FFEE0737	sub_FFEE0708	nmea_parse_magvar_ew	Confirmed	Variation W flag
+FFEE0737	FFEE077C	sub_FFEE0737	nmea_parse_fix_quality	Confirmed	GGA quality 0/1/2
+FFEE077C	FFEE07D0	sub_FFEE077C	nmea_parse_sat_count	Confirmed	GGA satellites used
+FFEE07D0	FFEE0853	sub_FFEE07D0	nmea_parse_altitude	Confirmed	GGA altitude integer metres with sign
+FFEE0853	FFEE0B54	sub_FFEE0853	nmea_parse_gsv	Confirmed	GSV multi-message satellite table, sorted by PRN
+FFEE0B54	FFEE0B92	sub_FFEE0B54	nmea_parse_gsa_fix	Confirmed	GSA fix type
+FFEE0B92	FFEE0BE2	sub_FFEE0B92	nmea_parse_gsa_prns	Confirmed	GSA PRN list
+FFEE0BE2	FFEE0C85	sub_FFEE0BE2	gps_mark_used_sats	Confirmed	Mark satellites used in solution
+FFEE0C85	FFEE0CF3	sub_FFEE0C85	nmea_field_to_bcd1	Confirmed	Field -> packed BCD with one decimal
+FFEE0CF3	FFEE0D4D	sub_FFEE0CF3	nmea_field_to_uint	Confirmed	Field -> decimal (<=4 digits, '-' -> 0)
+FFEE0D4D	FFEE0FA3	sub_FFEE0D4D	gps_command_sequencer	Confirmed	ACK-gated $PMTK command sequencer, cold/warm restart
+FFEE0FA3	FFEE103B	sub_FFEE0FA3	gps_send_pmtk	Confirmed	$PMTK sentence with *hh checksum on ch1
+FFEE103B	FFEE1105	sub_FFEE103B	gps_pmtk_ack	Confirmed	$PMTK001 advances sequencer stage
+FFEE1105	FFEE118D	sub_FFEE1105	tick_timer_start	Confirmed	TPU0 5.46 ms tick setup, ICU vector 135
+FFEE118D	FFEE119E	sub_FFEE118D	tick_pending_get	Confirmed	Get pending tick count 0x124D4
+FFEE119E	FFEE11B8	sub_FFEE119E	tick_pending_dec	Confirmed	Decrement pending tick count
+FFEE11B8	FFEE11E3	vec_intb_135	tpu0_tgi0a_isr	Confirmed	Vector 135 tick ISR: count, run tick fan-out sub_FFF36CAB
+FFEE11E3	FFEE1229	sub_FFEE11E3	swtimer_init	Confirmed	Clear 4 software timer groups, start tick
+FFEE1229	FFEE12AC	sub_FFEE1229	swtimer_group_create	Confirmed	Allocate software timer group
+FFEE12AC	FFEE12E7	sub_FFEE12AC	swtimer_restart	Confirmed	Reload timer slot
+FFEE12E7	FFEE131F	sub_FFEE12E7	swtimer_stop	Confirmed	Zero timer slot
+FFEE131F	FFEE1393	sub_FFEE131F	swtimer_service	Confirmed	Decrement all timers once per pending tick
+FFEE1393	FFEE1467	sub_FFEE1393	touch_init	Confirmed	S12AD1/pins/state init for resistive touch
+FFEE1467	FFEE1480	sub_FFEE1467	touch_get_last_xy	Confirmed	Return last reported X,Y
+FFEE1480	FFEE16B2	sub_FFEE1480	touch_step	Confirmed	Per-tick detect/X/Y measurement state machine
+FFEE16B2	FFEE16EE	sub_FFEE16B2	touch_clear_ring	Confirmed	Clear 4-sample ring
+FFEE16EE	FFEE177F	sub_FFEE16EE	touch_report	Confirmed	Average 4 samples, invert axes, send E0
+FFEE177F	FFEE1780	dead_FFEE177F	empty_stub	Confirmed	Unreached lone rts
+FFEE1780	FFEE1868	dead_FFEE1780	rt_init_iolib	Confirmed	Unreached CC-RX _INIT_IOLIB (stdin/stdout/stderr)
+FFEE1868	FFEE18A6	dead_FFEE1868	rt_close_all	Confirmed	Unreached CC-RX _CLOSEALL
+FFEE18A6	FFEE194D	sub_FFEE18A6	rt_open	Confirmed	lowsrc open(): stdin/stdout/stderr only
+FFEE194D	FFEE1958	sub_FFEE194D	rt_close	Confirmed	lowsrc close() returns 1
+FFEE1958	FFEE19E4	sub_FFEE1958	rt_write	Confirmed	lowsrc write() via charput (jsr 0 path)
+FFEE19E4	FFEE1A55	dead_FFEE19E4	rt_read	Confirmed	Unreached lowsrc read() via charget
+FFEE1A55	FFEE1A66	dead_FFEE1A55	rt_lseek	Confirmed	Unreached lseek() returns -1
+FFEE1A66	FFEE1AA2	sub_FFEE1A66	rt_sbrk	Confirmed	sbrk over 1 KB heap at 0x1CE64
+FFEE1AA2	FFEE1B52	dead_FFEE1AA2	u16_to_bcd	Confirmed	Unreached u16 -> 4-digit BCD
+FFEE1B52	FFEE1BC0	dead_FFEE1B52	u8_to_bcd	Confirmed	Unreached u8 -> 3-digit BCD

@@ -1,0 +1,287 @@
+start	end	ida_name	new_name	confidence	summary
+038CB4	038CCA	sub_38CB4	dtmf_next_digit_guarded	Confirmed	Guard (FF9544==0, AAE1.b7, AC09.b6) falling into dtmf_next_digit
+038CCA	038D66	sub_38CCA	dtmf_next_digit	Confirmed	Pop DTMF ring FFAC0E[AC0B]; load tone increments dword_39040[d], start TPU1; N=queue empty
+038D6C	038D90	sub_38D6C	dtmf_digit_started	Confirmed	Arm tone timer, count digit FFAC07, redraw, state 4 (manual) or 2 (string)
+038DA0	038DBA	sub_38DA0	dtmf_set_timer	Confirmed	FF9545 = 6 ticks, or 10 for a string with 89BE.b2 (DTMF speed)
+038DBA	038DEE	sub_38DBA	dtmf_tone_off_step	Confirmed	On timer expiry stop tone, post 0xFE to DSP mailbox B0C0 if digital, state 3
+038DEE	038E0E	sub_38DEE	dtmf_tone_off_step_tail	Confirmed	IDA split tail of dtmf_tone_off_step (shared predicate end)
+038E0E	038E84	sub_38E0E	dtmf_gap_step	Confirmed	After inter-digit gap play next digit or end (hold-off FF958F, state 5)
+038E84	038F00	sub_38E84	dtmf_finish	Confirmed	Reset sender, drop audio route (A9E3), end/delay TX
+038F00	038F3C	sub_38F00	dtmf_reset	Confirmed	Stop tone, DSP idle code in digital mode, clear sender and ring
+038F3C	038F7C	sub_38F3C	dtmf_reset_quiet	Confirmed	Second entry: stop tone and clear sender/ring (boot)
+038F7C	038FA8	sub_38F7C	dtmf_start_pause	Confirmed	Queue pause code 0x10, state 3
+038FA8	038FC2	sub_38FA8	dtmf_poll_end	Confirmed	Try next digit; finish when empty and hold-off expired
+038FC2	039002	sub_38FC2	dtmf_enqueue_request	Confirmed	Queue DTMF memory r2l (<0x50, via sub_3CE22) or single key r2l-0x50
+039002	039030	sub_39002	dtmf_enqueue	Confirmed	Store code&0x1F in 20-slot ring unless full
+039030	039040	sub_39030	dtmf_tone_stop	Confirmed	Clear AAD2.b2, stop TPU1, DA0=0x7F
+039120	039136	sub_39120	audio_sm_teardown	Confirmed	Audio state machine state 4: mux off, recompute FF8184, state 0
+039136	039182	sub_39136	audio_sm_idle	Confirmed	State 0: on event route mux, recompute, state 1
+039184	0391C0	sub_39184	audio_sm_route	Confirmed	States 1/2: wait FF953B, hold route AAE1.b7, route mux
+0391C0	0393E2	sub_391C0	audio_rx_route_update	Confirmed	Per-band RX-audio flags A9AC/A9AD and USB EP3 byte0 FF8184
+0393E2	03941A	sub_393E2	audio_sm_hold	Confirmed	State 3: hold then back to state 1 or teardown
+03941A	039454	sub_3941A	audio_sm_rx_release	Confirmed	On A9E3.b0 release RX route, arm hold timers, state 3
+039454	03948E	sub_39454	audio_sm_session_start	Confirmed	State 5: FF8184=1, mux on, state 6
+03948E	0394A8	sub_3948E	audio_sm_session_wait	Confirmed	States 6/7: wait timer, set AAE1.b7, state 8
+0394A8	0394B4	sub_394A8	audio_sm_session_end	Confirmed	State 8: wait tone sequencer FFAAE8 idle then teardown
+0394B4	0394D2	sub_394B4	eeprom_load_FF8002	Confirmed	EEPROM 0xFFFE (1 B) -> FF8002
+0394D2	0394F4	sub_394D2	eeprom_save_FF8002	Confirmed	FF8002=r4l, save to EEPROM 0xFFFE (NMI path)
+0394F4	039504	sub_394F4	eeprom_load_marker	Confirmed	EEPROM 0x10 (4 B boot marker) -> FF8006
+039504	039512	sub_39504	eeprom_mark_valid	Confirmed	FF8006="TAIS" then save marker
+039512	039522	sub_39512	eeprom_save_marker	Confirmed	FF8006 -> EEPROM 0x10
+039522	039534	sub_39522	eeprom_args_marker	Confirmed	Args r6=4 er0=0x10 er1=FF8006
+039534	039544	sub_39534	eeprom_load_region	Confirmed	EEPROM 0x20..27 -> FF800E (market bytes)
+039544	039554	sub_39544	eeprom_save_region	Confirmed	FF800E -> EEPROM 0x20..27
+039554	039566	sub_39554	eeprom_args_region	Confirmed	Args r6=8 er0=0x20 er1=FF800E
+039566	039576	sub_39566	eeprom_load_cfgimg	Confirmed	EEPROM 0x40 (0x100 B cal image) -> FF8016
+039576	039586	sub_39576	eeprom_save_cfgimg	Confirmed	FF8016 -> EEPROM 0x40
+039586	039598	sub_39586	eeprom_args_cfgimg	Confirmed	Args r6=0x100 er0=0x40 er1=FF8016
+039598	0395A8	sub_39598	eeprom_load_R1	Confirmed	EEPROM 0x580 (0x180) -> settings R1 FF8920
+0395A8	0395B8	sub_395A8	eeprom_save_R1	Confirmed	Settings R1 -> EEPROM 0x580
+0395B8	0395CA	sub_395B8	eeprom_args_R1	Confirmed	Args r6=0x180 er0=0x580 er1=FF8920
+0395CA	0395E8	sub_395CA	vfo_blocks_restore	Confirmed	Restore 4 mirrored VFO blocks from primary/backup, then snapshot
+0395E8	039670	sub_395E8	vfo_blocks_snapshot	Confirmed	Read primaries into shadows BCB6.., normalise FF8EA0, set AA31.b5
+039670	03970A	sub_39670	vfo_blk0_restore	Confirmed	Block FF8EA0: backup 0x740 checksum-check, repair primary 0x700
+03970A	0397A4	sub_3970A	vfo_blk1_restore	Confirmed	Block FF8EE0: backup 0x800 / primary 0x780
+0397A4	03983E	sub_397A4	vfo_blk2_restore	Confirmed	Block FF8FE8: backup 0x900 / primary 0x880
+03983E	0398D8	sub_3983E	vfo_blk3_restore	Confirmed	Block FF90F0: backup 0xA00 / primary 0x980
+0398D8	039A46	sub_398D8	vfo_blocks_save_all	Confirmed	Checksum+write all 4 blocks to primary and backup; marker "0000"; clear AA31.b5
+039A46	039BA0	sub_39A46	vfo_blocks_write_all	Confirmed	Same 8 writes, marker untouched
+039BA0	039CCA	sub_39BA0	vfo_blocks_flush_powerfail	Confirmed	Changed blocks -> backup copies (NMI power-fail save) + tail
+039CCA	039CE0	sub_39CCA	vfo_blocks_flush_done	Confirmed	FF8006="0000" (RAM), clear AA31.b5
+039CE0	039E22	sub_39CE0	vfo_blocks_flush	Confirmed	Changed blocks -> backups; 2nd entry 39CE6 saves FF8002 first
+039E22	039F5A	sub_39E22	vfo_blocks_flush_reload	Confirmed	Flush then vfo_blocks_restore
+039F5A	03A028	sub_39F5A	vfo_blocks_force_backup	Confirmed	Blk0 if changed, blocks 1-3 always to backups (BACKUP apply)
+03A028	03A034	sub_3A028	eeprom_save_id_block	Confirmed	Write ID block at EEPROM 0x360
+03A034	03A120	sub_3A034	vfo_blocks_flush_123	Confirmed	Flush blocks 1..3 only
+03A120	03A130	sub_3A120	eeprom_load_mem_attr	Confirmed	EEPROM 0x2940 (0x540) -> attribute bytes FF8188
+03A130	03A140	sub_3A130	eeprom_save_mem_attr	Confirmed	FF8188 -> EEPROM 0x2940
+03A140	03A152	sub_3A140	eeprom_args_mem_attr	Confirmed	Args r6=0x540 er0=0x2940 er1=FF8188
+03A152	03A162	sub_3A152	eeprom_load_u16tab	Confirmed	Table i at 0x1680+0xC8i -> FF86C8/FF8790 (side)
+03A162	03A172	sub_3A162	eeprom_save_u16tab	Confirmed	FF86C8/FF8790 -> 0x1680+0xC8i
+03A172	03A196	sub_3A172	eeprom_args_u16tab	Confirmed	Args for u16 table i, side by 817E.b0
+03A196	03A1A6	sub_3A196	eeprom_load_u16tab_C	Confirmed	Table i -> FF8858
+03A1A6	03A1BC	sub_3A1A6	eeprom_args_u16tab_C	Confirmed	Args for table i into FF8858
+03A1BC	03A200	sub_3A1BC	u16tab_put	Confirmed	Write-through u16 store into side table + EEPROM
+03A200	03A22E	sub_3A200	u16tab_C_put	Confirmed	Write-through u16 store into FF8858 table + EEPROM
+03A22E	03A266	sub_3A22E	settings_R1_put_word	Confirmed	Store word in R1 FF8A20/FF8A68[i] and save
+03A266	03A27C	sub_3A266	vfo_rec_load_sideA	Confirmed	Read side-A VFO record 0x1380+0x20n, unpack via sub_3FAD0
+03A27C	03A29C	sub_3A27C	vfo_rec_load_for	Confirmed	Read VFO record for rec[4], unpack
+03A29C	03A2C0	sub_3A29C	vfo_rec_load	Confirmed	Read VFO record for rec[3] (0x1380/0x1500), unpack, DG-ID
+03A2C0	03A2D0	sub_3A2C0	vfo_rec_read_raw	Confirmed	Read packed VFO record into FFAC76
+03A2D0	03A2FA	sub_3A2D0	vfo_rec_save	Confirmed	Pack, write VFO record if changed, DG-ID word
+03A2FA	03A302	sub_3A2FA	vfo_rec_addr_sideA	Confirmed	er0=0x1380 entry of address calc
+03A302	03A334	sub_3A302	vfo_rec_addr	Confirmed	er0=(side?0x1500:0x1380)+0x20*band
+03A334	03A35E	sub_3A334	vfo_rec_differs	Confirmed	Read EEPROM record to FFAC9A, compare with FFAC76 (Z=equal)
+03A35E	03A37C	sub_3A35E	rec1200_load	Confirmed	Read record n of 0x1200 set, unpack, DG-ID
+03A37C	03A390	sub_3A37C	rec1200_save_named	Confirmed	Pack, fetch name, save 0x1200 record
+03A390	03A3BE	sub_3A390	rec1200_save	Confirmed	Pack, write 0x1200 record if changed, DG-ID
+03A3BE	03A3D8	sub_3A3BE	rec1200_addr	Confirmed	er0=0x1200+0x20n
+03A3D8	03A40C	sub_3A3D8	oprec_load_A	Confirmed	Operating-record slot k (0x3A B) -> [FF812A]; slot 7 7 B -> FFAC76
+03A40C	03A432	sub_3A40C	oprec_addr_A	Confirmed	er0=(side?0x380:0x180)+0x3A*k, er1=[FF812A]
+03A432	03A448	sub_3A432	oprec_save_A	Confirmed	Write [FF812A] to slot k and FFAC76 7 B to slot 7
+03A448	03A474	sub_3A448	oprec_args_slot7	Confirmed	Args slot 7, 7 bytes, FFAC76
+03A474	03A47A	sub_3A474	oprec_save_live_0	Confirmed	oprec_save_live(0)
+03A47A	03A480	sub_3A47A	oprec_save_live_1	Confirmed	oprec_save_live(1)
+03A480	03A4D2	sub_3A480	oprec_load_live	Confirmed	Slot k -> band A or B record by +0x39.b7
+03A4D2	03A4F0	sub_3A4D2	oprec_save_live	Confirmed	Write live band record to slot k if changed
+03A4F0	03A514	sub_3A4F0	oprec_live_addr	Confirmed	Args for live record (sub_10748) slot k
+03A514	03A538	sub_3A514	oprec_live_differs	Confirmed	Compare slot k with live record (Z=equal)
+03A538	03A562	sub_3A538	oprec_load_pair	Confirmed	Slot3->band A, slot4->band B
+03A562	03A5B6	sub_3A562	oprec_save_pair	Confirmed	Save slots 3/4 if changed
+03A5B6	03A5F8	sub_3A5B6	mem_recall	Confirmed	Load channel record (or synth special area), unpack; return working rec
+03A5F8	03A632	sub_3A5F8	mem_recall_any	Confirmed	mem_recall without side test
+03A632	03A666	sub_3A632	mem_read_unpack_alt	Confirmed	Read channel record, unpack variant sub_3FAE8
+03A666	03A6EE	sub_3A666	mem_band_of_slot	Confirmed	Band-plan id of channel's RX frequency
+03A6EE	03A71A	sub_3A6EE	mem_rec_addr	Confirmed	Channel record addr 0x2E80+0x20n or divert to mem_rec_alt
+03A71A	03A784	sub_3A71A	mem_freq_of_slot	Confirmed	BCD RX frequency of channel slot
+03A784	03A796	sub_3A784	mem_store_named	Confirmed	Pack, fetch name, store channel
+03A796	03A7CE	sub_3A796	mem_name_fetch	Confirmed	Copy name block to FFAA96; Z=no name
+03A7CE	03A838	sub_3A7CE	mem_store	Confirmed	Pack, write channel, attribute byte, DG-ID
+03A838	03A892	sub_3A838	mem_store_raw_attr	Confirmed	Write channel with attribute FFACD8
+03A892	03A8E2	sub_3A892	mem_attr_put	Confirmed	Write attribute byte (area-rebased)
+03A8E2	03A906	sub_3A8E2	rec1200_name_store	Confirmed	Write 18-byte name into 0x1200 record
+03A906	03A922	sub_3A906	name_tmp_copy	Confirmed	Copy rec+0x22 name (0x12 B) to FFAA56
+03A922	03A97A	sub_3A922	mem_name_store	Confirmed	Write name to channel (area 0) or 0xF80 block (area 3)
+03A97A	03A98C	sub_3A97A	area3_name_addr	Confirmed	er0=0xF80+0x12n
+03A98C	03A9A2	sub_3A98C	area3_name_clear	Confirmed	Write ROM blank name 0xF6D4 to area-3 slot
+03A9F6	03A9FC	sub_3A9F6	mem_flag_update_if_regular	Confirmed	Skip in special area, else falls into mem_flag_update
+03A9FC	03AA66	sub_3A9FC	mem_flag_update	Confirmed	RMW channel byte +5 via sub_3FAB2
+03AA66	03AAAC	sub_3AA66	rec1200_flag_update	Confirmed	RMW 0x1200 record byte +5
+03AAAC	03AB5E	sub_3AAAC	mem_same_band	Confirmed	Z if channel frequency is in record's band (+0x58)
+03AB5E	03AB80	sub_3AB5E	mem_rec_addr_g	Confirmed	Area-aware address calc (r6l area)
+03AB80	03AD20	sub_3AB80	eeprom_read	Confirmed	Bit-banged I2C read, device A0 (16-bit addr)
+03AD20	03B0E4	sub_3AD20	eeprom_write	Confirmed	Bit-banged I2C write, device A0, 256-B page split
+03B14C	03B19A	sub_3B14C	i2c_addr_A0	Confirmed	START + 0xA0 + address, NACK retry
+03B19A	03B43C	sub_3B19A	i2c_put_A0	Confirmed	Clock one byte out, return ACK bit
+03B43C	03B770	sub_3B43C	eeprom_write_pages	Confirmed	Write e6 64-byte pages, device A0
+03B770	03BA90	sub_3B770	eeprom_write_page64	Confirmed	Write one 64-byte page, device A0
+03BA90	03BDAC	sub_3BA90	eeprom_write_burst	Confirmed	Write r6 bytes in one burst, device A0
+03BDAC	03BF4C	sub_3BDAC	eeprom2_read	Confirmed	I2C read, device A2/A3 (EEPROM 0x1xxxx)
+03BF4C	03C310	sub_3BF4C	eeprom2_write	Confirmed	I2C write, device A2, 256-B page split
+03C378	03C3C6	sub_3C378	i2c_addr_A2	Confirmed	START + 0xA2 + address, NACK retry
+03C3C6	03C668	sub_3C3C6	i2c_put_A2	Confirmed	Byte transmitter for A2 device
+03C99C	03CCBC	sub_3C99C	eeprom2_write_page64	Confirmed	One 64-byte page to device A2
+03CCBC	03CCD0	sub_3CCBC	settings_R1_save_byte	Confirmed	Save R1 byte n to EEPROM 0x580+n
+03CCD0	03CCEC	sub_3CCD0	settings_R1_save_range	Confirmed	Save R1 range er1/r6
+03CCEC	03CD1C	sub_3CCEC	settings_R2_save_byte	Confirmed	Save R2 byte n to 0xC000+n (2nd entry 3CD00 = range)
+03CD1C	03CD30	sub_3CD1C	settings_R3_save_byte	Confirmed	Save R3 byte n to 0xD000+n
+03CD30	03CD4C	sub_3CD30	settings_R3_save_range	Confirmed	Save R3 range
+03CD4C	03CD5C	sub_3CD4C	rec1034_load	Confirmed	18-B record 0x1034+0x12i -> FFAD6E
+03CD5C	03CD6C	sub_3CD5C	rec1034_save	Confirmed	FFAD6E -> 0x1034+0x12i
+03CD6C	03CD82	sub_3CD6C	rec1034_args	Confirmed	Args for 0x1034 record
+03CD82	03CDA0	sub_3CD82	bt_list_load	Confirmed	EEPROM 0x1EA00 0x8E B -> FFAAEA (Bluetooth list)
+03CDA0	03CDBE	sub_3CDA0	bt_list_save	Confirmed	FFAAEA -> EEPROM 0x1EA00
+03CDEA	03CDFC	sub_3CDEA	dtmf_mem_save_hi	Confirmed	Save DTMF memory n+16
+03CE22	03CE32	sub_3CE22	dtmf_mem_load	Confirmed	DTMF memory n (0xA80+16n) -> FFAC24
+03CE32	03CE42	sub_3CE32	dtmf_mem_save	Confirmed	FFAC24 -> DTMF memory n
+03CE42	03CE5A	sub_3CE42	dtmf_mem_args	Confirmed	Args er0=0xA80+16n er1=FFAC24 r6=16
+03CE5A	03CE9A	sub_3CE5A	dtmf_mem_save_if_changed	Confirmed	Save DTMF memory only when different
+03CE9A	03CEAA	sub_3CE9A	area4_tab_load	Confirmed	EEPROM 0xBC00 0x28 B -> FFACE2
+03CEAA	03CEBA	sub_3CEAA	area4_tab_save	Confirmed	FFACE2 -> 0xBC00
+03CEBA	03CECC	sub_3CEBA	area4_tab_args	Confirmed	Args 0xBC00/FFACE2/0x28
+03CECC	03CEDC	sub_3CECC	area7_tab_load	Confirmed	EEPROM 0xBBC0 0x40 B -> FFACE2
+03CEDC	03CEEC	sub_3CEDC	area7_tab_save	Confirmed	FFACE2 -> 0xBBC0 (page writer)
+03CEEC	03CEFE	sub_3CEEC	area7_tab_args	Confirmed	Args 0xBBC0/FFACE2/0x40
+03CEFE	03CF34	sub_3CEFE	mem_rec_alt	Confirmed	Special memory area dispatcher (table 0x3CF34) synthesising a channel
+03CF70	03CF72	nullsub_91	nullsub_91	Confirmed	Area 2 handler (rts only)
+03CF72	03CF9C	sub_3CF72	area3_synth	Confirmed	Area 3: freq ROM 0x3FFF4[n], name EEPROM 0xF80
+03CF9C	03CFE4	sub_3CF9C	area5_synth	Confirmed	Area 5: ROM table 0x40362, optional BCD shift
+03CFE8	03D004	sub_3CFE8	area4_synth	Confirmed	Area 4: ROM 0x4001C rows + EEPROM tone table
+03D004	03D022	sub_3D004	area6_synth	Confirmed	Area 6: ROM 0x415BA rows
+03D022	03D36E	sub_3D022	area_synth_common	Confirmed	Areas 6-11 bodies, dead 800 MHz case, shared record builder 3D1EE
+03D37E	03D38E	sub_3D37E	rec_B800_save	Confirmed	FFAA10 8 B -> 0xB800+8n
+03D38E	03D3A6	sub_3D38E	rec_B800_args	Confirmed	Args for 0xB800 record
+03D40E	03D41E	sub_3D40E	rec_B8C0_save	Confirmed	FFAA18 0x12 B -> 0xB8C0+0x12n
+03D41E	03D436	sub_3D41E	rec_B8C0_args	Confirmed	Args for 0xB8C0 record
+03D472	03D482	sub_3D472	eeprom_load_R2	Confirmed	EEPROM 0xC000 0x280 -> settings R2 FF8AA0
+03D482	03D492	sub_3D482	eeprom_save_R2	Confirmed	R2 -> EEPROM 0xC000
+03D492	03D4A4	sub_3D492	eeprom_args_R2	Confirmed	Args r6=0x280 er0=0xC000 er1=FF8AA0
+03D4A4	03D4B4	sub_3D4A4	rec_C280_load	Confirmed	0x1C-B record 0xC280+0x1Cn -> FF9D74
+03D4B4	03D4C4	sub_3D4B4	rec_C280_save	Confirmed	FF9D74 -> 0xC280+0x1Cn
+03D4C4	03D4DC	sub_3D4C4	rec_C280_args	Confirmed	Args for 0xC280 record
+03D4DC	03D542	sub_3D4DC	rec_E000_load	Confirmed	30-B typed record 0xE000+0x1En via FF95F8 into A7E2/9DB8/A800
+03D542	03D5AC	sub_3D542	rec_E000_save	Confirmed	Inverse of rec_E000_load
+03D5AC	03D5BC	sub_3D5AC	rec_C3A0_load	Confirmed	0x3C-B record 0xC3A0+0x3Cn -> FFADA2
+03D5BC	03D5CC	sub_3D5BC	rec_C3A0_save	Confirmed	FFADA2 -> 0xC3A0+0x3Cn
+03D5CC	03D5E4	sub_3D5CC	rec_C3A0_args	Confirmed	Args for 0xC3A0 record
+03D5E4	03D5F4	sub_3D5E4	rec_C4D0_load	Confirmed	0x43-B record 0xC4D0+0x43n -> FFADDE
+03D5F4	03D604	sub_3D5F4	rec_C4D0_save	Confirmed	FFADDE -> 0xC4D0+0x43n
+03D604	03D61C	sub_3D604	rec_C4D0_args	Confirmed	Args for 0xC4D0 record
+03D64E	03D66C	sub_3D64E	eeprom_load_R3	Confirmed	EEPROM 0xD000 0x180 -> settings R3 FF8D20
+03D66C	03D68A	sub_3D66C	eeprom_save_R3	Confirmed	R3 -> EEPROM 0xD000
+03D6B0	03D6D6	sub_3D6B0	eeprom_save_R3_7E	Confirmed	Save R3 bytes 0x7E..0xAE (0x31) to 0xD07E
+03D6D6	03D6E6	sub_3D6D6	rec_D280_load	Confirmed	0x5D-B record 0xD280+0x5Dn -> FFAE22
+03D6E6	03D6F6	sub_3D6E6	rec_D280_save	Confirmed	FFAE22 -> 0xD280+0x5Dn
+03D6F6	03D70E	sub_3D6F6	rec_D280_args	Confirmed	Args for 0xD280 record
+03D74A	03D75A	sub_3D74A	eeprom2_load_marker	Confirmed	EEPROM 0x10010 4 B -> FF800A (2nd device marker)
+03D75A	03D768	sub_3D75A	eeprom2_mark_valid	Confirmed	FF800A="TAIS", falls into save
+03D768	03D778	sub_3D768	eeprom2_save_marker	Confirmed	FF800A -> EEPROM 0x10010
+03D778	03D78A	sub_3D778	eeprom2_args_marker	Confirmed	Args r6=4 er0=0x10 er1=FF800A
+03D78A	03D79A	sub_3D78A	eeprom2_load_10100	Confirmed	EEPROM 0x10100 0x780 -> FEE000
+03D79A	03D7AA	sub_3D79A	eeprom2_save_10100	Confirmed	FEE000 -> EEPROM 0x10100
+03D7AA	03D7BC	sub_3D7AA	eeprom2_args_10100	Confirmed	Args 0x10100/FEE000/0x780
+03D7BC	03D7E0	sub_3D7BC	msgA_hdr_save	Confirmed	FF9DE8 0x20 B -> 0x10100+0x20n
+03D7E0	03D828	sub_3D7E0	msgA_save	Confirmed	Header + body FF9EF8 ([9E04]+2) -> 0x10880+0xB0n
+03D828	03D854	sub_3D828	msgA_body_load	Confirmed	Body 0x10880+0xB0n ([9E24]+2) -> FF9E48
+03D854	03D87E	sub_3D854	msgA_body_load2	Confirmed	Body (e6+2) -> FF9FA8
+03D87E	03D88E	sub_3D87E	eeprom2_load_131C0	Confirmed	EEPROM 0x131C0 0x780 -> FEE780
+03D88E	03D89E	sub_3D88E	eeprom2_save_131C0	Confirmed	FEE780 -> EEPROM 0x131C0
+03D89E	03D8B0	sub_3D89E	eeprom2_args_131C0	Confirmed	Args 0x131C0/FEE780/0x780
+03D8B0	03D8D4	sub_3D8B0	msgB_hdr_save	Confirmed	FF9DE8 0x20 B -> 0x131C0+0x20n
+03D8D4	03D8F8	sub_3D8D4	msgB_hdr_save2	Confirmed	FF9E28 0x20 B -> 0x131C0+0x20n
+03D8F8	03D918	sub_3D8F8	msgB_hdr_put	Confirmed	er3 0x20 B -> 0x131C0+0x20*r5l
+03D918	03D944	sub_3D918	msgB_body_load	Confirmed	Body 0x13940+0x90n ([9E24]+2) -> FF9E48
+03D944	03D970	sub_3D944	msgB_body_save	Confirmed	FF9EF8 ([9E04]+2) -> 0x13940+0x90n
+03D970	03D994	sub_3D970	msgB_body_load_full	Confirmed	Body 0x90 B -> FFA62C
+03D994	03DA10	sub_3D994	msgB_body_compare	Inferred	Read body, compare text with FF9F22; FFA557=diff (duplicate test)
+03DA10	03DA20	sub_3DA10	msgB_tail_load	Confirmed	Body+0x2A 0x60 B -> FFA56C
+03DA20	03DA30	sub_3DA20	msgB_tail_save	Confirmed	FFA56C -> body+0x2A
+03DA30	03DA52	sub_3DA30	msgB_tail_args	Confirmed	Args for body tail
+03DA52	03DA80	sub_3DA52	msgB_tail_load2	Confirmed	Body+0x2A 0x60 B -> FFA5CC
+03DA80	03DA90	sub_3DA80	eeprom2_load_1C000	Confirmed	EEPROM 0x1C000 0x110 -> FFB4A8
+03DA90	03DAA0	sub_3DA90	eeprom2_save_1C000	Confirmed	FFB4A8 -> EEPROM 0x1C000
+03DAA0	03DAB2	sub_3DAA0	eeprom2_args_1C000	Confirmed	Args 0x1C000/FFB4A8/0x110
+03DAB2	03DAD4	sub_3DAB2	group_name_load	Confirmed	Group name i (0x1B000+16i) -> FFB9F2
+03DAD4	03DAF6	sub_3DAD4	group_name_save	Confirmed	FFB9F2 -> group name i
+03DAF6	03DB18	sub_3DAF6	group_items_load	Confirmed	Group items i (0x1B0A0+0x1Ei) -> FFBA12
+03DB18	03DB3A	sub_3DB18	group_items_save	Confirmed	FFBA12 -> group items i
+03DB3A	03DB58	sub_3DB3A	blk_1B200_load	Confirmed	EEPROM 0x1B200 0x90 -> FF96F8
+03DB58	03DB76	sub_3DB58	blk_1B200_save	Confirmed	FF96F8 -> 0x1B200
+03DB76	03DB94	sub_3DB76	blk_1B300_load	Confirmed	EEPROM 0x1B300 0x90 -> FF96F8
+03DB94	03DBB2	sub_3DB94	blk_1B300_save	Confirmed	FF96F8 -> 0x1B300
+03DBB2	03DBCC	sub_3DBB2	tab24_load	Confirmed	0x168-B record 0x1C110+0x168n -> FF95F8 -> unpack FFB5B8
+03DBCC	03DBEA	sub_3DBCC	tab24_save	Confirmed	Pack FFB5B8 -> FF95F8 -> EEPROM
+03DBEA	03DC00	sub_3DBEA	tab24_args	Confirmed	Args 0x1C110+0x168n/FF95F8
+03DC00	03DC24	sub_3DC00	tab24_unpack	Confirmed	24x15 B -> FFB5B8 stride 0x20
+03DC24	03DC48	sub_3DC24	tab24_pack	Confirmed	FFB5B8 stride 0x20 -> 24x15 B
+03DC7A	03DC8A	sub_3DC7A	rec_1D8F8_load	Confirmed	0x50-B record 0x1D8F8+0x50n -> FFB8D8
+03DC8A	03DC9A	sub_3DC8A	rec_1D8F8_save	Confirmed	FFB8D8 -> 0x1D8F8+0x50n
+03DC9A	03DCB2	sub_3DC9A	rec_1D8F8_args	Confirmed	Args for 0x1D8F8 record
+03DCB2	03DCD0	sub_3DCB2	blk_1C000_load_wide	Confirmed	EEPROM 0x1C000 0x180 -> FF4576
+03DCD0	03DCEE	sub_3DCD0	blk_1C000_save_wide	Confirmed	FF4576 -> EEPROM 0x1C000
+03DCEE	03DD14	sub_3DCEE	blk_1C000_put16	Confirmed	Entry n 16 B FF4576 -> 0x1C000+16n
+03DD14	03DD32	sub_3DD14	blk_1E000_load	Confirmed	EEPROM 0x1E000 0x50 -> FFAE22
+03DD32	03DD50	sub_3DD32	blk_1E000_save	Confirmed	FFAE22 -> 0x1E000
+03DD50	03DD74	sub_3DD50	rec_1E050_load	Confirmed	0x1E0-B record 0x1E050+0x1E0n -> FFB5B8
+03DD74	03DD98	sub_3DD74	rec_1E050_save	Confirmed	FFB5B8 -> 0x1E050+0x1E0n
+03DD98	03DDA8	sub_3DD98	pic_state_load	Confirmed	EEPROM 0x1FA00 0x80 -> FF2F4A (picture state, doc 74)
+03DDA8	03DDB8	sub_3DDA8	pic_state_save	Confirmed	FF2F4A -> EEPROM 0x1FA00
+03DDB8	03DDCA	sub_3DDB8	pic_state_args	Confirmed	Args 0x1FA00/FF2F4A/0x80
+03DDFC	03DE20	sub_3DDFC	mem_read_raw	Confirmed	Channel record n -> FFAC76 raw
+03DE20	03DE52	sub_3DE20	dgid_cache_load	Confirmed	DG-ID cache 0x1A000/0x1A080 -> FF4726/FF476E
+03DE52	03DE84	sub_3DE52	dgid_cache_save	Confirmed	DG-ID cache back to EEPROM
+03DE84	03DE96	sub_3DE84	rec1200_dgid_save	Confirmed	Write-through DG-ID word for 0x1200 record
+03DE96	03DEA8	sub_3DE96	mem_dgid_save	Confirmed	Write-through DG-ID word for channel slot
+03DEA8	03DF0A	sub_3DEA8	vfo_dgid_save	Confirmed	Write-through DG-ID word for band VFO (A/B table)
+03DF0A	03DF1C	sub_3DF0A	rec1200_dgid_load	Confirmed	Cache -> working DG-ID word (0x1200 record)
+03DF1C	03DF2E	sub_3DF1C	mem_dgid_load	Confirmed	Cache -> working DG-ID word (channel)
+03DF2E	03DF86	sub_3DF2E	vfo_dgid_load	Confirmed	Cache -> working DG-ID word (band VFO)
+03DF86	03E060	sub_3DF86	smeter_update_A	Confirmed	Band-A S-meter refresh every 10 ticks (FF956E); redraw on change of +0x80
+03E060	03E110	sub_3E060	smeter_quantise_A	Confirmed	AN3 FFA993 -> S-level 0..10 into rec +0x80/+0x81/+0x83 (doc 137)
+03E110	03E14A	sub_3E110	smeter_level_A	Confirmed	Band-A quantiser only, level in r2l
+03E14A	03E192	sub_3E14A	smeter_redraw_check	Confirmed	Compare +0x80 with +0x84 and request redraw 817E.b1
+03E192	03E26C	sub_3E192	smeter_update_B	Confirmed	Band-B twin of smeter_update_A (FF9581)
+03E26C	03E31A	sub_3E26C	smeter_quantise_B	Confirmed	AN5 FFA995 -> band-B S-level
+03E31A	03E354	sub_3E31A	smeter_level_B	Confirmed	Band-B quantiser only
+03E354	03E5DA	sub_3E354	ui_timers_tick	Inferred	Periodic housekeeping: popup/timeout timers, redraw requests, RTC INT edge (FFFF45.b3) -> off-timer / hourly beep
+03E5DA	03E60E	sub_3E5DA	led_blink_toggle	Inferred	Toggle AA32.b1; FF9549 = 4 or 0x55; FFFBA5 low nibble 8/0
+03E60E	03E66C	sub_3E60E	blink_A9F7	Confirmed	500 ms blink state machine on A9F7/A9F8 (FF9541)
+03E66C	03E682	sub_3E66C	ui_flags_clear_A7	Confirmed	FF817E &= 0xA7 (no static caller; A9F6 test dead)
+03E682	03E6FE	sub_3E682	lamp_timer_event	Inferred	On AA30.b3 start lamp/backlight timer per setting FF89AA (table 0x3B4A)
+03E6FE	03E70A	sub_3E6FE	lamp_off	Inferred	sub_161F2 then A9E9=0
+03E71A	03E728	sub_3E71A	lamp_state_clear	Confirmed	A999=0, A9E9=0
+03E728	03E772	sub_3E728	rtc_init	Inferred	RTC reset: status1 0x60 twice, status2 0x62, time 0x64 from ROM defaults
+03E772	03E7EE	sub_3E772	rtc_boot_check	Inferred	Read RTC status (0x61); POC/BLD -> init + tone 0x1B; fix status2; read time
+03E7EE	03E828	sub_3E7EE	rtc_set_alarm	Inferred	Write status2, INT1 alarm (0x68) from FF8988 hour/min
+03E828	03E864	sub_3E828	rtc_read_time	Inferred	Read 6 time bytes (cmd 0x65) into er5, mask day/hour, clear timers
+03E864	03E90A	sub_3E864	rtc_read	Confirmed	3-wire read: cmd r2l MSB-first, r6l bytes LSB-first from FFFF4D.b4
+03E90A	03E98E	sub_3E90A	rtc_write	Confirmed	3-wire write: cmd r2l, r6l bytes LSB-first on FFFF5D.b4
+03E99A	03E9F8	sub_3E99A	blink_B3E8	Confirmed	500 ms blink state machine on B3E8/B3E9 (FF9566)
+03E9F8	03E9FC	sub_3E9F8	hw_reinit_then_standby	Inferred	sub_20F6 (port/clock init) then falls into standby_entry
+03E9FC	03EA28	sub_3E9FC	standby_entry	Inferred	Reset path: band A, load R1+cal image, then charge/standby loop body
+03EA28	03EBD6	sub_3EA28	charge_standby_loop	Inferred	Radio-off charge display loop: battery A/D, charge level A9DD, 11 h timeout
+03EBD6	03EC06	sub_3EBD6	charge_level_hourly	Inferred	Every hour (FF95F6=3600) bump charge level A9DD (<8)
+03EC06	03EC3C	sub_3EC06	charge_level_from_adc	Inferred	Map FF9590 against 8 thresholds to level 2..10
+03EC3C	03EC50	sub_3EC3C	standby_ports_off	Inferred	sub_38160 then clear FFFF5D b0/b1, FFFBA5.b6
+03EC50	03ECB8	sub_3EC50	low_power_modules	Confirmed	Disable IRQ, USB IRQ enables off, DA off, MSTPCR A/B/C, SCI-D reinit
+03ECB8	03ECC4	sub_3ECB8	market_is_0	Confirmed	Z iff FF800F==0 (doc 59)
+03ECC4	03ECD4	sub_3ECC4	market_is_0_or_6	Confirmed	Z iff FF800F in {0,6}; no caller (doc 59)
+03ECD4	03ECDE	sub_3ECD4	market_is_1	Confirmed	Z iff FF800F==1
+03ECDE	03ECF4	sub_3ECDE	market_is_2_to_4	Confirmed	r4l=0 (Z) iff 2<=FF800F<=4
+03EDAA	03EDB2	sub_3EDAA	cal_byte_ptr	Confirmed	If FF97FF set use alt map, else falls into cal_byte_ptr_main
+03EDB2	03EE70	sub_3EDB2	cal_byte_ptr_main	Confirmed	er4 = calibration byte for alignment item FF97F8 (FF8016/FF8096 + band offset)
+03EE70	03EE9A	sub_3EE70	cal_byte_ptr_alt	Confirmed	er4 = FF805A/5B/5D/5C by band rec+4
+03EE9A	03EEC4	sub_3EE9A	cal_block_A	Confirmed	er3 = band-A cal block FF8016/26/46/36 by rec+0x8E
+03EEC4	03EEEE	sub_3EEC4	cal_block_B	Confirmed	er3 = band-B cal block FF8096/A6/C6/B6 by rec+0x8E
+03EEEE	03EF2E	sub_3EEEE	tone_class_3C70	Confirmed	Squelch class byte[0x3C70+rec+0x16], 0 in digital/APRS
+03EF2E	03EF6E	sub_3EF2E	tone_class_3C7C	Confirmed	Class byte[0x3C7C+rec+0x16], 0 in digital/APRS
+03EF6E	03EFAE	sub_3EF6E	tx_tone_class	Confirmed	TX tone class byte[0x3C88+rec+0x16] (doc 120)
+03EFAE	03EFEE	sub_3EFAE	tone_class_3C94	Confirmed	Class byte[0x3C94+rec+0x16], 0 in digital/APRS
+03EFEE	03F016	sub_3EFEE	tone_class_3C94_b	Confirmed	Class byte[0x3C94+...], only APRS test on side B
+03F016	03F04A	sub_3F016	mem_step_up_bank	Confirmed	Step slot up (wrap) until valid and attr.b6 (bank/pref)
+03F068	03F076	sub_3F068	mem_step_store_check	Confirmed	Store slot, test attribute (tail of down twin)
+03F076	03F110	sub_3F076	mem_step_skip	Confirmed	Step up/down skipping attr.b7 slots; FFACD7=0xFF when wrapped to start
+03F110	03F164	sub_3F110	mem_step_valid	Confirmed	Step up/down to next valid slot (attr&3==3)
+03F164	03F172	sub_3F164	mem_attr_of_packed	Confirmed	Attribute of packed (area<<11|slot) word
+03F172	03F184	sub_3F172	mem_attr_of_slot	Confirmed	Attribute of slot r3 in current area (falls into 3F184)
+03F184	03F1C4	sub_3F184	mem_attr_lookup	Confirmed	Attribute byte (area-rebased, areas 6/8 special); Z iff attr&3==3

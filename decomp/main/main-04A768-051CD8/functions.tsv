@@ -1,0 +1,311 @@
+start	end	ida_name	new_name	confidence	summary
+04A768	04A88A	sub_4A768	aprs_popup_arm	Confirmed	Gate on ui mode, copy newest station record/frame to display copies, arm station or message pop-up timer
+04A88C	04A8DA	sub_4A88C	aprs_popup_arm_msg_A8E8	Confirmed	Message pop-up with callsign from FFA8E8; forces FFA9FE=1
+04A8DA	04A91C	sub_4A8DA	aprs_popup_arm_msg_A8E8_tail	Confirmed	IDA split tail of 04A88C (copy callsign, set timer)
+04A91E	04AA44	sub_4A91E	aprs_popup_arm_msglist	Confirmed	As aprs_popup_arm, popup_kind=1, shows msg_order[0], message letter 'M'
+04AAC8	04AAE8	sub_4AAC8	aprs_popup_clear	Confirmed	Clear both pop-up timers/types and FF9DDF
+04AAE8	04AB70	sub_4AAE8	aprs_detail_open	Confirmed	Latch UNIT settings, then list redraw or per-type detail page via table 0x04AB70
+04B192	04B1B4	sub_4B192	aprs_list_refresh	Confirmed	Choose compose / detail / list SUB frame builder
+04B1B4	04B1EC	sub_4B1B4	aprs_msg_detail_refresh	Confirmed	Received vs sent message detail frame; alt entry 0x4B1D0 narrow layouts
+04B1F6	04B20A	sub_4B1F6	row_src_call	Confirmed	Row: source callsign at column 7
+04B20A	04B238	sub_4B20A	put_addr_text	Confirmed	Copy 9-char CALL-SS text of a 10-byte address record plus space
+04B238	04B280	sub_4B238	row_type_date_alt	Confirmed	Type name (2nd table if cs_kind==1) + BCD date
+04B280	04B314	sub_4B280	row_type_date	Confirmed	Type name from 0x3CBE + BCD MM/DD date
+04B314	04B378	sub_4B314	row_dist_time	Confirmed	Distance + BCD HH:MM time row
+04B378	04B484	sub_4B378	show_distance	Confirmed	Distance label and 4-digit value (ddd.d / dddd / 1dddd / *****)
+04B4AA	04B5B6	sub_4B4AA	show_distance_B	Confirmed	Distance from second record A7D2
+04B5B6	04B6F4	sub_4B5B6	show_distance_C	Confirmed	As B, blank when FF8EB2==1
+04B6F4	04B724	sub_4B6F4	get_distance_B	Confirmed	Return A7D2 distance or -1
+04B724	04B764	sub_4B724	parse_dec5	Confirmed	5 ASCII digits to value, 0 if bad
+04B764	04B782	sub_4B764	parse_dec4	Confirmed	4 ASCII digits, 0 if bad
+04B782	04B7A0	sub_4B782	parse_dec3	Confirmed	3 ASCII digits, 0 if bad
+04B7A0	04B7BE	sub_4B7A0	parse_dec2	Confirmed	2 ASCII digits, 0 if bad
+04B7BE	04B7F4	sub_4B7BE	dec_core4	Confirmed	Shared 4/3/2-digit decimal core
+04B7F4	04B812	sub_4B7F4	parse_dec4_m1	Confirmed	4 digits, -1 if bad
+04B812	04B88C	sub_4B812	parse_dec3_m1	Confirmed	3 digits (entry 0x4B830: 2 digits), -1 if bad
+04B88C	04B8D4	sub_4B88C	page_mice	Confirmed	Mic-E detail page (desc 0x04AC58), symbol info[7]/[8]
+04B8D4	04B9EA	sub_4B8D4	row_mice_call_comment	Inferred	Callsign row; flags comment presence after Mic-E device trailer (jump table 0x4B9EA)
+04BA32	04BAA8	sub_4BA32	row_lat_mice	Confirmed	Row: Mic-E latitude or dash placeholder
+04BAA8	04BACE	sub_4BAA8	row_lat_mice_own	Confirmed	Full-row Mic-E latitude of own frame FF1A18
+04BAF4	04BB46	sub_4BAF4	row_lat_mice_A7F4	Confirmed	Full-row Mic-E latitude of FFA7F4 record
+04BB46	04BB54	sub_4BB46	mice_lat_own	Confirmed	Mic-E lat decode, P=own frame
+04BB54	04BB62	sub_4BB54	mice_lat_rx	Confirmed	Mic-E lat decode, P=rx frame
+04BB62	04BB6A	sub_4BB62	mice_lat_at	Confirmed	Mic-E lat decode at caller P
+04BB6A	04BE1E	sub_4BB6A	mice_lat_A7F4	Confirmed	Mic-E lat decode FFA7F4; entries 4BB78 (FFA882), 4BB86 (cur), core 4BB92
+04BEDC	04BEF2	sub_4BEDC	dms_secs_auto	Confirmed	Seconds field with ambiguity derived from echoed blanks
+04BEF2	04BF46	sub_4BEF2	dms_secs	Confirmed	Hundredths or rounded seconds (MM'SS mode) with ambiguity
+04BF46	04BFF4	sub_4BF46	row_lon_mice	Confirmed	Row: Mic-E longitude with ambiguity blanking
+04BFF4	04C004	sub_4BFF4	blank_masked	Confirmed	Overwrite digits whose ambiguity bit is set
+04C004	04C02A	sub_4C004	row_lon_mice_own	Confirmed	Full-row Mic-E longitude own frame
+04C050	04C0E0	sub_4C050	row_lon_mice_A7F4	Confirmed	Full-row Mic-E longitude FFA7F4 record
+04C0E0	04C104	sub_4C0E0	mice_lon_own	Confirmed	Mic-E lon decode own frame
+04C104	04C150	sub_4C104	mice_lon_rx	Confirmed	Mic-E lon decode rx frame + ambiguity blanking
+04C150	04C172	sub_4C150	mice_lon_packed	Inferred	Mic-E lon decode from packed {dest[6],lon[3]} record
+04C172	04C284	sub_4C172	mice_lon_A7F4	Confirmed	Mic-E lon decode FFA7FA; entries 4C198 (FFA888), 4C1BE (cur), core 4C1DC
+04C284	04C32C	sub_4C284	row_mice_device_date	Confirmed	Mic-E device model name (table 0x4C32C) + date
+04C3D2	04C426	sub_4C3D2	mice_lon_deg	Confirmed	Mic-E lon degrees with +100 offset and 180-199 folding
+04C426	04C43E	sub_4C426	mice_lon_min	Confirmed	Mic-E lon minutes (mod 60)
+04C43E	04C460	sub_4C43E	mice_lon_hh	Confirmed	Mic-E lon hundredths / seconds
+04C460	04C49A	sub_4C460	row_mice_status	Confirmed	Mic-E message/status label
+04C49A	04C4E2	sub_4C49A	mice_msg_code	Confirmed	Mic-E message code from dest[0..2] (0..14, 15 invalid)
+04C5C4	04C62E	sub_4C5C4	row_mice_speed	Confirmed	Mic-E speed row
+04C62E	04C640	sub_4C62E	speed_print	Confirmed	Convert knots by unit and print 4 digits
+04C640	04C668	sub_4C640	speed_conv	Confirmed	Knots -> knots/mph(x1.15)/kmh(x1.85) rounded
+04C6C0	04C724	sub_4C6C0	row_mice_course	Confirmed	Mic-E course row
+04C724	04C730	sub_4C724	course_print	Confirmed	3-digit course at column 16
+04C750	04C78E	sub_4C750	mice_course_val	Confirmed	Mic-E course value (bearing callback)
+04C78E	04C7DC	sub_4C78E	row_mice_alt	Confirmed	Mic-E altitude row
+04C7DC	04C7E4	sub_4C7DC	mice_type_cmp	Confirmed	mice_type with end=FFA4C2 (dup check)
+04C7E4	04C874	sub_4C7E4	mice_type	Confirmed	Mic-E device code from type byte/trailer; flags following altitude
+04C874	04C8E4	sub_4C874	mice_yaesu_code	Confirmed	Yaesu "_x" trailer -> device code
+04C8E4	04CA1A	sub_4C8E4	mice_alt_print	Confirmed	Base-91 Mic-E altitude, m or ft, signed
+04CA1A	04CA52	sub_4CA1A	m_to_ft	Confirmed	Metres to feet (x3.2808)
+04CA8E	04CAB6	sub_4CA8E	row_status_title	Confirmed	"[ STATUS TEXT ]" title row
+04CAC6	04CB42	sub_4CAC6	row_mice_text	Confirmed	Mic-E comment text window 0/20/40/60
+04CB42	04CB84	sub_4CB42	page_cmp_ts_wx	Confirmed	Compressed '/@' weather page desc 0x4ACCC
+04CB84	04CBBC	sub_4CB84	page_cmp_ts	Confirmed	Compressed '/@' page desc 0x4AC90
+04CBBC	04CBD8	sub_4CBBC	hdr_sym_cmp_ts	Confirmed	Header symbol info[8]/[0x11]
+04CBD8	04CBDC	sub_4CBD8	cmp_cs_kind	Confirmed	Thunk ext_ptr then cs_kind_at
+04CBDC	04CC08	sub_4CBDC	cs_kind_at	Confirmed	Compressed csT kind: 0 alt,1 crs/spd,2 range,FF bad
+04CC08	04CC5A	sub_4CC08	row_cmp_course	Confirmed	Compressed course c*4
+04CC5A	04CC84	sub_4CC5A	cmp_course_val	Confirmed	Compressed course value or FFFF
+04CC84	04CCEE	sub_4CC84	row_cmp_speed	Confirmed	Compressed speed via table 0x4E76C
+04CCEE	04CD7E	sub_4CCEE	row_cmp_range	Confirmed	Compressed radio range via tables 0x4E822/0x4E8D8
+04CD9C	04CE8A	sub_4CD9C	row_cmp_alt	Confirmed	Compressed altitude 1.002^cs ft (tables 0x4E98E/0x4EAFA)
+04CE8A	04CEB2	sub_4CE8A	row_cmp_alt_tail	Confirmed	IDA split tail of 04CD9C (ft->m, print)
+04CEB2	04CF70	sub_4CEB2	page_unc_ts	Confirmed	Uncompressed '/@' page by extension kind
+04CF70	04CF74	sub_4CF70	ext_kind_cur	Confirmed	Thunk ext_ptr then ext_kind
+04CF74	04CFB8	sub_4CF74	ext_kind	Confirmed	PHG=0 / none=1 / weather=2 / CSE-SPD=-1
+04CFB8	04CFE8	sub_4CFB8	dig3_or_fill	Confirmed	3 digits or 3 equal filler chars check
+04CFE8	04D00C	sub_4CFE8	row_lat_cmp_own	Confirmed	Full-row compressed lat own frame
+04D00C	04D042	sub_4D00C	row_lat_cmp	Confirmed	Row compressed latitude
+04D042	04D050	sub_4D042	cmp_lat_own	Confirmed	Compressed lat own
+04D050	04D126	sub_4D050	cmp_lat_rx	Confirmed	Compressed lat rx; entry 4D05E cur; core 4D06A
+04D126	04D146	sub_4D126	b91_word4	Confirmed	4 base-91 chars to integer
+04D146	04D17E	sub_4D146	b91_digit	Confirmed	(c-33)*91^n
+04D17E	04D204	sub_4D17E	b91_to_deg4	Confirmed	Base-91 to degrees*1e4 with 3 divisors
+04D204	04D228	sub_4D204	row_lon_cmp_own	Confirmed	Full-row compressed lon own
+04D228	04D25E	sub_4D228	row_lon_cmp	Confirmed	Row compressed longitude
+04D25E	04D270	sub_4D25E	cmp_lon_own	Confirmed	Compressed lon own
+04D270	04D360	sub_4D270	cmp_lon_rx	Confirmed	Compressed lon rx; entry 4D282 cur; core 4D292
+04D360	04D374	sub_4D360	pos_ptr_own	Confirmed	Position pointer in own frame by DTI
+04D374	04D3E8	sub_4D374	pos_ptr_rx	Confirmed	Position pointer rx frame; entry 4D388 cur
+04D3E8	04D43A	sub_4D3E8	row_lat_unc_own	Confirmed	Full-row uncompressed lat own
+04D43A	04D4AE	sub_4D43A	row_lat_unc	Confirmed	Row uncompressed latitude
+04D4AE	04D4BA	sub_4D4AE	unc_lat_own	Confirmed	Uncompressed lat own
+04D4BA	04D668	sub_4D4BA	unc_lat_rx	Confirmed	Uncompressed lat rx; entry 4D4C6 cur; core 4D4D0
+04D668	04D6BA	sub_4D668	row_lon_unc_own	Confirmed	Full-row uncompressed lon own
+04D6BA	04D72E	sub_4D6BA	row_lon_unc	Confirmed	Row uncompressed longitude
+04D72E	04D748	sub_4D72E	unc_lon_own	Confirmed	Uncompressed lon own
+04D748	04D9A4	sub_4D748	unc_lon_rx	Confirmed	Uncompressed lon rx; entry 4D762 cur; core 4D774
+04D9A4	04D9AC	sub_4D9A4	row_comment_title_ext	Confirmed	ext_ptr + comment title
+04D9AC	04D9D4	sub_4D9AC	row_comment_title	Confirmed	"[ COMMENT TEXT ]" title row
+04D9E6	04D9F2	sub_4D9E6	ext_ptr_cmp	Confirmed	Data-extension pointer, dup-check form
+04D9F2	04DA8E	sub_4D9F2	ext_ptr	Confirmed	Data-extension pointer by DTI/compression
+04DA8E	04DAA4	sub_4DA8E	row_ext_text	Confirmed	Comment text window entries 0..0x50
+04DAA4	04DAEC	sub_4DAA4	text_window	Confirmed	20-char text window of a frame tail
+04DAEC	04DB2E	sub_4DAEC	page_cmp_wx	Confirmed	Compressed '!=' weather page
+04DB2E	04DB66	sub_4DB2E	page_cmp	Confirmed	Compressed '!=' page
+04DB66	04DB82	sub_4DB66	hdr_sym_cmp	Confirmed	Header symbol info[1]/[0xA]
+04DB82	04DC40	sub_4DB82	page_unc	Confirmed	Uncompressed '!=' page
+04DC40	04DCFE	sub_4DC40	page_wx_nopos	Confirmed	Positionless weather '_' page
+04DCFE	04DD0A	sub_4DCFE	row_wx_nopos_title	Confirmed	Title row for '_' page
+04DD0A	04DD28	sub_4DD0A	row_wx_nopos_text	Confirmed	Text windows for '_' page
+04DD28	04DD82	sub_4DD28	row_phg_power	Confirmed	PHG power p^2 W
+04DDA6	04DE26	sub_4DDA6	row_phg_height	Confirmed	PHG height m/ft tables
+04DE94	04DEE2	sub_4DE94	row_phg_gain	Confirmed	PHG gain dB
+04DEF2	04DF60	sub_4DEF2	row_phg_dir	Confirmed	PHG directivity
+04DF98	04E010	sub_4DF98	row_phg_rate	Inferred	PHG beacon rate char
+04E020	04E054	sub_4E020	phg_ext_len	Confirmed	PHG extension length 7 or 9
+04E054	04E0BA	sub_4E054	row_cse_unc	Confirmed	CSE/SPD course row
+04E0BA	04E0FE	sub_4E0BA	cse_unc_val	Confirmed	CSE/SPD course value
+04E0FE	04E15E	sub_4E0FE	row_spd_unc	Confirmed	CSE/SPD speed row
+04E15E	04E19E	sub_4E15E	row_rain_1h	Confirmed	Rain last hour
+04E19E	04E1DC	sub_4E19E	row_rain_24h	Confirmed	Rain 24 h
+04E1DC	04E21A	sub_4E1DC	row_rain_mid	Confirmed	Rain since midnight
+04E21A	04E27C	sub_4E21A	rain_print	Confirmed	Rain inch/mm formatter
+04E2D6	04E31E	sub_4E2D6	row_baro	Confirmed	Barometer hPa (doc 70 K1a handler)
+04E32E	04E392	sub_4E32E	row_humidity	Confirmed	Humidity %
+04E3A2	04E408	sub_4E3A2	row_wdir_ext	Confirmed	Wind direction from extension
+04E418	04E470	sub_4E418	row_wspd_ext	Confirmed	Wind speed from extension
+04E470	04E4AE	sub_4E470	row_gust	Confirmed	Gust
+04E4AE	04E50A	sub_4E4AE	wind_print	Confirmed	mph or m/s formatter
+04E546	04E584	sub_4E546	row_temp	Confirmed	Temperature
+04E5A2	04E606	sub_4E5A2	temp_print	Confirmed	degF or degC formatter
+04E606	04E686	sub_4E606	wx_check_field_ext	Confirmed	Weather field validator (letter + n digits)
+04E686	04E6DE	sub_4E686	wx_check_temp	Confirmed	Temperature field validator with '-'
+04E6DE	04E72C	sub_4E6DE	row_wdir_wx	Confirmed	Wind dir ('_' pages)
+04E72C	04E76C	sub_4E72C	row_wspd_wx	Confirmed	Wind speed ('_' pages)
+04EBB0	04EC06	sub_4EBB0	row_wdir_cmp	Confirmed	Compressed wind direction
+04EC06	04EC6C	sub_4EC06	row_wspd_cmp	Confirmed	Compressed wind speed
+04EC6C	04ECD4	sub_4EC6C	wind_print_kn	Confirmed	Knots -> mph/m/s formatter
+04ECD4	04ED2E	sub_4ECD4	page_obj_cmp	Confirmed	Compressed object page
+04ED2E	04EDE6	sub_4ED2E	page_obj_unc	Confirmed	Uncompressed object page
+04EDE6	04EE0E	sub_4EDE6	row_obj_name	Confirmed	Object name row
+04EE0E	04EE3A	sub_4EE0E	page_item_cmp	Confirmed	Compressed item page
+04EE3A	04EE66	sub_4EE3A	page_item_cmp_tail	Confirmed	IDA split tail of 04EE0E
+04EE66	04EF1C	sub_4EE66	page_item_unc	Confirmed	Uncompressed item page
+04EF1C	04EF4C	sub_4EF1C	row_item_name	Confirmed	Item name row
+04EF4C	04EF52	sub_4EF4C	item_name_end_cur	Confirmed	P=disp_info then item_name_end
+04EF52	04EF68	sub_4EF52	item_name_end	Confirmed	Find '!'/'_' ending an item name
+04EF68	04EF8C	sub_4EF68	page_status	Confirmed	Status '>' page
+04EF8C	04EFA2	sub_4EF8C	page_open_blanksym	Confirmed	Open page with blank symbol
+04EFA2	04EFA8	sub_4EFA2	row_status_title2	Confirmed	Thunk to status title
+04EFA8	04EFB0	sub_4EFA8	status_ptr_cmp	Confirmed	Status text pointer (dup check)
+04EFB0	04EFC4	sub_4EFB0	status_ptr	Confirmed	Status text pointer skipping timestamp
+04EFC4	04EFEA	sub_4EFC4	has_timestamp	Confirmed	DDHHMMz or DDHHMM/ check
+04EFEA	04F002	sub_4EFEA	row_status_text	Confirmed	Status text windows
+04F002	04F02C	sub_4F002	page_other	Confirmed	"OTHER" raw page
+04F02C	04F054	sub_4F02C	row_data_title	Confirmed	"[ DATA TEXT ]" title
+04F062	04F084	sub_4F062	row_data_text	Confirmed	Raw data text windows
+04F084	04F10C	sub_4F084	wx_parse	Confirmed	Parse weather extension fields into FFA538 slots
+04F10C	04F234	sub_4F10C	wx_field_parse	Confirmed	Parse one weather field
+04F234	04F260	sub_4F234	wx_store	Confirmed	Store first valid weather field pointer
+04F260	04F296	sub_4F260	wx_check_at	Confirmed	Weather field check at pointer (FFA503)
+04F296	04F2CE	sub_4F296	wx_check_at_cases	Confirmed	IDA split of 04F260 letter cases
+04F2CE	04F306	sub_4F2CE	wx_digits_at	Confirmed	Digit/filler check at pointer
+04F30A	04F390	sub_4F30A	page_status_icon	Inferred	Status icon cells in SUB frame
+04F390	04F3DE	sub_4F390	page_bearing	Confirmed	16-point bearing cell from course callback
+04F3DE	04F3E4	sub_4F3DE	no_course	Confirmed	Return 0xFFFF
+04F3F8	04F46A	sub_4F3F8	own_mice_dir16	Inferred	16-point course of FFA7F4 Mic-E record
+04F46A	04F4B0	sub_4F46A	page_sym_cells	Confirmed	Symbol table/code cells of page header
+04F4B0	04F564	sub_4F4B0	sym_lookup	Confirmed	APRS symbol -> icon index with overlay
+04F564	04F700	sub_4F564	msg_rx_detail_frame	Confirmed	SUB frame for a received message
+04F700	04F728	sub_4F700	frame_append_scroll	Inferred	Append scroll index if FF813E check passes
+04F728	04F76C	sub_4F728	msg_title_frame	Confirmed	Title line to FF3D94
+04F76C	04F78E	sub_4F76C	msg_title_line	Confirmed	Title template + source callsign
+04F792	04F810	sub_4F792	msg_kind_line	Confirmed	"MSG"/"GRP"/"BLN" line
+04F810	04F82A	sub_4F810	msg_kind	Confirmed	0 msg, 1 group, 2 bulletin from cur_flags
+04F836	04F83C	sub_4F836	msgno_find_end	Confirmed	msgno_find with end=disp_end
+04F83C	04F85C	sub_4F83C	msgno_find	Confirmed	Find '{' message number near frame end
+04F85C	04F864	sub_4F85C	msg_text_line0	Confirmed	Message text window 0
+04F864	04F86C	sub_4F864	msg_text_line1	Confirmed	Message text window 20
+04F86C	04F874	sub_4F86C	msg_text_line2	Confirmed	Message text window 40
+04F874	04F924	sub_4F874	msg_text_line3	Confirmed	Message text window 60; narrow entries 4F87C..4F8A4
+04F924	04F948	sub_4F924	msg_text_end	Confirmed	End of message text before '{'
+04F948	04F94A	sub_4F948	copy_window20	Confirmed	copy_window with 20 chars
+04F94A	04F96A	sub_4F94A	copy_window	Confirmed	Copy text window to FFB05B, skip >=0x80
+04F9A4	04FAE0	sub_4F9A4	msg_tx_detail_frame	Confirmed	SUB frame for a sent message
+04FAE0	04FB24	sub_4FAE0	msg_tx_title_frame	Confirmed	Sent-message title to FF3D94
+04FB24	04FB40	sub_4FB24	msg_tx_title_line	Confirmed	Template + sub_61A4
+04FB44	04FB4A	sub_4FB44	thunk_619C	Confirmed	jsr sub_619C
+04FB4A	04FBAE	sub_4FB4A	msg_tx_status_line	Inferred	Retry status "n/5" + MSG number
+04FBCC	04FBE6	sub_4FBCC	copy_rec5	Confirmed	Copy cur_stn[0..4] to line
+04FBE6	04FBFE	sub_4FBE6	compose_redraw	Confirmed	Compose screen redraw
+04FBFE	04FD8E	sub_4FBFE	compose_frame	Confirmed	Compose screen SUB frames (full/cursor line)
+04FD8E	04FDA4	sub_4FD8E	fixed_text_ptr	Inferred	Pointer to 16-byte record FF8AFE+(n-5)*16
+04FE08	04FE0E	sub_4FE08	thunk_61B0	Confirmed	jsr sub_61B0
+04FE14	04FE18	sub_4FE14	compose_line0	Confirmed	Compose text window 0
+04FE18	04FE1C	sub_4FE18	compose_line1	Confirmed	Compose text window 1
+04FE1C	04FE20	sub_4FE1C	compose_line2	Confirmed	Compose text window 2
+04FE20	04FE62	sub_4FE20	compose_line3	Confirmed	Compose text window 3 (core 4FE24)
+04FE62	04FE66	sub_4FE62	always_zero	Confirmed	Return 0 (Z set)
+04FE66	04FE8E	sub_4FE66	compose_buf_sel	Confirmed	Select message text or auto-reply text buffer
+04FEE4	04FF0E	sub_4FEE4	text_window_ff	Confirmed	Text window over FF-terminated buffer
+04FF0E	04FF10	nullsub_9	nullsub_9	Confirmed	rts
+04FF10	04FFDA	sub_4FF10	stat_frame	Confirmed	Status-text edit SUB frames
+04FFDA	04FFE4	sub_4FFDA	stat_line0	Confirmed	Status text window 0
+04FFE4	04FFEE	sub_4FFE4	stat_line1	Confirmed	Status text window 1
+04FFEE	05002A	sub_4FFEE	stat_line2	Confirmed	Status text window 2 (core 4FFF8)
+05002A	05003C	sub_5002A	stat_buf_sel	Confirmed	Select status text buffer FFADA2
+05015A	05017C	sub_5015A	classify_cur_frame	Confirmed	Classify displayed frame, set cur_dti/cur_type
+05017C	0501FC	sub_5017C	aprs_classify	Confirmed	AX.25 UI + APRS DTI -> packet type 0..29 or FF
+0501FC	050280	sub_501FC	aprs_classify_obj_item	Confirmed	IDA split: object/item/position sub-classification
+050280	050290	sub_50280	wx_symbol_check_unc	Confirmed	Weather symbol + ext check, uncompressed
+050290	0502B0	sub_50290	wx_symbol_check_unc_tail	Confirmed	IDA split tail
+0502B0	0502D2	sub_502B0	wx_symbol_check_cmp	Confirmed	Weather symbol + field check, compressed
+0502D2	0503A0	sub_502D2	generic_dest_filter	Confirmed	Accept only APRS generic destinations (AP*,CQ,...)
+050402	05043A	sub_50402	stn_list_open_check	Confirmed	Station list entry exists check
+05043A	050460	sub_5043A	aprs_slot_delete	Confirmed	Fill slot and rx_hdr with FF, delete tone
+050460	050498	sub_50460	msg_list_open_check	Confirmed	Message list entry exists check
+050498	0504AC	sub_50498	stn_list_enter	Confirmed	Open station detail from list
+0504AC	0504BA	sub_504AC	stn_list_enter_tail	Confirmed	IDA split tail
+0504BA	0504CC	sub_504BA	stn_list_close	Confirmed	Close station detail; resync cursor (4504CC)
+0504CC	0504F2	sub_504CC	stn_cursor_resync	Confirmed	Find current slot in station order
+0504F2	050536	sub_504F2	stn_delete	Confirmed	Delete station under cursor
+050536	050570	sub_50536	stn_detail_load	Confirmed	Load station slot under cursor
+050570	0505BE	sub_50570	load_slot	Confirmed	Copy 0x20-byte slot to cur_stn and set end ptr
+0505BE	0505DA	sub_505BE	msg_list_enter	Confirmed	Open message detail from list
+0505E2	0505F4	sub_505E2	msg_list_close	Confirmed	Close message detail
+0505F4	05061A	sub_505F4	msg_cursor_resync	Confirmed	Find current slot in message order
+05061A	05066E	sub_5061A	msg_delete	Confirmed	Delete message under cursor
+05066E	050710	sub_5066E	msg_detail_load	Confirmed	Load message slot, mark read
+050710	050722	sub_50710	msg_retry_stop_cursor	Confirmed	Stop retries of message under cursor
+050722	05072C	sub_50722	msg_retry_stop_cur	Confirmed	Stop retries of current message
+050748	050782	sub_50748	msg_retry_stop	Confirmed	Set retry byte FF and save slot
+050782	0507AC	sub_50782	msg_retry_stop_tail	Confirmed	IDA split tail (save slot)
+0507AC	050828	sub_507AC	msg_reply_start	Inferred	Start compose (reply) from list
+050828	050894	sub_50828	msg_reply_from_detail	Inferred	Start compose from detail; quote text
+050894	0508B6	sub_50894	compose_init	Confirmed	Init compose state
+0508B6	0508CA	sub_508B6	edit_state_clear	Confirmed	Clear edit state and scroll
+0508CA	050918	sub_508CA	reply_to_fill	Confirmed	Addressee from source call or default
+050918	05095A	sub_50918	quote_text	Inferred	Copy received message text into edit buffer
+05095A	0509C4	sub_5095A	compose_toggle	Confirmed	Toggle compose mode, reset buffers
+0509D2	050A32	sub_509D2	aprs_list_step_key	Inferred	Cursor/scroll step key for list/detail
+050B0A	050B34	sub_50B0A	compose_key_50B0A	Inferred	Compose key: step descriptor 0x50B34
+050B86	050B92	sub_50B86	fixed_text_insert	Inferred	Insert fixed text record at cursor
+050BAA	050BC8	sub_50BAA	msg_to_reset	Inferred	Reset addressee flag and compose
+050BC8	050BE0	sub_50BC8	msg_cursor_ptr	Confirmed	Pointer/remaining length at edit cursor
+050BE0	050C02	sub_50BE0	insert_text	Confirmed	Insert text at cursor
+050C02	050C20	sub_50C02	msg_clear_from_cursor	Confirmed	Clear text from cursor
+050C20	050C3A	sub_50C20	buf_insert_space	Confirmed	Shift right and insert space
+050C3A	050C4A	sub_50C3A	fill_blank	Confirmed	Fill with ROM blank byte 0xF6D6
+050C4A	050C68	sub_50C4A	buf_delete_char	Confirmed	Shift left delete char
+050C9C	050CD6	sub_50C9C	stat_clear	Confirmed	Clear status text buffer
+050CD6	050CF6	sub_50CD6	stat_cursor_ptr	Confirmed	Status text cursor pointer
+050D7E	050DE8	sub_50D7E	ar_edit_apply	Confirmed	Apply CLR/INSERT/CLRALL/DELETE to auto-reply text
+050DE8	050E08	sub_50DE8	ar_cursor_ptr	Confirmed	Auto-reply cursor pointer
+050E08	050E1E	sub_50E08	compose_clear_key	Inferred	Clear from cursor then post key 6
+050E1E	050E82	sub_50E1E	build_msg_frame	Confirmed	TX frame ":ADDRESSEE:text{NN" (doc 90)
+050E82	050EA8	sub_50E82	build_ui_header	Confirmed	Dest APY03D + src/path + ':'
+050EA8	050F4C	sub_50EA8	msg_queue_outgoing	Inferred	Store outgoing message as record, arm 60 s retry
+050F52	050FAA	sub_50F52	build_src_path	Confirmed	Source + digipeater path + 03 F0
+050FAA	050FBE	sub_50FAA	build_own_src	Confirmed	Own callsign address field
+050FBE	050FD4	sub_50FBE	put_addr_shifted	Confirmed	6 chars <<1, FF->space
+050FD4	050FE8	sub_50FD4	put_call_plain	Confirmed	6 chars, FF->space
+050FE8	05101A	sub_50FE8	own_call_format	Confirmed	Format own call into FFA8D0
+05101A	051054	sub_5101A	put_call_ssid	Confirmed	Callsign + SSID suffix padded to 9
+051094	0510DA	sub_51094	build_ack_frame	Confirmed	TX frame ":ADDRESSEE:ackNN"
+0510E2	051108	sub_510E2	put_call9_compact	Confirmed	9-char call, spaces moved to end
+051144	0511B0	sub_51144	mice_dest_build	Confirmed	Mic-E destination (msg code 2); entry 51148 uses FF8AA9
+0511B0	0511D2	sub_511B0	mice_dest_char	Confirmed	One Mic-E destination char
+05120E	051280	sub_5120E	mice_info_lon	Confirmed	Mic-E info longitude d/m/h encoding
+051280	051352	sub_51280	mice_speed_course	Confirmed	Mic-E SP/DC/SE from GPS RMC
+051352	05135C	sub_51352	mice_alt_gate	Skeleton	Altitude field gate (continues in undumped 0x51366)
+05135C	051366	sub_5135C	mice_alt_gate2	Skeleton	Altitude field gate part 2 (undumped 0x51366..)
+0513D6	051408	sub_513D6	mice_alt_field	Inferred	4-char altitude field or placeholder
+051408	05144C	sub_51408	stn_list_key_51408	Inferred	Station list key handler by FFA9F0
+05144C	051468	sub_5144C	msg_list_key_5144C	Inferred	Message list key handler
+051478	05148C	sub_51478	msg_cursor_home	Confirmed	msg_cursor=0
+05148C	051494	sub_5148C	stn_view_toggle	Confirmed	Toggle FFAA3A.0 in detail, else sub_1F26A
+051494	0514A2	sub_51494	stn_view_toggle_tail	Confirmed	IDA split
+0514A2	0514B2	sub_514A2	msg_view_toggle	Confirmed	Toggle FFAA3A.1
+0514B2	0514C6	sub_514B2	msg_view_toggle_tail	Confirmed	IDA split
+0514C6	051500	sub_514C6	msg_list_frame_514C6	Inferred	Narrow message list page (desc 0x51548)
+051500	05150A	sub_51500	msg_list_frame_tail	Confirmed	IDA split tail
+05150A	051548	sub_5150A	msg_list_frame_5150A	Inferred	Alt layout page desc 0x51548
+051598	0515CC	sub_51598	row_dest	Confirmed	"DEST" row
+0515CC	051632	sub_515CC	row_digi1	Confirmed	"DIGI(F)" row; entry 0x515FC "DIGI(L)"
+051632	05164C	sub_51632	row_digi_tail	Confirmed	Print digi and '*' if H bit
+05164C	05166E	sub_5164C	put_addr10	Confirmed	Copy address text to FFB064
+05169E	0516C6	sub_5169E	row_raw_title	Confirmed	"[   RAW DATA   ]" title
+0516D8	0516DC	sub_516D8	row_raw0	Confirmed	Raw text window 0
+0516DC	0516E0	sub_516DC	row_raw1	Confirmed	Raw text window 1
+0516E0	0516E4	sub_516E0	row_raw2	Confirmed	Raw text window 2
+0516E4	0516E8	sub_516E4	row_raw3	Confirmed	Raw text window 3
+0516E8	0516EC	sub_516E8	row_raw4	Confirmed	Raw text window 4
+0516EC	0516FE	sub_516EC	row_raw5	Confirmed	Raw text window 5/6
+0516FE	051740	sub_516FE	msg_tx_list_frame	Inferred	Sent-message page (desc 0x51574)
+051740	051786	sub_51740	row_dest_aprs	Confirmed	DEST row showing APY03D
+051786	051790	sub_51786	row_digi_own	Confirmed	DIGI rows for own TX
+051790	0517F6	sub_51790	row_digi_own_tail	Confirmed	IDA split
+0517F6	051840	sub_517F6	row_tx_text	Confirmed	Own TX text windows
+051840	0518AE	sub_51840	tx_preview_build	Confirmed	Build ":ADDR:text{NN" preview in FFA91C
+0518AE	051980	sub_518AE	ax25_addr_decode	Confirmed	Decode address fields, check UI, copy frame to FF9EF8
+051980	051A36	sub_51980	ax25_addr_decode_tail	Confirmed	IDA split tail
+051A36	051AC8	sub_51A36	ax25_digi_copy	Confirmed	Copy decoded addresses and last-used digis
+051AC8	051AFC	sub_51AC8	thirdparty_parse	Confirmed	'}' third-party header parse
+051AFC	051B46	sub_51AFC	thirdparty_parse_tail	Confirmed	IDA split
+051B46	051B7A	sub_51B46	thirdparty_path	Confirmed	',' path form
+051B7A	051C5E	sub_51B7A	thirdparty_store	Confirmed	Store third-party frame as new frame
+051C5E	051CD8	sub_51C5E	thirdparty_path2	Confirmed	'*>' path form

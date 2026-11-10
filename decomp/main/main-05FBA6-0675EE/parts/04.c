@@ -365,7 +365,7 @@ void gm_goto_state7(void)                                /* 0644B8 */
     wx_state = 7;
 }
 /* ---------------------------------------------------------------------------
- * 0644DC-0644FA (30 B)  gm_touch_s7_probe  [sub_0644DC]  Confirmed
+ * 0644DC-0644FA (30 B)  gm_touch_s7_probe  [sub_644DC]  Confirmed
  * 0644FA-064504 (10 B)  gm_key_s7  [sub_644FA]  Confirmed
  * 064504-06457C (120 B) gm_member_toggle  [sub_64504]  Confirmed
  * Callers: 02BB9A, 02BC00 (probe); off_64330[7] (644FA); 02BBAE (64504).

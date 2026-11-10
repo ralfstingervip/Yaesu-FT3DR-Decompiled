@@ -1,11 +1,148 @@
-/* header pending */
-
-/* ==========================================================================
- * PART 1  0x015A46 - 0x0165F0
- * Setup-menu key handlers (BACK / ENTER / F style keys that act on the
- * menu level AD68), the setup-item entry hook, the dial dispatcher and the
- * first block of per-item dial handlers (screen ids 0x0E..0x35).
+/* ============================================================================
+ * main-015A46-01E73C.c  -  Hand-reconstructed C for MAIN 0x015A46-0x01E73C.
+ * Lane main-015A46-01E73C, C-reconstruction wave C.
+ *
+ * DOCUMENTATION ONLY.  By-hand transcription of the H8SX disassembly of
+ * FT3D_MAIN_ver102_EXP.bin (big-endian, base 0; comment addresses = file
+ * offsets).  Not compiled.  Function order = address order.  Each header
+ * carries a machine-readable marker:  @start-end ida_name new_name conf: text
+ *
+ * Register model (Renesas H8S/H8 C): args er0/er1/er2 (r0l.. for bytes),
+ * result r0/r4l and the CCR Z flag.  In this range almost every routine is a
+ * setup-menu key/dial handler called with er0 = rec = [FF812A], the active
+ * band/UI record (rec+1 = screen id, rec+0 = previous screen; field map in
+ * doc 35 / ida/out/chanrec/fields.tsv).  Results come back in r4l / r3l.
+ *
+ * Shared helpers outside this range (names used below):
+ *   key_consume()          sub_3FFA0  AAE0=0, A9ED=0xFF, 817E.1=0 (doc 49)
+ *   key_reject_beep()      sub_3FF9C  AAE0=0x1D then as above
+ *   ui_pop_screen(rec)     sub_3FF3A  runs exit handler for 0x0E..0xDB, pops
+ *   ui_push_screen(rec,id) sub_3FF10
+ *   dial_step_clamp(r)     sub_3F600  saturating step of record {lo,hi,u8*};
+ *                                     at a limit key_consume + r4l=0xFF
+ *   dial_step_wrap_dirty(r) sub_3F628 AA30|=0x40 then dial_step_wrap
+ *   dial_step_wrap(r)      sub_3F62E  wrap step by A9EE.0; new value in r3l
+ *   dial_step_up_wrap(r)   sub_3F636
+ *   eep_save_r1/2/3(n)     sub_3CCBC/3CCEC/3CD1C  save byte n of region R1/R2/R3
+ *   eep_save_rX_block(a,n) sub_3CCD0/3CD00/3CD30  save n bytes at RAM a
+ *   eep_reload_3CD4C / 3CE22   EEPROM reads through sub_3AB80 (I2C, 0xA1)
+ *   menu_list_dial(rec)    loc_14E04  item-list scroll (level 0)
+ *   menu_level_or_list(rec) sub_151EC level 0 -> list scroll and return 0
+ *   menu_level_or_call(rec,cb) sub_15206 as above; ctx stacked -> cb
+ *   menu_dispatch_by_level(rec,tbl) loc_15260 tbl[AD68] (tbl[0] if AD9D)
+ *   menu_close_screen(rec) sub_15968  menu_key_back(rec) sub_15948
+ *   menu_ctx_push/pop      sub_15910 / sub_15A02
+ *   menu_exit_all(rec)     sub_14BBA/14BBC  pop twice, re-push 0x0A/0x0B
+ *   rec_is_not_b_slot(rec) sub_3FFB4  rec==FF90F0 -> key_consume, false
+ *   chan_bitpos(ch,&off,&bit) sub_1C2A4 (this lane)
+ *   Step-record tables (rec_XXXXX) are ROM data at the named address; their
+ *   bytes are not in the repo, so limits are cited by address only.
  * ========================================================================== */
+
+#include <stdint.h>
+#include <string.h>
+typedef uint8_t u8; typedef int8_t s8; typedef uint16_t u16; typedef uint32_t u32;
+typedef struct rec rec_t;          /* band/UI record, fields per doc 35:      */
+/* +0 prev_screen +1 screen +3 band03 +4 band04 +5 vfo_mode(1 VFO,2 MEM,5..)
+ * +7 f07 (b2-3 MEMORY SKIP) +0x12 flags12 +0x13 +0x14 step14 +0x15 shift15
+ * +0x16 sqltype16 +0x17 f17 (tone) +0x18 f18 (DCS code) +0x19 rxmode19
+ * +0x1A rx freq +0x1E ofs1E +0x22 name22[16] +0x34 pr34 +0x35 dcs_inv35
+ * +0x36 mode36 +0x37 sql_s37 +0x38 f38 +0x39 gate39 +0x46 f46 (b0 keep shift)
+ * +0x5A f5A +0x86 f86 +0x8C f8C (pending reprogram code 3/4/5)            */
+typedef struct { u8 lo, hi; u8 *p; } step_rec_t;
+typedef void (*handler_t)(rec_t *);
+extern handler_t dial_tbl_12268[];  /* 0x012268 BE32 x219, idx id-0x0E   */
+extern const u16 exit_tbl_19A9E[];  /* 0x019A9E BE16 x206, +0x148A0       */
+
+/* ---- RAM / IO cells (see globals.tsv) ---- */
+extern rec_t *ui_rec;              /* FF812A */
+#define REC_B_SLOT ((rec_t *)0xFF90F0)
+extern u8 menu_level;   /* FFAD68 setup-menu level: 0 = item list, 1 = item open, 2+ = editing; in text  */
+extern u8 menu_ctx_live;   /* FFAD9D 1 = edit context live, 0 = stacked in AD9E..ADA0 (nested editor) */
+extern u8 menu_ctx_saved_level;   /* FFAD9E stacked AD68 */
+extern u8 nested_stage;   /* FFAD9C nested-edit stage (1/2 select pop, other values post key 4) */
+extern u8 menu_subpage;   /* FFAD6A setup sub-page (2 = open, AD6B = key that opened it); most setup keys  */
+extern u8 subpage_key_AD6B;   /* FFAD6B key/digit that opened the sub-page */
+extern u8 confirm_pending;   /* FFAD98 BACK swallowed once after a confirm prompt (tone 0x46) */
+extern u8 sub_cursor_AD99;   /* FFAD99 sub-cursor inside the auto-reply editor (call col / text col) */
+extern u8 char_mode_AD81;   /* FFAD81 1 = character step offers '*' (wildcard charset) */
+extern u8 pw_buf_AD88[6];   /* FFAD88 PASSWORD edit digits; AD8A..AD8D = 4-digit code copied to FF896C */
+extern u8 seq_buf_AD8E[4];   /* FFAD8E typed-digit unlock buffer compared as one long */
+extern u16 ui_AD92;   /* FFAD92 working copy of FF898C (screen 0x79 band bitmap) */
+extern u8 ui_AD94;   /* FFAD94 band of the record when screen 0x79 opened */
+extern u8 text_buf_AD6E[0x12];   /* FFAD6E 16-char text edit buffer */
+extern u8 text_ADA2[60];   /* FFADA2 BEACON STATUS TEXT edit buffer */
+extern u8 ar_text_ADDE[0x43];   /* FFADDE APRS auto-reply text */
+extern u8 key_event;   /* FFA9ED key code mailbox (0xFF = consumed; 4/6 synthesized cursor keys) */
+extern u8 key_flags;   /* FFA9EE b0 = dial direction down / CCW, b7 = long press */
+extern u8 key_digit;   /* FFA9F0 digit of a keypad key (0 = none) */
+extern u8 ui_flags;   /* FFAA30 b6 = value changed (exit handler saves, then clears), b7 = item opened */
+extern u8 ui_flags_AA31;   /* FFAA31 b2 = coarse step in RPT SHIFT FREQ editor (cleared on pop) */
+extern u8 ui_flags_AA34;   /* FFAA34 b6 = PASSWORD edited */
+extern u8 ui_flags_AA37;   /* FFAA37 b2 gates screens 0xD4/0xD5 and nullsub_30; b6 cleared by B-slot squelc */
+extern u8 dial_scratch;   /* FFAA56 scratch byte the step records point at when a record field is edited */
+extern u8 tone_ev;   /* FFAAE0 tone / prompt mailbox (0x39 beep preview, 0x16 unlock ok, 0x46 prompt, */
+extern u8 edit_row_B054;   /* FFB054 editor row, reset 0 on entry/exit */
+extern u8 edit_col_B055;   /* FFB055 editor column, reset 1 */
+extern u8 edit_cursor;   /* FFB3F4 edit cursor / selected slot */
+extern u8 edit_cursor_max;   /* FFB3F5 shadow of B3F4 (list selection) */
+extern u8 edit_sub_flags;   /* FFB380 b0 = sub-edit active (BACK calls sub_214BA) */
+extern u8 list_top_A4F5;   /* FFA4F5 first visible row of multi-row editors */
+extern u8 win_mode_B091;   /* FFB091 1 = page-mode window scroll */
+extern u8 ui_9542;   /* FF9542 cursor-blink / edit timer (0x96 after a char change) */
+extern u8 setup_group;   /* FF8F2E 0-based setup group of the item list */
+extern u16 ui_mode_8F2C;   /* FF8F2C UI mode word (0x10 enables the 08030706 sequence) */
+extern u8 node_mode;   /* FF8DDE node / PC-keyed mode; many dials refused when nonzero */
+extern u8 band_sel;   /* FF8EA0 b6 = band B active; b4 = mirror squelch to the other band */
+extern u8 slot_chk;   /* FF8EA6 b0 = B record in use */
+extern u8 comm_mode_a;   /* FF8D20 band-A comm mode (1 = digital: suppress reprogram request) */
+extern u8 comm_mode_b;   /* FF8DD5 band-B comm mode */
+extern u8 tx_state;   /* FF94C0 0 idle, nonzero transmitting */
+extern u8 tx_req_flag;   /* FFAACF reprogram code posted while transmitting */
+extern u8 tsearch_a_state;   /* FF8FE0 tone-search state band A (1 start, 3 stop) */
+extern u8 tsearch_a_active;   /* FF8FE2 tone search running band A */
+extern u8 tsearch_b_state;   /* FF90E8 tone-search state band B */
+extern u8 tsearch_b_active;   /* FF90EA tone search running band B */
+extern u8 r1_base[];   /* FF8920 EEPROM region R1 image; R1 n -> FF8920+n, EEPROM 0x580+n */
+extern u8 r2_base[];   /* FF8AA0 EEPROM region R2 image; R2 n -> FF8AA0+n, EEPROM 0xC000+n */
+extern u8 r3_base[];   /* FF8D20 EEPROM region R3 image; R3 n -> FF8D20+n, EEPROM 0xD000+n */
+extern u8 r1_set_89BE;   /* FF89BE R1 0x9E bit flags (b1 SQL EXPANSION, b3 RPT ARS, b5 SCAN LAMP, b7 VFO  */
+extern u8 r1_set_89BF;   /* FF89BF R1 0x9F bit flags (b4 BCLO ...) */
+extern u8 r1_set_89C0;   /* FF89C0 R1 0xA0 bit flags (b0 MONI/T-CALL, b7 gates RPT ARS) */
+extern u8 r1_set_89C1;   /* FF89C1 R1 0xA1 bit flags (b0 MEMORY WRITE, b2 MEMORY PROTECT, b3 KEY LOCK) */
+extern u8 r1_set_89C2;   /* FF89C2 R1 0xA2 bit flags (b0 password on, b1 LANGUAGE, b4 WX ALERT, b6 12/24h */
+extern u8 r1_set_89C3;   /* FF89C3 R1 0xA3 bit flags (b0 PRIORITY REVERT, b3 HOME VFO ...) */
+extern u8 r1_set_89C4;   /* FF89C4 R1 0xA4 feature flags (b1/b2/b3 group13/b4 RAM DISPLAY), b0 toggled by */
+extern u8 r1_set_89C5;   /* FF89C5 R1 0xA5 bit flags (b0 TARGET LOCATION, b7 LAMP field) */
+extern u8 r1_set_89A4;   /* FF89A4 LCD DIMMER level */
+extern u8 r1_set_89B4;   /* FF89B4 screens 0xD4 (b4-6) / 0xD5 (b0-2) */
+extern u8 r1_set_8936;   /* FF8936 DTMF memory slot */
+extern u8 r1_sql_8970;   /* FF8970 SQL LEVEL band A (8971 band B, 8972/8973 AM) */
+extern u8 att_bitmap_8976[];   /* FF8976 per-memory-channel ANT ATT bitmap */
+extern u16 r1_set_898C_w;   /* FF898C band bitmap edited on screen 0x79 */
+extern u16 r1_set_898E_w;   /* FF898E word setting 0..0x7F8 step 8 (screen 0xD6) */
+extern u32 r1_pw_896C;   /* FF896C PASSWORD code */
+extern u8 r2_callsign_8AA2[6];   /* FF8AA2 APRS callsign; FF8AA8 = SSID */
+extern u8 r2_set_8AAB;   /* FF8AAB APRS bits (b1 SmartBeacon, b6 AUTO beacon, b0/b3/b7 AF DUAL/MUTE/GPS T */
+extern u8 r2_aprs_filter_8AAE;   /* FF8AAE APRS filter mask (8AAF b0 continues it) */
+extern u8 aprs_pos_src;   /* FF8AB8 position source: 0 GPS, 1/2 manual, >=3 stored slot */
+extern u8 r2_sb_type_8BCC;   /* FF8BCC SmartBeaconing type (0 = off) */
+extern u8 beacon_mode_A90C;   /* FFA90C beacon mode 0/1 AUTO/2 SMART */
+extern u8 sb_edit_A90E[7];   /* FFA90E SmartBeaconing parameter edit block (A90E low, A90F high speed) */
+extern u8 r2_digipath_8BE5;   /* FF8BE5 DIGI PATH type (>=3 full path) */
+extern u8 r2_digi_hop_8AC2;   /* FF8AC2 selected hop (7-byte entries from table 0x0186F6) */
+extern u8 r2_sym_set_8C1E;   /* FF8C1E symbol set (3 = user) */
+extern u8 r2_symbol_8AA1;   /* FF8AA1 symbol code (0xC4 = user-defined) */
+extern u8 r2_com_8C26;   /* FF8C26 COM PORT: b7 STATUS, b0 INPUT */
+extern u8 r2_com_8C2A;   /* FF8C2A COM PORT Mic-E/POSITION/WEATHER/OBJECT/ITEM bits */
+extern u8 r2_ar_call_8CFC[7];   /* FF8CFC auto-reply to-call (wildcards allowed) */
+extern u8 msg_text_A574[67];   /* FFA574 APRS message compose text (A56C/A56D call, A573 SSID) */
+extern u8 rtc_edit_A9CC[7];   /* FFA9CC DATE & TIME edit image (BCD); A9C4 = clock image */
+extern u8 PORT_FBA5;   /* FFFBA5 port pull-up register; low nibble set for screen 0x42, cleared on exit */
+extern u8 PORT_52;   /* FFFF52 output port; b5 = inverse of rec+0x12.4 (RF path) */
+extern u8 IO_FE90;   /* FFFE90 serial register zeroed before reopening the COM port (FE92 too) */
+
+/* Remaining cells are named <area>_<addr> in the bodies (e.g. ui_A507 = FFA507, r1_set_89AA = FF89AA). */
 
 /* --------------------------------------------------------------------------
  * @015A46-015A4E sub_15A46 setup_key_tail_15A46 Inferred: IDA fragment; AD6A==0 -> shared key path loc_159E6 in sub_159C2, else loc_15A4E (unlisted)
@@ -659,6 +796,7 @@ void dtmf_key_star(rec_t *rec) { dtmf_store_digit(menu_level, 0x0C); }  /* 0163B
 
 /* @0163C8-0163CA sub_163C8 dial_2D_nop Confirmed: screen 0x2D dial: empty */
 void dial_2D_nop(rec_t *rec) { }
+
 /* @0163CA-0163CC sub_163CA dial_30_nop Confirmed: screen 0x30 dial: empty */
 void dial_30_nop(rec_t *rec) { }
 
@@ -744,10 +882,6 @@ void dial_33(rec_t *rec)
     setup_toggle_89C3(6);                               /* 0165DC jsr loc_17788 */
     if (slot_chk & 0x01) b_rec_dirty_917C = 1;
 }
-
-/* ==========================================================================
- * PART 2  0x0165F0 - 0x017264   setup dial handlers, screen ids 0x34..0x6F
- * ========================================================================== */
 
 /* @0165F0-0165FC sub_165F0 dial_34 Confirmed: screen 0x34: toggle FF89C3.4 (sub_17788) and re-apply audio via sub_1E79C */
 void dial_34(rec_t *rec) { setup_toggle_89C3(4); sub_1E79C(); }      /* 0165F0 */
@@ -1193,7 +1327,9 @@ void dial_68_band_scope(rec_t *rec)
 void dial_6A_sql_expansion(rec_t *rec) { setup_toggle_89BE(1); }
 
 /* @016ECC-016EDC sub_16ECC sql_level_frag_a Confirmed: duplicate head of sub_16EE8 (B-slot -> loc_16EDE, band B -> loc_16EFA); falls into sub_16EDC */
+
 /* @016EDC-016EDE sub_16EDC sql_level_frag_b Confirmed: bra loc_16F16 (band-A squelch step) */
+
 /* @016EE4-016EE8 sub_16EE4 sql_level_frag_c Confirmed: beq loc_16F58 / bra loc_16F46 (B-slot AM / FM squelch step) */
 #define sql_level_frag_a(rec)  dial_6B_sql_level(rec)
 #define sql_level_frag_b(rec)  sql_level_step_a(rec)
@@ -1351,13 +1487,6 @@ static void rec17_store_and_request(rec_t *rec, u8 v)     /* 017222 */
     else               tx_req_flag = 4;                   /* 01725E AACF */
 }
 
-/* ==========================================================================
- * PART 3  0x01726A - 0x018618   tone search, misc setup toggles, APRS/GPS
- *         setup editors (callsign, filters, SmartBeaconing, position).
- * In the text editors menu_level (AD68) doubles as the cursor column:
- * 1 = field select, 2.. = character positions.
- * ========================================================================== */
-
 /* --------------------------------------------------------------------------
  * @01726A-0172BC sub_1726A tone_freq_dial Inferred: dial in TONE / DCS screens: while a tone search runs on the band (8FE2 / 90EA) the dial only sets the search direction rec+0x5A.0 = A9EE.0; otherwise steps DCS code (+0x18, screen 0x26) or tone freq (+0x17)
  * -------------------------------------------------------------------------- */
@@ -1420,10 +1549,13 @@ void setup_toggle_89BE4_89BF6(rec_t *rec)
 
 /* @0173D2-0173D4 sub_173D2 dial_77_nop Confirmed: screen 0x77 dial: empty */
 void dial_77_nop(rec_t *rec) { }
+
 /* @0173D4-0173DC sub_173D4 dial_78 Confirmed: screen 0x78: toggle FF89BF.0 */
 void dial_78(rec_t *rec) { setup_toggle_89BF(0); }
+
 /* @0173DC-0173E4 sub_173DC dial_7A_vfo_mode Confirmed: VFO MODE (F394): toggle FF89BE.7 */
 void dial_7A_vfo_mode(rec_t *rec) { setup_toggle_89BE(7); }
+
 /* @0173E4-0173EC sub_173E4 dial_7B Confirmed: screen 0x7B: toggle FF89C2.7 */
 void dial_7B(rec_t *rec) { setup_toggle_89C2(7); }
 
@@ -1471,13 +1603,18 @@ void dial_84_compass(rec_t *rec)
 
 /* @0174D0-0174DA sub_174D0 setup_level_dispatch_174DA Confirmed: menu_dispatch_by_level(rec, tbl 0x0174DA) */
 void setup_level_dispatch_174DA(rec_t *rec) { menu_dispatch_by_level(rec, tbl_174DA); }
+
 /* @0174EA-0174F6 sub_174EA setup_step_1750A Confirmed: wrap-step record 0x01750A (level-table slot) */
 void setup_step_1750A(rec_t *rec) { dial_step_wrap_dirty(&rec_1750A); }
+
 /* @0174F6-017502 sub_174F6 setup_step_17510 Confirmed: wrap-step record 0x017510 */
 void setup_step_17510(rec_t *rec) { dial_step_wrap_dirty(&rec_17510); }
+
 /* @017502-01750A sub_17502 setup_toggle_89C5_b1 Confirmed: toggle FF89C5.1 */
 void setup_toggle_89C5_b1(rec_t *rec) { setup_toggle_89C5(1); }
+
 /* @017516-017518 sub_17516 setup_exit_jump_17516 Confirmed: bra sub_1752A */
+
 /* @01752A-017530 sub_1752A setup_exit_all_1752A Confirmed: menu_exit_all (sub_14BBA) */
 void setup_exit_all_1752A(rec_t *rec) { menu_exit_all(rec); }
 #define setup_exit_jump_17516(rec) setup_exit_all_1752A(rec)
@@ -1564,17 +1701,22 @@ void setup_toggle_BA35(rec_t *rec)
 
 /* @017758-01775E sub_17758 setup_refuse_17758 Confirmed: key_consume() */
 void setup_refuse_17758(rec_t *rec) { key_consume(); }
+
 /* @01775E-017760 sub_1775E setup_nop_1775E Confirmed: rts */
 void setup_nop_1775E(rec_t *rec) { }
 
 /* @017760-017768 sub_17760 setup_toggle_89BE Confirmed: FF89BE ^= 1<<r4l, dirty (shared tail loc_1779E) */
 void setup_toggle_89BE(u8 bit) { r1_set_89BE ^= (u8)(1u << bit); ui_flags |= 0x40; }
+
 /* @017768-017770 sub_17768 setup_toggle_89BF Confirmed: FF89BF ^= 1<<r4l, dirty */
 void setup_toggle_89BF(u8 bit) { r1_set_89BF ^= (u8)(1u << bit); ui_flags |= 0x40; }
+
 /* @017770-017778 sub_17770 setup_toggle_89C0 Confirmed: FF89C0 ^= 1<<r4l, dirty */
 void setup_toggle_89C0(u8 bit) { r1_set_89C0 ^= (u8)(1u << bit); ui_flags |= 0x40; }
+
 /* @017778-017780 sub_17778 setup_toggle_89C1 Confirmed: FF89C1 ^= 1<<r4l, dirty */
 void setup_toggle_89C1(u8 bit) { r1_set_89C1 ^= (u8)(1u << bit); ui_flags |= 0x40; }
+
 /* --------------------------------------------------------------------------
  * @017780-0177A6 sub_17780 setup_toggle_89C2 Confirmed: FF89C2 ^= 1<<r4l, dirty.  The same block holds the entry points 0x017788 (FF89C3), 0x017790 (FF89C4), 0x017798 (FF89C5) and the shared tail 0x01779E (AA30 |= 0x40)
  * -------------------------------------------------------------------------- */
@@ -1617,6 +1759,7 @@ void setup_step_by_level_1788E(rec_t *rec)
     u8 lvl = menu_level_or_call(rec, sub_1A0B4);
     if (lvl) dial_step_wrap_dirty(recs_1788E[lvl - 1]);
 }
+
 /* @01788C-01788E nullsub_80 setup_nop_1788C Confirmed: rts */
 void setup_nop_1788C(rec_t *rec) { }
 
@@ -1626,6 +1769,7 @@ void setup_step_by_level_178CA(rec_t *rec)
     u8 lvl = menu_level_or_call(rec, sub_1A0B4);
     if (lvl) dial_step_wrap_dirty(recs_178CA[lvl - 1]);
 }
+
 /* @0178C8-0178CA nullsub_81 setup_nop_178C8 Confirmed: rts */
 void setup_nop_178C8(rec_t *rec) { }
 
@@ -1640,6 +1784,7 @@ void setup_step_8C41_row(rec_t *rec)
     dial_scratch = r2_tbl_8C41[lvl];
     r2_tbl_8C41[lvl] = dial_step_wrap_dirty(&rec_17918);
 }
+
 /* @017916-017918 nullsub_82 setup_nop_17916 Confirmed: rts */
 void setup_nop_17916(rec_t *rec) { }
 
@@ -1725,6 +1870,7 @@ void dial_A9_gps_power(rec_t *rec) { r2_set_8ABE ^= 0x40; sub_44700(); ui_flags 
 void dial_A0_gps_time_set(rec_t *rec) { aprs_toggle_8AAB(7); }
 
 /* @017AFC-017B04 sub_17AFC callsign_cursor_8AA2 Confirmed: er1 = FF8AA2 (APRS callsign) and bra sub_17B0A */
+
 /* @017B04-017B0A sub_17B04 callsign_cursor_8AA2_b Confirmed: er1 = FF8AA2, falls into sub_17B0A */
 #define callsign_cursor_8AA2(rec)    callsign_cursor_move(rec, r2_callsign_8AA2)
 #define callsign_cursor_8AA2_b(rec)  callsign_cursor_move(rec, r2_callsign_8AA2)
@@ -2115,6 +2261,7 @@ void my_position_dial(rec_t *rec)                         /* 0184E8 */
     if (aprs_pos_src >= 3) sub_3D4A4(aprs_pos_src - 3);
     if (aprs_pos_src != 0) beacon_mode_recheck();
 }
+
 /* @018568-01856A nullsub_83 setup_nop_18568 Confirmed: rts (tail of sub_184E8) */
 void setup_nop_18568(rec_t *rec) { }
 
@@ -2125,13 +2272,6 @@ void my_position_store_gps(rec_t *rec)
     memcpy(gps_pos_9D74, gps_pos_9D58, 0x1C);             /* eepmov.w loop */
     sub_3D4B4(aprs_pos_src - 3);
 }
-
-/* ==========================================================================
- * PART 4  0x018618 - 0x019158   APRS editors II: DIGI PATH, message groups,
- *         COM PORT, APRS POPUP, auto-reply, callsign clear helpers.
- * Character editors share sub_189B2 (char step with an alphanumeric filter)
- * and the delete / clear helpers sub_1A90E / sub_188F6 / sub_18FD8.
- * ========================================================================== */
 
 /* @018618-018622 sub_18618 setup_level_dispatch_18622 Confirmed: menu_dispatch_by_level(rec, tbl 0x018622) */
 void setup_level_dispatch_18622(rec_t *rec) { menu_dispatch_by_level(rec, tbl_18622); }
@@ -2652,2283 +2792,1925 @@ refuse:
     key_consume();
 }
 
-/* ==== SKELETONS: functions not yet reconstructed ==== */
-/* @019158-019208 sub_19158 fn_19158 Skeleton: not yet reconstructed; 50 insns; refs sub_15E42,sub_508B6 */
+/* @019158-019208 sub_19158 fn_19158 Skeleton: 50 insns; calls sub_15E42,sub_508B6; RAM 8EA0,8FE0,8FE2,90E8,90EA,AA30,AA32,AD68 */
 void fn_19158(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (50 instructions, 019158..019208). */
+    /* TODO(waveC): body not transcribed (50 instructions). */
 }
 
-/* @019208-019250 sub_19208 fn_19208 Skeleton: not yet reconstructed; 20 insns; refs sub_3CCBC,sub_3CCD0 */
+/* @019208-019250 sub_19208 fn_19208 Skeleton: 20 insns; calls sub_3CCBC,sub_3CCD0; RAM -; table slot x6B:SQL LEVEL */
 void fn_19208(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (20 instructions, 019208..019250). */
+    /* TODO(waveC): body not transcribed (20 instructions). */
 }
 
-/* @019250-019258 sub_19250 fn_19250 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19250(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019250..019258). */
-}
+/* @019250-019258 sub_19250 exit_19250 Confirmed: exit/save stub: eep_save_r1(0x73) [exit slot x0F:APO] */
+void exit_19250(rec_t *rec) { eep_save_r1(0x73); }
 
-/* @019258-019260 sub_19258 fn_19258 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19258(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019258..019260). */
-}
+/* @019258-019260 sub_19258 exit_19258 Confirmed: exit/save stub: eep_save_r1(0x74) [exit slot x10] */
+void exit_19258(rec_t *rec) { eep_save_r1(0x74); }
 
-/* @019260-019270 sub_19260 fn_19260 Skeleton: not yet reconstructed; 4 insns; refs sub_3CCBC */
-void fn_19260(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (4 instructions, 019260..019270). */
-}
+/* @019260-019270 sub_19260 exit_19260 Confirmed: exit/save stub: eep_save_r1(0x77) eep_save_r1(0x9F) [exit slot x15:BEEP] */
+void exit_19260(rec_t *rec) { eep_save_r1(0x77); eep_save_r1(0x9F); }
 
-/* @019270-019278 sub_19270 fn_19270 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19270(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019270..019278). */
-}
+/* @019270-019278 sub_19270 exit_19270 Confirmed: exit/save stub: eep_save_r1(0x75) [exit slot x16:BELL x17] */
+void exit_19270(rec_t *rec) { eep_save_r1(0x75); }
 
-/* @019278-019280 sub_19278 fn_19278 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19278(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019278..019280). */
-}
+/* @019278-019280 sub_19278 exit_19278 Confirmed: exit/save stub: eep_save_r1(0x76) [exit slot x18:BEEP LEVEL] */
+void exit_19278(rec_t *rec) { eep_save_r1(0x76); }
 
-/* @019280-019288 sub_19280 fn_19280 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19280(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019280..019288). */
-}
+/* @019280-019288 sub_19280 exit_19280 Confirmed: exit/save stub: eep_save_r1(0x80) [exit slot x22] */
+void exit_19280(rec_t *rec) { eep_save_r1(0x80); }
 
-/* @019288-019290 sub_19288 fn_19288 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19288(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019288..019290). */
-}
+/* @019288-019290 sub_19288 exit_19288 Confirmed: exit/save stub: eep_save_r1(0x84) [exit slot x28:LCD DIMMER] */
+void exit_19288(rec_t *rec) { eep_save_r1(0x84); }
 
-/* @019290-0192A0 sub_19290 fn_19290 Skeleton: not yet reconstructed; 4 insns; refs sub_3CCBC */
-void fn_19290(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (4 instructions, 019290..0192A0). */
-}
+/* @019290-0192A0 sub_19290 exit_19290 Confirmed: exit/save stub: eep_save_r1(0x85) eep_save_r1(0x9E) [exit slot x2B:DTMF MODE] */
+void exit_19290(rec_t *rec) { eep_save_r1(0x85); eep_save_r1(0x9E); }
 
-/* @0192B0-0192B8 sub_192B0 fn_192B0 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_192B0(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0192B0..0192B8). */
-}
+/* @0192B0-0192B8 sub_192B0 exit_192B0 Confirmed: exit/save stub: eep_save_r1(0x87) [exit slot x3E] */
+void exit_192B0(rec_t *rec) { eep_save_r1(0x87); }
 
-/* @0192B8-0192C4 sub_192B8 fn_192B8 Skeleton: not yet reconstructed; 3 insns; refs loc_193D2,sub_3CCBC */
-void fn_192B8(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0192B8..0192C4). */
-}
+/* @0192B8-0192C4 sub_192B8 exit_192B8 Confirmed: exit/save stub: eep_save_r1(0x8A) eep_save_r1(0xA5)   /* bra 0x0193D2 */ [exit slot x40:LAMP] */
+void exit_192B8(rec_t *rec) { eep_save_r1(0x8A); eep_save_r1(0xA5);   /* bra 0x0193D2 */ }
 
-/* @0192C4-0192CC sub_192C4 fn_192C4 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_192C4(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0192C4..0192CC). */
-}
+/* @0192C4-0192CC sub_192C4 exit_192C4 Confirmed: exit/save stub: eep_save_r1(0x89) [exit slot x41:LANGUAGE] */
+void exit_192C4(rec_t *rec) { eep_save_r1(0x89); }
 
-/* @0192CC-0192D4 sub_192CC fn_192CC Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_192CC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0192CC..0192D4). */
-}
+/* @0192CC-0192D4 sub_192CC exit_192CC Confirmed: exit/save stub: eep_save_r1(0x8B) [exit slot x43:LOCK] */
+void exit_192CC(rec_t *rec) { eep_save_r1(0x8B); }
 
-/* @0192D4-0192DC sub_192D4 fn_192D4 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_192D4(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0192D4..0192DC). */
-}
+/* @0192D4-0192DC sub_192D4 exit_192D4 Confirmed: exit/save stub: eep_save_r1(0x8D) [exit slot x45:MIC GAIN] */
+void exit_192D4(rec_t *rec) { eep_save_r1(0x8D); }
 
-/* @0192DC-0192E4 sub_192DC fn_192DC Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_192DC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0192DC..0192E4). */
-}
+/* @0192DC-0192E4 sub_192DC exit_192DC Confirmed: exit/save stub: eep_save_r1(0x8C) [exit slot x49] */
+void exit_192DC(rec_t *rec) { eep_save_r1(0x8C); }
 
-/* @0192E4-0192EC sub_192E4 fn_192E4 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_192E4(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0192E4..0192EC). */
-}
+/* @0192E4-0192EC sub_192E4 exit_192E4 Confirmed: exit/save stub: eep_save_r1(0x93) [exit slot x4E:MUTE] */
+void exit_192E4(rec_t *rec) { eep_save_r1(0x93); }
 
-/* @0192EC-0192F4 sub_192EC fn_192EC Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_192EC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0192EC..0192F4). */
-}
+/* @0192EC-0192F4 sub_192EC exit_192EC Confirmed: exit/save stub: eep_save_r1(0x90) [exit slot x56:PTT DELAY] */
+void exit_192EC(rec_t *rec) { eep_save_r1(0x90); }
 
-/* @0192F4-0192FC sub_192F4 fn_192F4 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_192F4(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0192F4..0192FC). */
-}
+/* @0192F4-0192FC sub_192F4 exit_192F4 Confirmed: exit/save stub: eep_save_r1(0x8F) [exit slot x58:DW TIME] */
+void exit_192F4(rec_t *rec) { eep_save_r1(0x8F); }
 
-/* @0192FC-01930A sub_192FC fn_192FC Skeleton: not yet reconstructed; 3 insns; refs sub_3CCD0 */
-void fn_192FC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0192FC..01930A). */
-}
+/* @0192FC-01930A sub_192FC exit_192FC Confirmed: exit/save stub: eep_save_r1_block(0xFF8990, 2) [exit slot x5A:SCAN RESUME] */
+void exit_192FC(rec_t *rec) { eep_save_r1_block(0xFF8990, 2); }
 
-/* @01930A-019312 sub_1930A fn_1930A Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1930A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01930A..019312). */
-}
+/* @01930A-019312 sub_1930A exit_1930A Confirmed: exit/save stub: eep_save_r1(0x92) [exit slot x5B:SCAN RE-START] */
+void exit_1930A(rec_t *rec) { eep_save_r1(0x92); }
 
-/* @019312-01931A sub_19312 fn_19312 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19312(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019312..01931A). */
-}
+/* @019312-01931A sub_19312 exit_19312 Confirmed: exit/save stub: eep_save_r1(0x96) [exit slot x5C:SENSOR INFO] */
+void exit_19312(rec_t *rec) { eep_save_r1(0x96); }
 
-/* @01931A-019322 sub_1931A fn_1931A Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1931A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01931A..019322). */
-}
+/* @01931A-019322 sub_1931A exit_1931A Confirmed: exit/save stub: eep_save_r1(0x91) [exit slot x60:SAVE RX] */
+void exit_1931A(rec_t *rec) { eep_save_r1(0x91); }
 
-/* @019322-01932A sub_19322 fn_19322 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19322(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019322..01932A). */
-}
+/* @019322-01932A sub_19322 exit_19322 Confirmed: exit/save stub: eep_save_r1(0x97) [exit slot x65] */
+void exit_19322(rec_t *rec) { eep_save_r1(0x97); }
 
-/* @01932A-019332 sub_1932A fn_1932A Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1932A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01932A..019332). */
-}
+/* @01932A-019332 sub_1932A exit_1932A Confirmed: exit/save stub: eep_save_r1(0x95) [exit slot x66:DIAL KNOB CHANGE] */
+void exit_1932A(rec_t *rec) { eep_save_r1(0x95); }
 
-/* @019332-01933A sub_19332 fn_19332 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19332(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019332..01933A). */
-}
+/* @019332-01933A sub_19332 exit_19332 Confirmed: exit/save stub: eep_save_r1(0x99) [exit slot x68:BAND SCOPE] */
+void exit_19332(rec_t *rec) { eep_save_r1(0x99); }
 
-/* @01933A-019342 sub_1933A fn_1933A Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1933A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01933A..019342). */
-}
+/* @01933A-019342 sub_1933A exit_1933A Confirmed: exit/save stub: eep_save_r1(0x9A) [exit slot x73:TOT] */
+void exit_1933A(rec_t *rec) { eep_save_r1(0x9A); }
 
-/* @019342-01934A sub_19342 fn_19342 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19342(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019342..01934A). */
-}
+/* @019342-01934A sub_19342 exit_19342 Confirmed: exit/save stub: eep_save_r1(0x72) [exit slot x6F:RX AF DUAL] */
+void exit_19342(rec_t *rec) { eep_save_r1(0x72); }
 
-/* @01934A-019352 sub_1934A fn_1934A Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1934A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01934A..019352). */
-}
+/* @01934A-019352 sub_1934A exit_1934A Confirmed: exit/save stub: eep_save_r1(0xA7) [exit slot x80:APO x81] */
+void exit_1934A(rec_t *rec) { eep_save_r1(0xA7); }
 
-/* @019362-01936A sub_19362 fn_19362 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19362(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019362..01936A). */
-}
+/* @019362-01936A sub_19362 exit_19362 Confirmed: exit/save stub: eep_save_r1(0xAC) [exit slot x85] */
+void exit_19362(rec_t *rec) { eep_save_r1(0xAC); }
 
-/* @01936A-01937A sub_1936A fn_1936A Skeleton: not yet reconstructed; 4 insns; refs loc_193D2,sub_3CCD0 */
-void fn_1936A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01936A..01937A). */
-}
+/* @01936A-01937A sub_1936A exit_1936A Confirmed: exit/save stub: eep_save_r1_block(0xFF89CD, 3) eep_save_r1(0xA5)   /* bra 0x0193D2 */ [exit slot x87:USB CAMERA] */
+void exit_1936A(rec_t *rec) { eep_save_r1_block(0xFF89CD, 3); eep_save_r1(0xA5);   /* bra 0x0193D2 */ }
 
-/* @01937A-019382 sub_1937A fn_1937A Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1937A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01937A..019382). */
-}
+/* @01937A-019382 sub_1937A exit_1937A Confirmed: exit/save stub: eep_save_r1(0xB0) [exit slot x8B:GPS LOG] */
+void exit_1937A(rec_t *rec) { eep_save_r1(0xB0); }
 
-/* @019382-01938A sub_19382 fn_19382 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19382(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019382..01938A). */
-}
+/* @019382-01938A sub_19382 exit_19382 Confirmed: exit/save stub: eep_save_r1(0xA8) [exit slot x1C:BUSY LED] */
+void exit_19382(rec_t *rec) { eep_save_r1(0xA8); }
 
-/* @01938A-019392 sub_1938A fn_1938A Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1938A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01938A..019392). */
-}
+/* @01938A-019392 sub_1938A exit_1938A Confirmed: exit/save stub: eep_save_r1(0xAB) */
+void exit_1938A(rec_t *rec) { eep_save_r1(0xAB); }
 
-/* @019392-01939A sub_19392 fn_19392 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_19392(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019392..01939A). */
-}
+/* @019392-01939A sub_19392 exit_19392 Confirmed: exit/save stub: eep_save_r1(0x94) [exit slot xD4 xD5] */
+void exit_19392(rec_t *rec) { eep_save_r1(0x94); }
 
-/* @01939A-0193A2 sub_1939A fn_1939A Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1939A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01939A..0193A2). */
-}
+/* @01939A-0193A2 sub_1939A exit_1939A Confirmed: exit/save stub: eep_save_r1(0x9E) [exit slot x12:RPT ARS x2A x2D x62:SCAN LAMP x6A:SQL EXPANSION x77 x7A:VFO MODE] */
+void exit_1939A(rec_t *rec) { eep_save_r1(0x9E); }
 
-/* @0193A2-0193AA sub_193A2 fn_193A2 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_193A2(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0193A2..0193AA). */
-}
+/* @0193A2-0193AA sub_193A2 exit_193A2 Confirmed: exit/save stub: eep_save_r1(0x9F) [exit slot x14:BCLO x29 x30 x78] */
+void exit_193A2(rec_t *rec) { eep_save_r1(0x9F); }
 
-/* @0193AA-0193B2 sub_193AA fn_193AA Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_193AA(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0193AA..0193B2). */
-}
+/* @0193AA-0193B2 sub_193AA exit_193AA Confirmed: exit/save stub: eep_save_r1(0xA0) [exit slot x2E x36 x44:MONI/T-CALL x61] */
+void exit_193AA(rec_t *rec) { eep_save_r1(0xA0); }
 
-/* @0193B2-0193BA sub_193B2 fn_193B2 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_193B2(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0193B2..0193BA). */
-}
+/* @0193B2-0193BA sub_193B2 exit_193B2 Confirmed: exit/save stub: eep_save_r1(0xA1) [exit slot x11 x4A:MEMORY WRITE x4B:MEMORY PROTECT] */
+void exit_193B2(rec_t *rec) { eep_save_r1(0xA1); }
 
-/* @0193BA-0193C2 sub_193BA fn_193BA Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_193BA(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0193BA..0193C2). */
-}
+/* @0193BA-0193C2 sub_193BA exit_193BA Confirmed: exit/save stub: eep_save_r1(0xA2) [exit slot x3F:LANGUAGE x71:DATE & TIME ADJ x7B x8F:WX ALERT] */
+void exit_193BA(rec_t *rec) { eep_save_r1(0xA2); }
 
-/* @0193C2-0193CA sub_193C2 fn_193C2 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_193C2(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0193C2..0193CA). */
-}
+/* @0193C2-0193CA sub_193C2 exit_193C2 Confirmed: exit/save stub: eep_save_r1(0xA3) [exit slot x0E x32 x33 x34 x37:HOME VFO x57:PRIORITY REVERT x6E] */
+void exit_193C2(rec_t *rec) { eep_save_r1(0xA3); }
 
-/* @0193CA-0193D2 sub_193CA fn_193CA Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_193CA(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0193CA..0193D2). */
-}
+/* @0193CA-0193D2 sub_193CA exit_193CA Confirmed: exit/save stub: eep_save_r1(0xA4) [exit slot x67] */
+void exit_193CA(rec_t *rec) { eep_save_r1(0xA4); }
 
-/* @0193D2-0193DA sub_193D2 fn_193D2 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_193D2(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0193D2..0193DA). */
-}
+/* @0193D2-0193DA sub_193D2 exit_193D2 Confirmed: exit/save stub: eep_save_r1(0xA5) [exit slot x59:SCAN WIDTH x8E:TARGET LOCATION] */
+void exit_193D2(rec_t *rec) { eep_save_r1(0xA5); }
 
-/* @0193DA-0193DC sub_193DA fn_193DA Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @0193DA-0193DC sub_193DA fn_193DA Skeleton: 1 insns; calls -; RAM -; table slot x1D:DEVICE LIST x20:CLOCK TYPE x25 x27:DCS INVERSION x2F x31 x35:FM BANDWIDTH x3A x3B x3C x3D x42:HOME VFO x46 x47 x48 x5D:SQL S-METER x5E:RPT SHIFT x5F:RX MODE x63:RPT SHIFT FREQ x64:MEMORY SKIP x69 x6D:STEP x70:SENSOR INFO x74 x75 x7E x82:MEMORY INFO x83 x86:BACKUP x88:BACKUP x89:BACKUP x8A x9F:APRS DESTINATION xB6 xBA xBB xBF xC0:SOFTWARE VERSION xD8 xD9 xDA */
 void fn_193DA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 0193DA..0193DC). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @0193DC-0193EA sub_193DC fn_193DC Skeleton: not yet reconstructed; 3 insns; refs sub_3CCD0 */
-void fn_193DC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0193DC..0193EA). */
-}
+/* @0193DC-0193EA sub_193DC exit_193DC Confirmed: exit/save stub: eep_save_r1_block(0xFF89BB, 2) [exit slot x7C:VOX] */
+void exit_193DC(rec_t *rec) { eep_save_r1_block(0xFF89BB, 2); }
 
-/* @0193EA-0193F8 sub_193EA fn_193EA Skeleton: not yet reconstructed; 3 insns; refs sub_3CCD0 */
-void fn_193EA(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0193EA..0193F8). */
-}
+/* @0193EA-0193F8 sub_193EA exit_193EA Confirmed: exit/save stub: eep_save_r1_block(0xFF89D1, 2) [exit slot x7D:RECORDING] */
+void exit_193EA(rec_t *rec) { eep_save_r1_block(0xFF89D1, 2); }
 
-/* @0193F8-019406 sub_193F8 fn_193F8 Skeleton: not yet reconstructed; 3 insns; refs sub_3CCD0 */
-void fn_193F8(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0193F8..019406). */
-}
+/* @0193F8-019406 sub_193F8 exit_193F8 Confirmed: exit/save stub: eep_save_r1_block(0xFF8A58, 2) */
+void exit_193F8(rec_t *rec) { eep_save_r1_block(0xFF8A58, 2); }
 
-/* @019406-019426 sub_19406 fn_19406 Skeleton: not yet reconstructed; 11 insns; refs sub_3A9F6,sub_3AA66,sub_3F21A */
+/* @019406-019426 sub_19406 fn_19406 Skeleton: 11 insns; calls sub_3A9F6,sub_3AA66,sub_3F21A; RAM -; table slot x8C:TX POWER (title drawn directly by sub_FFF0878C, group 0; not from the setup-label table) */
 void fn_19406(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 019406..019426). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @019426-019444 sub_19426 fn_19426 Skeleton: not yet reconstructed; 9 insns; refs sub_3CCD0,sub_3F1DC */
+/* @019426-019444 sub_19426 fn_19426 Skeleton: 9 insns; calls sub_3CCD0,sub_3F1DC; RAM -; table slot x13:ANTENNA ATT */
 void fn_19426(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 019426..019444). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @019444-019454 sub_19444 fn_19444 Skeleton: not yet reconstructed; 4 insns; refs - */
+/* @019444-019454 sub_19444 fn_19444 Skeleton: 4 insns; calls -; RAM AA30; table slot x19 */
 void fn_19444(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 019444..019454). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @019454-01946C sub_19454 fn_19454 Skeleton: not yet reconstructed; 6 insns; refs sub_3CD5C */
+/* @019454-01946C sub_19454 fn_19454 Skeleton: 6 insns; calls sub_3CD5C; RAM AA30,AD6C; table slot x1B */
 void fn_19454(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 019454..01946C). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01946C-019474 sub_1946C fn_1946C Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1946C(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01946C..019474). */
-}
+/* @01946C-019474 sub_1946C exit_1946C Confirmed: exit/save stub: eep_save_r1(0x0) [exit slot x1E:Bluetooth x1F:Bluetooth Save] */
+void exit_1946C(rec_t *rec) { eep_save_r1(0x0); }
 
-/* @019474-01948A sub_19474 fn_19474 Skeleton: not yet reconstructed; 5 insns; refs sub_3CCBC,sub_3CCD0 */
-void fn_19474(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (5 instructions, 019474..01948A). */
-}
+/* @019474-01948A sub_19474 exit_19474 Confirmed: exit/save stub: eep_save_r1_block(0xFF8926, 16) eep_save_r1(0x9E) [exit slot x21] */
+void exit_19474(rec_t *rec) { eep_save_r1_block(0xFF8926, 16); eep_save_r1(0x9E); }
 
-/* @01948A-0194AE sub_1948A fn_1948A Skeleton: not yet reconstructed; 8 insns; refs sub_3CCBC,sub_3CCD0 */
-void fn_1948A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (8 instructions, 01948A..0194AE). */
-}
+/* @01948A-0194AE sub_1948A exit_1948A Confirmed: exit/save stub: eep_save_r1_block(0xFF8999, 7) eep_save_r1_block(0xFF89C1, 1) eep_save_r1(0xA0) [exit slot x23] */
+void exit_1948A(rec_t *rec) { eep_save_r1_block(0xFF8999, 7); eep_save_r1_block(0xFF89C1, 1); eep_save_r1(0xA0); }
 
-/* @0194AE-0194D2 sub_194AE fn_194AE Skeleton: not yet reconstructed; 8 insns; refs sub_3CCBC,sub_3CCD0 */
-void fn_194AE(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (8 instructions, 0194AE..0194D2). */
-}
+/* @0194AE-0194D2 sub_194AE exit_194AE Confirmed: exit/save stub: eep_save_r1_block(0xFF89A1, 1) eep_save_r1_block(0xFF89A2, 1) eep_save_r1(0xA0) [exit slot x24] */
+void exit_194AE(rec_t *rec) { eep_save_r1_block(0xFF89A1, 1); eep_save_r1_block(0xFF89A2, 1); eep_save_r1(0xA0); }
 
-/* @0194D2-0194E8 sub_194D2 fn_194D2 Skeleton: not yet reconstructed; 5 insns; refs sub_3CCBC,sub_3CCD0 */
-void fn_194D2(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (5 instructions, 0194D2..0194E8). */
-}
+/* @0194D2-0194E8 sub_194D2 exit_194D2 Confirmed: exit/save stub: eep_save_r1_block(0xFF8956, 18) eep_save_r1(0x35) [exit slot x51] */
+void exit_194D2(rec_t *rec) { eep_save_r1_block(0xFF8956, 18); eep_save_r1(0x35); }
 
-/* @0194E8-01950E sub_194E8 fn_194E8 Skeleton: not yet reconstructed; 9 insns; refs sub_3CCD0,sub_3CE5A */
+/* @0194E8-01950E sub_194E8 fn_194E8 Skeleton: 9 insns; calls sub_3CCD0,sub_3CE5A; RAM 8936,AA30; table slot x2C */
 void fn_194E8(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 0194E8..01950E). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01950E-019516 sub_1950E fn_1950E Skeleton: not yet reconstructed; 2 insns; refs sub_3CCBC */
-void fn_1950E(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01950E..019516). */
-}
+/* @01950E-019516 sub_1950E exit_1950E Confirmed: exit/save stub: eep_save_r1(0x9F) [exit slot x4C] */
+void exit_1950E(rec_t *rec) { eep_save_r1(0x9F); }
 
-/* @019516-01954A sub_19516 fn_19516 Skeleton: not yet reconstructed; 17 insns; refs sub_3A8E2,sub_3A922,sub_3F21A */
+/* @019516-01954A sub_19516 fn_19516 Skeleton: 17 insns; calls sub_3A8E2,sub_3A922,sub_3F21A; RAM -; table slot x4D */
 void fn_19516(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (17 instructions, 019516..01954A). */
+    /* TODO(waveC): body not transcribed (17 instructions). */
 }
 
-/* @01954A-01956E sub_1954A fn_1954A Skeleton: not yet reconstructed; 8 insns; refs sub_3CCBC,sub_3CCD0 */
-void fn_1954A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (8 instructions, 01954A..01956E). */
-}
+/* @01954A-01956E sub_1954A exit_1954A Confirmed: exit/save stub: eep_save_r1_block(0xFF8988, 2) eep_save_r1_block(0xFF898A, 2) eep_save_r1(0xA1) [exit slot x4F:TIMER] */
+void exit_1954A(rec_t *rec) { eep_save_r1_block(0xFF8988, 2); eep_save_r1_block(0xFF898A, 2); eep_save_r1(0xA1); }
 
-/* @01956E-019584 sub_1956E fn_1956E Skeleton: not yet reconstructed; 5 insns; refs sub_3CCBC,sub_3CCD0 */
-void fn_1956E(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01956E..019584). */
-}
+/* @01956E-019584 sub_1956E exit_1956E Confirmed: exit/save stub: eep_save_r1_block(0xFF898A, 2) eep_save_r1(0xA1) [exit slot x50] */
+void exit_1956E(rec_t *rec) { eep_save_r1_block(0xFF898A, 2); eep_save_r1(0xA1); }
 
-/* @019584-01959A sub_19584 fn_19584 Skeleton: not yet reconstructed; 5 insns; refs sub_3CCBC,sub_3CCD0 */
-void fn_19584(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (5 instructions, 019584..01959A). */
-}
+/* @019584-01959A sub_19584 exit_19584 Confirmed: exit/save stub: eep_save_r1_block(0xFF8968, 4) eep_save_r1(0xA3) [exit slot x52:PAGER x53 x54] */
+void exit_19584(rec_t *rec) { eep_save_r1_block(0xFF8968, 4); eep_save_r1(0xA3); }
 
-/* @01959A-0195D2 sub_1959A fn_1959A Skeleton: not yet reconstructed; 13 insns; refs sub_16A44,sub_3CCBC,sub_3CCD0 */
+/* @01959A-0195D2 sub_1959A fn_1959A Skeleton: 13 insns; calls sub_16A44,sub_3CCBC,sub_3CCD0; RAM 896C,AA34,AD8A; table slot x55:PASSWORD */
 void fn_1959A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01959A..0195D2). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @0195D2-01961E sub_195D2 fn_195D2 Skeleton: not yet reconstructed; 22 insns; refs sub_3CE9A,sub_3CEAA,sub_3CECC,sub_3CEDC,sub_3F1DC,sub_3F21A */
+/* @0195D2-01961E sub_195D2 fn_195D2 Skeleton: 22 insns; calls sub_3CE9A,sub_3CEAA,sub_3CECC,sub_3CEDC,sub_3F1DC,sub_3F21A; RAM -; table slot x6C:SQL TYPE */
 void fn_195D2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (22 instructions, 0195D2..01961E). */
+    /* TODO(waveC): body not transcribed (22 instructions). */
 }
 
-/* @01961E-01962C sub_1961E fn_1961E Skeleton: not yet reconstructed; 4 insns; refs sub_1963A */
+/* @01961E-01962C sub_1961E fn_1961E Skeleton: 4 insns; calls sub_1963A; RAM -; table slot x72:TONE SQL FREQ */
 void fn_1961E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01961E..01962C). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01962C-01963A sub_1962C fn_1962C Skeleton: not yet reconstructed; 4 insns; refs sub_1963A */
+/* @01962C-01963A sub_1962C fn_1962C Skeleton: 4 insns; calls sub_1963A; RAM -; table slot x26:DCS CODE */
 void fn_1962C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01962C..01963A). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01963A-019664 sub_1963A fn_1963A Skeleton: not yet reconstructed; 13 insns; refs sub_3CECC,sub_3CEDC,sub_3F1DC,sub_3F21A */
+/* @01963A-019664 sub_1963A fn_1963A Skeleton: 13 insns; calls sub_3CECC,sub_3CEDC,sub_3F1DC,sub_3F21A; RAM - */
 void fn_1963A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01963A..019664). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @019664-019674 sub_19664 fn_19664 Skeleton: not yet reconstructed; 4 insns; refs sub_3CCBC */
-void fn_19664(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (4 instructions, 019664..019674). */
-}
+/* @019664-019674 sub_19664 exit_19664 Confirmed: exit/save stub: eep_save_r1(0x9E) eep_save_r1(0x9F) [exit slot x76:TONE SEARCH] */
+void exit_19664(rec_t *rec) { eep_save_r1(0x9E); eep_save_r1(0x9F); }
 
-/* @019674-0196A0 sub_19674 fn_19674 Skeleton: not yet reconstructed; 13 insns; refs sub_3CE9A,sub_3CEAA,sub_3F1DC,sub_3F21A */
+/* @019674-0196A0 sub_19674 fn_19674 Skeleton: 13 insns; calls sub_3CE9A,sub_3CEAA,sub_3F1DC,sub_3F21A; RAM -; table slot x7F:PR FREQUENCY */
 void fn_19674(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 019674..0196A0). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @0196A0-0196B0 sub_196A0 fn_196A0 Skeleton: not yet reconstructed; 4 insns; refs sub_3CCD0 */
-void fn_196A0(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (4 instructions, 0196A0..0196B0). */
-}
+/* @0196A0-0196B0 sub_196A0 exit_196A0 Confirmed: exit/save stub: eep_save_r1_block(0xFF898C, 2) [exit slot x79] */
+void exit_196A0(rec_t *rec) { eep_save_r1_block(0xFF898C, 2); }
 
-/* @0196B0-0196C6 sub_196B0 fn_196B0 Skeleton: not yet reconstructed; 5 insns; refs sub_3CCBC,sub_3CCD0 */
-void fn_196B0(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (5 instructions, 0196B0..0196C6). */
-}
+/* @0196B0-0196C6 sub_196B0 exit_196B0 Confirmed: exit/save stub: eep_save_r1_block(0xFF898E, 2) eep_save_r1(0xA6) [exit slot xD6] */
+void exit_196B0(rec_t *rec) { eep_save_r1_block(0xFF898E, 2); eep_save_r1(0xA6); }
 
-/* @0196C6-0196D6 sub_196C6 fn_196C6 Skeleton: not yet reconstructed; 4 insns; refs sub_3CCD0 */
-void fn_196C6(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (4 instructions, 0196C6..0196D6). */
-}
+/* @0196C6-0196D6 sub_196C6 exit_196C6 Confirmed: exit/save stub: eep_save_r1_block(0xFF8A1C, 4) [exit slot x1A:BANK LINK xDB] */
+void exit_196C6(rec_t *rec) { eep_save_r1_block(0xFF8A1C, 4); }
 
-/* @0196D6-019702 sub_196D6 fn_196D6 Skeleton: not yet reconstructed; 11 insns; refs sub_3CD00,sub_3D5BC */
+/* @0196D6-019702 sub_196D6 fn_196D6 Skeleton: 11 insns; calls sub_3CD00,sub_3D5BC; RAM 8ABB,A984,AA30; table slot x9B:BEACON STATUS TEXT */
 void fn_196D6(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 0196D6..019702). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @019702-01972C sub_19702 fn_19702 Skeleton: not yet reconstructed; 10 insns; refs sub_18F22,sub_3CD00,sub_3D5F4 */
+/* @019702-01972C sub_19702 fn_19702 Skeleton: 10 insns; calls sub_18F22,sub_3CD00,sub_3D5F4; RAM 8CFB,AA30; table slot xAF */
 void fn_19702(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (10 instructions, 019702..01972C). */
+    /* TODO(waveC): body not transcribed (10 instructions). */
 }
 
-/* @01972C-01973E sub_1972C fn_1972C Skeleton: not yet reconstructed; 4 insns; refs - */
+/* @01972C-01973E sub_1972C fn_1972C Skeleton: 4 insns; calls -; RAM 8BCC,AA30; table slot xA8:SmartBeaconing */
 void fn_1972C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01972C..01973E). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01973E-019762 sub_1973E fn_1973E Skeleton: not yet reconstructed; 10 insns; refs sub_3CD00,sub_3F36E,sub_449A8 */
+/* @01973E-019762 sub_1973E fn_1973E Skeleton: 10 insns; calls sub_3CD00,sub_3F36E,sub_449A8; RAM - */
 void fn_1973E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (10 instructions, 01973E..019762). */
+    /* TODO(waveC): body not transcribed (10 instructions). */
 }
 
-/* @019762-019764 sub_19762 fn_19762 Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @019762-019764 sub_19762 fn_19762 Skeleton: 1 insns; calls -; RAM -; table slot x8D:RADIO ID CHECK */
 void fn_19762(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 019762..019764). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @019764-01976C sub_19764 fn_19764 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCEC */
-void fn_19764(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019764..01976C). */
-}
+/* @019764-01976C sub_19764 exit_19764 Confirmed: exit/save stub: eep_save_r2(0xA) */
+void exit_19764(rec_t *rec) { eep_save_r2(0xA); }
 
-/* @01976C-019774 sub_1976C fn_1976C Skeleton: not yet reconstructed; 2 insns; refs sub_3CCEC */
-void fn_1976C(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01976C..019774). */
-}
+/* @01976C-019774 sub_1976C exit_1976C Confirmed: exit/save stub: eep_save_r2(0x0) [exit slot x92:APRS MODEM] */
+void exit_1976C(rec_t *rec) { eep_save_r2(0x0); }
 
-/* @019774-01977C sub_19774 fn_19774 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCEC */
-void fn_19774(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019774..01977C). */
-}
+/* @019774-01977C sub_19774 exit_19774 Confirmed: exit/save stub: eep_save_r2(0x1D) [exit slot x99:APRS TX DELAY] */
+void exit_19774(rec_t *rec) { eep_save_r2(0x1D); }
 
-/* @01977C-019784 sub_1977C fn_1977C Skeleton: not yet reconstructed; 2 insns; refs sub_3CCEC */
-void fn_1977C(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01977C..019784). */
-}
+/* @01977C-019784 sub_1977C exit_1977C Confirmed: exit/save stub: eep_save_r2(0x1C) [exit slot x9A:BEACON INTERVAL] */
+void exit_1977C(rec_t *rec) { eep_save_r2(0x1C); }
 
-/* @019784-019794 sub_19784 fn_19784 Skeleton: not yet reconstructed; 4 insns; refs sub_3CCEC */
-void fn_19784(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (4 instructions, 019784..019794). */
-}
+/* @019784-019794 sub_19784 exit_19784 Confirmed: exit/save stub: eep_save_r2(0x128) eep_save_r2(0x12A) [exit slot x9E:GPS SETUP] */
+void exit_19784(rec_t *rec) { eep_save_r2(0x128); eep_save_r2(0x12A); }
 
-/* @019794-0197C0 sub_19794 fn_19794 Skeleton: not yet reconstructed; 10 insns; refs sub_3CCEC,sub_3CD00 */
-void fn_19794(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (10 instructions, 019794..0197C0). */
-}
+/* @019794-0197C0 sub_19794 exit_19794 Confirmed: exit/save stub: eep_save_r2(0x18D) eep_save_r2(0x1) eep_save_r2_block(0xFF8AC0, 2) eep_save_r2_block(0xFF8C1E, 4) [exit slot xA5:MY SYMBOL] */
+void exit_19794(rec_t *rec) { eep_save_r2(0x18D); eep_save_r2(0x1); eep_save_r2_block(0xFF8AC0, 2); eep_save_r2_block(0xFF8C1E, 4); }
 
-/* @0197C0-0197CE sub_197C0 fn_197C0 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_197C0(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0197C0..0197CE). */
-}
+/* @0197C0-0197CE sub_197C0 exit_197C0 Confirmed: exit/save stub: eep_save_r2_block(0xFF8AFC, 130) [exit slot x94] */
+void exit_197C0(rec_t *rec) { eep_save_r2_block(0xFF8AFC, 130); }
 
-/* @0197CE-0197F0 sub_197CE fn_197CE Skeleton: not yet reconstructed; 8 insns; refs sub_3CD00 */
+/* @0197CE-0197F0 sub_197CE fn_197CE Skeleton: 8 insns; calls sub_3CD00; RAM 8AC2; table slot x9D:DIGI PATH */
 void fn_197CE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (8 instructions, 0197CE..0197F0). */
+    /* TODO(waveC): body not transcribed (8 instructions). */
 }
 
-/* @0197F0-0197FE sub_197F0 fn_197F0 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_197F0(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0197F0..0197FE). */
-}
+/* @0197F0-0197FE sub_197F0 exit_197F0 Confirmed: exit/save stub: eep_save_r2_block(0xFF8B7E, 74) [exit slot xA2] */
+void exit_197F0(rec_t *rec) { eep_save_r2_block(0xFF8B7E, 74); }
 
-/* @0197FE-019816 sub_197FE fn_197FE Skeleton: not yet reconstructed; 6 insns; refs sub_17D90,sub_3CD00,sub_50FE8 */
+/* @0197FE-019816 sub_197FE fn_197FE Skeleton: 6 insns; calls sub_17D90,sub_3CD00,sub_50FE8; RAM -; table slot xA3:CALLSIGN (APRS) */
 void fn_197FE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 0197FE..019816). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @019816-019824 sub_19816 fn_19816 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_19816(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019816..019824). */
-}
+/* @019816-019824 sub_19816 exit_19816 Confirmed: exit/save stub: eep_save_r2_block(0xFF8AB0, 9) [exit slot xA4:MY POSITION] */
+void exit_19816(rec_t *rec) { eep_save_r2_block(0xFF8AB0, 9); }
 
-/* @019824-01982C sub_19824 fn_19824 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCEC */
-void fn_19824(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019824..01982C). */
-}
+/* @019824-01982C sub_19824 exit_19824 Confirmed: exit/save stub: eep_save_r2(0x9) [exit slot xA6:POSITION COMMENT] */
+void exit_19824(rec_t *rec) { eep_save_r2(0x9); }
 
-/* @01982C-019834 sub_1982C fn_1982C Skeleton: not yet reconstructed; 2 insns; refs sub_3CCEC */
-void fn_1982C(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01982C..019834). */
-}
+/* @01982C-019834 sub_1982C exit_1982C Confirmed: exit/save stub: eep_save_r2(0x129) [exit slot xA7:TIME ZONE] */
+void exit_1982C(rec_t *rec) { eep_save_r2(0x129); }
 
-/* @019834-019842 sub_19834 fn_19834 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_19834(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019834..019842). */
-}
+/* @019834-019842 sub_19834 exit_19834 Confirmed: exit/save stub: eep_save_r2_block(0xFF8C42, 20) [exit slot x96:APRS RINGER] */
+void exit_19834(rec_t *rec) { eep_save_r2_block(0xFF8C42, 20); }
 
-/* @019842-01984A sub_19842 fn_19842 Skeleton: not yet reconstructed; 2 insns; refs sub_3CCEC */
-void fn_19842(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019842..01984A). */
-}
+/* @019842-01984A sub_19842 exit_19842 Confirmed: exit/save stub: eep_save_r2(0xB) [exit slot x90:APRS AF DUAL x95:APRS MUTE x97 x9C:BEACON TX xA0:GPS TIME SET] */
+void exit_19842(rec_t *rec) { eep_save_r2(0xB); }
 
-/* @01984A-019858 sub_1984A fn_1984A Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_1984A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01984A..019858). */
-}
+/* @01984A-019858 sub_1984A exit_1984A Confirmed: exit/save stub: eep_save_r2_block(0xFF8AAC, 2) [exit slot x98:APRS UNIT] */
+void exit_1984A(rec_t *rec) { eep_save_r2_block(0xFF8AAC, 2); }
 
-/* @019858-019866 sub_19858 fn_19858 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_19858(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019858..019866). */
-}
+/* @019858-019866 sub_19858 exit_19858 Confirmed: exit/save stub: eep_save_r2_block(0xFF8ABE, 2) [exit slot x84:COMPASS xA1:GPS UNIT xA9:GPS POWER] */
+void exit_19858(rec_t *rec) { eep_save_r2_block(0xFF8ABE, 2); }
 
-/* @019866-019874 sub_19866 fn_19866 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_19866(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019866..019874). */
-}
+/* @019866-019874 sub_19866 exit_19866 Confirmed: exit/save stub: eep_save_r2_block(0xFF8AAE, 2) [exit slot x91] */
+void exit_19866(rec_t *rec) { eep_save_r2_block(0xFF8AAE, 2); }
 
-/* @019874-019882 sub_19874 fn_19874 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_19874(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019874..019882). */
-}
+/* @019874-019882 sub_19874 exit_19874 Confirmed: exit/save stub: eep_save_r2_block(0xFF8BE2, 3) [exit slot x93:APRS MSG FLASH] */
+void exit_19874(rec_t *rec) { eep_save_r2_block(0xFF8BE2, 3); }
 
-/* @019882-019890 sub_19882 fn_19882 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_19882(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019882..019890). */
-}
+/* @019882-019890 sub_19882 exit_19882 Confirmed: exit/save stub: eep_save_r2_block(0xFF8C22, 3) [exit slot xAA] */
+void exit_19882(rec_t *rec) { eep_save_r2_block(0xFF8C22, 3); }
 
-/* @019890-01989E sub_19890 fn_19890 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_19890(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019890..01989E). */
-}
+/* @019890-01989E sub_19890 exit_19890 Confirmed: exit/save stub: eep_save_r2_block(0xFF8C26, 5) [exit slot xAB] */
+void exit_19890(rec_t *rec) { eep_save_r2_block(0xFF8C26, 5); }
 
-/* @01989E-0198AC sub_1989E fn_1989E Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_1989E(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01989E..0198AC). */
-}
+/* @01989E-0198AC sub_1989E exit_1989E Confirmed: exit/save stub: eep_save_r2_block(0xFF8C2E, 20) [exit slot xAC:APRS POPUP] */
+void exit_1989E(rec_t *rec) { eep_save_r2_block(0xFF8C2E, 20); }
 
-/* @0198AC-0198AE sub_198AC fn_198AC Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @0198AC-0198AE sub_198AC fn_198AC Skeleton: 1 insns; calls -; RAM -; table slot xAD */
 void fn_198AC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 0198AC..0198AE). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @0198AE-0198BC sub_198AE fn_198AE Skeleton: not yet reconstructed; 3 insns; refs sub_3CD00 */
-void fn_198AE(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0198AE..0198BC). */
-}
+/* @0198AE-0198BC sub_198AE exit_198AE Confirmed: exit/save stub: eep_save_r2_block(0xFF8CF8, 2) [exit slot xAE:BEACON INFO] */
+void exit_198AE(rec_t *rec) { eep_save_r2_block(0xFF8CF8, 2); }
 
-/* @0198BC-0198C4 sub_198BC fn_198BC Skeleton: not yet reconstructed; 2 insns; refs sub_3CCEC */
-void fn_198BC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0198BC..0198C4). */
-}
+/* @0198BC-0198C4 sub_198BC exit_198BC Confirmed: exit/save stub: eep_save_r2(0x18B) [exit slot xD7] */
+void exit_198BC(rec_t *rec) { eep_save_r2(0x18B); }
 
-/* @0198CC-0198D4 sub_198CC fn_198CC Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_198CC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0198CC..0198D4). */
-}
+/* @0198CC-0198D4 sub_198CC exit_198CC Confirmed: exit/save stub: eep_save_r3(0x0) */
+void exit_198CC(rec_t *rec) { eep_save_r3(0x0); }
 
-/* @0198D4-0198DC sub_198D4 fn_198D4 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_198D4(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0198D4..0198DC). */
-}
+/* @0198D4-0198DC sub_198D4 exit_198D4 Confirmed: exit/save stub: eep_save_r3(0xB5) */
+void exit_198D4(rec_t *rec) { eep_save_r3(0xB5); }
 
-/* @0198DC-0198FA sub_198DC fn_198DC Skeleton: not yet reconstructed; 7 insns; refs sub_3CD1C,sub_3CD30 */
-void fn_198DC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (7 instructions, 0198DC..0198FA). */
-}
+/* @0198DC-0198FA sub_198DC exit_198DC Confirmed: exit/save stub: eep_save_r3_block(0xFF8D20, 2) eep_save_r3(0x6A) eep_save_r3(0xB2) [exit slot xB0] */
+void exit_198DC(rec_t *rec) { eep_save_r3_block(0xFF8D20, 2); eep_save_r3(0x6A); eep_save_r3(0xB2); }
 
-/* @0198FA-019902 sub_198FA fn_198FA Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_198FA(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0198FA..019902). */
-}
+/* @0198FA-019902 sub_198FA exit_198FA Confirmed: exit/save stub: eep_save_r3(0xBC) [exit slot xB2:DIGITAL VW] */
+void exit_198FA(rec_t *rec) { eep_save_r3(0xBC); }
 
-/* @019902-019910 sub_19902 fn_19902 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_19902(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019902..019910). */
-}
+/* @019902-019910 sub_19902 exit_19902 Confirmed: exit/save stub: eep_save_r3_block(0xFF8DD5, 2) */
+void exit_19902(rec_t *rec) { eep_save_r3_block(0xFF8DD5, 2); }
 
-/* @019910-01991E sub_19910 fn_19910 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_19910(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019910..01991E). */
-}
+/* @019910-01991E sub_19910 exit_19910 Confirmed: exit/save stub: eep_save_r3_block(0xFF8D85, 2) [exit slot xCD] */
+void exit_19910(rec_t *rec) { eep_save_r3_block(0xFF8D85, 2); }
 
-/* @01991E-019926 sub_1991E fn_1991E Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_1991E(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01991E..019926). */
-}
+/* @01991E-019926 sub_1991E exit_1991E Confirmed: exit/save stub: eep_save_r3(0x67) [exit slot xCE] */
+void exit_1991E(rec_t *rec) { eep_save_r3(0x67); }
 
-/* @019926-01992E sub_19926 fn_19926 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19926(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019926..01992E). */
-}
+/* @019926-01992E sub_19926 exit_19926 Confirmed: exit/save stub: eep_save_r3(0x10A) [exit slot xC2] */
+void exit_19926(rec_t *rec) { eep_save_r3(0x10A); }
 
-/* @01992E-019936 sub_1992E fn_1992E Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_1992E(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01992E..019936). */
-}
+/* @01992E-019936 sub_1992E exit_1992E Confirmed: exit/save stub: eep_save_r3(0x10B) [exit slot xCF] */
+void exit_1992E(rec_t *rec) { eep_save_r3(0x10B); }
 
-/* @019936-01993E sub_19936 fn_19936 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19936(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019936..01993E). */
-}
+/* @019936-01993E sub_19936 exit_19936 Confirmed: exit/save stub: eep_save_r3(0x10C) [exit slot xD0] */
+void exit_19936(rec_t *rec) { eep_save_r3(0x10C); }
 
-/* @01993E-019946 sub_1993E fn_1993E Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_1993E(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01993E..019946). */
-}
+/* @01993E-019946 sub_1993E exit_1993E Confirmed: exit/save stub: eep_save_r3(0x10D) [exit slot xD1] */
+void exit_1993E(rec_t *rec) { eep_save_r3(0x10D); }
 
-/* @019946-019954 sub_19946 fn_19946 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_19946(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019946..019954). */
-}
+/* @019946-019954 sub_19946 exit_19946 Confirmed: exit/save stub: eep_save_r3_block(0xFF8D22, 2) [exit slot xB1:DIGITAL POPUP] */
+void exit_19946(rec_t *rec) { eep_save_r3_block(0xFF8D22, 2); }
 
-/* @019954-01996E sub_19954 fn_19954 Skeleton: not yet reconstructed; 6 insns; refs sub_3CD30,sub_5E0C0 */
+/* @019954-01996E sub_19954 fn_19954 Skeleton: 6 insns; calls sub_3CD30,sub_5E0C0; RAM B0C9; table slot xB3 */
 void fn_19954(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 019954..01996E). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01996E-019976 sub_1996E fn_1996E Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_1996E(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01996E..019976). */
-}
+/* @01996E-019976 sub_1996E exit_1996E Confirmed: exit/save stub: eep_save_r3(0x4) [exit slot xB4:DG-ID] */
+void exit_1996E(rec_t *rec) { eep_save_r3(0x4); }
 
-/* @019976-01997E sub_19976 fn_19976 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19976(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019976..01997E). */
-}
+/* @019976-01997E sub_19976 exit_19976 Confirmed: exit/save stub: eep_save_r3(0x62) [exit slot xB5:LOCATION SERVICE] */
+void exit_19976(rec_t *rec) { eep_save_r3(0x62); }
 
-/* @01997E-01998C sub_1997E fn_1997E Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_1997E(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01997E..01998C). */
-}
+/* @01997E-01998C sub_1997E exit_1997E Confirmed: exit/save stub: eep_save_r3_block(0xFF8E20, 2) [exit slot xC3] */
+void exit_1997E(rec_t *rec) { eep_save_r3_block(0xFF8E20, 2); }
 
-/* @01998C-01999A sub_1998C fn_1998C Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_1998C(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01998C..01999A). */
-}
+/* @01998C-01999A sub_1998C exit_1998C Confirmed: exit/save stub: eep_save_r3_block(0xFF8E22, 4) [exit slot xC4] */
+void exit_1998C(rec_t *rec) { eep_save_r3_block(0xFF8E22, 4); }
 
-/* @01999A-0199A8 sub_1999A fn_1999A Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_1999A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01999A..0199A8). */
-}
+/* @01999A-0199A8 sub_1999A exit_1999A Confirmed: exit/save stub: eep_save_r3_block(0xFF8E26, 4) [exit slot xC5] */
+void exit_1999A(rec_t *rec) { eep_save_r3_block(0xFF8E26, 4); }
 
-/* @0199A8-0199B0 sub_199A8 fn_199A8 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_199A8(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0199A8..0199B0). */
-}
+/* @0199A8-0199B0 sub_199A8 exit_199A8 Confirmed: exit/save stub: eep_save_r3(0x10E) [exit slot xC6] */
+void exit_199A8(rec_t *rec) { eep_save_r3(0x10E); }
 
-/* @0199B0-0199BE sub_199B0 fn_199B0 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_199B0(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0199B0..0199BE). */
-}
+/* @0199B0-0199BE sub_199B0 exit_199B0 Confirmed: exit/save stub: eep_save_r3_block(0xFF8E2F, 5) [exit slot xC7] */
+void exit_199B0(rec_t *rec) { eep_save_r3_block(0xFF8E2F, 5); }
 
-/* @0199BE-0199CC sub_199BE fn_199BE Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_199BE(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0199BE..0199CC). */
-}
+/* @0199BE-0199CC sub_199BE exit_199BE Confirmed: exit/save stub: eep_save_r3_block(0xFF8E34, 2) [exit slot xC8] */
+void exit_199BE(rec_t *rec) { eep_save_r3_block(0xFF8E34, 2); }
 
-/* @0199CC-0199D4 sub_199CC fn_199CC Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_199CC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0199CC..0199D4). */
-}
+/* @0199CC-0199D4 sub_199CC exit_199CC Confirmed: exit/save stub: eep_save_r3(0x116) [exit slot xC9] */
+void exit_199CC(rec_t *rec) { eep_save_r3(0x116); }
 
-/* @0199D4-0199DC sub_199D4 fn_199D4 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_199D4(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0199D4..0199DC). */
-}
+/* @0199D4-0199DC sub_199D4 exit_199D4 Confirmed: exit/save stub: eep_save_r3(0x11D) [exit slot xCA] */
+void exit_199D4(rec_t *rec) { eep_save_r3(0x11D); }
 
-/* @0199DC-0199E4 sub_199DC fn_199DC Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_199DC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0199DC..0199E4). */
-}
+/* @0199DC-0199E4 sub_199DC exit_199DC Confirmed: exit/save stub: eep_save_r3(0x11E) [exit slot xCB] */
+void exit_199DC(rec_t *rec) { eep_save_r3(0x11E); }
 
-/* @0199E4-0199EC sub_199E4 fn_199E4 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_199E4(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0199E4..0199EC). */
-}
+/* @0199E4-0199EC sub_199E4 exit_199E4 Confirmed: exit/save stub: eep_save_r3(0x11F) [exit slot xCC] */
+void exit_199E4(rec_t *rec) { eep_save_r3(0x11F); }
 
-/* @0199EC-0199FA sub_199EC fn_199EC Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_199EC(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 0199EC..0199FA). */
-}
+/* @0199EC-0199FA sub_199EC exit_199EC Confirmed: exit/save stub: eep_save_r3_block(0xFF8D88, 2) [exit slot xD2 xD3] */
+void exit_199EC(rec_t *rec) { eep_save_r3_block(0xFF8D88, 2); }
 
-/* @0199FA-019A02 sub_199FA fn_199FA Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_199FA(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 0199FA..019A02). */
-}
+/* @0199FA-019A02 sub_199FA exit_199FA Confirmed: exit/save stub: eep_save_r3(0x6C) [exit slot xB7] */
+void exit_199FA(rec_t *rec) { eep_save_r3(0x6C); }
 
-/* @019A02-019A0A sub_19A02 fn_19A02 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A02(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A02..019A0A). */
-}
+/* @019A02-019A0A sub_19A02 exit_19A02 Confirmed: exit/save stub: eep_save_r3(0x6D) [exit slot xB8:DIGITAL POPUP] */
+void exit_19A02(rec_t *rec) { eep_save_r3(0x6D); }
 
-/* @019A0A-019A12 sub_19A0A fn_19A0A Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A0A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A0A..019A12). */
-}
+/* @019A0A-019A12 sub_19A0A exit_19A0A Confirmed: exit/save stub: eep_save_r3(0x6E) [exit slot xB9] */
+void exit_19A0A(rec_t *rec) { eep_save_r3(0x6E); }
 
-/* @019A12-019A1A sub_19A12 fn_19A12 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A12(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A12..019A1A). */
-}
+/* @019A12-019A1A sub_19A12 exit_19A12 Confirmed: exit/save stub: eep_save_r3(0x6F) [exit slot xBD:SEARCH SETUP] */
+void exit_19A12(rec_t *rec) { eep_save_r3(0x6F); }
 
-/* @019A1A-019A22 sub_19A1A fn_19A1A Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A1A(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A1A..019A22). */
-}
+/* @019A1A-019A22 sub_19A1A exit_19A1A Confirmed: exit/save stub: eep_save_r3(0xB4) [exit slot xC1:STANDBY BEEP] */
+void exit_19A1A(rec_t *rec) { eep_save_r3(0xB4); }
 
-/* @019A22-019A30 sub_19A22 fn_19A22 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_19A22(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019A22..019A30). */
-}
+/* @019A22-019A30 sub_19A22 exit_19A22 Confirmed: exit/save stub: eep_save_r3_block(0xFF8D90, 14) [exit slot xBC:RPT/WIRES FREQ] */
+void exit_19A22(rec_t *rec) { eep_save_r3_block(0xFF8D90, 14); }
 
-/* @019A30-019A3E sub_19A30 fn_19A30 Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_19A30(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019A30..019A3E). */
-}
+/* @019A30-019A3E sub_19A30 exit_19A30 Confirmed: exit/save stub: eep_save_r3_block(0xFF8DD0, 2) */
+void exit_19A30(rec_t *rec) { eep_save_r3_block(0xFF8DD0, 2); }
 
-/* @019A3E-019A4C sub_19A3E fn_19A3E Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_19A3E(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019A3E..019A4C). */
-}
+/* @019A3E-019A4C sub_19A3E exit_19A3E Confirmed: exit/save stub: eep_save_r3_block(0xFF8DD7, 5) [exit slot x38:DP-ID LIST x39:DP-ID LIST] */
+void exit_19A3E(rec_t *rec) { eep_save_r3_block(0xFF8DD7, 5); }
 
-/* @019A4C-019A54 sub_19A4C fn_19A4C Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A4C(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A4C..019A54). */
-}
+/* @019A4C-019A54 sub_19A4C exit_19A4C Confirmed: exit/save stub: eep_save_r3(0xBE) */
+void exit_19A4C(rec_t *rec) { eep_save_r3(0xBE); }
 
-/* @019A54-019A5C sub_19A54 fn_19A54 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A54(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A54..019A5C). */
-}
+/* @019A54-019A5C sub_19A54 exit_19A54 Confirmed: exit/save stub: eep_save_r3(0xBF) */
+void exit_19A54(rec_t *rec) { eep_save_r3(0xBF); }
 
-/* @019A5C-019A64 sub_19A5C fn_19A5C Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A5C(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A5C..019A64). */
-}
+/* @019A5C-019A64 sub_19A5C exit_19A5C Confirmed: exit/save stub: eep_save_r3(0xC0) */
+void exit_19A5C(rec_t *rec) { eep_save_r3(0xC0); }
 
-/* @019A64-019A6C sub_19A64 fn_19A64 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A64(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A64..019A6C). */
-}
+/* @019A64-019A6C sub_19A64 exit_19A64 Confirmed: exit/save stub: eep_save_r3(0xC1) */
+void exit_19A64(rec_t *rec) { eep_save_r3(0xC1); }
 
-/* @019A6C-019A74 sub_19A6C fn_19A6C Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A6C(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A6C..019A74). */
-}
+/* @019A6C-019A74 sub_19A6C exit_19A6C Confirmed: exit/save stub: eep_save_r3(0xC2) */
+void exit_19A6C(rec_t *rec) { eep_save_r3(0xC2); }
 
-/* @019A74-019A7C sub_19A74 fn_19A74 Skeleton: not yet reconstructed; 2 insns; refs sub_3CD1C */
-void fn_19A74(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019A74..019A7C). */
-}
+/* @019A74-019A7C sub_19A74 exit_19A74 Confirmed: exit/save stub: eep_save_r3(0xC7) */
+void exit_19A74(rec_t *rec) { eep_save_r3(0xC7); }
 
-/* @019A7C-019A8A sub_19A7C fn_19A7C Skeleton: not yet reconstructed; 3 insns; refs sub_3CD30 */
-void fn_19A7C(rec_t *rec)
-{
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019A7C..019A8A). */
-}
+/* @019A7C-019A8A sub_19A7C exit_19A7C Confirmed: exit/save stub: eep_save_r3_block(0xFF8E40, 15) */
+void exit_19A7C(rec_t *rec) { eep_save_r3_block(0xFF8E40, 15); }
 
-/* @019A8A-019A9E sub_19A8A fn_19A8A Skeleton: not yet reconstructed; 5 insns; refs sub_3DD32 */
+/* @019A8A-019A9E sub_19A8A fn_19A8A Skeleton: 5 insns; calls sub_3DD32; RAM AA30; table slot xBE */
 void fn_19A8A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 019A8A..019A9E). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @019C3A-019C44 sub_19C3A fn_19C3A Skeleton: not yet reconstructed; 2 insns; refs loc_15260 */
+/* @019C3A-019C44 sub_19C3A fn_19C3A Skeleton: 2 insns; calls loc_15260; RAM - */
 void fn_19C3A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019C3A..019C44). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @019C50-019C76 sub_19C50 fn_19C50 Skeleton: not yet reconstructed; 9 insns; refs sub_3F628,sub_7348C */
+/* @019C50-019C76 sub_19C50 fn_19C50 Skeleton: 9 insns; calls sub_3F628,sub_7348C; RAM 8920,B0AA */
 void fn_19C50(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 019C50..019C76). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @019C76-019C82 sub_19C76 fn_19C76 Skeleton: not yet reconstructed; 3 insns; refs sub_3F628 */
+/* @019C76-019C82 sub_19C76 fn_19C76 Skeleton: 3 insns; calls sub_3F628; RAM - */
 void fn_19C76(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019C76..019C82). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @019C8E-019C98 sub_19C8E fn_19C8E Skeleton: not yet reconstructed; 2 insns; refs loc_15260 */
+/* @019C8E-019C98 sub_19C8E fn_19C8E Skeleton: 2 insns; calls loc_15260; RAM - */
 void fn_19C8E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019C8E..019C98). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @019CA4-019CB6 sub_19CA4 fn_19CA4 Skeleton: not yet reconstructed; 5 insns; refs sub_3F628 */
+/* @019CA4-019CB6 sub_19CA4 fn_19CA4 Skeleton: 5 insns; calls sub_3F628; RAM BAD6 */
 void fn_19CA4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 019CA4..019CB6). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @019CB6-019CCE sub_19CB6 fn_19CB6 Skeleton: not yet reconstructed; 7 insns; refs sub_3F628,sub_3FF9C */
+/* @019CB6-019CCE sub_19CB6 fn_19CB6 Skeleton: 7 insns; calls sub_3F628,sub_3FF9C; RAM BAD6 */
 void fn_19CB6(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (7 instructions, 019CB6..019CCE). */
+    /* TODO(waveC): body not transcribed (7 instructions). */
 }
 
-/* @019CDA-019CF8 sub_19CDA fn_19CDA Skeleton: not yet reconstructed; 10 insns; refs sub_3F62E,sub_3FFA0 */
+/* @019CDA-019CF8 sub_19CDA fn_19CDA Skeleton: 10 insns; calls sub_3F62E,sub_3FFA0; RAM AAEA; table slot d1D:DEVICE LIST */
 void fn_19CDA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (10 instructions, 019CDA..019CF8). */
+    /* TODO(waveC): body not transcribed (10 instructions). */
 }
 
-/* @019CFE-019D10 sub_19CFE fn_19CFE Skeleton: not yet reconstructed; 4 insns; refs sub_730D0 */
+/* @019CFE-019D10 sub_19CFE fn_19CFE Skeleton: 4 insns; calls sub_730D0; RAM 8920,AA30; table slot d1E:Bluetooth */
 void fn_19CFE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 019CFE..019D10). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @019D10-019D22 sub_19D10 fn_19D10 Skeleton: not yet reconstructed; 4 insns; refs sub_734B0 */
+/* @019D10-019D22 sub_19D10 fn_19D10 Skeleton: 4 insns; calls sub_734B0; RAM 8920,AA30; table slot d1F:Bluetooth Save */
 void fn_19D10(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 019D10..019D22). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @019D22-019D4A sub_19D22 fn_19D22 Skeleton: not yet reconstructed; 10 insns; refs loc_19D3A,sub_19DDE */
+/* @019D22-019D4A sub_19D22 fn_19D22 Skeleton: 10 insns; calls sub_19DDE; RAM 94C1 */
 void fn_19D22(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (10 instructions, 019D22..019D4A). */
+    /* TODO(waveC): body not transcribed (10 instructions). */
 }
 
-/* @019D4A-019D58 sub_19D4A fn_19D4A Skeleton: not yet reconstructed; 5 insns; refs sub_14BBA */
+/* @019D4A-019D58 sub_19D4A fn_19D4A Skeleton: 5 insns; calls sub_14BBA; RAM AD68 */
 void fn_19D4A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 019D4A..019D58). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @019D58-019D60 sub_19D58 fn_19D58 Skeleton: not yet reconstructed; 2 insns; refs loc_19D74 */
+/* @019D58-019D60 sub_19D58 fn_19D58 Skeleton: 2 insns; calls loc_19D74; RAM - */
 void fn_19D58(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019D58..019D60). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @019D60-019D6E sub_19D60 fn_19D60 Skeleton: not yet reconstructed; 5 insns; refs sub_14BBA */
+/* @019D60-019D6E sub_19D60 fn_19D60 Skeleton: 5 insns; calls sub_14BBA; RAM AD68 */
 void fn_19D60(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 019D60..019D6E). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @019D6E-019D74 sub_19D6E fn_19D6E Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @019D6E-019D74 sub_19D6E fn_19D6E Skeleton: 1 insns; calls -; RAM - */
 void fn_19D6E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 019D6E..019D74). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @019D74-019DDE sub_19D74 fn_19D74 Skeleton: not yet reconstructed; 33 insns; refs sub_19DDE,sub_1A436 */
+/* @019D74-019DDE sub_19D74 fn_19D74 Skeleton: 33 insns; calls sub_19DDE,sub_1A436; RAM A9ED,AD68,AD82,BBBA,FFFF */
 void fn_19D74(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (33 instructions, 019D74..019DDE). */
+    /* TODO(waveC): body not transcribed (33 instructions). */
 }
 
-/* @019DDE-019E58 sub_19DDE fn_19DDE Skeleton: not yet reconstructed; 46 insns; refs loc_19E34,sub_19E58,sub_1A436,sub_3FFA0 */
+/* @019DDE-019E58 sub_19DDE fn_19DDE Skeleton: 46 insns; calls sub_19E58,sub_1A436,sub_3FFA0; RAM A9ED,AD68,AD82,AD86 */
 void fn_19DDE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (46 instructions, 019DDE..019E58). */
+    /* TODO(waveC): body not transcribed (46 instructions). */
 }
 
-/* @019E58-019E6C sub_19E58 fn_19E58 Skeleton: not yet reconstructed; 5 insns; refs sub_19F3A */
+/* @019E58-019E6C sub_19E58 fn_19E58 Skeleton: 5 insns; calls sub_19F3A; RAM AD86 */
 void fn_19E58(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 019E58..019E6C). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @019E6C-019E92 sub_19E6C fn_19E6C Skeleton: not yet reconstructed; 11 insns; refs loc_19EAE,sub_14BBA,sub_19E8A */
+/* @019E6C-019E92 sub_19E6C fn_19E6C Skeleton: 11 insns; calls loc_19EAE,sub_14BBA,sub_19E8A; RAM AD68 */
 void fn_19E6C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 019E6C..019E92). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @019E92-019ED6 sub_19E92 fn_19E92 Skeleton: not yet reconstructed; 20 insns; refs loc_19EAE,sub_19E58,sub_3FFA0 */
+/* @019E92-019ED6 sub_19E92 fn_19E92 Skeleton: 20 insns; calls sub_19E58,sub_3FFA0; RAM AD86 */
 void fn_19E92(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (20 instructions, 019E92..019ED6). */
+    /* TODO(waveC): body not transcribed (20 instructions). */
 }
 
-/* @019ED6-019F08 sub_19ED6 fn_19ED6 Skeleton: not yet reconstructed; 15 insns; refs loc_19EE4,sub_19E58 */
+/* @019ED6-019F08 sub_19ED6 fn_19ED6 Skeleton: 15 insns; calls sub_19E58; RAM AD86 */
 void fn_19ED6(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (15 instructions, 019ED6..019F08). */
+    /* TODO(waveC): body not transcribed (15 instructions). */
 }
 
-/* @019F3A-019F54 sub_19F3A fn_19F3A Skeleton: not yet reconstructed; 8 insns; refs loc_19F4E,sub_19FAE,sub_3FFA0 */
+/* @019F3A-019F54 sub_19F3A fn_19F3A Skeleton: 8 insns; calls sub_19FAE,sub_3FFA0; RAM AA30,AD68 */
 void fn_19F3A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (8 instructions, 019F3A..019F54). */
+    /* TODO(waveC): body not transcribed (8 instructions). */
 }
 
-/* @019F54-019F62 sub_19F54 fn_19F54 Skeleton: not yet reconstructed; 4 insns; refs sub_19FAE */
+/* @019F54-019F62 sub_19F54 fn_19F54 Skeleton: 4 insns; calls sub_19FAE; RAM AA30,AD99 */
 void fn_19F54(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 019F54..019F62). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @019F62-019F70 sub_19F62 fn_19F62 Skeleton: not yet reconstructed; 4 insns; refs sub_19FAE */
+/* @019F62-019F70 sub_19F62 fn_19F62 Skeleton: 4 insns; calls sub_19FAE; RAM AA30,B3A0 */
 void fn_19F62(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 019F62..019F70). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @019F78-019F82 sub_19F78 fn_19F78 Skeleton: not yet reconstructed; 3 insns; refs loc_19F7A,loc_19FA8 */
+/* @019F78-019F82 sub_19F78 fn_19F78 Skeleton: 3 insns; calls loc_19FA8; RAM - */
 void fn_19F78(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 019F78..019F82). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @019F82-019F8A sub_19F82 fn_19F82 Skeleton: not yet reconstructed; 2 insns; refs loc_19FA8 */
+/* @019F82-019F8A sub_19F82 fn_19F82 Skeleton: 2 insns; calls loc_19FA8; RAM - */
 void fn_19F82(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 019F82..019F8A). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @019F8A-019FAE sub_19F8A fn_19F8A Skeleton: not yet reconstructed; 9 insns; refs loc_19FA8 */
+/* @019F8A-019FAE sub_19F8A fn_19F8A Skeleton: 9 insns; calls -; RAM AD68 */
 void fn_19F8A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 019F8A..019FAE). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @019FAE-019FD4 sub_19FAE fn_19FAE Skeleton: not yet reconstructed; 10 insns; refs sub_3F62E */
+/* @019FAE-019FD4 sub_19FAE fn_19FAE Skeleton: 10 insns; calls sub_3F62E; RAM 9542,A9ED,A9EE */
 void fn_19FAE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (10 instructions, 019FAE..019FD4). */
+    /* TODO(waveC): body not transcribed (10 instructions). */
 }
 
-/* @019FDE-01A006 sub_19FDE fn_19FDE Skeleton: not yet reconstructed; 14 insns; refs loc_19FEA */
+/* @019FDE-01A006 sub_19FDE fn_19FDE Skeleton: 14 insns; calls -; RAM AA30 */
 void fn_19FDE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (14 instructions, 019FDE..01A006). */
+    /* TODO(waveC): body not transcribed (14 instructions). */
 }
 
-/* @01A006-01A028 sub_1A006 fn_1A006 Skeleton: not yet reconstructed; 14 insns; refs sub_3FFA0 */
+/* @01A006-01A028 sub_1A006 fn_1A006 Skeleton: 14 insns; calls sub_3FFA0; RAM - */
 void fn_1A006(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (14 instructions, 01A006..01A028). */
+    /* TODO(waveC): body not transcribed (14 instructions). */
 }
 
-/* @01A028-01A04A sub_1A028 fn_1A028 Skeleton: not yet reconstructed; 14 insns; refs sub_3FFA0 */
+/* @01A028-01A04A sub_1A028 fn_1A028 Skeleton: 14 insns; calls sub_3FFA0; RAM - */
 void fn_1A028(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (14 instructions, 01A028..01A04A). */
+    /* TODO(waveC): body not transcribed (14 instructions). */
 }
 
-/* @01A04A-01A062 sub_1A04A fn_1A04A Skeleton: not yet reconstructed; 11 insns; refs - */
+/* @01A04A-01A062 sub_1A04A fn_1A04A Skeleton: 11 insns; calls -; RAM AD99 */
 void fn_1A04A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01A04A..01A062). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01A062-01A07C sub_1A062 fn_1A062 Skeleton: not yet reconstructed; 12 insns; refs - */
+/* @01A062-01A07C sub_1A062 fn_1A062 Skeleton: 12 insns; calls -; RAM B3A0 */
 void fn_1A062(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (12 instructions, 01A062..01A07C). */
+    /* TODO(waveC): body not transcribed (12 instructions). */
 }
 
-/* @01A084-01A08C sub_1A084 fn_1A084 Skeleton: not yet reconstructed; 2 insns; refs loc_1A0EA */
+/* @01A084-01A08C sub_1A084 fn_1A084 Skeleton: 2 insns; calls loc_1A0EA; RAM - */
 void fn_1A084(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01A084..01A08C). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01A094-01A09C sub_1A094 fn_1A094 Skeleton: not yet reconstructed; 2 insns; refs loc_1A0EA */
+/* @01A094-01A09C sub_1A094 fn_1A094 Skeleton: 2 insns; calls loc_1A0EA; RAM - */
 void fn_1A094(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01A094..01A09C). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01A0A4-01A0AC sub_1A0A4 fn_1A0A4 Skeleton: not yet reconstructed; 2 insns; refs loc_1A0EA */
+/* @01A0A4-01A0AC sub_1A0A4 fn_1A0A4 Skeleton: 2 insns; calls loc_1A0EA; RAM - */
 void fn_1A0A4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01A0A4..01A0AC). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01A0AC-01A0B4 sub_1A0AC fn_1A0AC Skeleton: not yet reconstructed; 2 insns; refs loc_1A0EA */
+/* @01A0AC-01A0B4 sub_1A0AC fn_1A0AC Skeleton: 2 insns; calls loc_1A0EA; RAM - */
 void fn_1A0AC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01A0AC..01A0B4). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01A0B4-01A0BC sub_1A0B4 fn_1A0B4 Skeleton: not yet reconstructed; 2 insns; refs loc_1A0EA */
+/* @01A0B4-01A0BC sub_1A0B4 fn_1A0B4 Skeleton: 2 insns; calls loc_1A0EA; RAM - */
 void fn_1A0B4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01A0B4..01A0BC). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01A0DC-01A17C sub_1A0DC fn_1A0DC Skeleton: not yet reconstructed; 50 insns; refs loc_1A0EA,loc_1A154,loc_1A16C,sub_3F62E */
+/* @01A0DC-01A17C sub_1A0DC fn_1A0DC Skeleton: 50 insns; calls sub_3F62E; RAM A9EE,AD68,B054,B055 */
 void fn_1A0DC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (50 instructions, 01A0DC..01A17C). */
+    /* TODO(waveC): body not transcribed (50 instructions). */
 }
 
-/* @01A246-01A254 sub_1A246 fn_1A246 Skeleton: not yet reconstructed; 3 insns; refs loc_1A259 */
+/* @01A246-01A254 sub_1A246 fn_1A246 Skeleton: 3 insns; calls loc_1A259; RAM - */
 void fn_1A246(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01A246..01A254). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @01A260-01A28C sub_1A260 fn_1A260 Skeleton: not yet reconstructed; 14 insns; refs sub_19F54 */
+/* @01A260-01A28C sub_1A260 fn_1A260 Skeleton: 14 insns; calls sub_19F54; RAM AD86 */
 void fn_1A260(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (14 instructions, 01A260..01A28C). */
+    /* TODO(waveC): body not transcribed (14 instructions). */
 }
 
-/* @01A2C0-01A2D8 sub_1A2C0 fn_1A2C0 Skeleton: not yet reconstructed; 8 insns; refs sub_151EC,sub_1A2D8,sub_3FFA0 */
+/* @01A2C0-01A2D8 sub_1A2C0 fn_1A2C0 Skeleton: 8 insns; calls sub_151EC,sub_1A2D8,sub_3FFA0; RAM BBF2 */
 void fn_1A2C0(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (8 instructions, 01A2C0..01A2D8). */
+    /* TODO(waveC): body not transcribed (8 instructions). */
 }
 
-/* @01A2D8-01A302 sub_1A2D8 fn_1A2D8 Skeleton: not yet reconstructed; 13 insns; refs loc_1A2F2,sub_3F676 */
+/* @01A2D8-01A302 sub_1A2D8 fn_1A2D8 Skeleton: 13 insns; calls sub_3F676; RAM B092,B093,BC77,BC78,BC7A */
 void fn_1A2D8(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01A2D8..01A302). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01A302-01A31C sub_1A302 fn_1A302 Skeleton: not yet reconstructed; 9 insns; refs sub_3FFA0 */
+/* @01A302-01A31C sub_1A302 fn_1A302 Skeleton: 9 insns; calls sub_3FFA0; RAM BC77,BC79 */
 void fn_1A302(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 01A302..01A31C). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01A31C-01A33C sub_1A31C fn_1A31C Skeleton: not yet reconstructed; 11 insns; refs sub_3FFA0 */
+/* @01A31C-01A33C sub_1A31C fn_1A31C Skeleton: 11 insns; calls sub_3FFA0; RAM BC77,BC78,BC79 */
 void fn_1A31C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01A31C..01A33C). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01A33C-01A350 sub_1A33C fn_1A33C Skeleton: not yet reconstructed; 6 insns; refs sub_1A2D8,sub_3FFA0 */
+/* @01A33C-01A350 sub_1A33C fn_1A33C Skeleton: 6 insns; calls sub_1A2D8,sub_3FFA0; RAM BBF2 */
 void fn_1A33C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01A33C..01A350). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01A350-01A364 sub_1A350 fn_1A350 Skeleton: not yet reconstructed; 6 insns; refs sub_1A2D8,sub_3FFA0 */
+/* @01A350-01A364 sub_1A350 fn_1A350 Skeleton: 6 insns; calls sub_1A2D8,sub_3FFA0; RAM BBF2 */
 void fn_1A350(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01A350..01A364). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01A432-01A436 sub_1A432 fn_1A432 Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @01A432-01A436 sub_1A432 fn_1A432 Skeleton: 1 insns; calls -; RAM AD80 */
 void fn_1A432(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 01A432..01A436). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @01A436-01A43C sub_1A436 fn_1A436 Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @01A436-01A43C sub_1A436 fn_1A436 Skeleton: 1 insns; calls -; RAM AD82 */
 void fn_1A436(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 01A436..01A43C). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @01A43C-01A458 sub_1A43C fn_1A43C Skeleton: not yet reconstructed; 9 insns; refs - */
+/* @01A43C-01A458 sub_1A43C fn_1A43C Skeleton: 9 insns; calls -; RAM - */
 void fn_1A43C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 01A43C..01A458). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01A468-01A46C sub_1A468 fn_1A468 Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @01A468-01A46C sub_1A468 fn_1A468 Skeleton: 1 insns; calls -; RAM AD80 */
 void fn_1A468(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 01A468..01A46C). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @01A46C-01A490 sub_1A46C fn_1A46C Skeleton: not yet reconstructed; 11 insns; refs loc_1A48C */
+/* @01A46C-01A490 sub_1A46C fn_1A46C Skeleton: 11 insns; calls -; RAM AD82 */
 void fn_1A46C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01A46C..01A490). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01A490-01A4C8 sub_1A490 fn_1A490 Skeleton: not yet reconstructed; 16 insns; refs loc_1A50C */
+/* @01A490-01A4C8 sub_1A490 fn_1A490 Skeleton: 16 insns; calls loc_1A50C; RAM 94C1,AD68 */
 void fn_1A490(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (16 instructions, 01A490..01A4C8). */
+    /* TODO(waveC): body not transcribed (16 instructions). */
 }
 
-/* @01A4CE-01A4EE sub_1A4CE fn_1A4CE Skeleton: not yet reconstructed; 9 insns; refs loc_1A50C */
+/* @01A4CE-01A4EE sub_1A4CE fn_1A4CE Skeleton: 9 insns; calls loc_1A50C; RAM AD68 */
 void fn_1A4CE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 01A4CE..01A4EE). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01A4EE-01A558 sub_1A4EE fn_1A4EE Skeleton: not yet reconstructed; 29 insns; refs loc_1A588,sub_1A432 */
+/* @01A4EE-01A558 sub_1A4EE fn_1A4EE Skeleton: 29 insns; calls loc_1A588,sub_1A432; RAM AD68,AD80,AD82 */
 void fn_1A4EE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (29 instructions, 01A4EE..01A558). */
+    /* TODO(waveC): body not transcribed (29 instructions). */
 }
 
-/* @01A58C-01A5CC sub_1A58C fn_1A58C Skeleton: not yet reconstructed; 18 insns; refs sub_3FFA0 */
+/* @01A58C-01A5CC sub_1A58C fn_1A58C Skeleton: 18 insns; calls sub_3FFA0; RAM AD69 */
 void fn_1A58C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (18 instructions, 01A58C..01A5CC). */
+    /* TODO(waveC): body not transcribed (18 instructions). */
 }
 
-/* @01A5CC-01A60A sub_1A5CC fn_1A5CC Skeleton: not yet reconstructed; 18 insns; refs loc_1A648,sub_14BBA */
+/* @01A5CC-01A60A sub_1A5CC fn_1A5CC Skeleton: 18 insns; calls loc_1A648,sub_14BBA; RAM 94C1,AD68 */
 void fn_1A5CC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (18 instructions, 01A5CC..01A60A). */
+    /* TODO(waveC): body not transcribed (18 instructions). */
 }
 
-/* @01A60A-01A62A sub_1A60A fn_1A60A Skeleton: not yet reconstructed; 9 insns; refs loc_1A648 */
+/* @01A60A-01A62A sub_1A60A fn_1A60A Skeleton: 9 insns; calls loc_1A648; RAM AD68 */
 void fn_1A60A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 01A60A..01A62A). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01A62A-01A648 sub_1A62A fn_1A62A Skeleton: not yet reconstructed; 8 insns; refs - */
+/* @01A62A-01A648 sub_1A62A fn_1A62A Skeleton: 8 insns; calls -; RAM AD68 */
 void fn_1A62A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (8 instructions, 01A62A..01A648). */
+    /* TODO(waveC): body not transcribed (8 instructions). */
 }
 
-/* @01A6B4-01A6EC sub_1A6B4 fn_1A6B4 Skeleton: not yet reconstructed; 16 insns; refs loc_1A6D4,sub_1A432,sub_1A468,sub_1A950 */
+/* @01A6B4-01A6EC sub_1A6B4 fn_1A6B4 Skeleton: 16 insns; calls sub_1A432,sub_1A468,sub_1A950; RAM - */
 void fn_1A6B4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (16 instructions, 01A6B4..01A6EC). */
+    /* TODO(waveC): body not transcribed (16 instructions). */
 }
 
-/* @01A6EC-01A754 sub_1A6EC fn_1A6EC Skeleton: not yet reconstructed; 34 insns; refs loc_1A714,sub_1A754,sub_1A7A4,sub_1A9C8,sub_3FFA0 */
+/* @01A6EC-01A754 sub_1A6EC fn_1A6EC Skeleton: 34 insns; calls sub_1A754,sub_1A7A4,sub_1A9C8,sub_3FFA0; RAM AA30 */
 void fn_1A6EC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (34 instructions, 01A6EC..01A754). */
+    /* TODO(waveC): body not transcribed (34 instructions). */
 }
 
-/* @01A754-01A7A4 sub_1A754 fn_1A754 Skeleton: not yet reconstructed; 29 insns; refs - */
+/* @01A754-01A7A4 sub_1A754 fn_1A754 Skeleton: 29 insns; calls -; RAM AA30,AD68,AD80 */
 void fn_1A754(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (29 instructions, 01A754..01A7A4). */
+    /* TODO(waveC): body not transcribed (29 instructions). */
 }
 
-/* @01A7A4-01A7BC sub_1A7A4 fn_1A7A4 Skeleton: not yet reconstructed; 8 insns; refs sub_1A436 */
+/* @01A7A4-01A7BC sub_1A7A4 fn_1A7A4 Skeleton: 8 insns; calls sub_1A436; RAM AA30,AD80 */
 void fn_1A7A4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (8 instructions, 01A7A4..01A7BC). */
+    /* TODO(waveC): body not transcribed (8 instructions). */
 }
 
-/* @01A7BC-01A7F6 sub_1A7BC fn_1A7BC Skeleton: not yet reconstructed; 19 insns; refs sub_1A46C */
+/* @01A7BC-01A7F6 sub_1A7BC fn_1A7BC Skeleton: 19 insns; calls sub_1A46C; RAM 3FFF,AD80,AD82 */
 void fn_1A7BC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (19 instructions, 01A7BC..01A7F6). */
+    /* TODO(waveC): body not transcribed (19 instructions). */
 }
 
-/* @01A84E-01A854 sub_1A84E fn_1A84E Skeleton: not yet reconstructed; 2 insns; refs - */
+/* @01A84E-01A854 sub_1A84E fn_1A84E Skeleton: 2 insns; calls -; RAM 9542 */
 void fn_1A84E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01A84E..01A854). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01A854-01A88E sub_1A854 fn_1A854 Skeleton: not yet reconstructed; 14 insns; refs sub_1A94C */
+/* @01A854-01A88E sub_1A854 fn_1A854 Skeleton: 14 insns; calls sub_1A94C; RAM BBF1,BC34 */
 void fn_1A854(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (14 instructions, 01A854..01A88E). */
+    /* TODO(waveC): body not transcribed (14 instructions). */
 }
 
-/* @01A88E-01A8CE sub_1A88E fn_1A88E Skeleton: not yet reconstructed; 16 insns; refs loc_1A960 */
+/* @01A88E-01A8CE sub_1A88E fn_1A88E Skeleton: 16 insns; calls loc_1A960; RAM 9542,BBF1,BC34 */
 void fn_1A88E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (16 instructions, 01A88E..01A8CE). */
+    /* TODO(waveC): body not transcribed (16 instructions). */
 }
 
-/* @01A8CE-01A8E4 sub_1A8CE fn_1A8CE Skeleton: not yet reconstructed; 7 insns; refs loc_1A960 */
+/* @01A8CE-01A8E4 sub_1A8CE fn_1A8CE Skeleton: 7 insns; calls loc_1A960; RAM 9542,BC34 */
 void fn_1A8CE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (7 instructions, 01A8CE..01A8E4). */
+    /* TODO(waveC): body not transcribed (7 instructions). */
 }
 
-/* @01A8E4-01A90E sub_1A8E4 fn_1A8E4 Skeleton: not yet reconstructed; 12 insns; refs loc_1A8F8,sub_1A9EC */
+/* @01A8E4-01A90E sub_1A8E4 fn_1A8E4 Skeleton: 12 insns; calls sub_1A9EC; RAM AD68,AD80,BC34 */
 void fn_1A8E4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (12 instructions, 01A8E4..01A90E). */
+    /* TODO(waveC): body not transcribed (12 instructions). */
 }
 
-/* @01A90E-01A974 sub_1A90E fn_1A90E Skeleton: not yet reconstructed; 33 insns; refs loc_1A960,sub_1A94C,sub_1A974,sub_3FFA0 */
+/* @01A90E-01A974 sub_1A90E fn_1A90E Skeleton: 33 insns; calls sub_1A94C,sub_1A974,sub_3FFA0; RAM A9F0,AD68,AD80,AD99,BC34 */
 void fn_1A90E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (33 instructions, 01A90E..01A974). */
+    /* TODO(waveC): body not transcribed (33 instructions). */
 }
 
-/* @01A974-01A9C8 sub_1A974 fn_1A974 Skeleton: not yet reconstructed; 32 insns; refs sub_1A9C8 */
+/* @01A974-01A9C8 sub_1A974 fn_1A974 Skeleton: 32 insns; calls sub_1A9C8; RAM 9542,AA30,AD80 */
 void fn_1A974(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (32 instructions, 01A974..01A9C8). */
+    /* TODO(waveC): body not transcribed (32 instructions). */
 }
 
-/* @01A9C8-01A9EC sub_1A9C8 fn_1A9C8 Skeleton: not yet reconstructed; 12 insns; refs - */
+/* @01A9C8-01A9EC sub_1A9C8 fn_1A9C8 Skeleton: 12 insns; calls -; RAM A9F0 */
 void fn_1A9C8(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (12 instructions, 01A9C8..01A9EC). */
+    /* TODO(waveC): body not transcribed (12 instructions). */
 }
 
-/* @01A9EC-01AA46 sub_1A9EC fn_1A9EC Skeleton: not yet reconstructed; 34 insns; refs sub_1A9C8 */
+/* @01A9EC-01AA46 sub_1A9EC fn_1A9EC Skeleton: 34 insns; calls sub_1A9C8; RAM 9542,AA30,AD80 */
 void fn_1A9EC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (34 instructions, 01A9EC..01AA46). */
+    /* TODO(waveC): body not transcribed (34 instructions). */
 }
 
-/* @01AA46-01AA80 sub_1AA46 fn_1AA46 Skeleton: not yet reconstructed; 16 insns; refs loc_1AA74,sub_1A94C,sub_3FFA0 */
+/* @01AA46-01AA80 sub_1AA46 fn_1AA46 Skeleton: 16 insns; calls sub_1A94C,sub_3FFA0; RAM AA30,AD68 */
 void fn_1AA46(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (16 instructions, 01AA46..01AA80). */
+    /* TODO(waveC): body not transcribed (16 instructions). */
 }
 
-/* @01B992-01B99A sub_1B992 fn_1B992 Skeleton: not yet reconstructed; 3 insns; refs sub_3FFA0 */
+/* @01B992-01B99A sub_1B992 fn_1B992 Skeleton: 3 insns; calls sub_3FFA0; RAM - */
 void fn_1B992(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01B992..01B99A). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @01BEF2-01BF28 sub_1BEF2 fn_1BEF2 Skeleton: not yet reconstructed; 16 insns; refs loc_1BF12,sub_1A9EC */
+/* @01BEF2-01BF28 sub_1BEF2 fn_1BEF2 Skeleton: 16 insns; calls sub_1A9EC; RAM AD80,B9ED,BC34 */
 void fn_1BEF2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (16 instructions, 01BEF2..01BF28). */
+    /* TODO(waveC): body not transcribed (16 instructions). */
 }
 
-/* @01BF28-01BF38 sub_1BF28 fn_1BF28 Skeleton: not yet reconstructed; 4 insns; refs sub_19FAE */
+/* @01BF28-01BF38 sub_1BF28 fn_1BF28 Skeleton: 4 insns; calls sub_19FAE; RAM AA30,B9ED */
 void fn_1BF28(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01BF28..01BF38). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01BF38-01BF40 sub_1BF38 fn_1BF38 Skeleton: not yet reconstructed; 3 insns; refs sub_3FF9C */
+/* @01BF38-01BF40 sub_1BF38 fn_1BF38 Skeleton: 3 insns; calls sub_3FF9C; RAM - */
 void fn_1BF38(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01BF38..01BF40). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @01BF40-01BF78 sub_1BF40 fn_1BF40 Skeleton: not yet reconstructed; 21 insns; refs loc_1BF66 */
+/* @01BF40-01BF78 sub_1BF40 fn_1BF40 Skeleton: 21 insns; calls -; RAM 817E,94F5,9539 */
 void fn_1BF40(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (21 instructions, 01BF40..01BF78). */
+    /* TODO(waveC): body not transcribed (21 instructions). */
 }
 
-/* @01BF78-01BF84 sub_1BF78 fn_1BF78 Skeleton: not yet reconstructed; 4 insns; refs loc_1BFAC */
+/* @01BF78-01BF84 sub_1BF78 fn_1BF78 Skeleton: 4 insns; calls loc_1BFAC; RAM AAE0,BBE1 */
 void fn_1BF78(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01BF78..01BF84). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01BF84-01BF8E sub_1BF84 fn_1BF84 Skeleton: not yet reconstructed; 4 insns; refs sub_1BFA8 */
+/* @01BF84-01BF8E sub_1BF84 fn_1BF84 Skeleton: 4 insns; calls sub_1BFA8; RAM AAE0 */
 void fn_1BF84(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01BF84..01BF8E). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01BF8E-01BF98 sub_1BF8E fn_1BF8E Skeleton: not yet reconstructed; 4 insns; refs sub_1BFA8 */
+/* @01BF8E-01BF98 sub_1BF8E fn_1BF8E Skeleton: 4 insns; calls sub_1BFA8; RAM AAE0 */
 void fn_1BF8E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01BF8E..01BF98). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01BF98-01BFBA sub_1BF98 fn_1BF98 Skeleton: not yet reconstructed; 11 insns; refs sub_1BFA8 */
+/* @01BF98-01BFBA sub_1BF98 fn_1BF98 Skeleton: 11 insns; calls sub_1BFA8; RAM 9538,AA34,AAE0,BBE1 */
 void fn_1BF98(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01BF98..01BFBA). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01BFBA-01BFEC sub_1BFBA fn_1BFBA Skeleton: not yet reconstructed; 13 insns; refs sub_1C050,sub_3A29C,sub_3F3B4,sub_3FEEC */
+/* @01BFBA-01BFEC sub_1BFBA fn_1BFBA Skeleton: 13 insns; calls sub_1C050,sub_3A29C,sub_3F3B4,sub_3FEEC; RAM 8EA6,8EA7 */
 void fn_1BFBA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01BFBA..01BFEC). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01BFEC-01C050 sub_1BFEC fn_1BFEC Skeleton: not yet reconstructed; 28 insns; refs sub_3A29C,sub_3F3B4,sub_3FEEC */
+/* @01BFEC-01C050 sub_1BFEC fn_1BFEC Skeleton: 28 insns; calls sub_3A29C,sub_3F3B4,sub_3FEEC; RAM 812A,817E,8EA6 */
 void fn_1BFEC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (28 instructions, 01BFEC..01C050). */
+    /* TODO(waveC): body not transcribed (28 instructions). */
 }
 
-/* @01C050-01C0B2 sub_1C050 fn_1C050 Skeleton: not yet reconstructed; 32 insns; refs loc_1C0AA */
+/* @01C050-01C0B2 sub_1C050 fn_1C050 Skeleton: 32 insns; calls -; RAM 817E,8EA6,8F6C,8F73,917C,9183,AA36 */
 void fn_1C050(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (32 instructions, 01C050..01C0B2). */
+    /* TODO(waveC): body not transcribed (32 instructions). */
 }
 
-/* @01C0B2-01C0DC sub_1C0B2 fn_1C0B2 Skeleton: not yet reconstructed; 11 insns; refs sub_1C124,sub_3FEEC */
+/* @01C0B2-01C0DC sub_1C0B2 fn_1C0B2 Skeleton: 11 insns; calls sub_1C124,sub_3FEEC; RAM 8EA6,8EA7,AA39 */
 void fn_1C0B2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01C0B2..01C0DC). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01C0DC-01C104 sub_1C0DC fn_1C0DC Skeleton: not yet reconstructed; 13 insns; refs sub_1C104,sub_2D5A6,sub_3FEEC */
+/* @01C0DC-01C104 sub_1C0DC fn_1C0DC Skeleton: 13 insns; calls sub_1C104,sub_2D5A6,sub_3FEEC; RAM 817E,90F5 */
 void fn_1C0DC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01C0DC..01C104). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01C104-01C124 sub_1C104 fn_1C104 Skeleton: not yet reconstructed; 9 insns; refs loc_1C116,sub_1C050,sub_3A5B6,sub_3F172,sub_3F21A,sub_3F3B4 */
+/* @01C104-01C124 sub_1C104 fn_1C104 Skeleton: 9 insns; calls sub_1C050,sub_3A5B6,sub_3F172,sub_3F21A,sub_3F3B4,sub_3F586; RAM - */
 void fn_1C104(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 01C104..01C124). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01C124-01C144 sub_1C124 fn_1C124 Skeleton: not yet reconstructed; 9 insns; refs loc_1C136,sub_1C050,sub_3A5F8,sub_3F172,sub_3F21A,sub_3F3B4 */
+/* @01C124-01C144 sub_1C124 fn_1C124 Skeleton: 9 insns; calls sub_1C050,sub_3A5F8,sub_3F172,sub_3F21A,sub_3F3B4,sub_3F586; RAM - */
 void fn_1C124(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 01C124..01C144). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01C144-01C172 sub_1C144 fn_1C144 Skeleton: not yet reconstructed; 15 insns; refs sub_1C0DC,sub_3293A,sub_3F184,sub_3F356,sub_3FEEC */
+/* @01C144-01C172 sub_1C144 fn_1C144 Skeleton: 15 insns; calls sub_1C0DC,sub_3293A,sub_3F184,sub_3F356,sub_3FEEC; RAM - */
 void fn_1C144(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (15 instructions, 01C144..01C172). */
+    /* TODO(waveC): body not transcribed (15 instructions). */
 }
 
-/* @01C172-01C178 sub_1C172 fn_1C172 Skeleton: not yet reconstructed; 2 insns; refs sub_1C17C */
+/* @01C172-01C178 sub_1C172 fn_1C172 Skeleton: 2 insns; calls sub_1C17C; RAM - */
 void fn_1C172(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01C172..01C178). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01C178-01C18E sub_1C178 fn_1C178 Skeleton: not yet reconstructed; 6 insns; refs sub_1C050,sub_3A480,sub_3F3A4,sub_3F586 */
+/* @01C178-01C18E sub_1C178 fn_1C178 Skeleton: 6 insns; calls sub_1C050,sub_3A480,sub_3F3A4,sub_3F586; RAM - */
 void fn_1C178(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01C178..01C18E). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01C18E-01C1CE sub_1C18E fn_1C18E Skeleton: not yet reconstructed; 18 insns; refs sub_1C050,sub_3A35E,sub_3F3B4,sub_3F586,sub_3FEEC */
+/* @01C18E-01C1CE sub_1C18E fn_1C18E Skeleton: 18 insns; calls sub_1C050,sub_3A35E,sub_3F3B4,sub_3F586,sub_3FEEC; RAM 8EA6,8EA7 */
 void fn_1C18E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (18 instructions, 01C18E..01C1CE). */
+    /* TODO(waveC): body not transcribed (18 instructions). */
 }
 
-/* @01C1CE-01C1D2 sub_1C1CE fn_1C1CE Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @01C1CE-01C1D2 sub_1C1CE fn_1C1CE Skeleton: 1 insns; calls -; RAM - */
 void fn_1C1CE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 01C1CE..01C1D2). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @01C1D2-01C1FC sub_1C1D2 fn_1C1D2 Skeleton: not yet reconstructed; 13 insns; refs sub_1C050,sub_3A35E,sub_3F3B4,sub_3F586,sub_3FEEC */
+/* @01C1D2-01C1FC sub_1C1D2 fn_1C1D2 Skeleton: 13 insns; calls sub_1C050,sub_3A35E,sub_3F3B4,sub_3F586,sub_3FEEC; RAM - */
 void fn_1C1D2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01C1D2..01C1FC). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01C1FC-01C20C sub_1C1FC fn_1C1FC Skeleton: not yet reconstructed; 5 insns; refs sub_3FFA0 */
+/* @01C1FC-01C20C sub_1C1FC fn_1C1FC Skeleton: 5 insns; calls sub_3FFA0; RAM A9EE */
 void fn_1C1FC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01C1FC..01C20C). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01C20C-01C222 sub_1C20C fn_1C20C Skeleton: not yet reconstructed; 7 insns; refs sub_1BF78,sub_1C6DA */
+/* @01C20C-01C222 sub_1C20C fn_1C20C Skeleton: 7 insns; calls sub_1BF78,sub_1C6DA; RAM A9EE */
 void fn_1C20C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (7 instructions, 01C20C..01C222). */
+    /* TODO(waveC): body not transcribed (7 instructions). */
 }
 
-/* @01C222-01C238 sub_1C222 fn_1C222 Skeleton: not yet reconstructed; 7 insns; refs sub_1BF78,sub_3FFA0 */
+/* @01C222-01C238 sub_1C222 fn_1C222 Skeleton: 7 insns; calls sub_1BF78,sub_3FFA0; RAM A9EE */
 void fn_1C222(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (7 instructions, 01C222..01C238). */
+    /* TODO(waveC): body not transcribed (7 instructions). */
 }
 
-/* @01C24A-01C252 sub_1C24A fn_1C24A Skeleton: not yet reconstructed; 2 insns; refs - */
+/* @01C24A-01C252 sub_1C24A fn_1C24A Skeleton: 2 insns; calls -; RAM A9EE */
 void fn_1C24A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01C24A..01C252). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01C252-01C29A sub_1C252 fn_1C252 Skeleton: not yet reconstructed; 21 insns; refs loc_1C270,sub_1C050,sub_1C2BA,sub_1C408,sub_1C4D2,sub_3A29C */
+/* @01C252-01C29A sub_1C252 fn_1C252 Skeleton: 21 insns; calls sub_1C050,sub_1C2BA,sub_1C408,sub_1C4D2,sub_3A29C,sub_3A2D0,sub_3F3B4,sub_3FFA0; RAM 8EA0,8EA8,A9EE */
 void fn_1C252(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (21 instructions, 01C252..01C29A). */
+    /* TODO(waveC): body not transcribed (21 instructions). */
 }
 
-/* @01C29A-01C2A4 sub_1C29A fn_1C29A Skeleton: not yet reconstructed; 4 insns; refs sub_1C2A4 */
+/* @01C29A-01C2A4 sub_1C29A fn_1C29A Skeleton: 4 insns; calls sub_1C2A4; RAM - */
 void fn_1C29A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01C29A..01C2A4). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01C2A4-01C2BA sub_1C2A4 fn_1C2A4 Skeleton: not yet reconstructed; 8 insns; refs - */
+/* @01C2A4-01C2BA sub_1C2A4 fn_1C2A4 Skeleton: 8 insns; calls -; RAM - */
 void fn_1C2A4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (8 instructions, 01C2A4..01C2BA). */
+    /* TODO(waveC): body not transcribed (8 instructions). */
 }
 
-/* @01C2BA-01C348 sub_1C2BA fn_1C2BA Skeleton: not yet reconstructed; 43 insns; refs loc_1C2F6,loc_1C316,loc_1C33C,sub_1C348,sub_1C3BE,sub_1C3F0 */
+/* @01C2BA-01C348 sub_1C2BA fn_1C2BA Skeleton: 43 insns; calls sub_1C348,sub_1C3BE,sub_1C3F0,sub_1CCAA,sub_1D5B4,sub_3F386; RAM 8EA0,8EA8,A9EE,AA56 */
 void fn_1C2BA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (43 instructions, 01C2BA..01C348). */
+    /* TODO(waveC): body not transcribed (43 instructions). */
 }
 
-/* @01C348-01C360 sub_1C348 fn_1C348 Skeleton: not yet reconstructed; 7 insns; refs sub_1BFBA,sub_1CCAA,sub_1D5B4 */
+/* @01C348-01C360 sub_1C348 fn_1C348 Skeleton: 7 insns; calls sub_1BFBA,sub_1CCAA,sub_1D5B4; RAM - */
 void fn_1C348(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (7 instructions, 01C348..01C360). */
+    /* TODO(waveC): body not transcribed (7 instructions). */
 }
 
-/* @01C360-01C394 sub_1C360 fn_1C360 Skeleton: not yet reconstructed; 15 insns; refs loc_1C38A,sub_1C29A,sub_1C3BE,sub_1C3F0,sub_3F386 */
+/* @01C360-01C394 sub_1C360 fn_1C360 Skeleton: 15 insns; calls sub_1C29A,sub_1C3BE,sub_1C3F0,sub_3F386; RAM AA56 */
 void fn_1C360(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (15 instructions, 01C360..01C394). */
+    /* TODO(waveC): body not transcribed (15 instructions). */
 }
 
-/* @01C394-01C3BE sub_1C394 fn_1C394 Skeleton: not yet reconstructed; 12 insns; refs loc_1C3B8,sub_1C3BE,sub_1C3F0,sub_3F386 */
+/* @01C394-01C3BE sub_1C394 fn_1C394 Skeleton: 12 insns; calls sub_1C3BE,sub_1C3F0,sub_3F386; RAM AA56,AD94 */
 void fn_1C394(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (12 instructions, 01C394..01C3BE). */
+    /* TODO(waveC): body not transcribed (12 instructions). */
 }
 
-/* @01C3BE-01C3EA sub_1C3BE fn_1C3BE Skeleton: not yet reconstructed; 17 insns; refs sub_3F62E */
+/* @01C3BE-01C3EA sub_1C3BE fn_1C3BE Skeleton: 17 insns; calls sub_3F62E; RAM 8EA0 */
 void fn_1C3BE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (17 instructions, 01C3BE..01C3EA). */
+    /* TODO(waveC): body not transcribed (17 instructions). */
 }
 
-/* @01C3F0-01C3F4 sub_1C3F0 fn_1C3F0 Skeleton: not yet reconstructed; 2 insns; refs sub_1C3F4 */
+/* @01C3F0-01C3F4 sub_1C3F0 fn_1C3F0 Skeleton: 2 insns; calls sub_1C3F4; RAM - */
 void fn_1C3F0(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01C3F0..01C3F4). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01C3F4-01C408 sub_1C3F4 fn_1C3F4 Skeleton: not yet reconstructed; 7 insns; refs sub_3F62E */
+/* @01C3F4-01C408 sub_1C3F4 fn_1C3F4 Skeleton: 7 insns; calls sub_3F62E; RAM - */
 void fn_1C3F4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (7 instructions, 01C3F4..01C408). */
+    /* TODO(waveC): body not transcribed (7 instructions). */
 }
 
-/* @01C408-01C468 sub_1C408 fn_1C408 Skeleton: not yet reconstructed; 32 insns; refs loc_1C428,loc_1C450,sub_1C46A,sub_1C4A8,sub_1CCF4,sub_1D5B4 */
+/* @01C408-01C468 sub_1C408 fn_1C408 Skeleton: 32 insns; calls sub_1C46A,sub_1C4A8,sub_1CCF4,sub_1D5B4; RAM 812A,8EA8,A9EE */
 void fn_1C408(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (32 instructions, 01C408..01C468). */
+    /* TODO(waveC): body not transcribed (32 instructions). */
 }
 
-/* @01C468-01C46A nullsub_45 fn_1C468 Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @01C468-01C46A nullsub_45 fn_1C468 Skeleton: 1 insns; calls -; RAM - */
 void fn_1C468(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 01C468..01C46A). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @01C46A-01C482 sub_1C46A fn_1C46A Skeleton: not yet reconstructed; 7 insns; refs sub_1BFEC,sub_1CCF4,sub_1D5B4 */
+/* @01C46A-01C482 sub_1C46A fn_1C46A Skeleton: 7 insns; calls sub_1BFEC,sub_1CCF4,sub_1D5B4; RAM - */
 void fn_1C46A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (7 instructions, 01C46A..01C482). */
+    /* TODO(waveC): body not transcribed (7 instructions). */
 }
 
-/* @01C498-01C4A8 sub_1C498 fn_1C498 Skeleton: not yet reconstructed; 4 insns; refs sub_1C4A8 */
+/* @01C498-01C4A8 sub_1C498 fn_1C498 Skeleton: 4 insns; calls sub_1C4A8; RAM - */
 void fn_1C498(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01C498..01C4A8). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01C4A8-01C4D2 sub_1C4A8 fn_1C4A8 Skeleton: not yet reconstructed; 19 insns; refs loc_1C4CE */
+/* @01C4A8-01C4D2 sub_1C4A8 fn_1C4A8 Skeleton: 19 insns; calls -; RAM A9EE */
 void fn_1C4A8(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (19 instructions, 01C4A8..01C4D2). */
+    /* TODO(waveC): body not transcribed (19 instructions). */
 }
 
-/* @01C594-01C5AE sub_1C594 fn_1C594 Skeleton: not yet reconstructed; 6 insns; refs sub_1CD7C */
+/* @01C594-01C5AE sub_1C594 fn_1C594 Skeleton: 6 insns; calls sub_1CD7C; RAM 8EA0,8EBD */
 void fn_1C594(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01C594..01C5AE). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01C5AE-01C5D2 sub_1C5AE fn_1C5AE Skeleton: not yet reconstructed; 11 insns; refs sub_24E08,sub_24E7E,sub_3FFA0 */
+/* @01C5AE-01C5D2 sub_1C5AE fn_1C5AE Skeleton: 11 insns; calls sub_24E08,sub_24E7E,sub_3FFA0; RAM B056 */
 void fn_1C5AE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01C5AE..01C5D2). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01C5D2-01C5E8 sub_1C5D2 fn_1C5D2 Skeleton: not yet reconstructed; 5 insns; refs - */
+/* @01C5D2-01C5E8 sub_1C5D2 fn_1C5D2 Skeleton: 5 insns; calls -; RAM B9E4 */
 void fn_1C5D2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01C5D2..01C5E8). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01C608-01C60E sub_1C608 fn_1C608 Skeleton: not yet reconstructed; 2 insns; refs sub_24E30 */
+/* @01C608-01C60E sub_1C608 fn_1C608 Skeleton: 2 insns; calls sub_24E30; RAM - */
 void fn_1C608(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01C608..01C60E). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01C60E-01C61E sub_1C60E fn_1C60E Skeleton: not yet reconstructed; 5 insns; refs sub_21B46,sub_2458A */
+/* @01C60E-01C61E sub_1C60E fn_1C60E Skeleton: 5 insns; calls sub_21B46,sub_2458A; RAM B9E4 */
 void fn_1C60E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01C60E..01C61E). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01C61E-01C666 sub_1C61E fn_1C61E Skeleton: not yet reconstructed; 22 insns; refs loc_1C666,sub_3DAB2,sub_3DAD4 */
+/* @01C61E-01C666 sub_1C61E fn_1C61E Skeleton: 22 insns; calls loc_1C666,sub_3DAB2,sub_3DAD4; RAM B9EB */
 void fn_1C61E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (22 instructions, 01C61E..01C666). */
+    /* TODO(waveC): body not transcribed (22 instructions). */
 }
 
-/* @01C666-01C67A sub_1C666 fn_1C666 Skeleton: not yet reconstructed; 6 insns; refs - */
+/* @01C666-01C67A sub_1C666 fn_1C666 Skeleton: 6 insns; calls -; RAM B3F4,B3F5,B9E4,B9EB */
 void fn_1C666(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01C666..01C67A). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01C67A-01C6C2 sub_1C67A fn_1C67A Skeleton: not yet reconstructed; 24 insns; refs loc_1C6C2,sub_3DB18 */
+/* @01C67A-01C6C2 sub_1C67A fn_1C67A Skeleton: 24 insns; calls loc_1C6C2,sub_3DB18; RAM B9EB,B9EC */
 void fn_1C67A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (24 instructions, 01C67A..01C6C2). */
+    /* TODO(waveC): body not transcribed (24 instructions). */
 }
 
-/* @01C6C2-01C6CA sub_1C6C2 fn_1C6C2 Skeleton: not yet reconstructed; 3 insns; refs - */
+/* @01C6C2-01C6CA sub_1C6C2 fn_1C6C2 Skeleton: 3 insns; calls -; RAM B9E4 */
 void fn_1C6C2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01C6C2..01C6CA). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @01C6CA-01C6D2 sub_1C6CA fn_1C6CA Skeleton: not yet reconstructed; 3 insns; refs - */
+/* @01C6CA-01C6D2 sub_1C6CA fn_1C6CA Skeleton: 3 insns; calls -; RAM B9E4 */
 void fn_1C6CA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01C6CA..01C6D2). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @01C6D2-01C6DA sub_1C6D2 fn_1C6D2 Skeleton: not yet reconstructed; 3 insns; refs - */
+/* @01C6D2-01C6DA sub_1C6D2 fn_1C6D2 Skeleton: 3 insns; calls -; RAM B9E4 */
 void fn_1C6D2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01C6D2..01C6DA). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @01C6DA-01C724 sub_1C6DA fn_1C6DA Skeleton: not yet reconstructed; 27 insns; refs loc_1C718,sub_1C724,sub_1C74E,sub_1C82E,sub_1D966,sub_2372C */
+/* @01C6DA-01C724 sub_1C6DA fn_1C6DA Skeleton: 27 insns; calls sub_1C724,sub_1C74E,sub_1C82E,sub_1D966,sub_2372C,sub_3FFA0; RAM 8EA6,8EA8 */
 void fn_1C6DA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (27 instructions, 01C6DA..01C724). */
+    /* TODO(waveC): body not transcribed (27 instructions). */
 }
 
-/* @01C724-01C74E sub_1C724 fn_1C724 Skeleton: not yet reconstructed; 13 insns; refs - */
+/* @01C724-01C74E sub_1C724 fn_1C724 Skeleton: 13 insns; calls -; RAM 89BE */
 void fn_1C724(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01C724..01C74E). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01C74E-01C7B2 sub_1C74E fn_1C74E Skeleton: not yet reconstructed; 32 insns; refs sub_3293A,sub_3F1F2,sub_3FEEC */
+/* @01C74E-01C7B2 sub_1C74E fn_1C74E Skeleton: 32 insns; calls sub_3293A,sub_3F1F2,sub_3FEEC; RAM - */
 void fn_1C74E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (32 instructions, 01C74E..01C7B2). */
+    /* TODO(waveC): body not transcribed (32 instructions). */
 }
 
-/* @01C7B2-01C82E sub_1C7B2 fn_1C7B2 Skeleton: not yet reconstructed; 36 insns; refs loc_1C7E4,sub_1BF78,sub_1C0DC,sub_1C82E,sub_1E974,sub_22352 */
+/* @01C7B2-01C82E sub_1C7B2 fn_1C7B2 Skeleton: 36 insns; calls sub_1BF78,sub_1C0DC,sub_1C82E,sub_1E974,sub_22352,sub_223BC,sub_3A2D0,sub_3F356; RAM 812A,8EA0,8EA6,A9EE,AA39,ACD6 */
 void fn_1C7B2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (36 instructions, 01C7B2..01C82E). */
+    /* TODO(waveC): body not transcribed (36 instructions). */
 }
 
-/* @01C82E-01C85E sub_1C82E fn_1C82E Skeleton: not yet reconstructed; 17 insns; refs - */
+/* @01C82E-01C85E sub_1C82E fn_1C82E Skeleton: 17 insns; calls -; RAM 817E,8EA6,8EA7 */
 void fn_1C82E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (17 instructions, 01C82E..01C85E). */
+    /* TODO(waveC): body not transcribed (17 instructions). */
 }
 
-/* @01C914-01C93A sub_1C914 fn_1C914 Skeleton: not yet reconstructed; 11 insns; refs sub_19902,sub_22060 */
+/* @01C914-01C93A sub_1C914 fn_1C914 Skeleton: 11 insns; calls sub_19902,sub_22060; RAM 8DD5,8EC3,8EC5,B11E,BBF9 */
 void fn_1C914(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01C914..01C93A). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01C940-01C9B4 sub_1C940 fn_1C940 Skeleton: not yet reconstructed; 28 insns; refs sub_34DC2 */
+/* @01C940-01C9B4 sub_1C940 fn_1C940 Skeleton: 28 insns; calls sub_34DC2; RAM 8122,8126,812A,817E,8EA0 */
 void fn_1C940(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (28 instructions, 01C940..01C9B4). */
+    /* TODO(waveC): body not transcribed (28 instructions). */
 }
 
-/* @01C9B4-01C9C2 sub_1C9B4 fn_1C9B4 Skeleton: not yet reconstructed; 3 insns; refs sub_1CA72 */
+/* @01C9B4-01C9C2 sub_1C9B4 fn_1C9B4 Skeleton: 3 insns; calls sub_1CA72; RAM A9EE */
 void fn_1C9B4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01C9B4..01C9C2). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @01C9C2-01C9E8 sub_1C9C2 fn_1C9C2 Skeleton: not yet reconstructed; 11 insns; refs sub_3FFB4 */
+/* @01C9C2-01C9E8 sub_1C9C2 fn_1C9C2 Skeleton: 11 insns; calls sub_3FFB4; RAM 8D20,8EA0 */
 void fn_1C9C2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01C9C2..01C9E8). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01C9E8-01CA8C sub_1C9E8 fn_1C9E8 Skeleton: not yet reconstructed; 49 insns; refs loc_1C93F,sub_198DC,sub_1CA90,sub_1CC80,sub_1CDBA,sub_3F636 */
+/* @01C9E8-01CA8C sub_1C9E8 fn_1C9E8 Skeleton: 49 insns; calls loc_1C93F,sub_198DC,sub_1CA90,sub_1CC80,sub_1CDBA,sub_3F636,sub_3FFA0,sub_5E5AE; RAM 8D20,8DDC,8EB5,8EB6,8EB7,A9E6,B0AA,B11E */
 void fn_1C9E8(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (49 instructions, 01C9E8..01CA8C). */
+    /* TODO(waveC): body not transcribed (49 instructions). */
 }
 
-/* @01CA8C-01CA90 sub_1CA8C fn_1CA8C Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @01CA8C-01CA90 sub_1CA8C fn_1CA8C Skeleton: 1 insns; calls -; RAM 8EB3 */
 void fn_1CA8C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 01CA8C..01CA90). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @01CA90-01CAB6 sub_1CA90 fn_1CA90 Skeleton: not yet reconstructed; 11 insns; refs sub_198DC,sub_1CC80 */
+/* @01CA90-01CAB6 sub_1CA90 fn_1CA90 Skeleton: 11 insns; calls sub_198DC,sub_1CC80; RAM 8D20,8EB4,8EB6,B0AA,B11E */
 void fn_1CA90(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01CA90..01CAB6). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01CAC0-01CAD0 sub_1CAC0 fn_1CAC0 Skeleton: not yet reconstructed; 4 insns; refs sub_1CC80,sub_5E5AE */
+/* @01CAC0-01CAD0 sub_1CAC0 fn_1CAC0 Skeleton: 4 insns; calls sub_1CC80,sub_5E5AE; RAM B0AA */
 void fn_1CAC0(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01CAC0..01CAD0). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01CAD0-01CAF8 sub_1CAD0 fn_1CAD0 Skeleton: not yet reconstructed; 13 insns; refs - */
+/* @01CAD0-01CAF8 sub_1CAD0 fn_1CAD0 Skeleton: 13 insns; calls -; RAM 8D20,8EB3,8EB4,8EB5,8EB6,8EB7,B11E */
 void fn_1CAD0(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01CAD0..01CAF8). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01CAF8-01CB20 sub_1CAF8 fn_1CAF8 Skeleton: not yet reconstructed; 13 insns; refs - */
+/* @01CAF8-01CB20 sub_1CAF8 fn_1CAF8 Skeleton: 13 insns; calls -; RAM 8D20,8EB3,8EB4,8EB5,8EB6,8EB7,B11E */
 void fn_1CAF8(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01CAF8..01CB20). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01CB20-01CB44 sub_1CB20 fn_1CB20 Skeleton: not yet reconstructed; 11 insns; refs - */
+/* @01CB20-01CB44 sub_1CB20 fn_1CB20 Skeleton: 11 insns; calls -; RAM 8D20,8EB3,8EB4,8EB5,8EB6,8EB7,B11E */
 void fn_1CB20(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01CB20..01CB44). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01CB44-01CB68 sub_1CB44 fn_1CB44 Skeleton: not yet reconstructed; 11 insns; refs - */
+/* @01CB44-01CB68 sub_1CB44 fn_1CB44 Skeleton: 11 insns; calls -; RAM 8D20,8EB3,8EB4,8EB5,8EB6,8EB7,B11E */
 void fn_1CB44(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01CB44..01CB68). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01CB68-01CB8C sub_1CB68 fn_1CB68 Skeleton: not yet reconstructed; 11 insns; refs - */
+/* @01CB68-01CB8C sub_1CB68 fn_1CB68 Skeleton: 11 insns; calls -; RAM 8D20,8EB3,8EB4,8EB5,8EB6,8EB7,B11E */
 void fn_1CB68(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01CB68..01CB8C). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01CB8C-01CBB0 sub_1CB8C fn_1CB8C Skeleton: not yet reconstructed; 11 insns; refs - */
+/* @01CB8C-01CBB0 sub_1CB8C fn_1CB8C Skeleton: 11 insns; calls -; RAM 8D20,8EB3,8EB4,8EB5,8EB6,8EB7,B11E */
 void fn_1CB8C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01CB8C..01CBB0). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01CBB0-01CBD4 sub_1CBB0 fn_1CBB0 Skeleton: not yet reconstructed; 11 insns; refs - */
+/* @01CBB0-01CBD4 sub_1CBB0 fn_1CBB0 Skeleton: 11 insns; calls -; RAM 8D20,8EB3,8EB4,8EB5,8EB6,8EB7,B11E */
 void fn_1CBB0(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01CBB0..01CBD4). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01CBD4-01CBE6 sub_1CBD4 fn_1CBD4 Skeleton: not yet reconstructed; 4 insns; refs sub_1CC80 */
+/* @01CBD4-01CBE6 sub_1CBD4 fn_1CBD4 Skeleton: 4 insns; calls sub_1CC80; RAM 8EA5 */
 void fn_1CBD4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01CBD4..01CBE6). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01CBE6-01CC62 sub_1CBE6 fn_1CBE6 Skeleton: not yet reconstructed; 48 insns; refs sub_1CAD0,sub_1CAF8,sub_1CB20,sub_1CB44,sub_1CB68,sub_1CB8C */
+/* @01CBE6-01CC62 sub_1CBE6 fn_1CBE6 Skeleton: 48 insns; calls sub_1CAD0,sub_1CAF8,sub_1CB20,sub_1CB44,sub_1CB68,sub_1CB8C,sub_1CBB0; RAM 8EB3,8EB6,B0AA */
 void fn_1CBE6(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (48 instructions, 01CBE6..01CC62). */
+    /* TODO(waveC): body not transcribed (48 instructions). */
 }
 
-/* @01CC62-01CC80 sub_1CC62 fn_1CC62 Skeleton: not yet reconstructed; 12 insns; refs - */
+/* @01CC62-01CC80 sub_1CC62 fn_1CC62 Skeleton: 12 insns; calls -; RAM 8EB3,8EB6 */
 void fn_1CC62(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (12 instructions, 01CC62..01CC80). */
+    /* TODO(waveC): body not transcribed (12 instructions). */
 }
 
-/* @01CC80-01CCAA sub_1CC80 fn_1CC80 Skeleton: not yet reconstructed; 16 insns; refs - */
+/* @01CC80-01CCAA sub_1CC80 fn_1CC80 Skeleton: 16 insns; calls -; RAM 8EB3,8EB6 */
 void fn_1CC80(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (16 instructions, 01CC80..01CCAA). */
+    /* TODO(waveC): body not transcribed (16 instructions). */
 }
 
-/* @01CCAA-01CCB0 sub_1CCAA fn_1CCAA Skeleton: not yet reconstructed; 2 insns; refs sub_1CC80 */
+/* @01CCAA-01CCB0 sub_1CCAA fn_1CCAA Skeleton: 2 insns; calls sub_1CC80; RAM - */
 void fn_1CCAA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01CCAA..01CCB0). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01CCF4-01CCFA sub_1CCF4 fn_1CCF4 Skeleton: not yet reconstructed; 2 insns; refs sub_1CBE6 */
+/* @01CCF4-01CCFA sub_1CCF4 fn_1CCF4 Skeleton: 2 insns; calls sub_1CBE6; RAM - */
 void fn_1CCF4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01CCF4..01CCFA). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01CCFA-01CD26 sub_1CCFA fn_1CCFA Skeleton: not yet reconstructed; 13 insns; refs loc_1CD26 */
+/* @01CCFA-01CD26 sub_1CCFA fn_1CCFA Skeleton: 13 insns; calls loc_1CD26; RAM 8D20,8EB3,8EBE,8EBF */
 void fn_1CCFA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01CCFA..01CD26). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01CD7C-01CDBA sub_1CD7C fn_1CD7C Skeleton: not yet reconstructed; 18 insns; refs loc_1CDA8,sub_198DC,sub_5E5BE */
+/* @01CD7C-01CDBA sub_1CD7C fn_1CD7C Skeleton: 18 insns; calls sub_198DC,sub_5E5BE; RAM 8D20,8EB3,8EC0,8EC1 */
 void fn_1CD7C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (18 instructions, 01CD7C..01CDBA). */
+    /* TODO(waveC): body not transcribed (18 instructions). */
 }
 
-/* @01CDBA-01CDFA sub_1CDBA fn_1CDBA Skeleton: not yet reconstructed; 19 insns; refs sub_1C9E8,sub_1CA8C,sub_1CB8C,sub_20FC4,sub_5E5BE */
+/* @01CDBA-01CDFA sub_1CDBA fn_1CDBA Skeleton: 19 insns; calls sub_1C9E8,sub_1CA8C,sub_1CB8C,sub_20FC4,sub_5E5BE; RAM 8D20,8EB3,AA3D,B0AA */
 void fn_1CDBA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (19 instructions, 01CDBA..01CDFA). */
+    /* TODO(waveC): body not transcribed (19 instructions). */
 }
 
-/* @01CDFA-01CE6C sub_1CDFA fn_1CDFA Skeleton: not yet reconstructed; 40 insns; refs loc_1CE3C,loc_1CE42,loc_1CE66,sub_1CB20,sub_1CB8C,sub_1CC80 */
+/* @01CDFA-01CE6C sub_1CDFA fn_1CDFA Skeleton: 40 insns; calls sub_1CB20,sub_1CB8C,sub_1CC80,sub_20FC4,sub_21F00,sub_21F6C,sub_22060,sub_5E5BE; RAM 8D20,8DD5,8EA0,8EB6,8EC5 */
 void fn_1CDFA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (40 instructions, 01CDFA..01CE6C). */
+    /* TODO(waveC): body not transcribed (40 instructions). */
 }
 
-/* @01CE6C-01CE80 sub_1CE6C fn_1CE6C Skeleton: not yet reconstructed; 6 insns; refs loc_1C93F,sub_1CE8A */
+/* @01CE6C-01CE80 sub_1CE6C fn_1CE6C Skeleton: 6 insns; calls loc_1C93F,sub_1CE8A; RAM 8D20,A9EE */
 void fn_1CE6C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01CE6C..01CE80). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01CE80-01CEB6 sub_1CE80 fn_1CE80 Skeleton: not yet reconstructed; 15 insns; refs loc_63C03,loc_64445,sub_1CDBA,sub_1CDFA,sub_1CEB6,sub_3FFA0 */
+/* @01CE80-01CEB6 sub_1CE80 fn_1CE80 Skeleton: 15 insns; calls loc_63C03,loc_64445,sub_1CDBA,sub_1CDFA,sub_1CEB6,sub_3FFA0; RAM 8DD7,A9EE,AA3D */
 void fn_1CE80(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (15 instructions, 01CE80..01CEB6). */
+    /* TODO(waveC): body not transcribed (15 instructions). */
 }
 
-/* @01CEB6-01CEC4 sub_1CEB6 fn_1CEB6 Skeleton: not yet reconstructed; 5 insns; refs - */
+/* @01CEB6-01CEC4 sub_1CEB6 fn_1CEB6 Skeleton: 5 insns; calls -; RAM 8DD7 */
 void fn_1CEB6(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01CEB6..01CEC4). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01CEC4-01CF0A sub_1CEC4 fn_1CEC4 Skeleton: not yet reconstructed; 25 insns; refs loc_1CED2,loc_1CEEC,sub_148A0,sub_3FFA0 */
+/* @01CEC4-01CF0A sub_1CEC4 fn_1CEC4 Skeleton: 25 insns; calls sub_148A0,sub_3FFA0; RAM 8DD8,AD68,AD9D,B054,B055 */
 void fn_1CEC4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (25 instructions, 01CEC4..01CF0A). */
+    /* TODO(waveC): body not transcribed (25 instructions). */
 }
 
-/* @01CF0A-01CF4C sub_1CF0A fn_1CF0A Skeleton: not yet reconstructed; 19 insns; refs sub_1494C,sub_193B2,sub_3FFA0 */
+/* @01CF0A-01CF4C sub_1CF0A fn_1CF0A Skeleton: 19 insns; calls sub_1494C,sub_193B2,sub_3FFA0; RAM 817E,89C1,9548,AAE0,BBEB */
 void fn_1CF0A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (19 instructions, 01CF0A..01CF4C). */
+    /* TODO(waveC): body not transcribed (19 instructions). */
 }
 
-/* @01CF80-01D052 sub_1CF80 fn_1CF80 Skeleton: not yet reconstructed; 61 insns; refs loc_1CFC8,loc_1D004,loc_1D044,loc_1D122,sub_2B9BC,sub_2C342 */
+/* @01CF80-01D052 sub_1CF80 fn_1CF80 Skeleton: 61 insns; calls loc_1D122,sub_2B9BC,sub_2C342,sub_68B5C,sub_68C30,sub_68CC6; RAM A8CE,A9EE,A9F9,AD99,AD9A,B056 */
 void fn_1CF80(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (61 instructions, 01CF80..01D052). */
+    /* TODO(waveC): body not transcribed (61 instructions). */
 }
 
-/* @01D052-01D06A sub_1D052 fn_1D052 Skeleton: not yet reconstructed; 5 insns; refs sub_50498 */
+/* @01D052-01D06A sub_1D052 fn_1D052 Skeleton: 5 insns; calls sub_50498; RAM A9EE,BBEC */
 void fn_1D052(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01D052..01D06A). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01D06A-01D07A sub_1D06A fn_1D06A Skeleton: not yet reconstructed; 4 insns; refs sub_505BE */
+/* @01D06A-01D07A sub_1D06A fn_1D06A Skeleton: 4 insns; calls sub_505BE; RAM A9EE */
 void fn_1D06A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01D06A..01D07A). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01D07A-01D0FC sub_1D07A fn_1D07A Skeleton: not yet reconstructed; 32 insns; refs loc_1D158,sub_1D0FC */
+/* @01D07A-01D0FC sub_1D07A fn_1D07A Skeleton: 32 insns; calls loc_1D158,sub_1D0FC; RAM A9EE,A9F9,A9FA,AD9A,B056,B2A5 */
 void fn_1D07A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (32 instructions, 01D07A..01D0FC). */
+    /* TODO(waveC): body not transcribed (32 instructions). */
 }
 
-/* @01D0FC-01D15E sub_1D0FC fn_1D0FC Skeleton: not yet reconstructed; 28 insns; refs sub_14924,sub_3F636,sub_3FFA0,sub_68D90 */
+/* @01D0FC-01D15E sub_1D0FC fn_1D0FC Skeleton: 28 insns; calls sub_14924,sub_3F636,sub_3FFA0,sub_68D90; RAM 9D28,9D42,A4F5,A8CE,A9FA,B056 */
 void fn_1D0FC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (28 instructions, 01D0FC..01D15E). */
+    /* TODO(waveC): body not transcribed (28 instructions). */
 }
 
-/* @01D164-01D18C sub_1D164 fn_1D164 Skeleton: not yet reconstructed; 12 insns; refs sub_14930,sub_3FFA0 */
+/* @01D164-01D18C sub_1D164 fn_1D164 Skeleton: 12 insns; calls sub_14930,sub_3FFA0; RAM A9EE,AD9A,B056 */
 void fn_1D164(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (12 instructions, 01D164..01D18C). */
+    /* TODO(waveC): body not transcribed (12 instructions). */
 }
 
-/* @01D18C-01D1BA sub_1D18C fn_1D18C Skeleton: not yet reconstructed; 13 insns; refs loc_1D19A */
+/* @01D18C-01D1BA sub_1D18C fn_1D18C Skeleton: 13 insns; calls -; RAM A4F5,A9F9,A9FA,BBEC,BBED */
 void fn_1D18C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01D18C..01D1BA). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01D1CA-01D1EE sub_1D1CA fn_1D1CA Skeleton: not yet reconstructed; 11 insns; refs loc_1D202,sub_1C82E,sub_1F782,sub_3F1F2 */
+/* @01D1CA-01D1EE sub_1D1CA fn_1D1CA Skeleton: 11 insns; calls loc_1D202,sub_1C82E,sub_1F782,sub_3F1F2; RAM 812A,A9EE */
 void fn_1D1CA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01D1CA..01D1EE). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01D1EE-01D220 sub_1D1EE fn_1D1EE Skeleton: not yet reconstructed; 16 insns; refs loc_1D21A,sub_1C82E,sub_1D220,sub_1D332,sub_3F1F2,sub_3FFA0 */
+/* @01D1EE-01D220 sub_1D1EE fn_1D1EE Skeleton: 16 insns; calls sub_1C82E,sub_1D220,sub_1D332,sub_3F1F2,sub_3FFA0; RAM 812A,A9EE */
 void fn_1D1EE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (16 instructions, 01D1EE..01D220). */
+    /* TODO(waveC): body not transcribed (16 instructions). */
 }
 
-/* @01D220-01D2BA sub_1D220 fn_1D220 Skeleton: not yet reconstructed; 45 insns; refs loc_1D28C,loc_1D528,loc_1D56B,sub_1938A,sub_1BF40,sub_1C104 */
+/* @01D220-01D2BA sub_1D220 fn_1D220 Skeleton: 45 insns; calls loc_1D528,loc_1D56B,sub_1938A,sub_1BF40,sub_1C104,sub_1D2EE,sub_1EF08,sub_3ECB8; RAM 812A,9101,94C1,A9F9,AA39,AA56 */
 void fn_1D220(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (45 instructions, 01D220..01D2BA). */
+    /* TODO(waveC): body not transcribed (45 instructions). */
 }
 
-/* @01D2C0-01D2EE sub_1D2C0 fn_1D2C0 Skeleton: not yet reconstructed; 14 insns; refs loc_1D300,sub_193F8,sub_3ECB8 */
+/* @01D2C0-01D2EE sub_1D2C0 fn_1D2C0 Skeleton: 14 insns; calls loc_1D300,sub_193F8,sub_3ECB8; RAM 8122,8A58,90FE */
 void fn_1D2C0(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (14 instructions, 01D2C0..01D2EE). */
+    /* TODO(waveC): body not transcribed (14 instructions). */
 }
 
-/* @01D2EE-01D300 sub_1D2EE fn_1D2EE Skeleton: not yet reconstructed; 6 insns; refs loc_1D300,sub_193F8 */
+/* @01D2EE-01D300 sub_1D2EE fn_1D2EE Skeleton: 6 insns; calls loc_1D300,sub_193F8; RAM 8A58 */
 void fn_1D2EE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01D2EE..01D300). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01D300-01D332 sub_1D300 fn_1D300 Skeleton: not yet reconstructed; 17 insns; refs - */
+/* @01D300-01D332 sub_1D300 fn_1D300 Skeleton: 17 insns; calls -; RAM 89CB */
 void fn_1D300(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (17 instructions, 01D300..01D332). */
+    /* TODO(waveC): body not transcribed (17 instructions). */
 }
 
-/* @01D332-01D38C sub_1D332 fn_1D332 Skeleton: not yet reconstructed; 29 insns; refs loc_1D358,loc_1D376,sub_1BF78,sub_1C0DC,sub_1C82E,sub_1D396 */
+/* @01D332-01D38C sub_1D332 fn_1D332 Skeleton: 29 insns; calls sub_1BF78,sub_1C0DC,sub_1C82E,sub_1D396,sub_20DB8,sub_3F356; RAM 812A,90F6,AA39 */
 void fn_1D332(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (29 instructions, 01D332..01D38C). */
+    /* TODO(waveC): body not transcribed (29 instructions). */
 }
 
-/* @01D396-01D3A4 sub_1D396 fn_1D396 Skeleton: not yet reconstructed; 5 insns; refs - */
+/* @01D396-01D3A4 sub_1D396 fn_1D396 Skeleton: 5 insns; calls -; RAM - */
 void fn_1D396(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01D396..01D3A4). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01D3A4-01D3D0 sub_1D3A4 fn_1D3A4 Skeleton: not yet reconstructed; 13 insns; refs sub_1BFBA,sub_1BFEC,sub_1C82E,sub_1E9BC,sub_3FFA0 */
+/* @01D3A4-01D3D0 sub_1D3A4 fn_1D3A4 Skeleton: 13 insns; calls sub_1BFBA,sub_1BFEC,sub_1C82E,sub_1E9BC,sub_3FFA0; RAM 8EA7,A9EE */
 void fn_1D3A4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01D3A4..01D3D0). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01D3D0-01D3D4 sub_1D3D0 fn_1D3D0 Skeleton: not yet reconstructed; 1 insns; refs - */
+/* @01D3D0-01D3D4 sub_1D3D0 fn_1D3D0 Skeleton: 1 insns; calls -; RAM A9F0 */
 void fn_1D3D0(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 01D3D0..01D3D4). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @01D3D4-01D3E2 sub_1D3D4 fn_1D3D4 Skeleton: not yet reconstructed; 6 insns; refs sub_1D40E,sub_3FFA0 */
+/* @01D3D4-01D3E2 sub_1D3D4 fn_1D3D4 Skeleton: 6 insns; calls sub_1D40E,sub_3FFA0; RAM - */
 void fn_1D3D4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01D3D4..01D3E2). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01D40E-01D4DA sub_1D40E fn_1D40E Skeleton: not yet reconstructed; 60 insns; refs loc_1D4B2,loc_1D516,loc_1D528,loc_1D56B,sub_1BF40,sub_1C104 */
+/* @01D40E-01D4DA sub_1D40E fn_1D40E Skeleton: 60 insns; calls loc_1D516,loc_1D528,loc_1D56B,sub_1BF40,sub_1C104,sub_1C82E,sub_1CCAA,sub_1CCF4; RAM 800F,8010,812A,8EA6 */
 void fn_1D40E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (60 instructions, 01D40E..01D4DA). */
+    /* TODO(waveC): body not transcribed (60 instructions). */
 }
 
-/* @01D4DA-01D528 sub_1D4DA fn_1D4DA Skeleton: not yet reconstructed; 22 insns; refs loc_1D516,sub_1C050,sub_1CCF4,sub_1E9BC,sub_1FA1C,sub_1FA26 */
+/* @01D4DA-01D528 sub_1D4DA fn_1D4DA Skeleton: 22 insns; calls sub_1C050,sub_1CCF4,sub_1E9BC,sub_1FA1C,sub_1FA26,sub_2402E,sub_3A538,sub_3F3A4; RAM 8EA7 */
 void fn_1D4DA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (22 instructions, 01D4DA..01D528). */
+    /* TODO(waveC): body not transcribed (22 instructions). */
 }
 
-/* @01D528-01D544 sub_1D528 fn_1D528 Skeleton: not yet reconstructed; 7 insns; refs - */
+/* @01D528-01D544 sub_1D528 fn_1D528 Skeleton: 7 insns; calls -; RAM - */
 void fn_1D528(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (7 instructions, 01D528..01D544). */
+    /* TODO(waveC): body not transcribed (7 instructions). */
 }
 
-/* @01D56C-01D584 sub_1D56C fn_1D56C Skeleton: not yet reconstructed; 9 insns; refs sub_1D528,sub_3CCD0 */
+/* @01D56C-01D584 sub_1D56C fn_1D56C Skeleton: 9 insns; calls sub_1D528,sub_3CCD0; RAM - */
 void fn_1D56C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 01D56C..01D584). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01D5B4-01D5E2 sub_1D5B4 fn_1D5B4 Skeleton: not yet reconstructed; 13 insns; refs sub_342D8 */
+/* @01D5B4-01D5E2 sub_1D5B4 fn_1D5B4 Skeleton: 13 insns; calls sub_342D8; RAM - */
 void fn_1D5B4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01D5B4..01D5E2). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01D5E2-01D64C sub_1D5E2 fn_1D5E2 Skeleton: not yet reconstructed; 31 insns; refs loc_1D604,loc_1DA5E,sub_1D67C,sub_1D6B4,sub_1D714,sub_33DC8 */
+/* @01D5E2-01D64C sub_1D5E2 fn_1D5E2 Skeleton: 31 insns; calls loc_1DA5E,sub_1D67C,sub_1D6B4,sub_1D714,sub_33DC8,sub_342D8,sub_3A2D0,sub_3A474; RAM 800F,8010,812A,8EA7,8EA8,8EAA */
 void fn_1D5E2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (31 instructions, 01D5E2..01D64C). */
+    /* TODO(waveC): body not transcribed (31 instructions). */
 }
 
-/* @01D67C-01D6B4 sub_1D67C fn_1D67C Skeleton: not yet reconstructed; 18 insns; refs sub_2EAF2,sub_2EB0C */
+/* @01D67C-01D6B4 sub_1D67C fn_1D67C Skeleton: 18 insns; calls sub_2EAF2,sub_2EB0C; RAM 8EE0,8EE1,AAE0 */
 void fn_1D67C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (18 instructions, 01D67C..01D6B4). */
+    /* TODO(waveC): body not transcribed (18 instructions). */
 }
 
-/* @01D6B4-01D6C2 sub_1D6B4 fn_1D6B4 Skeleton: not yet reconstructed; 3 insns; refs loc_1D6CE */
+/* @01D6B4-01D6C2 sub_1D6B4 fn_1D6B4 Skeleton: 3 insns; calls loc_1D6CE; RAM 8EA6,8EA7 */
 void fn_1D6B4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01D6B4..01D6C2). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @01D6C2-01D6CE sub_1D6C2 fn_1D6C2 Skeleton: not yet reconstructed; 2 insns; refs - */
+/* @01D6C2-01D6CE sub_1D6C2 fn_1D6C2 Skeleton: 2 insns; calls -; RAM 8EA6,8EA7 */
 void fn_1D6C2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01D6C2..01D6CE). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01D714-01D744 sub_1D714 fn_1D714 Skeleton: not yet reconstructed; 14 insns; refs sub_2D5A6,sub_3F36E */
+/* @01D714-01D744 sub_1D714 fn_1D714 Skeleton: 14 insns; calls sub_2D5A6,sub_3F36E; RAM 8EA6,8EA7,8EA8 */
 void fn_1D714(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (14 instructions, 01D714..01D744). */
+    /* TODO(waveC): body not transcribed (14 instructions). */
 }
 
-/* @01D744-01D774 sub_1D744 fn_1D744 Skeleton: not yet reconstructed; 13 insns; refs sub_1D7FA,sub_3F356 */
+/* @01D744-01D774 sub_1D744 fn_1D744 Skeleton: 13 insns; calls sub_1D7FA,sub_3F356; RAM 812A */
 void fn_1D744(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01D744..01D774). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01D774-01D786 sub_1D774 fn_1D774 Skeleton: not yet reconstructed; 6 insns; refs - */
+/* @01D774-01D786 sub_1D774 fn_1D774 Skeleton: 6 insns; calls -; RAM 812A */
 void fn_1D774(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01D774..01D786). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01D786-01D7B4 sub_1D786 fn_1D786 Skeleton: not yet reconstructed; 14 insns; refs loc_1D7AC,sub_3F184,sub_3F2CA */
+/* @01D786-01D7B4 sub_1D786 fn_1D786 Skeleton: 14 insns; calls sub_3F184,sub_3F2CA; RAM 812A */
 void fn_1D786(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (14 instructions, 01D786..01D7B4). */
+    /* TODO(waveC): body not transcribed (14 instructions). */
 }
 
-/* @01D7B4-01D7B8 sub_1D7B4 fn_1D7B4 Skeleton: not yet reconstructed; 1 insns; refs sub_24006 */
+/* @01D7B4-01D7B8 sub_1D7B4 fn_1D7B4 Skeleton: 1 insns; calls sub_24006; RAM - */
 void fn_1D7B4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (1 instructions, 01D7B4..01D7B8). */
+    /* TODO(waveC): body not transcribed (1 instructions). */
 }
 
-/* @01D7B8-01D7FA sub_1D7B8 fn_1D7B8 Skeleton: not yet reconstructed; 17 insns; refs sub_2415A */
+/* @01D7B8-01D7FA sub_1D7B8 fn_1D7B8 Skeleton: 17 insns; calls sub_2415A; RAM 8992,8EA7 */
 void fn_1D7B8(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (17 instructions, 01D7B8..01D7FA). */
+    /* TODO(waveC): body not transcribed (17 instructions). */
 }
 
-/* @01D7FA-01D80C sub_1D7FA fn_1D7FA Skeleton: not yet reconstructed; 5 insns; refs loc_1D744,sub_32FA2,sub_32FF4,sub_33DB4 */
+/* @01D7FA-01D80C sub_1D7FA fn_1D7FA Skeleton: 5 insns; calls loc_1D744,sub_32FA2,sub_32FF4,sub_33DB4; RAM - */
 void fn_1D7FA(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01D7FA..01D80C). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01D824-01D866 sub_1D824 fn_1D824 Skeleton: not yet reconstructed; 17 insns; refs sub_23DC6 */
+/* @01D824-01D866 sub_1D824 fn_1D824 Skeleton: 17 insns; calls sub_23DC6; RAM 8992,8EA7 */
 void fn_1D824(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (17 instructions, 01D824..01D866). */
+    /* TODO(waveC): body not transcribed (17 instructions). */
 }
 
-/* @01D866-01D878 sub_1D866 fn_1D866 Skeleton: not yet reconstructed; 5 insns; refs loc_1D744,sub_32FA2,sub_32FF4,sub_33DB4 */
+/* @01D866-01D878 sub_1D866 fn_1D866 Skeleton: 5 insns; calls loc_1D744,sub_32FA2,sub_32FF4,sub_33DB4; RAM - */
 void fn_1D866(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01D866..01D878). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01D888-01D89C sub_1D888 fn_1D888 Skeleton: not yet reconstructed; 6 insns; refs sub_1C6DA,sub_3FFA0 */
+/* @01D888-01D89C sub_1D888 fn_1D888 Skeleton: 6 insns; calls sub_1C6DA,sub_3FFA0; RAM A9EE */
 void fn_1D888(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01D888..01D89C). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01D89C-01D8E8 sub_1D89C fn_1D89C Skeleton: not yet reconstructed; 23 insns; refs sub_1BFEC,sub_1C0DC,sub_223BC,sub_3F184,sub_3F21A,sub_3F356 */
+/* @01D89C-01D8E8 sub_1D89C fn_1D89C Skeleton: 23 insns; calls sub_1BFEC,sub_1C0DC,sub_223BC,sub_3F184,sub_3F21A,sub_3F356,sub_3FEEC,sub_3FFA0; RAM 812A,8EA0,A9EE,ACD6 */
 void fn_1D89C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (23 instructions, 01D89C..01D8E8). */
+    /* TODO(waveC): body not transcribed (23 instructions). */
 }
 
-/* @01D8F8-01D906 sub_1D8F8 fn_1D8F8 Skeleton: not yet reconstructed; 4 insns; refs sub_1C82E */
+/* @01D8F8-01D906 sub_1D8F8 fn_1D8F8 Skeleton: 4 insns; calls sub_1C82E; RAM A9EE */
 void fn_1D8F8(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (4 instructions, 01D8F8..01D906). */
+    /* TODO(waveC): body not transcribed (4 instructions). */
 }
 
-/* @01D906-01D948 sub_1D906 fn_1D906 Skeleton: not yet reconstructed; 17 insns; refs sub_1C144,sub_1C4D2,sub_1D950,sub_3F6F2,sub_3FFA0 */
+/* @01D906-01D948 sub_1D906 fn_1D906 Skeleton: 17 insns; calls sub_1C144,sub_1C4D2,sub_1D950,sub_3F6F2,sub_3FFA0; RAM 812A,8EA8,A9EE,AA56 */
 void fn_1D906(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (17 instructions, 01D906..01D948). */
+    /* TODO(waveC): body not transcribed (17 instructions). */
 }
 
-/* @01D950-01D966 sub_1D950 fn_1D950 Skeleton: not yet reconstructed; 9 insns; refs - */
+/* @01D950-01D966 sub_1D950 fn_1D950 Skeleton: 9 insns; calls -; RAM - */
 void fn_1D950(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 01D950..01D966). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01D966-01D99A sub_1D966 fn_1D966 Skeleton: not yet reconstructed; 19 insns; refs sub_1D950 */
+/* @01D966-01D99A sub_1D966 fn_1D966 Skeleton: 19 insns; calls sub_1D950; RAM - */
 void fn_1D966(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (19 instructions, 01D966..01D99A). */
+    /* TODO(waveC): body not transcribed (19 instructions). */
 }
 
-/* @01D99A-01DA32 sub_1D99A fn_1D99A Skeleton: not yet reconstructed; 40 insns; refs loc_1D9DC,sub_1C0DC,sub_1C17C,sub_1C82E,sub_3F36E,sub_3FFA0 */
+/* @01D99A-01DA32 sub_1D99A fn_1D99A Skeleton: 40 insns; calls sub_1C0DC,sub_1C17C,sub_1C82E,sub_3F36E,sub_3FFA0; RAM 812A,8EA0,A9EE */
 void fn_1D99A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (40 instructions, 01D99A..01DA32). */
+    /* TODO(waveC): body not transcribed (40 instructions). */
 }
 
-/* @01DA54-01DA5E sub_1DA54 fn_1DA54 Skeleton: not yet reconstructed; 2 insns; refs - */
+/* @01DA54-01DA5E sub_1DA54 fn_1DA54 Skeleton: 2 insns; calls -; RAM A9EE */
 void fn_1DA54(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01DA54..01DA5E). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01DA5E-01DB04 sub_1DA5E fn_1DA5E Skeleton: not yet reconstructed; 48 insns; refs loc_1DAA8,loc_1DAE6,sub_1C82E,sub_22352,sub_223BC,sub_3FEEC */
+/* @01DA5E-01DB04 sub_1DA5E fn_1DA5E Skeleton: 48 insns; calls sub_1C82E,sub_22352,sub_223BC,sub_3FEEC; RAM 812A,8EA0,8EAA,AA39 */
 void fn_1DA5E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (48 instructions, 01DA5E..01DB04). */
+    /* TODO(waveC): body not transcribed (48 instructions). */
 }
 
-/* @01DB04-01DB0A sub_1DB04 fn_1DB04 Skeleton: not yet reconstructed; 2 insns; refs sub_3FFA0 */
+/* @01DB04-01DB0A sub_1DB04 fn_1DB04 Skeleton: 2 insns; calls sub_3FFA0; RAM - */
 void fn_1DB04(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01DB04..01DB0A). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01DB4C-01DB54 sub_1DB4C fn_1DB4C Skeleton: not yet reconstructed; 2 insns; refs loc_1DB60 */
+/* @01DB4C-01DB54 sub_1DB4C fn_1DB4C Skeleton: 2 insns; calls loc_1DB60; RAM AA33 */
 void fn_1DB4C(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01DB4C..01DB54). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01DB54-01DB5A sub_1DB54 fn_1DB54 Skeleton: not yet reconstructed; 2 insns; refs sub_1E73C */
+/* @01DB54-01DB5A sub_1DB54 fn_1DB54 Skeleton: 2 insns; calls sub_1E73C; RAM - */
 void fn_1DB54(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (2 instructions, 01DB54..01DB5A). */
+    /* TODO(waveC): body not transcribed (2 instructions). */
 }
 
-/* @01DB5A-01DBC8 sub_1DB5A fn_1DB5A Skeleton: not yet reconstructed; 33 insns; refs loc_1DB7E,sub_1C050,sub_1DBC8,sub_1DC52,sub_1E240,sub_1E260 */
+/* @01DB5A-01DBC8 sub_1DB5A fn_1DB5A Skeleton: 33 insns; calls sub_1C050,sub_1DBC8,sub_1DC52,sub_1E240,sub_1E260,sub_1E506,sub_1E63E; RAM 817E,95AC,95AD,AA33 */
 void fn_1DB5A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (33 instructions, 01DB5A..01DBC8). */
+    /* TODO(waveC): body not transcribed (33 instructions). */
 }
 
-/* @01DBC8-01DC52 sub_1DBC8 fn_1DBC8 Skeleton: not yet reconstructed; 46 insns; refs loc_1DC04,sub_1DCA6,sub_1DDE4,sub_1E388,sub_2EAEE,sub_325FA */
+/* @01DBC8-01DC52 sub_1DBC8 fn_1DBC8 Skeleton: 46 insns; calls sub_1DCA6,sub_1DDE4,sub_1E388,sub_2EAEE,sub_325FA,sub_32798,sub_EC0A; RAM 94C1,A9EE,AA31 */
 void fn_1DBC8(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (46 instructions, 01DBC8..01DC52). */
+    /* TODO(waveC): body not transcribed (46 instructions). */
 }
 
-/* @01DC52-01DCA6 sub_1DC52 fn_1DC52 Skeleton: not yet reconstructed; 31 insns; refs - */
+/* @01DC52-01DCA6 sub_1DC52 fn_1DC52 Skeleton: 31 insns; calls -; RAM 89BE */
 void fn_1DC52(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (31 instructions, 01DC52..01DCA6). */
+    /* TODO(waveC): body not transcribed (31 instructions). */
 }
 
-/* @01DCA6-01DDCC sub_1DCA6 fn_1DCA6 Skeleton: not yet reconstructed; 80 insns; refs loc_1DD82,loc_1DDC6,loc_1E093,sub_1DC52,sub_1DDE4,sub_1DF7A */
+/* @01DCA6-01DDCC sub_1DCA6 fn_1DCA6 Skeleton: 80 insns; calls loc_1E093,sub_1DC52,sub_1DDE4,sub_1DF7A,sub_1E0DC,sub_1E110,sub_1E6D4; RAM A9EE */
 void fn_1DCA6(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (80 instructions, 01DCA6..01DDCC). */
+    /* TODO(waveC): body not transcribed (80 instructions). */
 }
 
-/* @01DDCC-01DDE4 sub_1DDCC fn_1DDCC Skeleton: not yet reconstructed; 8 insns; refs - */
+/* @01DDCC-01DDE4 sub_1DDCC fn_1DDCC Skeleton: 8 insns; calls -; RAM 94C1 */
 void fn_1DDCC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (8 instructions, 01DDCC..01DDE4). */
+    /* TODO(waveC): body not transcribed (8 instructions). */
 }
 
-/* @01DDE4-01DE1C sub_1DDE4 fn_1DDE4 Skeleton: not yet reconstructed; 17 insns; refs loc_1DE50,sub_3F924,sub_3F94C */
+/* @01DDE4-01DE1C sub_1DDE4 fn_1DDE4 Skeleton: 17 insns; calls loc_1DE50,sub_3F924,sub_3F94C; RAM A9EE */
 void fn_1DDE4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (17 instructions, 01DDE4..01DE1C). */
+    /* TODO(waveC): body not transcribed (17 instructions). */
 }
 
-/* @01DE50-01DE78 sub_1DE50 fn_1DE50 Skeleton: not yet reconstructed; 11 insns; refs loc_1DEAE,sub_1DEC6 */
+/* @01DE50-01DE78 sub_1DE50 fn_1DE50 Skeleton: 11 insns; calls loc_1DEAE,sub_1DEC6; RAM A9EE */
 void fn_1DE50(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01DE50..01DE78). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01DE78-01DE8C sub_1DE78 fn_1DE78 Skeleton: not yet reconstructed; 5 insns; refs sub_3F94C */
+/* @01DE78-01DE8C sub_1DE78 fn_1DE78 Skeleton: 5 insns; calls sub_3F94C; RAM - */
 void fn_1DE78(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01DE78..01DE8C). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01DEC6-01DEEA sub_1DEC6 fn_1DEC6 Skeleton: not yet reconstructed; 11 insns; refs - */
+/* @01DEC6-01DEEA sub_1DEC6 fn_1DEC6 Skeleton: 11 insns; calls -; RAM - */
 void fn_1DEC6(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (11 instructions, 01DEC6..01DEEA). */
+    /* TODO(waveC): body not transcribed (11 instructions). */
 }
 
-/* @01DF7A-01E064 sub_1DF7A fn_1DF7A Skeleton: not yet reconstructed; 60 insns; refs loc_1E054,sub_3F778,sub_3F986,sub_3FA2C,sub_EC0A */
+/* @01DF7A-01E064 sub_1DF7A fn_1DF7A Skeleton: 60 insns; calls sub_3F778,sub_3F986,sub_3FA2C,sub_EC0A; RAM A9EE,AA3E,AA46,AA48 */
 void fn_1DF7A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (60 instructions, 01DF7A..01E064). */
+    /* TODO(waveC): body not transcribed (60 instructions). */
 }
 
-/* @01E094-01E0DC sub_1E094 fn_1E094 Skeleton: not yet reconstructed; 16 insns; refs sub_3F94C */
+/* @01E094-01E0DC sub_1E094 fn_1E094 Skeleton: 16 insns; calls sub_3F94C; RAM AA3E */
 void fn_1E094(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (16 instructions, 01E094..01E0DC). */
+    /* TODO(waveC): body not transcribed (16 instructions). */
 }
 
-/* @01E0DC-01E110 sub_1E0DC fn_1E0DC Skeleton: not yet reconstructed; 14 insns; refs sub_3F924,sub_3F94C */
+/* @01E0DC-01E110 sub_1E0DC fn_1E0DC Skeleton: 14 insns; calls sub_3F924,sub_3F94C; RAM - */
 void fn_1E0DC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (14 instructions, 01E0DC..01E110). */
+    /* TODO(waveC): body not transcribed (14 instructions). */
 }
 
-/* @01E110-01E1A4 sub_1E110 fn_1E110 Skeleton: not yet reconstructed; 39 insns; refs loc_1E17A,sub_1DC52,sub_1E240,sub_32650,sub_3F5B2 */
+/* @01E110-01E1A4 sub_1E110 fn_1E110 Skeleton: 39 insns; calls sub_1DC52,sub_1E240,sub_32650,sub_3F5B2; RAM A9EE */
 void fn_1E110(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (39 instructions, 01E110..01E1A4). */
+    /* TODO(waveC): body not transcribed (39 instructions). */
 }
 
-/* @01E238-01E260 sub_1E238 fn_1E238 Skeleton: not yet reconstructed; 13 insns; refs - */
+/* @01E238-01E260 sub_1E238 fn_1E238 Skeleton: 13 insns; calls -; RAM 89BF,AAE0,AAE1 */
 void fn_1E238(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01E238..01E260). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01E260-01E30A sub_1E260 fn_1E260 Skeleton: not yet reconstructed; 47 insns; refs sub_1C360,sub_1DDCC,sub_1E30A,sub_1E6D4,sub_2EB02,sub_2EB08 */
+/* @01E260-01E30A sub_1E260 fn_1E260 Skeleton: 47 insns; calls sub_1C360,sub_1DDCC,sub_1E30A,sub_1E6D4,sub_2EB02,sub_2EB08,sub_3A29C,sub_3A2D0; RAM 94C1,A9EE */
 void fn_1E260(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (47 instructions, 01E260..01E30A). */
+    /* TODO(waveC): body not transcribed (47 instructions). */
 }
 
-/* @01E30A-01E388 sub_1E30A fn_1E30A Skeleton: not yet reconstructed; 33 insns; refs loc_1E366,sub_1E240,sub_32650,sub_3F586,sub_3F5B2 */
+/* @01E30A-01E388 sub_1E30A fn_1E30A Skeleton: 33 insns; calls sub_1E240,sub_32650,sub_3F586,sub_3F5B2; RAM A9EE */
 void fn_1E30A(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (33 instructions, 01E30A..01E388). */
+    /* TODO(waveC): body not transcribed (33 instructions). */
 }
 
-/* @01E388-01E43E sub_1E388 fn_1E388 Skeleton: not yet reconstructed; 39 insns; refs sub_1E4EC,sub_3F5EE,sub_3F94C */
+/* @01E388-01E43E sub_1E388 fn_1E388 Skeleton: 39 insns; calls sub_1E4EC,sub_3F5EE,sub_3F94C; RAM A9EE,AA3E */
 void fn_1E388(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (39 instructions, 01E388..01E43E). */
+    /* TODO(waveC): body not transcribed (39 instructions). */
 }
 
-/* @01E43E-01E4EC sub_1E43E fn_1E43E Skeleton: not yet reconstructed; 48 insns; refs loc_1E4CA,loc_1E4E0,sub_1DC52,sub_1E110,sub_1E4EC,sub_1FA1C */
+/* @01E43E-01E4EC sub_1E43E fn_1E43E Skeleton: 48 insns; calls sub_1DC52,sub_1E110,sub_1E4EC,sub_1FA1C,sub_3F924,sub_3F94C; RAM - */
 void fn_1E43E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (48 instructions, 01E43E..01E4EC). */
+    /* TODO(waveC): body not transcribed (48 instructions). */
 }
 
-/* @01E4EC-01E506 sub_1E4EC fn_1E4EC Skeleton: not yet reconstructed; 9 insns; refs - */
+/* @01E4EC-01E506 sub_1E4EC fn_1E4EC Skeleton: 9 insns; calls -; RAM - */
 void fn_1E4EC(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (9 instructions, 01E4EC..01E506). */
+    /* TODO(waveC): body not transcribed (9 instructions). */
 }
 
-/* @01E506-01E59E sub_1E506 fn_1E506 Skeleton: not yet reconstructed; 43 insns; refs sub_1E59E,sub_1E5F6,sub_1E620,sub_3ECD4,sub_3F5B2 */
+/* @01E506-01E59E sub_1E506 fn_1E506 Skeleton: 43 insns; calls sub_1E59E,sub_1E5F6,sub_1E620,sub_3ECD4,sub_3F5B2; RAM 800F,89BE,89C0 */
 void fn_1E506(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (43 instructions, 01E506..01E59E). */
+    /* TODO(waveC): body not transcribed (43 instructions). */
 }
 
-/* @01E59E-01E5EE sub_1E59E fn_1E59E Skeleton: not yet reconstructed; 25 insns; refs sub_32650,sub_3ECB8,sub_3F5EE */
+/* @01E59E-01E5EE sub_1E59E fn_1E59E Skeleton: 25 insns; calls sub_32650,sub_3ECB8,sub_3F5EE; RAM - */
 void fn_1E59E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (25 instructions, 01E59E..01E5EE). */
+    /* TODO(waveC): body not transcribed (25 instructions). */
 }
 
-/* @01E5F6-01E620 sub_1E5F6 fn_1E5F6 Skeleton: not yet reconstructed; 13 insns; refs sub_3ECB8,sub_3EFAE */
+/* @01E5F6-01E620 sub_1E5F6 fn_1E5F6 Skeleton: 13 insns; calls sub_3ECB8,sub_3EFAE; RAM - */
 void fn_1E5F6(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (13 instructions, 01E5F6..01E620). */
+    /* TODO(waveC): body not transcribed (13 instructions). */
 }
 
-/* @01E620-01E63E sub_1E620 fn_1E620 Skeleton: not yet reconstructed; 10 insns; refs sub_3ECB8,sub_3EFAE */
+/* @01E620-01E63E sub_1E620 fn_1E620 Skeleton: 10 insns; calls sub_3ECB8,sub_3EFAE; RAM - */
 void fn_1E620(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (10 instructions, 01E620..01E63E). */
+    /* TODO(waveC): body not transcribed (10 instructions). */
 }
 
-/* @01E63E-01E646 sub_1E63E fn_1E63E Skeleton: not yet reconstructed; 3 insns; refs - */
+/* @01E63E-01E646 sub_1E63E fn_1E63E Skeleton: 3 insns; calls -; RAM - */
 void fn_1E63E(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (3 instructions, 01E63E..01E646). */
+    /* TODO(waveC): body not transcribed (3 instructions). */
 }
 
-/* @01E646-01E6BE sub_1E646 fn_1E646 Skeleton: not yet reconstructed; 39 insns; refs loc_1E6B8,sub_3ECB8,sub_3F5B2 */
+/* @01E646-01E6BE sub_1E646 fn_1E646 Skeleton: 39 insns; calls sub_3ECB8,sub_3F5B2; RAM - */
 void fn_1E646(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (39 instructions, 01E646..01E6BE). */
+    /* TODO(waveC): body not transcribed (39 instructions). */
 }
 
-/* @01E6BE-01E6D4 sub_1E6BE fn_1E6BE Skeleton: not yet reconstructed; 6 insns; refs sub_1E6E8 */
+/* @01E6BE-01E6D4 sub_1E6BE fn_1E6BE Skeleton: 6 insns; calls sub_1E6E8; RAM B383,B384,B386 */
 void fn_1E6BE(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (6 instructions, 01E6BE..01E6D4). */
+    /* TODO(waveC): body not transcribed (6 instructions). */
 }
 
-/* @01E6D4-01E6E2 sub_1E6D4 fn_1E6D4 Skeleton: not yet reconstructed; 5 insns; refs - */
+/* @01E6D4-01E6E2 sub_1E6D4 fn_1E6D4 Skeleton: 5 insns; calls -; RAM - */
 void fn_1E6D4(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (5 instructions, 01E6D4..01E6E2). */
+    /* TODO(waveC): body not transcribed (5 instructions). */
 }
 
-/* @01E6E2-01E73C sub_1E6E2 fn_1E6E2 Skeleton: not yet reconstructed; 29 insns; refs sub_3ECB8,sub_3F5B2 */
+/* @01E6E2-01E73C sub_1E6E2 fn_1E6E2 Skeleton: 29 insns; calls sub_3ECB8,sub_3F5B2; RAM A9EE */
 void fn_1E6E2(rec_t *rec)
 {
-    /* TODO(waveC): body not yet transcribed (29 instructions, 01E6E2..01E73C). */
+    /* TODO(waveC): body not transcribed (29 instructions). */
 }

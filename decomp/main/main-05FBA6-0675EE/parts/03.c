@@ -710,7 +710,7 @@ out:
 }
 
 /* ---------------------------------------------------------------------------
- * 0636B2-063720 (110 B)  wx_rx_room_status  [sub_6363C sibling, sub_636B2]
+ * 0636B2-063720 (110 B)  wx_rx_room_status  [sub_636B2]
  * Confirmed.  Callers: node-answer code (not listed).
  * r4l = room kind char, er1 = node block, er2 = room block (0x31 + key).
  * B26F = 0 for kinds '3'/'4' else 1.  If already linked and the room block

@@ -1,0 +1,16 @@
+addr	name	width	meaning	evidence
+0x00008C4D	g_shadow	u8[]	Applied shadow of last IPC frame ([0] opcode hi, [1] lo, [9] b4 two-row layout flag, [0x20..] record)	every scrNN_reconcile_fields; doc 51/pc-04
+0x00008E46	g_frame	u8[]	Pending IPC frame (raw 300-byte dequeue copy)	reconcile compares; doc 51
+0x00008C4C	g_ui_step	u8	Per-screen draw step 0..3 (sync, frame, full draw, event loop), clamped to 3	all scrNN handlers; FFEF036F increments
+0x00008F73	g_cur_event	u8	Index of the dirty event being serviced (0xFF none); read by ui_screen_type	scrNN_step3_events; FFEEC2AA
+0x00008F74	g_blink_armed	u8	Screen 0x08: cursor blink mask armed once	FFEEA396, FFEEA4DD
+0x00008D79	g_redraw_8D79	u8	Cleared before every full redraw (meaning Unknown)	FFEE8A1B, FFEE9212, FFEEA68A, FFEEAD87, FFEEB275
+0x00008F77	g_multislot_redraw	u8	Force full redraw of multi-slot renderer	FFEEBB04; doc 31
+0x0001D3B0	g_ui_events[0]	u32	Dirty events 0..31 (bit n = event n)	FFEEFEA4/FFEF003F; FFEEB21D tests bit 29
+0x0001D3B4	g_ui_events[1]	u32	Dirty events 0x20..0x3F	FFEEFEEE; FFEEBCA0 tests bit 9
+0x0001D39C	g_rec_ptr	ptr	Published &g_shadow[0x20] (0 for F280)	reconcile functions; FFEEA38D
+0x00012285	g_screen_type_ovr	u8	ui_screen_type override, 0xFF off	FFEEC35B, FFEEC236
+0x0001D3B8	g_lcd_surf	struct(16)	Full-screen surface descriptor used for every region	FFEEF9BB calls; FFEF032D
+0x0001D284	g_gps	u8[0x10A]	Screen-11 cache of GPS fix (date,time,position,speed,altitude,36 satellites)	FFEE9013; draw helpers
+0x00068E2C	g_tone_glyph	ptr[]	Glyph descriptors for CTCSS/DCS digits	FFEEB5CB, FFEEB687
+0x00068D24	g_font_digits	ptr[][11]	Per-font digit glyph pointers, stride 0x2C	FFEEB7A1, FFEEB85F
