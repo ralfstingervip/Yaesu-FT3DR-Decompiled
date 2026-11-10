@@ -1,0 +1,36 @@
+addr	name	width	meaning	evidence
+0x00008C4D	g_frame	u8[]	applied IPC frame shadow; +0 opcode hi, +1 opcode lo, +0x20.. per-screen fields	every apply_fields compares 0x8E46+k and copies to 0x8C4D+k (agrees with doc 50/pc-04)
+0x00008E46	g_frame_pend	u8[]	pending frame from MAIN	source side of every SYNC in this range
+0x00008C4C	g_screen_phase	u8	screen phase 0..3; entry clamps >3 to 3; commit (sub_FFEF036F) increments	all 15 SCREEN_ENTRY bodies, e.g. FFEE2248
+0x00008A8C	g_screen_id	u8	index into k_screen_tbl FFED4050	dispatcher FFEDF0DC (doc 23)
+0x00008F73	g_touch_key	u8	key/request returned by touch_key_poll, index into key tables	all phase-3 dispatchers, e.g. FFEE2524
+0x00008F74	g_blink_armed	u8	blink-timer subscription done once	FFEE3C46, FFEE7E6B
+0x00008F72	g_lang	u8	UI language, 0 = Japanese (JIS kanji title), else English	FFEE80D9 branch; JIS 0x467E/0x4E4F/0x4550/0x4F3F; matches RESUME-FULL, supersedes doc 12 reading
+0x00008D79	g_8D79	u8	cleared at the start of every redraw_all (meaning unknown)	FFEE29B1 and 14 siblings
+0x00008C23	sim_io_buf	u8	CC-RX lowlvl IO_BUF for simulated I/O	FFEE2208/FFEE2225
+0x0001D264	sim_io_parm	u32	CC-RX lowlvl PARM block pointer	FFEE2216, FFEE2231
+0x0001D3B0	g_touch_req	u32[2]	64-bit redraw/touch request mask; bit k = key k	sub_FFEEFEA4/FEEE/FF25/FF38/FF90, sub_FFEF003F
+0x0001D3B8	g_surf	struct	drawing surface descriptor passed to gfx_region_begin	all region_begin calls
+0x0001D3C8	g_cur_surface	ptr	current surface pointer set by sub_FFEEF9BB	FFEEFA41 (callee)
+0x0001D39C	g_block3_dst	ptr	destination pointer for 3-byte block applier sub_FFEF42A7	FFEE5E10, FFEE6C72, FFEE7F3D
+0x00008C24	g_pick_q	u8[40]	char-picker cell repaint ring (cell 0..39)	FFEE530A, FFEE543A..FFEE5591, FFEE56EC
+0x00012282	g_pick_rd	u8	ring read index (mod 40)	FFEE54DF
+0x00012283	g_pick_wr	u8	ring write index (mod 40)	FFEE57BB
+0x00012284	g_numentry_reset	u8	set when F104<->F105 changes; forces F104 layout once	FFEE5DE0, FFEE5F08
+0x00012285	g_ui_layer	u8	band/panel layer selector for band painters (1,2,3,4,0xFF)	sub_FFEEC35B, FFEE67DC, FFEE86B9
+0x00068854	g_blink	struct	UI blink timer {id, phase@+4, lo mask@+8, hi mask@+0xC, period@+0x10}	sub_FFEF0163/019E/02F2
+0x00068868	g_icon_slot_rects	ptr[]	per-slot base of {x,y,w,h} icon rects (closes doc 79 Open 4: layout confirmed by region_begin args)	FFEE24E4..FFEE2508
+0x0006875C	g_aprs_tabs_a	ptr[15]	screen 0x22 header images (OP_LO 0)	FFEE22AE
+0x00068798	g_aprs_tabs_b	ptr[15]	screen 0x22 header images (OP_LO != 0)	FFEE22FC
+0x00068658	g_aprs_sym_tbl	ptr[]	APRS symbol images indexed code-0x20	FFEE4C1C
+0x00068584	g_aprs_ovl_tbl	ptr[]	APRS overlay images (index % 53)	FFEE4C3E
+0x000687D4	g_compass_ctr	ptr[16]	screen 0x24 compass centre images	FFEE4E52
+0x00068814	g_gps_ctr_imgs	ptr[16]	screen 0x0D compass centre images	FFEE7476
+0x00068514	g_level_imgs	ptr[]	screen 0x03 level images (stride 0x38)	FFEE6989
+0xFFED4050	k_screen_tbl	ptr[]	screen handler table (14 entries land in this range)	hidden/_ptrindex_sub.tsv
+0xFFEC60B8	k_rects_60B8	rect16[]	soft-key area rects (APRS screens); [6].y = body bottom	FFEE2466, FFEE239E
+0xFFEC6088	k_rects_6088	rect16[]	soft-key rects for screen 0x25	FFEE3F8A
+0xFFEC6058	k_rects_6058	rect16[]	soft-key rects for F1 screens and 0x24	FFEE4B80, FFEE635A
+0xFFED49E0	k_pick_groups	struct[45]	character groups {base_code, rsvd, map}	FFEE59CA, FFEE5AB5
+0xFFC3D376	k_dial_pos	u8[32]	16 compass label positions (rotating dial)	FFEE7315
+0xFFC3D396	k_scope_bars	u8[3]	band-scope bar counts per span	FFEE7777

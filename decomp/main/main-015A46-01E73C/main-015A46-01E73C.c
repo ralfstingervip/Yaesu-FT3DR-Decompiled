@@ -3343,400 +3343,483 @@ void exit_BE(rec_t *rec)
     sub_3DD32();
 }
 
-/* @019C3A-019C44 sub_19C3A fn_19C3A Skeleton: 2 insns; calls loc_15260; RAM - */
-void fn_19C3A(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (2 instructions). */
-}
-
-/* @019C50-019C76 sub_19C50 fn_19C50 Skeleton: 9 insns; calls sub_3F628,sub_7348C; RAM 8920,B0AA */
-void fn_19C50(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (9 instructions). */
-}
-
-/* @019C76-019C82 sub_19C76 fn_19C76 Skeleton: 3 insns; calls sub_3F628; RAM - */
-void fn_19C76(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (3 instructions). */
-}
+/* @019C3A-019C44 sub_19C3A setup_level_dispatch_19C44 Confirmed: menu_dispatch_by_level(rec, tbl 0x019C44) */
+void setup_level_dispatch_19C44(rec_t *rec) { menu_dispatch_by_level(rec, tbl_19C44); }
 
-/* @019C8E-019C98 sub_19C8E fn_19C8E Skeleton: 2 insns; calls loc_15260; RAM - */
-void fn_19C8E(rec_t *rec)
+/* @019C50-019C76 sub_19C50 bt_step_19C82 Inferred: Bluetooth row: wrap-step record 0x019C82, set B0AA.7; when Bluetooth is on (FF8920.0) and FF8920.7 is set call sub_7348C (re-apply) */
+void bt_step_19C82(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (2 instructions). */
+    dial_step_wrap_dirty(&rec_19C82);
+    ui_B0AA |= 0x80;
+    if ((r1_set_8920 & 0x01) && (r1_set_8920 & 0x80)) sub_7348C();
 }
 
-/* @019CA4-019CB6 sub_19CA4 fn_19CA4 Skeleton: 5 insns; calls sub_3F628; RAM BAD6 */
-void fn_19CA4(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (5 instructions). */
-}
-
-/* @019CB6-019CCE sub_19CB6 fn_19CB6 Skeleton: 7 insns; calls sub_3F628,sub_3FF9C; RAM BAD6 */
-void fn_19CB6(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (7 instructions). */
-}
-
-/* @019CDA-019CF8 sub_19CDA fn_19CDA Skeleton: 10 insns; calls sub_3F62E,sub_3FFA0; RAM AAEA; table slot d1D:DEVICE LIST */
-void fn_19CDA(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (10 instructions). */
-}
+/* @019C76-019C82 sub_19C76 bt_step_19C88 Confirmed: wrap-step record 0x019C88 */
+void bt_step_19C88(rec_t *rec) { dial_step_wrap_dirty(&rec_19C88); }
 
-/* @019CFE-019D10 sub_19CFE fn_19CFE Skeleton: 4 insns; calls sub_730D0; RAM 8920,AA30; table slot d1E:Bluetooth */
-void fn_19CFE(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (4 instructions). */
-}
+/* @019C8E-019C98 sub_19C8E setup_level_dispatch_19C98 Confirmed: menu_dispatch_by_level(rec, tbl 0x019C98) */
+void setup_level_dispatch_19C98(rec_t *rec) { menu_dispatch_by_level(rec, tbl_19C98); }
 
-/* @019D10-019D22 sub_19D10 fn_19D10 Skeleton: 4 insns; calls sub_734B0; RAM 8920,AA30; table slot d1F:Bluetooth Save */
-void fn_19D10(rec_t *rec)
+/* @019CA4-019CB6 sub_19CA4 setup_step_19CCE_unless_BAD6 Confirmed: if BAD6 == 0 wrap-step record 0x019CCE, else key_reject_beep (loc_19CC8) */
+void setup_step_19CCE_unless_BAD6(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (4 instructions). */
+    if (ui_BAD6 == 0) dial_step_wrap_dirty(&rec_19CCE); else key_reject_beep();
 }
 
-/* @019D22-019D4A sub_19D22 fn_19D22 Skeleton: 10 insns; calls sub_19DDE; RAM 94C1 */
-void fn_19D22(rec_t *rec)
+/* @019CB6-019CCE sub_19CB6 setup_step_19CD4_unless_BAD6 Confirmed: if BAD6 == 0 wrap-step record 0x019CD4, else key_reject_beep */
+void setup_step_19CD4_unless_BAD6(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (10 instructions). */
+    if (ui_BAD6 == 0) dial_step_wrap_dirty(&rec_19CD4); else key_reject_beep();
 }
 
-/* @019D4A-019D58 sub_19D4A fn_19D4A Skeleton: 5 insns; calls sub_14BBA; RAM AD68 */
-void fn_19D4A(rec_t *rec)
+/* @019CDA-019CF8 sub_19CDA dial_1D_device_list Inferred: DEVICE LIST (Bluetooth): with n = AAEA paired devices, wrap-steps record 0x019CF8 until the index is < n+1; none -> key_consume */
+void dial_1D_device_list(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (5 instructions). */
+    u8 n = bt_AAEA;
+    if (n == 0) { key_consume(); return; }
+    n++;
+    while (dial_step_wrap(&rec_19CF8) >= n) ;
 }
 
-/* @019D58-019D60 sub_19D58 fn_19D58 Skeleton: 2 insns; calls loc_19D74; RAM - */
-void fn_19D58(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (2 instructions). */
-}
+/* @019CFE-019D10 sub_19CFE dial_1E_bluetooth Confirmed: Bluetooth (F3D2): dirty, toggle FF8920.0 (R1 n=0), sub_730D0 (power the module) */
+void dial_1E_bluetooth(rec_t *rec) { ui_flags |= 0x40; r1_set_8920 ^= 0x01; sub_730D0(); }
 
-/* @019D60-019D6E sub_19D60 fn_19D60 Skeleton: 5 insns; calls sub_14BBA; RAM AD68 */
-void fn_19D60(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (5 instructions). */
-}
+/* @019D10-019D22 sub_19D10 dial_1F_bluetooth_save Confirmed: Bluetooth Save (F3D4): dirty, toggle FF8920.7, sub_734B0 */
+void dial_1F_bluetooth_save(rec_t *rec) { ui_flags |= 0x40; r1_set_8920 ^= 0x80; sub_734B0(); }
 
-/* @019D6E-019D74 sub_19D6E fn_19D6E Skeleton: 1 insns; calls -; RAM - */
-void fn_19D6E(rec_t *rec)
+/* @019D22-019D4A sub_19D22 name_cursor Inferred: cursor in the 16-char name (AA96 when page 94C1 == 5, else rec+0x22): text_cursor_2b(er5, first col 2, record 0x01A204) */
+void name_cursor(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (1 instructions). */
+    u8 *buf = (ui_page_94C1 == 5) ? name_buf_AA96 : &rec->name22[0];
+    text_cursor_2b(buf, 2, &rec_1A204);                   /* bra sub_19DDE */
 }
 
-/* @019D74-019DDE sub_19D74 fn_19D74 Skeleton: 33 insns; calls sub_19DDE,sub_1A436; RAM A9ED,AD68,AD82,BBBA,FFFF */
-void fn_19D74(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (33 instructions). */
-}
+/* @019D4A-019D58 sub_19D4A text_cursor_AD6E_guard Confirmed: level >= 2 -> sub_19D58, else menu_exit_all */
+void text_cursor_AD6E_guard(rec_t *rec) { if (menu_level >= 2) text_cursor_AD6E(rec); else menu_exit_all(rec); }
 
-/* @019DDE-019E58 sub_19DDE fn_19DDE Skeleton: 46 insns; calls sub_19E58,sub_1A436,sub_3FFA0; RAM A9ED,AD68,AD82,AD86 */
-void fn_19DDE(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (46 instructions). */
-}
+/* @019D58-019D60 sub_19D58 text_cursor_AD6E Confirmed: er5 = FFAD6E, bra loc_19D74 */
+void text_cursor_AD6E(rec_t *rec) { text_cursor_2b_back(text_buf_AD6E); }
 
-/* @019E58-019E6C sub_19E58 fn_19E58 Skeleton: 5 insns; calls sub_19F3A; RAM AD86 */
-void fn_19E58(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (5 instructions). */
-}
+/* @019D60-019D6E sub_19D60 text_cursor_8956_guard Confirmed: level >= 2 -> sub_19D6E, else menu_exit_all */
+void text_cursor_8956_guard(rec_t *rec) { if (menu_level >= 2) text_cursor_8956(rec); else menu_exit_all(rec); }
 
-/* @019E6C-019E92 sub_19E6C fn_19E6C Skeleton: 11 insns; calls loc_19EAE,sub_14BBA,sub_19E8A; RAM AD68 */
-void fn_19E6C(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (11 instructions). */
-}
+/* @019D6E-019D74 sub_19D6E text_cursor_8956 Confirmed: er5 = FF8956, falls into sub_19D74 */
+void text_cursor_8956(rec_t *rec) { text_cursor_2b_back(r1_text_8956); }
 
-/* @019E92-019ED6 sub_19E92 fn_19E92 Skeleton: 20 insns; calls sub_19E58,sub_3FFA0; RAM AD86 */
-void fn_19E92(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @019D74-019DDE sub_19D74 text_cursor_2b_back Inferred: cursor move (first col 3, record 0x01A210) that also keeps the cursor on the first half of a 2-byte character: BBBA = -1, and for a left move onto an odd column whose previous slot is a 2-byte char (sub_1A436) the cursor steps back one more
+ * -------------------------------------------------------------------------- */
+void text_cursor_2b_back(u8 *buf)                         /* 019D74 */
 {
-    /* TODO(waveC): body not transcribed (20 instructions). */
+    text_cursor_2b(buf, 3, &rec_1A210);
+    ui_BBBA = 0xFFFFFFFF;
+    if (key_event == 4) return;
+    u8 col = menu_level;
+    *(u8 *)&ui_BBBA = col;
+    if (col < 2 || !(col & 1)) return;
+    text_ptr_AD82 = buf;
+    if (is_wide_char(col - 2)) return;                    /* sub_1A436 */
+    if (!is_wide_char(col - 3)) return;
+    menu_level--;
 }
 
-/* @019ED6-019F08 sub_19ED6 fn_19ED6 Skeleton: 15 insns; calls sub_19E58; RAM AD86 */
-void fn_19ED6(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @019DDE-019E58 sub_19DDE text_cursor_2b Inferred: generic text cursor: remembers buffer (AD82) and step record (AD86); moves AD68 via sub_19E58, skipping the second half of 2-byte chars (per-char flag word, sub_1A436) and gaps of two empty bytes; level 0 -> key_consume
+ * Args: er5 = buffer, er1 = first text column, er6 = cursor step record.
+ * -------------------------------------------------------------------------- */
+void text_cursor_2b(u8 *buf, u8 first, const step_rec_t *r)   /* 019DDE */
 {
-    /* TODO(waveC): body not transcribed (15 instructions). */
+    text_ptr_AD82 = buf;  cursor_rec_AD86 = r;
+again:;
+    u8 c = menu_level;
+    if (c == 0) { key_consume(); return; }
+    c--;
+    u8 col;
+    if (key_event != 4) {                                 /* moving left */
+        if (c == 0) {
+            col = cursor_step_rec();
+            if (!is_wide_char(col - first)) goto chk;
+            goto step2;
+        }
+        if (c >= first && is_wide_char(c - first)) cursor_step_rec();
+    } else {                                              /* moving right */
+        if (first != 2) { if (c == 0) goto step2; c--; }
+        if (is_wide_char(c)) cursor_step_rec();
+    }
+step2:
+    col = cursor_step_rec();
+chk:
+    if (col < first) return;
+    {
+        u8 *p = text_ptr_AD82 + 2 - first + col;
+        if (p[0] == 0xFF && p[1] == 0xFF) goto again;     /* double gap */
+    }
 }
 
-/* @019F3A-019F54 sub_19F3A fn_19F3A Skeleton: 8 insns; calls sub_19FAE,sub_3FFA0; RAM AA30,AD68 */
-void fn_19F3A(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (8 instructions). */
-}
+/* @019E58-019E6C sub_19E58 cursor_step_rec Confirmed: sub_19F3A with the record saved in AD86 (er1 preserved); returns the new column */
+u8 cursor_step_rec(void) { return cursor_step_19F3A(cursor_rec_AD86); }
 
-/* @019F54-019F62 sub_19F54 fn_19F54 Skeleton: 4 insns; calls sub_19FAE; RAM AA30,AD99 */
-void fn_19F54(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @019E6C-019E92 sub_19E6C text_cursor_entries Inferred: entry points that pick a buffer and fall into the shared cursor loop loc_19EAE (record 0x01A210): 0x019E6C FF8926; 0x019E74 level guard (else menu_exit_all) then 0x019E82 FFAC24 (DTMF digits); 0x019E8A buffer from the caller
+ * -------------------------------------------------------------------------- */
+void text_cursor_8926(rec_t *rec) { text_cursor_skipgap(r1_text_8926, &rec_1A210); }   /* 019E6C */
+void text_cursor_dtmf_guard(rec_t *rec)                   /* 019E74 */
 {
-    /* TODO(waveC): body not transcribed (4 instructions). */
+    if (menu_level >= 2) text_cursor_skipgap(dtmf_buf_AC22 + 2, &rec_1A210);
+    else menu_exit_all(rec);
 }
 
-/* @019F62-019F70 sub_19F62 fn_19F62 Skeleton: 4 insns; calls sub_19FAE; RAM AA30,B3A0 */
-void fn_19F62(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @019E92-019ED6 sub_19E92 text_cursor_skipgap Inferred: cursor loop loc_19EAE: step with the given record (AD86) and repeat while the column >= 3 sits on two empty bytes; entries 0x019E92 / 0x019EA0 use the password buffer FFAD8A with records 0x01A1C2 / 0x01A1BC
+ * -------------------------------------------------------------------------- */
+void text_cursor_skipgap(u8 *buf, const step_rec_t *r)   /* 019EAE */
 {
-    /* TODO(waveC): body not transcribed (4 instructions). */
+    cursor_rec_AD86 = r;
+    u8 col;
+    do {
+        col = cursor_step_rec();
+        if (col < 3) return;
+    } while (buf[col - 3] == 0xFF && buf[col - 2] == 0xFF);
 }
+void pw_cursor_right(rec_t *rec) { text_cursor_skipgap(pw_buf_AD88 + 2, &rec_1A1C2); }  /* 019E92 */
+void pw_cursor_left(rec_t *rec)  { text_cursor_skipgap(pw_buf_AD88 + 2, &rec_1A1BC); }  /* 019EA0 */
 
-/* @019F78-019F82 sub_19F78 fn_19F78 Skeleton: 3 insns; calls loc_19FA8; RAM - */
-void fn_19F78(rec_t *rec)
+/* @019ED6-019F08 sub_19ED6 status_text_cursor Confirmed: cursor over FFADA2 (record 0x01A228) from column 5, skipping double gaps */
+void status_text_cursor(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (3 instructions). */
+    u8 col;
+    cursor_rec_AD86 = &rec_1A228;
+    do { col = cursor_step_rec(); if (col < 5) return; }
+    while (text_ADA2[col - 5] == 0xFF && text_ADA2[col - 4] == 0xFF);
 }
 
-/* @019F82-019F8A sub_19F82 fn_19F82 Skeleton: 2 insns; calls loc_19FA8; RAM - */
-void fn_19F82(rec_t *rec)
+/* @019F3A-019F54 sub_19F3A cursor_step_19F3A Confirmed: level 0 -> key_consume; else AA30 |= 0x80 and cursor_step_19FAE(er6); returns AD68 (r4l) with the stepped value in r3l */
+u8 cursor_step_19F3A(const step_rec_t *r)
 {
-    /* TODO(waveC): body not transcribed (2 instructions). */
+    if (menu_level == 0) key_consume();
+    else { ui_flags |= 0x80; cursor_step_19FAE(r); }
+    return menu_level;
 }
+
+/* @019F54-019F62 sub_19F54 cursor_step_19F54 Confirmed: AA30 |= 0x80, cursor_step_19FAE(er6), return AD99 (auto-reply sub-cursor) */
+u8 cursor_step_19F54(const step_rec_t *r) { ui_flags |= 0x80; cursor_step_19FAE(r); return sub_cursor_AD99; }
 
-/* @019F8A-019FAE sub_19F8A fn_19F8A Skeleton: 9 insns; calls -; RAM AD68 */
-void fn_19F8A(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (9 instructions). */
-}
+/* @019F62-019F70 sub_19F62 cursor_step_19F62 Confirmed: AA30 |= 0x80, cursor_step_19FAE(er6), return B3A0 */
+u8 cursor_step_19F62(const step_rec_t *r) { ui_flags |= 0x80; cursor_step_19FAE(r); return ui_B3A0; }
 
-/* @019FAE-019FD4 sub_19FAE fn_19FAE Skeleton: 10 insns; calls sub_3F62E; RAM 9542,A9ED,A9EE */
-void fn_19FAE(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (10 instructions). */
-}
+/* @019F78-019F82 sub_19F78 cursor_key_1A1BC Confirmed: record 0x01A1BC then loc_19FA8 (level check + cursor step) */
+void cursor_key_1A1BC(rec_t *rec) { cursor_key(&rec_1A1BC); }
 
-/* @019FDE-01A006 sub_19FDE fn_19FDE Skeleton: 14 insns; calls -; RAM AA30 */
-void fn_19FDE(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (14 instructions). */
-}
+/* @019F82-019F8A sub_19F82 cursor_key_1A1A4 Confirmed: record 0x01A1A4 then loc_19FA8 */
+void cursor_key_1A1A4(rec_t *rec) { cursor_key(&rec_1A1A4); }
 
-/* @01A006-01A028 sub_1A006 fn_1A006 Skeleton: 14 insns; calls sub_3FFA0; RAM - */
-void fn_1A006(rec_t *rec)
+/* @019F8A-019FAE sub_19F8A cursor_key_1A1AA Confirmed: record 0x01A1AA; entries 0x019F92 (0x01A1B6), 0x019F9A (0x01A1CE), 0x019FA2 (0x01A1D4); loc_19FA8: level 0 -> key_consume (loc_19FD4), else falls into sub_19FAE */
+void cursor_key_1A1AA(rec_t *rec) { cursor_key(&rec_1A1AA); }
+static void cursor_key(const step_rec_t *r)               /* 019FA8 */
 {
-    /* TODO(waveC): body not transcribed (14 instructions). */
+    if (menu_level == 0) { key_consume(); return; }
+    cursor_step_19FAE(r);
 }
 
-/* @01A028-01A04A sub_1A028 fn_1A028 Skeleton: 14 insns; calls sub_3FFA0; RAM - */
-void fn_1A028(rec_t *rec)
+/* @019FAE-019FD4 sub_19FAE cursor_step_19FAE Confirmed: 9542 = 0; key 4 -> up, any other key -> down (A9EE.0); wrap-step the record; returns the new value zero-extended in er3 */
+u8 cursor_step_19FAE(const step_rec_t *r)
 {
-    /* TODO(waveC): body not transcribed (14 instructions). */
+    ui_9542 = 0;
+    key_flags &= ~0x01;
+    if (key_event != 4) key_flags |= 0x01;
+    return dial_step_wrap(r);
 }
 
-/* @01A04A-01A062 sub_1A04A fn_1A04A Skeleton: 11 insns; calls -; RAM AD99 */
-void fn_1A04A(rec_t *rec)
+/* @019FDE-01A006 sub_19FDE text_len_to_AD99 Confirmed: AD99 = number of leading non-0xFF bytes of er5, capped at r3l; AA30 |= 0x80 */
+void text_len_to_AD99(const u8 *p, u8 max)
 {
-    /* TODO(waveC): body not transcribed (11 instructions). */
+    u8 n = 0;
+    while (n < max && *p++ != 0xFF) n++;
+    sub_cursor_AD99 = n;
+    ui_flags |= 0x80;
 }
 
-/* @01A062-01A07C sub_1A062 fn_1A062 Skeleton: 12 insns; calls -; RAM B3A0 */
-void fn_1A062(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (12 instructions). */
-}
+/* @01A006-01A028 sub_1A006 ad99_advance Confirmed: if *er5 is a char and r2l < r4h: AD99 = r2l+1, else AD99 = 0; label 0x01A022 = key_consume */
+void ad99_advance(const u8 *p, u8 cur, u8 max) { sub_cursor_AD99 = (*p != 0xFF && cur < max) ? cur + 1 : 0; }
 
-/* @01A084-01A08C sub_1A084 fn_1A084 Skeleton: 2 insns; calls loc_1A0EA; RAM - */
-void fn_1A084(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (2 instructions). */
-}
+/* @01A028-01A04A sub_1A028 b3a0_advance Confirmed: as sub_1A006 for cursor B3A0, wrapping to 1 */
+void b3a0_advance(const u8 *p, u8 cur, u8 max) { ui_B3A0 = (*p != 0xFF && cur < max) ? cur + 1 : 1; }
 
-/* @01A094-01A09C sub_1A094 fn_1A094 Skeleton: 2 insns; calls loc_1A0EA; RAM - */
-void fn_1A094(rec_t *rec)
+/* @01A04A-01A062 sub_1A04A text_clear_ad99 Confirmed: fill (r3l-r2l) bytes at er5 with 0xFF; AD99 = r2l-1 unless r2l == 0 */
+void text_clear_ad99(u8 *p, u8 i, u8 end)
 {
-    /* TODO(waveC): body not transcribed (2 instructions). */
+    u8 n = end - i;
+    do *p++ = 0xFF; while (--n);
+    if (i) sub_cursor_AD99 = i - 1;
 }
 
-/* @01A0A4-01A0AC sub_1A0A4 fn_1A0A4 Skeleton: 2 insns; calls loc_1A0EA; RAM - */
-void fn_1A0A4(rec_t *rec)
+/* @01A062-01A07C sub_1A062 text_clear_b3a0 Confirmed: fill (r3l-r2l+1) bytes with 0xFF; B3A0 = r2l-1 unless r2l == 1 */
+void text_clear_b3a0(u8 *p, u8 i, u8 end)
 {
-    /* TODO(waveC): body not transcribed (2 instructions). */
+    u8 n = end - i + 1;
+    do *p++ = 0xFF; while (--n);
+    if (i != 1) ui_B3A0 = i - 1;
 }
 
-/* @01A0AC-01A0B4 sub_1A0AC fn_1A0AC Skeleton: 2 insns; calls loc_1A0EA; RAM - */
-void fn_1A0AC(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (2 instructions). */
-}
+/* --------------------------------------------------------------------------
+ * @01A084-01A08C sub_1A084 setup_cb_1A084 Confirmed: row/column cursor with layout 0x01A1F8 (loc_1A0EA)
+ * @01A094-01A09C sub_1A094 setup_cb_1A094 Confirmed: layout 0x01A1EC
+ * @01A0A4-01A0AC sub_1A0A4 setup_cb_1A0A4 Confirmed: layout 0x01A1E0
+ * @01A0AC-01A0B4 sub_1A0AC setup_cb_1A0AC Confirmed: layout 0x01A1A4
+ * @01A0B4-01A0BC sub_1A0B4 setup_cb_1A0B4 Confirmed: layout 0x01A1AA
+ * These are the "ctx stacked" callbacks passed to sub_15206: they move the
+ * two-level cursor (B054 window top, B055 row) of a multi-row page.
+ * -------------------------------------------------------------------------- */
+void setup_cb_1A084(rec_t *rec) { rowcol_cursor(lay_1A1F8); }
+void setup_cb_1A094(rec_t *rec) { rowcol_cursor(lay_1A1EC); }
+void setup_cb_1A0A4(rec_t *rec) { rowcol_cursor(lay_1A1E0); }
+void setup_cb_1A0AC(rec_t *rec) { rowcol_cursor(lay_1A1A4); }
+void setup_cb_1A0B4(rec_t *rec) { rowcol_cursor(lay_1A1AA); }
 
-/* @01A0B4-01A0BC sub_1A0B4 fn_1A0B4 Skeleton: 2 insns; calls loc_1A0EA; RAM - */
-void fn_1A0B4(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @01A0DC-01A17C sub_1A0DC rowcol_cursor Inferred: multi-row page cursor: layout byte [1] = item count. Up (dial up / key 4) on row 3 scrolls the window B054 down until top+3 == count, wrapping B054 to 0; down on row 1 scrolls up, wrapping to count-3 (if count >= 4); otherwise steps the row B055 with record 0x01A23A (0x01A234 for 2-item pages). AD68 = B054 + B055.  Entries 0x01A0DC (layout 0x01A1D4) and 0x01A0E4 (0x01A1DA); level 0 -> key_consume
+ * -------------------------------------------------------------------------- */
+void rowcol_cursor(const u8 *lay)                         /* 01A0EA */
 {
-    /* TODO(waveC): body not transcribed (2 instructions). */
+    if (menu_level == 0) { key_consume(); return; }
+    u8 cnt = lay[1];
+    if (!(key_flags & 0x01)) {
+        if (edit_col_B055 == 3) {
+            if ((u8)(edit_row_B054 + 3) != cnt) { edit_row_B054++; goto set; }
+            if (edit_row_B054) edit_row_B054 = 0;
+        }
+    } else {
+        if (edit_col_B055 == 1) {
+            if (edit_row_B054) { edit_row_B054--; goto set; }
+            if (cnt >= 4) edit_row_B054 = cnt - 3;
+        }
+    }
+    dial_step_wrap(cnt == 2 ? &rec_1A234 : &rec_1A23A);  /* steps B055 */
+set:
+    menu_level = edit_row_B054 + edit_col_B055;
 }
+void sb_cb_1A0DC(rec_t *rec)  { rowcol_cursor(lay_1A1D4); }   /* 01A0DC */
+void rowcol_1A1DA(rec_t *rec) { rowcol_cursor(lay_1A1DA); }   /* 01A0E4 */
 
-/* @01A0DC-01A17C sub_1A0DC fn_1A0DC Skeleton: 50 insns; calls sub_3F62E; RAM A9EE,AD68,B054,B055 */
-void fn_1A0DC(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (50 instructions). */
-}
+/* @01A246-01A254 sub_1A246 text_cursor_1A246 Confirmed: auto-reply text cursor: er1 = FFADDE, record 0x01A254, then the gap-skipping loop at 0x01A25A */
+void text_cursor_1A246(rec_t *rec) { cursor_rec_AD86 = &rec_1A254; ar_text_cursor(ar_text_ADDE); }
 
-/* @01A246-01A254 sub_1A246 fn_1A246 Skeleton: 3 insns; calls loc_1A259; RAM - */
-void fn_1A246(rec_t *rec)
+/* @01A260-01A28C sub_1A260 ar_text_cursor Confirmed: step AD99 (sub_19F54 with record AD86) and repeat while AD99 >= 2 sits on two empty bytes */
+void ar_text_cursor(u8 *buf)
 {
-    /* TODO(waveC): body not transcribed (3 instructions). */
+    u8 c;
+    do { c = cursor_step_19F54(cursor_rec_AD86); if (c < 2) return; }
+    while (buf[c - 2] == 0xFF && buf[c - 1] == 0xFF);
 }
 
-/* @01A260-01A28C sub_1A260 fn_1A260 Skeleton: 14 insns; calls sub_19F54; RAM AD86 */
-void fn_1A260(rec_t *rec)
+/* @01A2C0-01A2D8 sub_1A2C0 list_select_dial Inferred: not at list level: if BBF2.6 (list page active) -> sub_1A2D8, else refuse */
+void list_select_dial(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (14 instructions). */
+    if (menu_level_or_list(rec) == 0) return;
+    if (ui_BBF2 & 0x40) list_select_step(); else key_consume();
 }
 
-/* @01A2C0-01A2D8 sub_1A2C0 fn_1A2C0 Skeleton: 8 insns; calls sub_151EC,sub_1A2D8,sub_3FFA0; RAM BBF2 */
-void fn_1A2C0(rec_t *rec)
+/* @01A2D8-01A302 sub_1A2D8 list_select_step Inferred: B092 = 0; B093 = 0x27 (40 rows) unless on the last page (BC77 == BC78) where it is BC7A; steps the row BC79 with sub_3F676 (limits from word B092) */
+void list_select_step(void)
 {
-    /* TODO(waveC): body not transcribed (8 instructions). */
+    ui_B092 = 0;
+    ui_B093 = (list_page_BC77 != list_pages_BC78) ? 0x27 : list_last_rows_BC7A;
+    sub_3F676(&list_row_BC79);
 }
 
-/* @01A2D8-01A302 sub_1A2D8 fn_1A2D8 Skeleton: 13 insns; calls sub_3F676; RAM B092,B093,BC77,BC78,BC7A */
-void fn_1A2D8(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (13 instructions). */
-}
+/* @01A302-01A31C sub_1A302 list_page_prev Confirmed: BC77 > 0 -> BC77--, row BC79 = 0; else key_consume */
+void list_page_prev(rec_t *rec) { if (list_page_BC77) { list_page_BC77--; list_row_BC79 = 0; } else key_consume(); }
 
-/* @01A302-01A31C sub_1A302 fn_1A302 Skeleton: 9 insns; calls sub_3FFA0; RAM BC77,BC79 */
-void fn_1A302(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (9 instructions). */
-}
+/* @01A31C-01A33C sub_1A31C list_page_next Confirmed: BC77 < BC78 -> BC77++, row 0; else key_consume */
+void list_page_next(rec_t *rec) { if (list_page_BC77 < list_pages_BC78) { list_page_BC77++; list_row_BC79 = 0; } else key_consume(); }
 
-/* @01A31C-01A33C sub_1A31C fn_1A31C Skeleton: 11 insns; calls sub_3FFA0; RAM BC77,BC78,BC79 */
-void fn_1A31C(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (11 instructions). */
-}
+/* @01A33C-01A350 sub_1A33C list_select_if_active Confirmed: BBF2.6 -> sub_1A2D8, else key_consume */
+void list_select_if_active(rec_t *rec) { if (ui_BBF2 & 0x40) list_select_step(); else key_consume(); }
 
-/* @01A33C-01A350 sub_1A33C fn_1A33C Skeleton: 6 insns; calls sub_1A2D8,sub_3FFA0; RAM BBF2 */
-void fn_1A33C(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (6 instructions). */
-}
+/* @01A350-01A364 sub_1A350 list_select_if_active_b Confirmed: identical copy of sub_1A33C */
+void list_select_if_active_b(rec_t *rec) { if (ui_BBF2 & 0x40) list_select_step(); else key_consume(); }
 
-/* @01A350-01A364 sub_1A350 fn_1A350 Skeleton: 6 insns; calls sub_1A2D8,sub_3FFA0; RAM BBF2 */
-void fn_1A350(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (6 instructions). */
-}
+/* @01A432-01A436 sub_1A432 is_wide_cur Confirmed: r2l = AD80 (current char index), falls into sub_1A436 */
+u8 is_wide_cur(void) { return is_wide_char(char_idx_AD80); }
 
-/* @01A432-01A436 sub_1A432 fn_1A432 Skeleton: 1 insns; calls -; RAM AD80 */
-void fn_1A432(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (1 instructions). */
-}
+/* @01A436-01A43C sub_1A436 is_wide_char Confirmed: er5 = AD82 (buffer), falls into sub_1A43C */
 
-/* @01A436-01A43C sub_1A436 fn_1A436 Skeleton: 1 insns; calls -; RAM AD82 */
-void fn_1A436(rec_t *rec)
+/* @01A43C-01A458 sub_1A43C wide_flag_test Confirmed: tests bit tbl_1A458[i] of the buffer's first word (high byte for i < 8, low byte otherwise): per-character "2-byte" flag */
+u8 is_wide_char(u8 i)
 {
-    /* TODO(waveC): body not transcribed (1 instructions). */
+    u16 w = *(u16 *)text_ptr_AD82;
+    u8 bit = wide_bit_1A458[i];
+    return (i < 8) ? ((w >> 8) >> bit) & 1 : (w >> bit) & 1;
 }
 
-/* @01A43C-01A458 sub_1A43C fn_1A43C Skeleton: 9 insns; calls -; RAM - */
-void fn_1A43C(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (9 instructions). */
-}
+/* @01A468-01A46C sub_1A468 wide_clear_cur Confirmed: r2l = AD80, falls into sub_1A46C */
 
-/* @01A468-01A46C sub_1A468 fn_1A468 Skeleton: 1 insns; calls -; RAM AD80 */
-void fn_1A468(rec_t *rec)
+/* @01A46C-01A490 sub_1A46C wide_flag_clear Confirmed: clears the "2-byte" flag of char i in the buffer's first word */
+void wide_flag_clear(u8 i)
 {
-    /* TODO(waveC): body not transcribed (1 instructions). */
+    u16 *w = (u16 *)text_ptr_AD82;
+    u8 bit = wide_bit_1A458[i];
+    if (i < 8) *w &= ~(u16)(0x100u << bit); else *w &= ~(u16)(1u << bit);
 }
+void wide_clear_cur(void) { wide_flag_clear(char_idx_AD80); }
 
-/* @01A46C-01A490 sub_1A46C fn_1A46C Skeleton: 11 insns; calls -; RAM AD82 */
-void fn_1A46C(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @01A490-01A4C8 sub_1A490 name_key_convert Inferred: "convert" key in a name editor (AA96/AA98 on page 5, else rec+0x22/+0x24): shared tail loc_1A50C toggles the character at the cursor between full-width (2-byte JIS 0x2340..0x237F via table 0x01BE72) and half-width (ASCII 0x40..0x7F via table 0x01BE32); unconvertible -> key_consume (loc_1A4C8)
+ * @01A4CE-01A4EE sub_1A4CE text_key_convert_AD6E Inferred: same for FFAD6E (columns >= 2)
+ * @01A4EE-01A558 sub_1A4EE text_key_convert_8956 Inferred: same for FF8956; holds the shared tail 0x01A50C..0x01A554
+ * -------------------------------------------------------------------------- */
+void text_key_convert(u8 *flags, u8 *chars, u8 i)         /* 01A50C */
 {
-    /* TODO(waveC): body not transcribed (11 instructions). */
+    char_idx_AD80 = i;  text_ptr_AD82 = flags;
+    if (is_wide_cur()) {
+        u16 *p = (u16 *)(chars + char_idx_AD80);
+        if (*p < 0x2340 || *p >= 0x2380) goto no;
+        u16 n = wide_to_half_1BE72[*p - 0x2340];
+        if (!n) goto no;
+        *p = n;                                           /* then continues at 0x01A588 */
+        return;
+    }
+    text_key_convert_half(chars, char_idx_AD80);          /* 01A554 -> sub_1A58C */
+    return;
+no:
+    key_consume();
 }
-
-/* @01A490-01A4C8 sub_1A490 fn_1A490 Skeleton: 16 insns; calls loc_1A50C; RAM 94C1,AD68 */
-void fn_1A490(rec_t *rec)
+void name_key_convert(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (16 instructions). */
+    if (menu_level == 0) { key_consume(); return; }
+    if (ui_page_94C1 == 5) text_key_convert(name_buf_AA96, name_buf_AA96 + 2, menu_level - 1);
+    else text_key_convert(&rec->name22[0], &rec->name22[2], menu_level - 1);
 }
-
-/* @01A4CE-01A4EE sub_1A4CE fn_1A4CE Skeleton: 9 insns; calls loc_1A50C; RAM AD68 */
-void fn_1A4CE(rec_t *rec)
+void text_key_convert_AD6E(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (9 instructions). */
+    if (menu_level < 2) { key_consume(); return; }
+    text_key_convert(text_buf_AD6E, text_buf_AD6E + 2, menu_level - 2);
 }
-
-/* @01A4EE-01A558 sub_1A4EE fn_1A4EE Skeleton: 29 insns; calls loc_1A588,sub_1A432; RAM AD68,AD80,AD82 */
-void fn_1A4EE(rec_t *rec)
+void text_key_convert_8956(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (29 instructions). */
+    if (menu_level < 2) { key_consume(); return; }
+    text_key_convert(r1_text_8956, r1_text_8956 + 2, menu_level - 2);
 }
 
-/* @01A58C-01A5CC sub_1A58C fn_1A58C Skeleton: 18 insns; calls sub_3FFA0; RAM AD69 */
-void fn_1A58C(rec_t *rec)
+/* @01A58C-01A5CC sub_1A58C text_key_convert_half Inferred: unless AD69.7: single-byte char 0x40..0x7F -> tbl_1BE32[c-0x40] (case / kana variant), 0 -> key_consume (the AD69.7 path goes to 0x01A558, outside any function) */
+void text_key_convert_half(u8 *chars, u8 i)
 {
-    /* TODO(waveC): body not transcribed (18 instructions). */
+    if (ui_AD69 & 0x80) { text_convert_1A558(chars, i); return; }
+    u8 *p = chars + i, c = *p;
+    if (c < 0x40 || c >= 0x80) { key_consume(); return; }
+    u8 n = half_conv_1BE32[c - 0x40];
+    if (!n) { key_consume(); return; }
+    *p = n;
 }
 
-/* @01A5CC-01A60A sub_1A5CC fn_1A5CC Skeleton: 18 insns; calls loc_1A648,sub_14BBA; RAM 94C1,AD68 */
-void fn_1A5CC(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @01A5CC-01A60A sub_1A5CC name_key_delete Inferred: delete key in a name editor (same buffer choice as sub_1A490), shared tail loc_1A648 (outside this listing) removes the character at the cursor; level 0 -> menu_exit_all (loc_1A604)
+ * @01A60A-01A62A sub_1A60A text_key_delete_AD6E Inferred: same for FFAD6E (columns >= 2)
+ * @01A62A-01A648 sub_1A62A text_key_delete_8956 Inferred: same for FF8956; falls into the unlisted 0x01A648 tail
+ * -------------------------------------------------------------------------- */
+void name_key_delete(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (18 instructions). */
+    if (menu_level == 0) { menu_exit_all(rec); return; }
+    if (ui_page_94C1 == 5) text_delete_1A648(name_buf_AA96, name_buf_AA96 + 2, menu_level - 1);
+    else text_delete_1A648(&rec->name22[0], &rec->name22[2], menu_level - 1);
 }
-
-/* @01A60A-01A62A sub_1A60A fn_1A60A Skeleton: 9 insns; calls loc_1A648; RAM AD68 */
-void fn_1A60A(rec_t *rec)
+void text_key_delete_AD6E(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (9 instructions). */
+    if (menu_level < 2) { menu_exit_all(rec); return; }
+    text_delete_1A648(text_buf_AD6E, text_buf_AD6E + 2, menu_level - 2);
 }
-
-/* @01A62A-01A648 sub_1A62A fn_1A62A Skeleton: 8 insns; calls -; RAM AD68 */
-void fn_1A62A(rec_t *rec)
+void text_key_delete_8956(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (8 instructions). */
+    if (menu_level < 2) { menu_exit_all(rec); return; }
+    text_delete_1A648(r1_text_8956, r1_text_8956 + 2, menu_level - 2);
 }
 
-/* @01A6B4-01A6EC sub_1A6B4 fn_1A6B4 Skeleton: 16 insns; calls sub_1A432,sub_1A468,sub_1A950; RAM - */
-void fn_1A6B4(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @01A6B4-01A6EC sub_1A6B4 keypad_enter_wide Inferred: keypad multi-tap entry with a 16-char limit through sub_1A950, table selected by entry point: 0x01A6B4 -> 0x01B1D0, 0x01A6BC -> 0x01BCFE, 0x01A6C4 -> 0x01B352, 0x01A6CC -> 0x01BBD8; if the char at the cursor was 2-byte, its second byte becomes ' ' and the flag is cleared
+ * -------------------------------------------------------------------------- */
+void keypad_enter_wide(const u8 *tbl)                     /* 01A6D4 */
 {
-    /* TODO(waveC): body not transcribed (16 instructions). */
+    u8 *p = keypad_put_1A950(tbl, 0x10);                  /* returns er1 = slot */
+    if (is_wide_cur()) { p[1] = ' '; wide_clear_cur(); }
 }
 
-/* @01A6EC-01A754 sub_1A6EC fn_1A6EC Skeleton: 34 insns; calls sub_1A754,sub_1A7A4,sub_1A9C8,sub_3FFA0; RAM AA30 */
-void fn_1A6EC(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @01A6EC-01A754 sub_1A6EC keypad_enter_2byte Inferred: multi-tap entry of 2-byte characters (tables 0x01B4DA, 0x01B62E, 0x01B6AA, 0x01B77A, 0x01B88C by entry point); refused at column 0x0F. sub_1A9C8 positions the slot; the current code is looked up in the table's {count; u16 code; ...} list to find the next code; a new key starts with the first code (sub_1A754 may advance the cursor by 2); AA30.7 cleared, code stored big-endian, flag set by sub_1A7A4
+ * -------------------------------------------------------------------------- */
+void keypad_enter_2byte(const u8 *tbl, u8 col)            /* 01A714 */
 {
-    /* TODO(waveC): body not transcribed (34 instructions). */
+    if (col == 0x0F) { key_consume(); return; }
+    u8 *p = keypad_slot_1A9C8(tbl, 0x10);                 /* er1 slot, er5 list, er6 end */
+    /* TODO(waveC): exact register use of the lookup loop 0x01A726..0x01A732 (er5 list walk, e4 count) */
+    u16 cur = (p[0] << 8) | p[1], code = 0;
+    if (!keypad_lookup_next(tbl, cur, &code)) {
+        code = *(const u16 *)(tbl + 2);                   /* @(2,er2) first code */
+        s8 r = (s8)keypad_advance_2(p, code);             /* sub_1A754 */
+        if (r < 0) { key_consume(); return; }
+        if (r > 0) goto flag;
+    }
+    ui_flags &= ~0x80;
+    p[0] = code >> 8;  p[1] = (u8)code;
+flag:
+    wide_set_cur();                                       /* sub_1A7A4 */
 }
 
-/* @01A754-01A7A4 sub_1A754 fn_1A754 Skeleton: 29 insns; calls -; RAM AA30,AD68,AD80 */
-void fn_1A754(rec_t *rec)
+/* @01A754-01A7A4 sub_1A754 keypad_advance_2 Inferred: when a different key was pressed (AA30.5 set, AA30.7 clear) on a non-empty slot and room remains, moves to the next 2-byte slot (AD80 += 2, AD68 += 2), writes the code there and returns 1; no room -> 0xFF; otherwise 0 */
+s8 keypad_advance_2(u8 *p, u16 code)
 {
-    /* TODO(waveC): body not transcribed (29 instructions). */
+    /* er6 = end of buffer, er1 = slot */
+    if ((ui_flags & 0x80) || !(ui_flags & 0x20)) return 0;
+    if (p[0] == 0xFF && p[1] == 0xFF) return 0;
+    if (p + 2 > keypad_end_er6) return -1;               /* cmp er4,er6 ; bcs */
+    p += 2;  p[0] = code >> 8;  p[1] = (u8)code;
+    char_idx_AD80 += 2;  menu_level += 2;
+    return 1;
 }
 
-/* @01A7A4-01A7BC sub_1A7A4 fn_1A7A4 Skeleton: 8 insns; calls sub_1A436; RAM AA30,AD80 */
-void fn_1A7A4(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (8 instructions). */
-}
+/* @01A7A4-01A7BC sub_1A7A4 wide_set_cur Inferred: unless AA30.5: if the next char was 2-byte, falls into sub_1A7BC to blank it; then sets this char's 2-byte flag */
 
-/* @01A7BC-01A7F6 sub_1A7BC fn_1A7BC Skeleton: 19 insns; calls sub_1A46C; RAM 3FFF,AD80,AD82 */
-void fn_1A7BC(rec_t *rec)
+/* @01A7BC-01A7F6 sub_1A7BC wide_set_flag Confirmed: p[2] = ' ', clear flag of char AD80+1; then word flags = (flags & (0xFFFF3FFF >> i)) | (0x8000 >> i) for i = AD80 */
+void wide_set_cur(void)
 {
-    /* TODO(waveC): body not transcribed (19 instructions). */
+    if (!(ui_flags & 0x20)) {
+        u8 n = char_idx_AD80 + 1;
+        if (n < 0x0F && is_wide_char(n)) {
+            /* 01A7BC */ keypad_slot_er1[2] = ' ';
+            wide_flag_clear(char_idx_AD80 + 1);
+        }
+    }
+    u32 m = 0xFFFF3FFF, s = 0x8000;
+    for (u8 i = char_idx_AD80; i; i--) { m >>= 1; s >>= 1; }
+    u16 *w = (u16 *)text_ptr_AD82;
+    *w = (*w & (u16)m) | (u16)s;
 }
 
-/* @01A84E-01A854 sub_1A84E fn_1A84E Skeleton: 2 insns; calls -; RAM 9542 */
-void fn_1A84E(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (2 instructions). */
-}
+/* @01A84E-01A854 sub_1A84E text_insert_1A84E Confirmed: 9542 = 0x96, falls into sub_1A854 */
 
-/* @01A854-01A88E sub_1A854 fn_1A854 Skeleton: 14 insns; calls sub_1A94C; RAM BBF1,BC34 */
-void fn_1A854(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @01A854-01A88E sub_1A854 keypad_put_by_mode Inferred: multi-tap character entry by input mode BC34: 0 -> table 0x01B1D0, 1 -> 0x01BCFE, other -> 0x01B31E (BBF1.2) or 0x01B352; tail-jumps to sub_1A94C
+ * -------------------------------------------------------------------------- */
+u8 text_insert_1A84E(u8 *buf, u8 i, u8 len) { ui_9542 = 0x96; return keypad_put_by_mode(buf, i, len); }
+u8 keypad_put_by_mode(u8 *buf, u8 i, u8 len)
 {
-    /* TODO(waveC): body not transcribed (14 instructions). */
+    const u8 *t;
+    if (edit_mode_BC34 == 0) t = kp_tbl_1B1D0;
+    else if (edit_mode_BC34 == 1) t = kp_tbl_1BCFE;
+    else t = (ui_BBF1 & 0x04) ? kp_tbl_1B31E : kp_tbl_1B352;
+    return keypad_put_1A94C(buf, i, len, t);
 }
+/* compatibility aliases used by earlier parts */
+#define text_delete_shift_1A854(b,i,n)  keypad_put_by_mode(b,i,n)
 
-/* @01A88E-01A8CE sub_1A88E fn_1A88E Skeleton: 16 insns; calls loc_1A960; RAM 9542,BBF1,BC34 */
-void fn_1A88E(rec_t *rec)
+/* @01A88E-01A8CE sub_1A88E keypad_put_by_mode_b Inferred: same table choice as sub_1A854 with 9542 = 0x96, tail-jumps to loc_1A960 */
+u8 text_delete_1A88E(u8 *buf, u8 i, u8 len)
 {
-    /* TODO(waveC): body not transcribed (16 instructions). */
+    ui_9542 = 0x96;
+    const u8 *t;
+    if (edit_mode_BC34 == 0) t = kp_tbl_1B1D0;
+    else if (edit_mode_BC34 == 1) t = kp_tbl_1BCFE;
+    else t = (ui_BBF1 & 0x04) ? kp_tbl_1B31E : kp_tbl_1B352;
+    return keypad_put_1A960(buf, i, len, t);
 }
 
 /* @01A8CE-01A8E4 sub_1A8CE fn_1A8CE Skeleton: 7 insns; calls loc_1A960; RAM 9542,BC34 */

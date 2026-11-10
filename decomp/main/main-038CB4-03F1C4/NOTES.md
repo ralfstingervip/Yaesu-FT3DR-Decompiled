@@ -2,8 +2,10 @@
 
 The chunk holds 286 MAIN functions in 0x038CB4 to 0x03F1C4. Every function has a header and a C body in
 `main-038CB4-03F1C4.c`. Most of the repeated EEPROM wrappers are written as one-liners. In the TSV the
-counts are 277 Confirmed and 9 Inferred, with no Skeleton. The Inferred entries are the meaning of the
-charge/standby loop, the RTC routines and the message compare. Their control flow was traced fully.
+counts are 271 Confirmed and 15 Inferred, with no Skeleton. The Inferred entries are the RTC routines, the
+charge/standby loop, the lamp timer, the UI timer tick and the message compare. Their control flow was
+traced, but their meanings are guessed. Two bodies keep a TODO: most of the timer blocks in `sub_3E354` and
+the charge-loop phases in `sub_3EA28`.
 
 ## Subsystems in the range
 
