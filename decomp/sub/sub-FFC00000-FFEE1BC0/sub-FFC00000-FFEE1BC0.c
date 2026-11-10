@@ -3253,3 +3253,339 @@ void gps_pmtk_ack(void)
     swtimer_stop(gps_timer_grp, 1);
 }
 
+/* ============================================================================
+ * 8. TICK, SOFTWARE TIMERS, TOUCH PANEL  (doc 84, doc 02)
+ * ========================================================================== */
+
+/* ----------------------------------------------------------------------------
+ * FFEE1105-FFEE118D (136 B)  tick_timer_start  [sub_FFEE1105]  Confirmed
+ * Caller: swtimer_init.  TPU0: TCR=1 (PCLK/4, no clear), TMDR/TIORH/TIORL 0,
+ * TIER=0x41, TCNT=0, TGRA=0xEA5F; start.  ICU vector 135: IER10 b7 off,
+ * SLIBXR135=0x0F (TPU0.TGI0A), IPR135=2, IR clear, IER on.  With CCLR=0 the
+ * compare recurs every 65536 counts = 5.46 ms (doc 84).
+ * ------------------------------------------------------------------------- */
+void tick_timer_start(void)
+{
+    tick_pending = 0;
+    TPU_TSTR &= ~0x01;
+    REG8(TPU0 + 1) = 0; REG8(TPU0 + 2) = 0; REG8(TPU0 + 3) = 0;
+    REG8(TPU0 + 0) = 0x01;
+    REG8(TPU0 + 4) = 0x41;
+    REG16(TPU0 + 6) = 0;
+    REG16(TPU0 + 8) = 0xEA5F;
+    TPU_TSTR |= 0x01;
+    ICU_IER(0x10) &= ~0x80;
+    ICU_SLIBXR(135) = 0x0F;
+    ICU_IPR(135) = (ICU_IPR(135) | 0x02) & 0xF2;
+    ICU_IR(135) = 0;
+    ICU_IER(0x10) |= 0x80;
+}
+
+/* FFEE118D-FFEE119E (17 B) tick_pending_get [sub_FFEE118D] Confirmed. */
+u16 tick_pending_get(void) { return tick_pending; }
+
+/* FFEE119E-FFEE11B8 (26 B) tick_pending_dec [sub_FFEE119E] Confirmed. */
+void tick_pending_dec(void) { if (tick_pending != 0) tick_pending--; }
+
+/* ----------------------------------------------------------------------------
+ * FFEE11B8-FFEE11E3 (43 B)  tpu0_tgi0a_isr  [vec_intb_135]  Confirmed
+ * Re-enables interrupts (setpsw i: higher priorities may nest), clears
+ * TSR0.TGFA, counts the tick and runs the tick fan-out sub_FFF36CAB
+ * (swtimer_service, touch_step, gps_tick, BT pump, link_rx_poll).
+ * ------------------------------------------------------------------------- */
+void __interrupt tpu0_tgi0a_isr(void)
+{
+    __setpsw_i();
+    if (REG8(TPU0 + 5) & 0x01) REG8(TPU0 + 5) &= ~0x01;
+    tick_pending++;
+    tick_fanout();                           /* sub_FFF36CAB */
+}
+
+/* FFEE11E3-FFEE1229 (70 B) swtimer_init [sub_FFEE11E3] Confirmed.
+ * Caller: sub_main.  Clears the 4 groups and starts the tick. */
+void swtimer_init(void)
+{
+    s32 g;
+    for (g = 0; g < 4; g++) { swtimer[g].count = 0; swtimer[g].ctr = 0; swtimer[g].reload = 0; }
+    tick_timer_start();
+}
+
+/* ----------------------------------------------------------------------------
+ * FFEE1229-FFEE12AC (131 B)  swtimer_group_create(n, ctr, reload) -> u32 grp
+ * [sub_FFEE1229]  Confirmed.  Callers: link_init, gps_init, sub_FFEEFD64 (UI
+ * timers).  First free group (count == 0); counters zeroed (= expired).
+ * Returns 4 when none is free, without registering anything.
+ * ------------------------------------------------------------------------- */
+u32 swtimer_group_create(u16 n, u16 *ctr, const u16 *reload)
+{
+    u32 g; u16 i;
+    for (g = 0; g < 4; g++) if (swtimer[g].count == 0) break;
+    if (g == 4) return g;
+    swtimer[g].count = n; swtimer[g].ctr = ctr; swtimer[g].reload = reload;
+    for (i = 0; i < n; i++) ctr[i] = 0;
+    return g;
+}
+
+/* FFEE12AC-FFEE12E7 (59 B) swtimer_restart(grp, i) [sub_FFEE12AC] Confirmed.
+ * ctr[i] = reload[i]; a counter of 0 means expired/stopped. */
+void swtimer_restart(u32 g, u16 i)
+{
+    if (g > 3 || i >= swtimer[g].count) return;
+    swtimer[g].ctr[i] = swtimer[g].reload[i];
+}
+
+/* FFEE12E7-FFEE131F (56 B) swtimer_stop(grp, i) [sub_FFEE12E7] Confirmed. */
+void swtimer_stop(u32 g, u16 i)
+{
+    if (g > 3 || i >= swtimer[g].count) return;
+    swtimer[g].ctr[i] = 0;
+}
+
+/* ----------------------------------------------------------------------------
+ * FFEE131F-FFEE1393 (116 B)  swtimer_service  [sub_FFEE131F]  Confirmed
+ * Caller: tick fan-out.  Busy-waits for a pending tick (normally already 1),
+ * then for every pending tick decrements every non-zero counter of every
+ * group, catching up on missed ticks.
+ * ------------------------------------------------------------------------- */
+void swtimer_service(void)
+{
+    s32 g; u16 i;
+    while (tick_pending_get() == 0) ;
+    do {
+        for (g = 0; g < 4; g++)
+            for (i = 0; i < swtimer[g].count; i++)
+                if (swtimer[g].ctr[i] != 0) swtimer[g].ctr[i]--;
+        tick_pending_dec();
+    } while (tick_pending_get() != 0);
+}
+
+/* ----------------------------------------------------------------------------
+ * FFEE1393-FFEE1467 (212 B)  touch_init  [sub_FFEE1393]  Confirmed (doc 84)
+ * PRCR=A502, MSTPCRA b16 clear (S12AD1 on), PRCR=A500; PORT0.PMR b0/b1 off;
+ * PWPR unlock, P00PFS/P01PFS ASEL, relock; S12AD1 ADCSR=0, ADANSA0=0,
+ * ADANSA1=0x000C (AN118/AN119), ADADS0/1=0, +0x0E &= 0x7FFF; drive lines
+ * P56=1 P83=0 P54=1 P55=0; counters; ring cleared; state 1 (detect).
+ * ------------------------------------------------------------------------- */
+void touch_init(void)
+{
+    REG16(0x000803FE) = 0xA502;
+    REG32(0x00080010) &= ~(1u << 16);
+    REG16(0x000803FE) = 0xA500;
+    REG8(0x0008C060) &= ~0x01; REG8(0x0008C060) &= ~0x02;
+    REG8(0x0008C11F) &= ~0x80; REG8(0x0008C11F) |= 0x40;
+    REG8(0x0008C140) |= 0x80;  REG8(0x0008C141) |= 0x80;
+    REG8(0x0008C11F) &= ~0x40; REG8(0x0008C11F) |= 0x80;
+    REG16(S12AD1 + 0x0) = 0; REG16(S12AD1 + 0x4) = 0; REG16(S12AD1 + 0x6) = 0x000C;
+    REG16(S12AD1 + 0x8) = 0; REG16(S12AD1 + 0xA) = 0;
+    REG16(S12AD1 + 0xE) &= 0x7FFF;
+    P5_PODR |= 0x40; P8_PODR &= ~0x08; P5_PODR |= 0x10; P5_PODR &= ~0x20;
+    touch_press_cnt = 4; touch_release_cnt = 0; touch_pair_ok = 0;
+    touch_clear_ring();
+    touch_state = 1;
+}
+
+/* FFEE1467-FFEE1480 (25 B) touch_get_last_xy(out) [sub_FFEE1467] Confirmed.
+ * Caller: sub_FFF37BBC (SUB-local seek bar, doc 84). */
+void touch_get_last_xy(u16 *out) { out[0] = touch_last[0]; out[1] = touch_last[1]; }
+
+/* ----------------------------------------------------------------------------
+ * FFEE1480-FFEE16B2 (562 B)  touch_step  [sub_FFEE1480]  Confirmed (doc 84)
+ * One A/D conversion per tick (ADST, busy-wait), then:
+ *  1 detect: ADDR18 >= 0xAF0 = pen down: push a valid pair into the ring,
+ *    press_cnt-- -> at 0 report(1) and release_cnt = 4; drive X (P56=0
+ *    P83=1 P54=1 P55=0), state 2.  Else release_cnt-- -> at 0 press_cnt = 4,
+ *    report(0), clear ring, pair invalid.
+ *  2 X: ADDR18 calibrated (<=0x81 -> 0; <=0x3E7 -> -0x82; >=0xF00 -> 0xFFF;
+ *    >=0xBB9 -> +0x100) * 320 / 4095; drive Y (0,0,0,1), state 3.
+ *  3 Y: ADDR19 (<=0x77 -> 0; <=0x3E7 -> -0x78; >=0xEEC -> 0xFFF; >=0xBB9 ->
+ *    +0x114) * 240 / 4095; pair valid; drive detect (1,0,1,0), state 1.
+ * ------------------------------------------------------------------------- */
+void touch_step(void)
+{
+    u16 v;
+    REG16(S12AD1) |= 0x8000;
+    while (REG16(S12AD1) & 0x8000) ;
+    switch (touch_state) {
+    case 1:
+        v = REG16(S12AD1 + 0x44);
+        if (v >= 0x0AF0) {
+            if (touch_pair_ok == 1) {
+                touch_ring[touch_ring_idx][0] = touch_cur[0];
+                touch_ring[touch_ring_idx][1] = touch_cur[1];
+                touch_ring_idx = (touch_ring_idx + 1) & 3;
+                touch_pair_ok = 0;
+                if (touch_press_cnt != 0 && --touch_press_cnt == 0) {
+                    touch_report(1);
+                    touch_release_cnt = 4;
+                }
+            }
+            P5_PODR &= ~0x40; P8_PODR |= 0x08; P5_PODR |= 0x10; P5_PODR &= ~0x20;
+            touch_state = 2;
+        } else if (touch_release_cnt != 0 && --touch_release_cnt == 0) {
+            touch_press_cnt = 4;
+            touch_report(0);
+            touch_clear_ring();
+            touch_pair_ok = 0;
+        }
+        break;
+    case 2:
+        v = REG16(S12AD1 + 0x44);
+        if (v <= 0x81) v = 0;
+        else if (v <= 0x3E7) v -= 0x82;
+        else if (v >= 0xF00) v = 0xFFF;
+        else if (v >= 0xBB9) v += 0x100;
+        touch_cur[0] = (u16)((u32)v * 0x140 / 0xFFF);
+        P5_PODR &= ~0x40; P8_PODR &= ~0x08; P5_PODR &= ~0x10; P5_PODR |= 0x20;
+        touch_state = 3;
+        break;
+    case 3:
+        v = REG16(S12AD1 + 0x46);
+        if (v <= 0x77) v = 0;
+        else if (v <= 0x3E7) v -= 0x78;
+        else if (v >= 0xEEC) v = 0xFFF;
+        else if (v >= 0xBB9) v += 0x114;
+        touch_cur[1] = (u16)((u32)v * 0xF0 / 0xFFF);
+        touch_pair_ok = 1;
+        P5_PODR |= 0x40; P8_PODR &= ~0x08; P5_PODR |= 0x10; P5_PODR &= ~0x20;
+        touch_state = 1;
+        break;
+    }
+}
+
+/* FFEE16B2-FFEE16EE (60 B) touch_clear_ring [sub_FFEE16B2] Confirmed. */
+void touch_clear_ring(void)
+{
+    u8 i;
+    touch_ring_idx = 0;
+    for (i = 0; i < 4; i++) { touch_ring[i][0] = 0; touch_ring[i][1] = 0; }
+}
+
+/* FFEE16EE-FFEE177F (145 B) touch_report(pen) [sub_FFEE16EE] Confirmed (doc 84).
+ * Average the 4 ring samples, invert both axes (X = 320-avg, Y = 240-avg),
+ * store as last X/Y, send E0. */
+void touch_report(u8 pen)
+{
+    u16 sx = 0, sy = 0; u8 i;
+    touch_last[1] = 0; touch_last[0] = touch_last[1];
+    for (i = 0; i < 4; i++) { sx += touch_ring[i][0]; sy += touch_ring[i][1]; }
+    sx = 0x140 - (sx >> 2);
+    sy = 0xF0  - (sy >> 2);
+    touch_last[0] = sx; touch_last[1] = sy;
+    link_send_touch(pen, sx, sy);
+}
+
+/* FFEE177F-FFEE1780 (1 B) empty_stub [dead_FFEE177F] Confirmed. Lone rts (doc 127). */
+void empty_stub(void) { }
+
+/* ============================================================================
+ * 9. CC-RX LOW-LEVEL I/O (lowsrc.c sample; docs 12, 13, 20, 135)
+ * ========================================================================== */
+
+/* FFEE1780-FFEE1868 (232 B) rt_init_iolib [dead_FFEE1780] Confirmed, unreached.
+ * _INIT_IOLIB: iob pointers, then for stdin ("r"), stdout ("w"), stderr ("w")
+ * freopen-like sub_FFF45496(name, mode, iob); on failure mode = 0xFFFF.
+ * As in the Renesas sample, stdin's mode is then unconditionally set to 1
+ * (_MOPENR); each stream gets |= 0x800 (_MNBF) and _Bend = _Buf + 1. */
+void rt_init_iolib(void)
+{
+    u16 *in = (u16 *)0x000696B0, *out = (u16 *)0x000696F8, *err = (u16 *)0x00069740;
+    rt_iob_ptr[0] = in; rt_iob_ptr[1] = out; rt_iob_ptr[2] = err;
+    if (rt_freopen("stdin", "r", in) == 0) *in = 0xFFFF;
+    *in = 1;
+    *in |= 0x0800;  ((u32 *)in)[2]  = ((u32 *)in)[1] + 1;
+    if (rt_freopen("stdout", "w", out) == 0) *out = 0xFFFF;
+    *out |= 0x0800; ((u32 *)out)[2] = ((u32 *)out)[1] + 1;
+    if (rt_freopen("stderr", "w", err) == 0) *err = 0xFFFF;
+    *err |= 0x0800; ((u32 *)err)[2] = ((u32 *)err)[1] + 1;
+}
+
+/* FFEE1868-FFEE18A6 (62 B) rt_close_all [dead_FFEE1868] Confirmed, unreached.
+ * _CLOSEALL: fclose (sub_FFF454C5) every stream with mode & 7. */
+void rt_close_all(void)
+{
+    s32 i;
+    for (i = 0; i < rt_nfiles; i++)
+        if (*(u16 *)rt_iob_ptr[i] & 7) rt_fclose(rt_iob_ptr[i]);
+}
+
+/* FFEE18A6-FFEE194D (167 B) rt_open(name, mode, flg) -> fd [sub_FFEE18A6]
+ * Confirmed.  Caller: sub_FFF469D7.  stdin needs mode bit0 -> fd 0; stdout,
+ * stderr need bit1 -> fd 1/2; the mode is kept in rt_fd_mode[fd]; else -1. */
+s32 rt_open(const char *name, u32 mode, u32 flg)
+{
+    if (strcmp(name, "stdin") == 0)  { if (!(mode & 1)) return -1; rt_fd_mode[0] = (u8)mode; return 0; }
+    if (strcmp(name, "stdout") == 0) { if (!(mode & 2)) return -1; rt_fd_mode[1] = (u8)mode; return 1; }
+    if (strcmp(name, "stderr") == 0) { if (!(mode & 2)) return -1; rt_fd_mode[2] = (u8)mode; return 2; }
+    return -1;
+}
+
+/* FFEE194D-FFEE1958 (11 B) rt_close(fd) -> 1 [sub_FFEE194D] Confirmed. */
+s32 rt_close(s32 fd) { (void)fd; return 1; }
+
+/* FFEE1958-FFEE19E4 (140 B) rt_write(fd, buf, n) -> n [sub_FFEE1958] Confirmed.
+ * Caller: sub_FFF45E0D.  Writable fd 1/2: each byte to charput sub_FFEE2208,
+ * which reaches the `jsr 0` site of doc 135 (no live caller chain). */
+s32 rt_write(s32 fd, const u8 *buf, s32 n)
+{
+    s32 i;
+    if (!(rt_fd_mode[fd] & 2) && !(rt_fd_mode[fd] & 4)) return -1;
+    if (fd == 0) return -1;
+    if (fd != 1 && fd != 2) return -1;
+    for (i = n; i > 0; i--) charput(*buf++);
+    return n;
+}
+
+/* FFEE19E4-FFEE1A55 (113 B) rt_read(fd, buf, n) -> n [dead_FFEE19E4] Confirmed,
+ * unreached.  Readable mode: charget (sub_FFEE2225) per byte, '\r' -> '\n'.
+ * The fd number itself is not checked. */
+s32 rt_read(s32 fd, u8 *buf, s32 n)
+{
+    s32 i;
+    if (!(rt_fd_mode[fd] & 1) && !(rt_fd_mode[fd] & 4)) return -1;
+    for (i = n; i > 0; i--) {
+        *buf = charget();
+        if (*buf == '\r') *buf = '\n';
+        buf++;
+    }
+    return n;
+}
+
+/* FFEE1A55-FFEE1A66 (17 B) rt_lseek [dead_FFEE1A55] Confirmed, unreached. -> -1. */
+s32 rt_lseek(s32 fd, s32 off, s32 whence) { (void)fd; (void)off; (void)whence; return -1; }
+
+/* FFEE1A66-FFEE1AA2 (60 B) rt_sbrk(size) -> ptr [sub_FFEE1A66] Confirmed.
+ * Caller: sub_FFF474CA (malloc).  1 KB heap 0x1CE64..0x1D264. */
+void *rt_sbrk(u32 size)
+{
+    u8 *old;
+    if (rt_heap_ptr + size > rt_heap + 0x400) return (void *)-1;
+    old = rt_heap_ptr;
+    rt_heap_ptr += size;
+    return old;
+}
+
+/* FFEE1AA2-FFEE1B52 (176 B) u16_to_bcd(v) -> u16 [dead_FFEE1AA2] Confirmed,
+ * unreached.  v >= 10000 -> 0xFFFF; digit tables 0xFFEB7506 (x1000),
+ * 0xFFEB74F2 (x100), 0xFFEB74DE (x10) give the nibble-shifted digits. */
+u16 u16_to_bcd(u16 v)
+{
+    extern const u16 bcd_k[10], bcd_h[10], bcd_t[10];   /* FFEB7506 / FFEB74F2 / FFEB74DE */
+    u16 r = 0;
+    if (v >= 10000) return 0xFFFF;
+    if (v >= 1000) { r = bcd_k[v / 1000]; v %= 1000; }
+    if (v >= 100)  { r |= bcd_h[v / 100]; v %= 100; }
+    if (v >= 10)   { r |= bcd_t[v / 10];  v %= 10; }
+    return r | v;
+}
+
+/* FFEE1B52-FFEE1BC0 (110 B) u8_to_bcd(v) -> u16 [dead_FFEE1B52] Confirmed, unreached. */
+u16 u8_to_bcd(u8 v)
+{
+    extern const u16 bcd_h[10], bcd_t[10];
+    u16 r = 0;
+    if (v >= 100) { r = bcd_h[v / 100]; v %= 100; }
+    if (v >= 10)  { r |= bcd_t[v / 10]; v %= 10; }
+    return r | v;
+}
+
+/* end of sub-FFC00000-FFEE1BC0.c */
