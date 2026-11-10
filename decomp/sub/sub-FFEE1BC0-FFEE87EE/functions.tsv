@@ -1,0 +1,229 @@
+start	end	ida_name	new_name	confidence	summary
+FFEE1BC0	FFEE1C1F	sub_FFEE1BC0	bcd16_to_bin	Confirmed	Callers: sub_FFEE9DA5. Converts a 4-digit packed-BCD word to binary using three ROM weight tables of ten u16 each (k_bcd_w10 = 0,10,..,90; k_bcd_w100; k_bcd_w1000)
+FFEE1C1F	FFEE1C4D	dead_FFEE1C1F	bcd8_to_bin	Confirmed	No callers (dead). Byte variant of the above: reads the low byte of k_bcd_w10[hi] (little-endian u16 table, so the low byte is the value)
+FFEE1C4D	FFEE1C6A	sub_FFEE1C4D	nibble_to_hexchar	Confirmed	Callers: sub_FFEE9477. k_hexdigits = "0123456789ABCDEF" (FFC0012D, doc 01)
+FFEE1C6A	FFEE1C9A	sub_FFEE1C6A	put_hex2	Confirmed	Callers: sub_FFEE0FA3 (NMEA checksum, doc 14 "hex2"), sub_FFF0AB40. Writes two upper-case hex digits of v to dst[0..1] (no terminator)
+FFEE1C9A	FFEE1CE5	sub_FFEE1C9A	put_dec2	Confirmed	Callers: sub_FFEE9282, sub_FFEE956A, sub_FFEE9A8E, sub_FFF37B5D. Two decimal digits with leading zero; values > 99 write nothing
+FFEE1CE5	FFEE1D6D	sub_FFEE1CE5	put_dec3_ltrim	Confirmed	Callers: sub_FFEDED8F (alignment UI), sub_FFF00684. v %= 1000, then 1..3 digits left-aligned (no leading zeros, no padding, no terminator)
+FFEE1D6D	FFEE1DE8	sub_FFEE1D6D	put_dec3_zpad	Confirmed	Callers: sub_FFF00684, sub_FFF0104F, sub_FFF01F70, sub_FFF03652, sub_FFF0381A, sub_FFF03AD8, sub_FFF057FF. Exactly three digits with leading zeros (v % 1000)
+FFEE1DE8	FFEE1E8D	sub_FFEE1DE8	put_dec3_spad	Confirmed	Callers (14): list renderers FFEE2B4C/FFEE2D81, menu walker sub_FFF0964A ("itoa(buf, item+1)", docs 08/20), FFF0AB40, FFF41F8E, FFF43534, ... Exactly three characters, right-aligned, leading zeros become spaces (v % 1000
+FFEE1E8D	FFEE1FCB	sub_FFEE1E8D	put_dec5_spad	Confirmed	Callers: sub_FFF07E49 (MEMORY INFO), sub_FFF0AB40. Exactly five characters, right-aligned, leading zeros -> spaces (doc 50 section "frame packing" already states this)
+FFEE1FCB	FFEE206D	sub_FFEE1FCB	put_dec3_ltrim_count	Confirmed	Callers: sub_FFEE518C (this range), sub_FFF057FF, sub_FFF0C1F0 (SmartBeaconing, doc 50). As put_dec3_ltrim, but also adds the number of characters written to len
+FFEE206D	FFEE20D3	sub_FFEE206D	hexchar_to_nibble	Confirmed	Callers: GPS/NMEA parser (FFEDFC5D, FFEE045D, FFEE0547, FFEE077C, FFEE07D0, FFEE0853, FFEE0C85, FFEE0CF3) and the two helpers below. '0'-'9' -> 0..9, 'A'-'F' / 'a'-'f' -> 10..15, anything else -> 0xFF
+FFEE20D3	FFEE20F8	dead_FFEE20D3	hex2_to_byte	Confirmed	No callers (dead; the xref from FFEE206D's caller list is this body)
+FFEE20F8	FFEE215D	sub_FFEE20F8	dec2_to_byte	Confirmed	Callers: NMEA parser (FFEE0364, FFEE03FB, FFEE045D, FFEE0547) - used for the 2-digit hh/mm/ss/dd/mm/yy fields. Two ASCII decimal digits -> 0..99; a non-digit contributes 0
+FFEE215D	FFEE21BD	dead_FFEE215D	dec2_to_bcd	Confirmed	No callers (dead). Two ASCII decimal digits -> packed BCD byte
+FFEE21BD	FFEE2208	dead_FFEE21BD	put_bcd2	Confirmed	No callers (dead). Packed BCD byte -> two characters; a nibble > 9 prints ' '
+FFEE2208	FFEE2225	sub_FFEE2208	charput	Confirmed	FFEE2225-FFEE2248 (35 B) charget [alias sub_FFEE2225] Callers: charput <- sub_FFEE1958; charget <- dead_FFEE19E4. These are byte-for-byte the CC-RX "lowlvl.src" simulator I/O stubs: SIM_IO = 0 (jsr to address 0 = debugge
+FFEE2225	FFEE2248	sub_FFEE2225	charget	Confirmed	Callers: charput <- sub_FFEE1958; charget <- dead_FFEE19E4. These are byte-for-byte the CC-RX "lowlvl.src" simulator I/O stubs: SIM_IO = 0 (jsr to address 0 = debugger break-in), O_PUTC = 0x01220000, O_GETC = 0x01210000,
+FFEE2248	FFEE2272	sub_FFEE2248	aprs_list_entry	Confirmed	k_screen_tbl[0x22]. Doc 23 listed this as "not a function in the DB"; it is the standard entry
+FFEE2272	FFEE2284	sub_FFEE2272	aprs_list_phase0	Confirmed	phase_tbl[0]
+FFEE2284	FFEE23D6	sub_FFEE2284	aprs_list_phase1_bg	Confirmed	phase_tbl[1] and key_tbl[1]. Builds the static background: 15 tab/header images from a RAM pointer table (0x6875C for OP_LO 0, else 0x68798), spaced 13 px with an extra 13 px gap after items 3 and 10; four row separators
+FFEE23D6	FFEE2403	sub_FFEE23D6	aprs_list_phase2	Confirmed	aprs list phase2
+FFEE2403	FFEE2438	sub_FFEE2403	aprs_list_key_title	Confirmed	key_tbl[15]. Redraws the 22x20 edit-state badge at (298,4)
+FFEE2438	FFEE24B2	sub_FFEE2438	aprs_list_key_body	Confirmed	key_tbl[16]. Redraws the list body (y 26..), plus the soft-key icons when the bar is on
+FFEE24B2	FFEE2524	sub_FFEE24B2	aprs_list_key_icon	Confirmed	key_tbl[0x11..0x19]: redraw status icon (key-0x11) inside its slot rectangle. Identical copies: FFEE2FCB, FFEE35DB, FFEE3B2C, FFEE407F, FFEE4568, FFEE4ED5(variant), FFEE5603,
+FFEE2524	FFEE25AA	sub_FFEE2524	aprs_list_phase3	Confirmed	aprs list phase3
+FFEE25AA	FFEE25C6	sub_FFEE25AA	aprs_list_apply	Confirmed	aprs list apply
+FFEE25C6	FFEE29B1	sub_FFEE25C6	aprs_list_apply_fields	Confirmed	Field layout per OP_LO (all four share +0x20 = edit/badge state): 0: +0x21..+0x81 list (cursor, top, 5 x 19 B rows), +0x82 bar flag, icons +0x83/+0x8C 1: +0x21..+0x48, icons +0x49/+0x52 (F501, vestigial) 2: +0x21..+0x86 
+FFEE29B1	FFEE29D7	sub_FFEE29B1	aprs_list_redraw_all	Confirmed	aprs list redraw all
+FFEE29D7	FFEE2A4A	sub_FFEE29D7	aprs_list_draw_badge	Confirmed	Draws image FFED31CC at (x,y) mode 0, then overlays FFED31CC (state 1) or FFED31DC (state 2) in mode 1; any other state redraws mode 0. Both OP_LO branches read +0x20
+FFEE2A4A	FFEE2AC4	sub_FFEE2A4A	aprs_list_draw_list	Confirmed	Restores the body background, draws the rows for the current layout and the scroll thumb (x 311, y 27, 6 x 153, 60 entries, 5 visible, pos +0x22)
+FFEE2AC4	FFEE2B2C	sub_FFEE2AC4	aprs_list_draw_icons	Confirmed	With the soft-key bar off only icons 6..8 are drawn; with it on the soft-key area is restored and icons 0..8 are drawn. Same shape as FFEE32EE, FFEE39CC,
+FFEE2B2C	FFEE2B4C	sub_FFEE2B2C	aprs_list_row_count	Confirmed	5 visible rows for OP_LO 0 and 2, 0 for the vestigial pages 1 and 3
+FFEE2B4C	FFEE2D81	sub_FFEE2B4C	aprs_list_draw_rows_a	Confirmed	Layout A rows (19-byte records at +0x23): rec[0] = type (1..4 -> one of four 14x28 RGB565 icons FFED217C/FFECF19C/FFED215C/FFED216C; 5..10 -> a one-char label from a 6 x 16 B ROM table whose first entry is "5"), rec[1] =
+FFEE2D81	FFEE2E69	sub_FFEE2D81	aprs_list_draw_rows_b	Confirmed	Layout B rows: 20-byte records at +0x23, 19 chars drawn at x 34
+FFEE2E69	FFEE2E93	sub_FFEE2E69	aprs_detail_entry	Confirmed	k_screen_tbl[0x23]
+FFEE2E93	FFEE2EA5	sub_FFEE2E93	aprs_detail_phase0	Confirmed	aprs detail phase0
+FFEE2EA5	FFEE2F0E	sub_FFEE2EA5	aprs_detail_phase1_bg	Confirmed	phase_tbl[1], key_tbl[1]. Cyan (0x03FF) 28-px title bar
+FFEE2F0E	FFEE2F3B	sub_FFEE2F0E	aprs_detail_phase2	Confirmed	aprs detail phase2
+FFEE2F3B	FFEE2F6D	sub_FFEE2F3B	aprs_detail_key_header	Confirmed	key_tbl[15]
+FFEE2F6D	FFEE2FCB	sub_FFEE2F6D	aprs_detail_key_body	Confirmed	key_tbl[16]
+FFEE2FCB	FFEE303D	sub_FFEE2FCB	aprs_detail_key_icon	Confirmed	key_tbl[0x11..0x19]
+FFEE303D	FFEE30C3	sub_FFEE303D	aprs_detail_phase3	Confirmed	aprs detail phase3
+FFEE30C3	FFEE30DF	sub_FFEE30C3	aprs_detail_apply	Confirmed	aprs detail apply
+FFEE30DF	FFEE3234	sub_FFEE30DF	aprs_detail_apply_fields	Confirmed	A change of +0x30 bit 1 (header blink) subscribes / unsubscribes dirty bit 0x8000 to the blink timer (sub_FFEF0163 / sub_FFEF019E)
+FFEE3234	FFEE3258	sub_FFEE3234	aprs_detail_redraw_all	Confirmed	aprs detail redraw all
+FFEE3258	FFEE32DF	sub_FFEE3258	aprs_detail_draw_header	Confirmed	Draws 16 chars of +0x20 at x+6; when the blink state is "off" the first 56 px (4 glyphs) are wiped again
+FFEE32DF	FFEE32EE	sub_FFEE32DF	aprs_detail_draw_body_wrap	Confirmed	thunk
+FFEE32EE	FFEE333B	sub_FFEE32EE	aprs_detail_draw_icons	Confirmed	(bar = +0x87)
+FFEE333B	FFEE3497	sub_FFEE333B	aprs_detail_draw_body	Confirmed	Doc 20 called this the "log timestamp formatter"; it is the body painter of screen 0x23 and the template is filled from BCD frame bytes. k_stamp_pos (FFF48567, 5 bytes) = offsets of yy/mm/dd/hh/mm in the template. (templ
+FFEE3497	FFEE34C1	sub_FFEE3497	aprs_text_entry	Confirmed	k_screen_tbl[0x28]
+FFEE34C1	FFEE34D3	sub_FFEE34C1	aprs_text_phase0	Confirmed	aprs text phase0
+FFEE34D3	FFEE351E	sub_FFEE34D3	aprs_text_phase1_bg	Confirmed	aprs text phase1 bg
+FFEE351E	FFEE354B	sub_FFEE351E	aprs_text_phase2	Confirmed	aprs text phase2
+FFEE354B	FFEE357D	sub_FFEE354B	aprs_text_key_header	Confirmed	key_tbl[15]
+FFEE357D	FFEE35DB	sub_FFEE357D	aprs_text_key_body	Confirmed	key_tbl[16]
+FFEE35DB	FFEE364D	sub_FFEE35DB	aprs_text_key_icon	Confirmed	aprs text key icon
+FFEE364D	FFEE36D3	sub_FFEE364D	aprs_text_phase3	Confirmed	aprs text phase3
+FFEE36D3	FFEE36EF	sub_FFEE36D3	aprs_text_apply	Confirmed	aprs text apply
+FFEE36EF	FFEE3870	sub_FFEE36EF	aprs_text_apply_fields	Confirmed	aprs text apply fields
+FFEE3870	FFEE3894	sub_FFEE3870	aprs_text_redraw_all	Confirmed	aprs text redraw all
+FFEE3894	FFEE3931	sub_FFEE3894	aprs_text_draw_header	Confirmed	Blink "on": 16 chars of +0x20 at x+34; "off": 12 chars of +0x24 at x+90 (= the same text without its 4-glyph prefix)
+FFEE3931	FFEE39CC	sub_FFEE3931	aprs_text_draw_body	Confirmed	aprs text draw body
+FFEE39CC	FFEE3A1C	sub_FFEE39CC	aprs_text_draw_icons	Confirmed	(bar = +0xD1)
+FFEE3A1C	FFEE3A46	sub_FFEE3A1C	aprs_edit_entry	Inferred	k_screen_tbl[0x26]
+FFEE3A46	FFEE3A58	sub_FFEE3A46	aprs_edit_phase0	Inferred	aprs edit phase0
+FFEE3A58	FFEE3A99	sub_FFEE3A58	aprs_edit_phase1_bg	Inferred	Four row separators at y = 34 + 36 i, widget 6
+FFEE3A99	FFEE3AC6	sub_FFEE3A99	aprs_edit_phase2	Inferred	aprs edit phase2
+FFEE3AC6	FFEE3AF8	sub_FFEE3AC6	aprs_edit_key_line	Inferred	key_tbl[15]
+FFEE3AF8	FFEE3B2C	sub_FFEE3AF8	aprs_edit_key_list	Inferred	key_tbl[16]
+FFEE3B2C	FFEE3B9E	sub_FFEE3B2C	aprs_edit_key_icon	Inferred	key_tbl[0x11]
+FFEE3B9E	FFEE3C24	sub_FFEE3B9E	aprs_edit_phase3	Inferred	aprs edit phase3
+FFEE3C24	FFEE3C40	sub_FFEE3C24	aprs_edit_apply	Inferred	aprs edit apply
+FFEE3C40	FFEE3D42	sub_FFEE3C40	aprs_edit_apply_fields	Inferred	Only one icon pair (+0x8B/+0x8C) is tracked: the loop bound is `> 0`
+FFEE3D42	FFEE3D69	sub_FFEE3D42	aprs_edit_redraw_all	Inferred	aprs edit redraw all
+FFEE3D69	FFEE3E1D	sub_FFEE3D69	aprs_edit_draw_line	Inferred	20 glyphs, 14 px pitch from x+20, through the double-byte glyph blitter (sub_FFEF190D, font 0x0D). Cursor cell = orange 14x28 when blink phase 1
+FFEE3E1D	FFEE3EF7	sub_FFEE3E1D	aprs_edit_draw_list	Inferred	Four 36-px rows: one-digit index (top+row, only when <= 9) at x 34 and 16 chars at x 62
+FFEE3EF7	FFEE3F21	sub_FFEE3EF7	aprs_to_entry	Confirmed	k_screen_tbl[0x25]
+FFEE3F21	FFEE3F33	sub_FFEE3F21	aprs_to_phase0	Confirmed	aprs to phase0
+FFEE3F33	FFEE3FC2	sub_FFEE3F33	aprs_to_phase1_bg	Confirmed	aprs to phase1 bg
+FFEE3FC2	FFEE3FEF	sub_FFEE3FC2	aprs_to_phase2	Confirmed	aprs to phase2
+FFEE3FEF	FFEE4021	sub_FFEE3FEF	aprs_to_key_header	Confirmed	key_tbl[15]
+FFEE4021	FFEE407F	sub_FFEE4021	aprs_to_key_body	Confirmed	key_tbl[16]
+FFEE407F	FFEE40F7	sub_FFEE407F	aprs_to_key_icon	Confirmed	key_tbl[0x11..0x16]. Same as ICON_KEY_BODY but icon 1 is never redrawn
+FFEE40F7	FFEE417D	sub_FFEE40F7	aprs_to_phase3	Confirmed	aprs to phase3
+FFEE417D	FFEE4199	sub_FFEE417D	aprs_to_apply	Confirmed	aprs to apply
+FFEE4199	FFEE4294	sub_FFEE4199	aprs_to_apply_fields	Confirmed	aprs to apply fields
+FFEE4294	FFEE42B8	sub_FFEE4294	aprs_to_redraw_all	Confirmed	aprs to redraw all
+FFEE42B8	FFEE42F9	sub_FFEE42B8	aprs_to_draw_header	Confirmed	9-char addressee after the static "To:" label
+FFEE42F9	FFEE4308	sub_FFEE42F9	aprs_to_draw_body_wrap	Confirmed	thunk
+FFEE4308	FFEE435A	sub_FFEE4308	aprs_to_draw_icons	Confirmed	Icons 3..5 (bar off) or 0..5 (bar on), always skipping icon 1
+FFEE435A	FFEE4421	sub_FFEE435A	aprs_to_draw_body	Confirmed	Three 20-char lines at (20, 32+30i); the 7-char line +0x65 at y 122 is suppressed when the bar flag == 1
+FFEE4421	FFEE444B	sub_FFEE4421	aprs_stn_entry	Confirmed	k_screen_tbl[0x24]
+FFEE444B	FFEE445D	sub_FFEE444B	aprs_stn_phase0	Confirmed	aprs stn phase0
+FFEE445D	FFEE44A9	sub_FFEE445D	aprs_stn_phase1_bg	Confirmed	Cyan header band at y 20..41 (below a 20-px status strip)
+FFEE44A9	FFEE44D6	sub_FFEE44A9	aprs_stn_phase2	Confirmed	aprs stn phase2
+FFEE44D6	FFEE450A	sub_FFEE44D6	aprs_stn_key_header	Confirmed	key_tbl[15]
+FFEE450A	FFEE4568	sub_FFEE450A	aprs_stn_key_body	Confirmed	key_tbl[17], key_tbl[18]
+FFEE4568	FFEE45DA	sub_FFEE4568	aprs_stn_key_icon	Confirmed	key_tbl[20..25] (icon = key - 0x14)
+FFEE45DA	FFEE4660	sub_FFEE45DA	aprs_stn_phase3	Confirmed	aprs stn phase3
+FFEE4660	FFEE467C	sub_FFEE4660	aprs_stn_apply	Confirmed	aprs stn apply
+FFEE467C	FFEE4A0D	sub_FFEE467C	aprs_stn_apply_fields	Confirmed	The compass-mode transition table decides which areas to repaint
+FFEE4A0D	FFEE4A60	sub_FFEE4A0D	aprs_stn_redraw_all	Confirmed	aprs stn redraw all
+FFEE4A60	FFEE4B04	sub_FFEE4A60	aprs_stn_draw_header	Confirmed	16 chars at (4,22) through the coloured text routine sub_FFEFAB3E (white); first 52 px wiped when the blink phase is off; badge FFED22AC at (305,23) when +0x30 == 1
+FFEE4B04	FFEE4B67	sub_FFEE4B04	aprs_stn_draw_text	Confirmed	Six 22-char lines at x 46, 23-px pitch from y 46
+FFEE4B67	FFEE4BB7	sub_FFEE4B67	aprs_stn_draw_icons	Confirmed	Icons 3..5 (bar off) or 0..5 (bar on, rect table FFEC6058)
+FFEE4BB7	FFEE4CBD	sub_FFEE4BB7	aprs_stn_draw_symbol	Confirmed	+0x32 b4 == 0: draws the APRS symbol: code +0x38 (0x20..0x5A -> index code-0x20, else 0) from the RAM pointer table 0x68658 at (25,65), then an overlay from 0x68584[+0x37 % 53] at (23,62) when that index > 0. b4 == 1: pr
+FFEE4CBD	FFEE4D70	sub_FFEE4CBD	aprs_stn_draw_compass	Confirmed	When +0x31 != 0: four 60x60 quadrant images (FFED23CC/303C/305C/307C) at (x+6..+66, y+11..+71) via sub_FFEF0648, the compass labels, then (blink-gated by +0x32 b0-1) the bearing marker and the centre icon. Note the base 
+FFEE4D70	FFEE4DDA	sub_FFEE4D70	aprs_stn_draw_compass_labels	Confirmed	Four fixed images at (55,43), (114,102), (55,161), (0,102): the N/E/S/W-style labels around the dial (). The masked +0x33 value is computed but unused. (label meaning )
+FFEE4DDA	FFEE4E37	sub_FFEE4DDA	aprs_stn_draw_marker	Confirmed	Position = byte pair k_compass_pos[+0x34 & 15] (FFC0013D, x then y); image = k_compass_marks[+0x35 % 17] (FFED45A4, 17 RGB565 images FFED308C..FFED3F5C). The x/y arguments are ignored
+FFEE4E37	FFEE4E99	sub_FFEE4E37	aprs_stn_draw_centre	Confirmed	Image g_compass_ctr[v & 15] (RAM pointer table 0x687D4) at (46,93); the draw mode follows +0x32 b6-7 (1 on, 2 blink, else 0)
+FFEE4E99	FFEE4EC3	sub_FFEE4E99	aprs_stxt_entry	Inferred	k_screen_tbl[0x27]
+FFEE4EC3	FFEE4ED5	sub_FFEE4EC3	aprs_stxt_phase0	Inferred	aprs stxt phase0
+FFEE4ED5	FFEE4F0F	sub_FFEE4ED5	aprs_stxt_phase1_bg	Inferred	(FFF33C6C holds the value FFEE4F05, inside this body: a data word, not a code pointer.)
+FFEE4F0F	FFEE4F3C	sub_FFEE4F0F	aprs_stxt_phase2	Inferred	aprs stxt phase2
+FFEE4F3C	FFEE4F6E	sub_FFEE4F3C	aprs_stxt_key_header	Inferred	key_tbl[15]
+FFEE4F6E	FFEE4FA2	sub_FFEE4F6E	aprs_stxt_key_body	Inferred	key_tbl[16]
+FFEE4FA2	FFEE4FEA	sub_FFEE4FA2	aprs_stxt_key_icon	Inferred	key_tbl[17..18] Fixed rects k_rects_6048[idx] instead of the RAM slot table
+FFEE4FEA	FFEE5070	sub_FFEE4FEA	aprs_stxt_phase3	Inferred	aprs stxt phase3
+FFEE5070	FFEE508C	sub_FFEE5070	aprs_stxt_apply	Inferred	aprs stxt apply
+FFEE508C	FFEE5168	sub_FFEE508C	aprs_stxt_apply_fields	Inferred	aprs stxt apply fields
+FFEE5168	FFEE518C	sub_FFEE5168	aprs_stxt_redraw_all	Inferred	aprs stxt redraw all
+FFEE518C	FFEE51DE	sub_FFEE518C	aprs_stxt_draw_header	Inferred	Slot number +0x20 as 1..3 digits at x 108 (sub_FFEFA7E7)
+FFEE51DE	FFEE524E	sub_FFEE51DE	aprs_stxt_draw_body	Inferred	aprs stxt draw body
+FFEE524E	FFEE5269	sub_FFEE524E	aprs_stxt_draw_icons	Inferred	aprs stxt draw icons
+FFEE5269	FFEE52B3	sub_FFEE5269	font_glyph_width	Confirmed	Callers: sub_FFEF1B23 (text), sub_FFEF1BB1, sub_FFEF2184 (glyph lookup). Block 0x19 (variable-width ASCII) gives width 5 for the 11 bytes of "MWXYmwx @\" + NUL (the loop bound is 11, so code 0 also matches); otherwise by
+FFEE52B3	FFEE52DD	sub_FFEE52B3	charpick_entry	Confirmed	k_screen_tbl[0x1C]
+FFEE52DD	FFEE52EF	sub_FFEE52DD	charpick_phase0	Confirmed	charpick phase0
+FFEE52EF	FFEE540D	sub_FFEE52EF	charpick_phase1_bg	Confirmed	Seeds the cell queue with the cursor (clamped to 40, not 39 here), paints the dark panels, grey frame lines and scroll track, widget 3
+FFEE540D	FFEE543A	sub_FFEE540D	charpick_phase2	Confirmed	charpick phase2
+FFEE543A	FFEE54FF	sub_FFEE543A	charpick_key_cell_plain	Confirmed	key_tbl[21] Repaints the oldest queued cell un-highlighted, pops it, then requests key 22
+FFEE54FF	FFEE5591	sub_FFEE54FF	charpick_key_cell_cursor	Confirmed	key_tbl[22] Paints the cell at the queue head highlighted; if more moves are queued, requests key 21 again
+FFEE5591	FFEE55C4	sub_FFEE5591	charpick_key_grid	Confirmed	key_tbl[20]
+FFEE55C4	FFEE5603	sub_FFEE55C4	charpick_key_softkeys	Confirmed	key_tbl[19]
+FFEE5603	FFEE564A	sub_FFEE5603	charpick_key_icon	Confirmed	key_tbl[15..18] icon = key - 13 (2..5), rect k_rects_5F28[icon]
+FFEE564A	FFEE56D0	sub_FFEE564A	charpick_phase3	Confirmed	charpick phase3
+FFEE56D0	FFEE56EC	sub_FFEE56D0	charpick_apply	Confirmed	charpick apply
+FFEE56EC	FFEE5987	sub_FFEE56EC	charpick_apply_fields	Confirmed	(charpick_q_reset is inlined twice in the binary.)
+FFEE5987	FFEE59A4	sub_FFEE5987	charpick_redraw_all	Confirmed	charpick redraw all
+FFEE59A4	FFEE5A73	sub_FFEE59A4	charpick_draw_cell	Confirmed	map + page 0x50 + row 0x10 + col 2 (doc 79 wrote the row/col names the other way round; row = cell>>3, col = cell&7 per the callers)
+FFEE5A73	FFEE5C27	sub_FFEE5A73	charpick_draw_grid	Confirmed	Answers doc 79 Open 3: the second glyph_tbl8 reader is this full-grid painter. It draws the group's base_code glyph as the group label, a white scroll thumb (page/pages over 167 px at x 311), then the 40 cells with the c
+FFEE5C27	FFEE5C42	sub_FFEE5C27	charpick_draw_icons	Confirmed	icons 0..3
+FFEE5C42	FFEE5C6C	sub_FFEE5C42	numentry_entry	Inferred	k_screen_tbl[4], [5]
+FFEE5C6C	FFEE5C7E	sub_FFEE5C6C	numentry_phase0	Inferred	numentry phase0
+FFEE5C7E	FFEE5CAB	sub_FFEE5C7E	numentry_phase1_bg	Inferred	numentry phase1 bg
+FFEE5CAB	FFEE5CD8	sub_FFEE5CAB	numentry_phase2	Inferred	numentry phase2
+FFEE5CD8	FFEE5D05	sub_FFEE5CD8	numentry_key_digits	Inferred	key_tbl[20]
+FFEE5D05	FFEE5D44	sub_FFEE5D05	numentry_key_icons	Inferred	key_tbl[44]
+FFEE5D44	FFEE5DCA	sub_FFEE5D44	numentry_phase3	Inferred	numentry phase3
+FFEE5DCA	FFEE5E01	sub_FFEE5DCA	numentry_apply	Inferred	An opcode change (F104 <-> F105) sets g_numentry_reset (0x12284) so the next digit paint uses the F104 layout once
+FFEE5E01	FFEE5EE0	sub_FFEE5E01	numentry_apply_fields	Inferred	+0x09 is copied silently (no request bit)
+FFEE5EE0	FFEE5EF8	sub_FFEE5EE0	numentry_redraw_all	Inferred	numentry redraw all
+FFEE5EF8	FFEE5EFC	sub_FFEE5EF8	numentry_draw_digits_wrap	Inferred	thunk
+FFEE5EFC	FFEE5F49	sub_FFEE5EFC	numentry_draw_digits	Inferred	numentry draw digits
+FFEE5F49	FFEE5FC6	sub_FFEE5F49	numentry_draw_bcd3	Inferred	Three BCD nibbles from +0x50 ("ddd", nibble > 9 -> ' ')
+FFEE5FC6	FFEE6083	sub_FFEE5FC6	numentry_draw_bcd6	Inferred	Six BCD nibbles from +0x50 as "ddd.ddd"; the '.' becomes ' ' while the third digit is still blank
+FFEE6083	FFEE609E	sub_FFEE6083	numentry_draw_icons	Inferred	icons 0..11
+FFEE609E	FFEE60D6	sub_FFEE609E	mainalt_entry	Inferred	k_screen_tbl[3]
+FFEE60D6	FFEE60E8	sub_FFEE60D6	mainalt_phase0	Inferred	mainalt phase0
+FFEE60E8	FFEE613B	sub_FFEE60E8	mainalt_phase1_bg	Inferred	mainalt phase1 bg
+FFEE613B	FFEE6168	sub_FFEE613B	mainalt_phase2	Inferred	mainalt phase2
+FFEE6168	FFEE61B1	sub_FFEE6168	mainalt_key_badge	Inferred	key_tbl[54] Rect k_rect_5942
+FFEE61B1	FFEE61F4	sub_FFEE61B1	mainalt_key_name	Inferred	key_tbl[55]
+FFEE61F4	FFEE6238	sub_FFEE61F4	mainalt_key_level	Inferred	key_tbl[56]
+FFEE6238	FFEE6274	sub_FFEE6238	mainalt_key_item	Inferred	key_tbl[57] Rect k_rect_595A; no layer switch
+FFEE6274	FFEE62C9	sub_FFEE6274	mainalt_key_value	Inferred	key_tbl[58] Rect k_rect_5962; value +0x2C through sub_FFEF9A8A (kind 0)
+FFEE62C9	FFEE633E	sub_FFEE62C9	mainalt_key_float	Inferred	key_tbl[59] Asks sub_FFEEDF40 for the on-screen position of a floating element; if it is on screen, repaints a 164x13 box at (x-7, y-1) via sub_FFEF9B22
+FFEE633E	FFEE6395	sub_FFEE633E	mainalt_key_softkeys	Inferred	key_tbl[53]
+FFEE6395	FFEE641B	sub_FFEE6395	mainalt_phase3	Inferred	mainalt phase3
+FFEE641B	FFEE6437	sub_FFEE641B	mainalt_apply	Inferred	mainalt apply
+FFEE6437	FFEE67C7	sub_FFEE6437	mainalt_apply_fields	Inferred	Level +0x2B values 14..20 blink (blink timer joined/left when crossing 13/14). When the soft-key bar (+0xC9) is on, high requests 0..14 are cancelled after the flush
+FFEE67C7	FFEE683A	sub_FFEE67C7	mainalt_redraw_all	Inferred	mainalt redraw all
+FFEE683A	FFEE6889	sub_FFEE683A	mainalt_draw_band	Inferred	Paints the band panel selected by the current layer through the shared band painters (all outside this range)
+FFEE6889	FFEE6899	sub_FFEE6889	mainalt_draw_badge	Inferred	thunk -> sub_FFEF6A0D
+FFEE6899	FFEE68C0	sub_FFEE6899	mainalt_draw_name	Inferred	Builds an 80-byte request on the stack with +0x2F = 0 and +0x30..+0x33 = frame +0x20..+0x23, then hands it to the large text renderer sub_FFEF6C42 (11.8 KB). x/y are not passed on; the rest of the request is uninitialise
+FFEE68C0	FFEE69A4	sub_FFEE68C0	mainalt_draw_level	Inferred	+0x2B: 0..13 steady; 14..20 blinking as v-7; 21..27 blinking as v-14 with the main image steady; > 27 draws nothing. Extra overlay FFED39DC for v 7..10 and FFECEFDC for v 11..13; main image from RAM table 0x68514[v] (set
+FFEE69A4	FFEE6A04	sub_FFEE69A4	mainalt_draw_item	Inferred	mainalt draw item
+FFEE6A04	FFEE6A51	sub_FFEE6A04	mainalt_draw_icons	Inferred	(bar +0xC9)
+FFEE6A51	FFEE6A89	sub_FFEE6A51	gpsinfo_entry	Inferred	k_screen_tbl[0x0D]
+FFEE6A89	FFEE6A9B	sub_FFEE6A89	gpsinfo_phase0	Inferred	gpsinfo phase0
+FFEE6A9B	FFEE6AB7	sub_FFEE6A9B	gpsinfo_phase1_bg	Inferred	gpsinfo phase1 bg
+FFEE6AB7	FFEE6AE4	sub_FFEE6AB7	gpsinfo_phase2	Inferred	gpsinfo phase2
+FFEE6AE4	FFEE6B74	sub_FFEE6AE4	gpsinfo_key_body	Inferred	key_tbl[48..52], [54], [56]. Unlike redraw_all it does not test the page mode before painting the compass
+FFEE6B74	FFEE6BBE	sub_FFEE6B74	gpsinfo_key_odd_icons	Inferred	key_tbl[53], [55], [57]: repaints icons 1, 3, 5 inside the band between k_rects_6120[1] and k_rects_6120[4].y
+FFEE6BBE	FFEE6C44	sub_FFEE6BBE	gpsinfo_phase3	Inferred	gpsinfo phase3
+FFEE6C44	FFEE6C60	sub_FFEE6C44	gpsinfo_apply	Inferred	gpsinfo apply
+FFEE6C60	FFEE7047	sub_FFEE6C60	gpsinfo_apply_fields	Inferred	Note: when an odd icon changes (skip_flush = 1) the routine returns without ui_flush_dirty()
+FFEE7047	FFEE70D7	sub_FFEE7047	gpsinfo_redraw_all	Inferred	gpsinfo redraw all
+FFEE70D7	FFEE7125	sub_FFEE70D7	gpsinfo_draw_heading_icon	Inferred	Only for v 1 / 2: FFED23FC (1) or FFED23DC (2), then FFED240C at x+12
+FFEE7125	FFEE719D	sub_FFEE7125	gpsinfo_draw_compass	Inferred	gpsinfo draw compass
+FFEE719D	FFEE7300	sub_FFEE719D	gpsinfo_draw_dial	Inferred	Four 80x80 quadrants at (x+80,y) (x+80,y+80) (x,y+80) (x,y); style (v & 3) picks one of four image sets
+FFEE7300	FFEE73F3	sub_FFEE7300	gpsinfo_draw_labels	Inferred	The four cardinal labels (same images as screen 0x24, which proves the N/E/S/W reading: there they sit at top/right/bottom/left) are placed at k_dial_pos[(d + 4k) & 15] (FFC3D376, 16 x/y byte pairs), i.e. the dial rotate
+FFEE73F3	FFEE7469	sub_FFEE73F3	gpsinfo_draw_marker	Inferred	Mode 2: image FFED2D7C at k_marker_pos2[v&15] (FFEC5972, u16 x,y); mode 4: image FFED335C at k_marker_pos4[v&15] (FFEC59B2)
+FFEE7469	FFEE7497	sub_FFEE7469	gpsinfo_draw_centre	Inferred	Image g_gps_ctr_imgs[v & 15] (RAM pointer table 0x68814) at (98,128)
+FFEE7497	FFEE74CF	sub_FFEE7497	scope_entry	Inferred	k_screen_tbl[0x0B]
+FFEE74CF	FFEE74E1	sub_FFEE74CF	scope_phase0	Inferred	scope phase0
+FFEE74E1	FFEE75A5	sub_FFEE74E1	scope_phase1_bg	Inferred	Header band (y 84..105, colour 0x2A69), five horizontal grid lines (y 106 + 19i) and five vertical ones (x 51 + 54i, y 106..182), centre marker image FFED249C at (154,99), widget 6
+FFEE75A5	FFEE75D2	sub_FFEE75A5	scope_phase2	Inferred	scope phase2
+FFEE75D2	FFEE7606	sub_FFEE75D2	scope_key_scope	Inferred	key_tbl[32]
+FFEE7606	FFEE768C	sub_FFEE7606	scope_phase3	Inferred	scope phase3
+FFEE768C	FFEE76A8	sub_FFEE768C	scope_apply	Inferred	scope apply
+FFEE76A8	FFEE7945	sub_FFEE76A8	scope_apply_fields	Inferred	scope apply fields
+FFEE7945	FFEE7985	sub_FFEE7945	scope_redraw_all	Inferred	scope redraw all
+FFEE7985	FFEE79CB	sub_FFEE7985	scope_draw_band	Inferred	Same painter chain as mainalt_draw_band but the "type 2" order is 5E38 then 6096 and the 643C/64D2 branch is absent
+FFEE79CB	FFEE7C9F	sub_FFEE79CB	scope_draw	Inferred	Header glyph row at (185,86) 13 px apart (4 images for variant 0, 5 otherwise), span label at (267,86), then the bars. Level 1..10 maps to a top y (175,167,160,152,145,138,130,123,115,108) and bar image FFED31EC + 0x10 (
+FFEE7C9F	FFEE7CC9	sub_FFEE7C9F	keypad_entry	Confirmed	k_screen_tbl[7], [0x16]
+FFEE7CC9	FFEE7CDB	sub_FFEE7CC9	keypad_phase0	Confirmed	keypad phase0
+FFEE7CDB	FFEE7D15	sub_FFEE7CDB	keypad_phase1_bg	Confirmed	Both the F1 and the F0 branch draw widget 2
+FFEE7D15	FFEE7D42	sub_FFEE7D15	keypad_phase2	Confirmed	keypad phase2
+FFEE7D42	FFEE7D87	sub_FFEE7D42	keypad_key_header	Confirmed	key_tbl[53]
+FFEE7D87	FFEE7DB5	sub_FFEE7D87	keypad_key_icons	Confirmed	key_tbl[52]
+FFEE7DB5	FFEE7E3B	sub_FFEE7DB5	keypad_phase3	Confirmed	keypad phase3
+FFEE7E3B	FFEE7E57	sub_FFEE7E3B	keypad_apply	Confirmed	keypad apply
+FFEE7E57	FFEE803D	sub_FFEE7E57	keypad_apply_fields	Confirmed	In the F1 branch the 3-byte block pointer is set but sub_FFEF42A7 is not called
+FFEE803D	FFEE806F	sub_FFEE803D	keypad_redraw_all	Confirmed	Doc 12 named this the password dispatcher (F0 -> password_draw)
+FFEE806F	FFEE80A9	sub_FFEE806F	keypad_draw_freq	Confirmed	Header line from the current band record: attribute word b[2..3] (BE) and string b+4, drawn at (20,3) by sub_FFEFA7E7
+FFEE80A9	FFEE8363	sub_FFEE80A9	password_draw	Confirmed	g_lang (0x8F72, language flag per RESUME-FULL) == 0 -> Japanese title: 7-byte kana string FFF48580 then two JIS X 0208 kanji through the glyph blitter: 0x467E 0x4E4F = "nyuuryoku" (input) when +0x20 == 0, 0x4550 0x4F3F =
+FFEE8363	FFEE837F	sub_FFEE8363	keypad_draw_icons	Confirmed	icons 0..19
+FFEE837F	FFEE83B7	sub_FFEE837F	main_entry	Confirmed	k_screen_tbl[0]
+FFEE83B7	FFEE83C9	sub_FFEE83B7	main_phase0	Confirmed	main phase0
+FFEE83C9	FFEE841C	sub_FFEE83C9	main_phase1_bg	Confirmed	main phase1 bg
+FFEE841C	FFEE8449	sub_FFEE841C	main_phase2	Confirmed	main phase2
+FFEE8449	FFEE84A0	sub_FFEE8449	main_key_softkeys	Confirmed	key_tbl[53]
+FFEE84A0	FFEE8526	sub_FFEE84A0	main_phase3	Confirmed	main phase3
+FFEE8526	FFEE8542	sub_FFEE8526	main_apply	Confirmed	main apply
+FFEE8542	FFEE86A4	sub_FFEE8542	main_apply_fields	Confirmed	Icon changes all raise the same high bit 0x200000 (not shifted per icon). With the bar on, high requests 10..13 (0x3C00) are cancelled
+FFEE86A4	FFEE86D6	sub_FFEE86A4	main_redraw_all	Confirmed	main redraw all
+FFEE86D6	FFEE87A1	sub_FFEE86D6	main_draw_band	Confirmed	"Compact" painting (only 6096/5E38) for a type-2 band record when the +0x09 b4 layout and band_mode() agree (b4 0 & mode 2, or b4 1 & mode 1); otherwise the full chain. In band_mode 2 with the bar on the icons are repain
+FFEE87A1	FFEE87EE	sub_FFEE87A1	main_draw_icons	Confirmed	(bar +0xB8)

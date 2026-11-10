@@ -1,0 +1,238 @@
+start	end	ida_name	new_name	confidence	summary
+051CD8	051D6A	sub_51CD8	aprs_addr_encode_call	Confirmed	Encode CALL[-SSID] token into 10-byte APRS address slot (6 chars, 3 SSID text, SSID octet 0x60|ssid<<1)
+051D6A	051DCA	sub_51D6A	aprs_addr_long_call	Confirmed	Tail for 7..9 char callsigns; status FFA50A=2, SSID octet 0x44
+051DCA	051ED4	sub_51DCA	aprs_path_encode_digis	Inferred	Encode digipeater path list into address slots; H bit on first term_a element, EA bit on ':'
+051ED4	051F08	sub_51ED4	aprs_ssid_1digit	Confirmed	Parse "-N" SSID, code 0x10|N or error code 2 (status 1)
+051F08	051F48	sub_51F08	aprs_ssid_2digit	Confirmed	Parse "-10".."-15" SSID, else error code 0x0D
+051F48	051FA6	sub_51F48	aprs_path_long_call	Confirmed	Path-element twin of aprs_addr_long_call (':' also terminates)
+051FA6	052000	sub_51FA6	aprs_skip_addr_token	Confirmed	Skip one CALL[-SS] token up to : , > *
+052000	052002	nullsub_27	aprs_skip_addr_token_rts	Confirmed	Shared rts of sub_51FA6
+052002	05206E	sub_52002	aprs_open_station_detail	Inferred	Twin of sub_4AAE8 head: latch FF8AAC options and dispatch station-type screen or sub_4B1B4
+05206E	0520F8	sub_5206E	log_line_mode_tag	Inferred	Build 12-byte "xM> "+9 chars line in FFB05A by FFA9FE and queue via sub_C7E4
+0520F8	052164	sub_520F8	caller_line_band_a	Confirmed	Band-A caller line "R>"+ID or " >/X>/E>"+callsign to post_line12
+052164	0521D0	sub_52164	caller_line_band_b	Confirmed	Band-B twin of caller_line_band_a
+0521D0	0521F6	sub_521D0	caller_line_band_b_plain	Confirmed	" >"+FFBC16 callsign line
+0521F6	05223E	sub_521F6	aprs_dup_compare	Inferred	Duplicate-packet check via per-type extent table 0x04ABE4 (FF9DFF); r4l 2=dup 1=diff
+05223E	052278	sub_5223E	aprs_dup_compare_tail	Confirmed	IDA-split byte-compare tail of sub_521F6
+052278	0522CA	sub_52278	aprs_extent_pos	Inferred	Extent routine (table 4ABE4 slots 0,1): payload class/len/start for stored and new packet
+0522CA	05230E	sub_522CA	aprs_extent_pos_helper	Inferred	beg=+9(+4), end minus CR minus ROM 0x3F1E[class]
+05230E	052368	sub_5230E	aprs_extent_t1	Inferred	Extent routine (12 slots of 4ABE4)
+052368	05236C	sub_52368	aprs_extent_t1_head	Confirmed	jsr sub_4D9E6 then falls into sub_5236C
+05236C	0523D0	sub_5236C	aprs_extent_t1_tail	Inferred	Classify via sub_4CF74, skip count FFA4FE, class, length
+0523D0	05242A	sub_523D0	aprs_extent_t2	Inferred	Extent routine (8 slots of 4ABE4)
+05242A	05242E	sub_5242A	aprs_extent_t2_head	Confirmed	jsr sub_4D9E6 then falls into sub_5242E
+05242E	052470	sub_5242E	aprs_extent_t2_tail	Inferred	class=sub_4CBDC, skip 3
+052470	0524CA	sub_52470	aprs_extent_t3	Inferred	Extent routine (4 slots of 4ABE4)
+0524CA	0524CE	sub_524CA	aprs_extent_t3_head	Confirmed	jsr sub_4D9E6 then falls into sub_524CE
+0524CE	052504	sub_524CE	aprs_extent_t3_tail	Inferred	class=sub_4CBDC, beg=er2-4
+052504	05255E	sub_52504	aprs_extent_t4	Inferred	Extent routine (1 slot)
+05255E	052570	sub_5255E	aprs_extent_t4_tail	Confirmed	jsr 4D9E6, beg=er2-1, CR trim (split with 052570)
+052570	052582	sub_52570	aprs_extent_t4_tail2	Confirmed	IDA-split end of sub_5255E
+052582	0525D4	sub_52582	aprs_extent_t5	Inferred	Extent routine (1 slot), helper sub_525D4
+0525D4	0525F6	sub_525D4	aprs_extent_t5_tail	Inferred	jsr sub_4EFA8, class 0, CR trim
+0525F6	052648	sub_525F6	aprs_extent_raw	Inferred	Extent routine using whole window
+052648	05266C	sub_52648	aprs_extent_raw_helper	Confirmed	Whole window, class 0, CR trim
+05270A	052816	sub_5270A	fmt_dec8_blank	Confirmed	Decimal formatter, entries for 8/7/6/5/4 digits, leading-zero blank (FFAA33 b6)
+052816	05281E	sub_52816	fmt_dec2_zero	Confirmed	2-digit zero-padded entry (er6 dst)
+05281E	052826	sub_5281E	fmt_dec2_blank	Confirmed	2-digit blanked entry
+052826	05282E	sub_52826	fmt_dec3_zero	Confirmed	3-digit zero-padded entry
+05282E	052888	sub_5282E	fmt_dec3_blank	Confirmed	3-digit blanked entry
+052888	0528AE	sub_52888	blank_lead0_2ch	Confirmed	Blank leading zero(s) of 2-char field at FFB05A+er3
+0528AE	0528DA	sub_528AE	blank_lead0_2ch_b	Confirmed	Same, also blanks " 0"
+0528DA	0528EC	sub_528DA	rows4_from_B286	Confirmed	Run 4 row callbacks from table[FFB286]
+05290E	052962	sub_5290E	rows4	Confirmed	Run 4 row callbacks (row_ctx FFB050)
+052962	05298C	sub_52962	rows1to3_from_B3F1	Confirmed	Run rows 1..3; entry 052974 from table[0]
+052992	0529AC	sub_52992	rows1to3_loop	Confirmed	IDA-split loop body of sub_52962
+052A3A	052A5E	sub_52A3A	list3_draw	Inferred	3-row list draw by selection FFB3F1
+052A76	052A82	sub_52A76	row_abs0	Confirmed	Thunk: *FFB288(r1=0)
+052A82	052A8E	sub_52A82	row_abs1	Confirmed	Thunk: *FFB288(r1=1)
+052A8E	052A9A	sub_52A8E	row_abs2	Confirmed	Thunk: *FFB288(r1=2)
+052A9A	052AA6	sub_52A9A	row_abs3	Confirmed	Thunk: *FFB288(r1=3)
+052AA6	052ABA	sub_52AA6	row_rel3_1	Confirmed	Thunk: *FFB288(sel-3+1)
+052ABA	052ACE	sub_52ABA	row_rel3_2	Confirmed	Thunk: *FFB288(sel-3+2)
+052ACE	052AE2	sub_52ACE	row_rel3_3	Confirmed	Thunk: *FFB288(sel-3+3)
+052AE8	052B0C	sub_52AE8	list4_draw	Inferred	4-row list draw by selection FFB3F1
+052B2C	052B40	sub_52B2C	row_rel4_1	Confirmed	Thunk: *FFB288(sel-4+1)
+052B40	052B54	sub_52B40	row_rel4_2	Confirmed	Thunk: *FFB288(sel-4+2)
+052B54	052B68	sub_52B54	row_rel4_3	Confirmed	Thunk: *FFB288(sel-4+3)
+052B68	052B7C	sub_52B68	row_rel4_4	Confirmed	Thunk: *FFB288(sel-4+4)
+052B7C	052C72	sub_52B7C	aprs_station_list_page	Inferred	Build 5-line APRS station list into IPC frame, send F502
+052C72	052C8C	sub_52C72	aprs_no_data_line	Confirmed	ROM 0x050146 "no data" text to stage+4
+052C8C	052DB0	sub_52C8C	aprs_station_line	Confirmed	Station line: type char/Emg, callsign, HH:MM or MM/DD (contradicts doc 12 8.4)
+052DB0	052DEE	sub_52DB0	aprs_detail_page	Inferred	APRS detail screen frame builder (title + 7 rows)
+052DEE	052E4E	sub_52DEE	aprs_detail_page_tail	Confirmed	IDA-split continuation of sub_52DB0
+052E4E	052E8A	sub_52E4E	aprs_type_tag	Confirmed	Station type char or "Emg" into stage
+052E8A	052F88	sub_52E8A	aprs_message_list_page	Inferred	Build 5-line APRS message list, send F500
+052F88	052FA2	sub_52F88	aprs_no_data_line_msg	Confirmed	"no data" text to stage+2
+052FA2	0530CA	sub_52FA2	aprs_message_line	Confirmed	Message line: status glyph, direction, callsign, time/date
+0530CA	0530CC	nullsub_50	aprs_row_none	Confirmed	Empty row builder (rts)
+0530CC	053110	sub_530CC	aprs_rows7	Confirmed	7 framed rows with page scroll (split with 053110)
+053110	05314A	sub_53110	aprs_rows7_loop	Confirmed	IDA-split loop of sub_530CC
+05314A	0531C8	sub_5314A	aprs_rows5_scroll	Confirmed	5 framed rows with page scroll
+0531C8	05327C	sub_531C8	aprs_scroll_marks_F511	Inferred	Scroll markers FF3DA5..AC, send F511
+05327C	0532EE	sub_5327C	aprs_scroll_clear_F518	Confirmed	Clear scroll markers, send F518
+0532EE	053300	sub_532EE	rows4_framed_from_A4F5	Confirmed	4 framed rows from FFA4F5
+053300	053372	sub_53300	rows4_framed	Confirmed	4 framed rows
+053372	053384	sub_53372	rows5_framed_from_A4F5	Confirmed	5 framed rows from FFA4F5
+053384	0533F6	sub_53384	rows5_framed	Confirmed	5 framed rows
+053496	0534C0	sub_53496	rows_framed_from1	Skeleton	Framed rows from 1; loop body outside chunk; dead tier (doc 117)
+053574	053580	sub_53574	row_abs0_b	Confirmed	Thunk r1=0
+053580	05358C	sub_53580	row_abs1_b	Confirmed	Thunk r1=1
+05358C	053598	sub_5358C	row_abs2_b	Confirmed	Thunk r1=2
+053598	0535A4	sub_53598	row_abs3_b	Confirmed	Thunk r1=3
+0535A4	0535B0	sub_535A4	row_abs4	Confirmed	Thunk r1=4
+0535B0	0535BC	sub_535B0	row_abs5	Confirmed	Thunk r1=5
+0535BC	0535D0	sub_535BC	row_rel6_1	Confirmed	Thunk sel-6+1
+0535D0	0535E4	sub_535D0	row_rel6_2	Confirmed	Thunk sel-6+2
+0535E4	0535F8	sub_535E4	row_rel6_3	Confirmed	Thunk sel-6+3
+0535F8	05360C	sub_535F8	row_rel6_4	Confirmed	Thunk sel-6+4
+05360C	053620	sub_5360C	row_rel6_5	Confirmed	Thunk sel-6+5
+053620	053634	sub_53620	row_rel6_6	Confirmed	Thunk sel-6+6
+053634	05363A	sub_53634	list5_draw_B3F5	Confirmed	5-row list draw, selection FFB3F5
+05363A	05365E	sub_5363A	list5_draw	Confirmed	5-row list draw, selection FFB3F1
+053686	05369A	sub_53686	row_rel5_1	Confirmed	Thunk sel-5+1
+0536AE	0536C2	sub_536AE	row_rel5_3	Confirmed	Thunk sel-5+3
+0536C2	0536D6	sub_536C2	row_rel5_4	Confirmed	Thunk sel-5+4
+0536D6	0536EA	sub_536D6	row_rel5_5	Confirmed	Thunk sel-5+5
+0536EA	053714	sub_536EA	list4f_draw	Confirmed	4 framed rows by FFB3F5 (entry 0536F0: FFB3F1)
+053734	053748	sub_53734	row_rel4_1b	Confirmed	Thunk sel-4+1
+053748	05375C	sub_53748	row_rel4_2b	Confirmed	Thunk sel-4+2
+05375C	053770	sub_5375C	row_rel4_3b	Confirmed	Thunk sel-4+3
+053770	053784	sub_53770	row_rel4_4b	Confirmed	Thunk sel-4+4
+053784	053822	sub_53784	own_position_load	Confirmed	Own position from MY POSITION source FF8AB8 into FFA7BE
+053822	0539A0	sub_53822	own_position_from_gps	Confirmed	Parse GPS fix text FF9D60 into own position
+0539A0	0539C6	sub_539A0	pos_convert_if_valid	Inferred	If long != -1 convert via sub_49822 to FFA882, FFA872 flag
+0539C6	0539DE	sub_539C6	aprs_dist_bearing_entry	Confirmed	Guard entry: other/own position valid, then distance/bearing
+0539DE	053FAE	sub_539DE	aprs_dist_bearing	Inferred	Flat-earth distance (digits A7A0..A3) and 16-point bearing A7A4
+0542AC	054484	sub_542AC	rx_position_parse	Inferred	Parse received position FF9DC2 into FFA7D8, plus FF9D34/36
+054484	0544F2	sub_54484	aprs_rx_dist_bearing	Confirmed	Distance/bearing to last received position, result A7D2..A7D7
+0544F2	054502	sub_544F2	aprs_rx_dist_bearing_cfg	Confirmed	Same using configured position source
+054502	05450E	sub_54502	aprs_rx_dist_bearing_cfg_tail	Confirmed	IDA-split tail of sub_544F2
+05450E	054524	sub_5450E	aprs_ack_state_reset	Confirmed	Reset ack task state A514/15/18/19
+054524	054536	sub_54524	aprs_autoreply_state_reset	Confirmed	Reset auto-reply state A51A/1B/1D
+054536	054568	sub_54536	aprs_beacon_mode_eval	Confirmed	Beacon mode FFA90C 0 off/1 auto/2 smart from FF8AAB
+054568	054592	sub_54568	aprs_band_ok	Confirmed	APRS modem on and band suitable (0=ok)
+054592	0545AC	sub_54592	aprs_tasks_arm	Confirmed	Arm beacon, idle retry/ack requests
+0545AC	0545F6	sub_545AC	aprs_beacon_task	Confirmed	Beacon AUTO task (main loop 0x2C10); body continues at 05460C
+0545F6	05460C	sub_545F6	beacon_timer_load	Confirmed	FF95EC = ROM 0x3FB0[FF8ABC]
+054630	05469C	sub_54630	aprs_tx_busy	Confirmed	Automatic APRS TX inhibit/busy check (0=clear)
+05469C	0547D2	sub_5469C	aprs_msg_retry_task	Confirmed	Message retransmit task: 60 s retries, 3 s on busy
+0547D2	05482C	sub_547D2	aprs_msg_saved	Inferred	Persist message slot, refresh detail view, redraw
+05482C	05484C	sub_5482C	aprs_msg_retry_stop	Confirmed	Stop retries for current slot (ack/rej received)
+05484C	0548BE	sub_5484C	aprs_next_retry_slot	Confirmed	Find next outgoing message slot with retries left
+0548BE	054A28	sub_548BE	aprs_ack_task	Confirmed	Auto-ack task: 3 s after receipt build :ackNN
+054A28	054AC0	sub_54A28	aprs_next_ack_slot	Confirmed	Find next incoming record owing an ack
+054BF8	054C12	sub_54BF8	usb_epir_load	Confirmed	50 bytes ROM 0x054C12 to EPIR FFEE32
+054C44	054CAE	sub_54C44	usb_init	Confirmed	USB function module init (IER/ISR, ring, report word)
+054CAE	054CFA	sub_54CAE	usb_module_reset	Confirmed	FCLR0, IFR clear, clear FF3C6A buffers
+054CFA	054D50	sub_54CFA	usb_isr_ifr2	Confirmed	Vector 238: IFR2 b4 ack, FF8180 b1 (resume tail dead)
+054D50	054EC2	sub_54D50	usb_isr_main	Confirmed	Vector 234: bus reset/SETUP/EP0 OUT/IN; CDC -> 0x07827C
+054EC2	054FEC	sub_54EC2	usb_isr_vbus	Confirmed	Vector 235: VBUS, EP3, suspend, IFR2 b3
+054FEC	055002	sub_54FEC	usb_poll	Confirmed	Control FSM dispatcher via table 0x055002
+055032	055034	nullsub_97	usb_state_ret	Confirmed	Shared rts of FSM states
+055034	055116	sub_55034	usb_st0_st1_setup	Confirmed	States 0/1/5: VBUS wait, SETUP dequeue, GET_DESCRIPTOR
+055116	055128	sub_55116	usb_send_cfg9	Confirmed	Send first 9 config bytes, latch 5
+055144	055196	sub_55144	ep0in_setup	Confirmed	Start EP0-IN transfer (len, src, latch)
+055196	0551C2	sub_55196	usb_st2_st3	Confirmed	States 2/3: IN done, host status
+0551C2	0551DA	sub_551C2	usb_st4_zlp_done	Confirmed	State 4: ZLP sent -> latch
+0551DA	055306	sub_551DA	usb_st6_d4	Confirmed	State 6: EP3 report, C1 D4 quality reply
+055306	05551E	sub_55306	usb_st7_d1_d3	Confirmed	States 7/10: 41 D3 button, 41 D1 image start
+055520	055652	sub_55520	usb_st8_st9	Confirmed	State 8 tone wait, state 9 EP1 data / 41 D2
+055652	055684	sub_55652	usb_ep1_rx	Confirmed	EP1 bulk-OUT copy into FF5806 window (split with 05568A)
+05568A	0556C8	sub_5568A	usb_ep1_rx_tail	Confirmed	IDA-split copy loop/wrap tail
+0556C8	0557A2	sub_556C8	usb_st11_sink	Confirmed	State 11: drain refused EP1, accept D2 (latch 0x0A)
+0557A2	055810	sub_557A2	usb_report_refresh	Confirmed	Force rep_b0=1 and send EP3 report if changed
+055976	0559F4	sub_55976	img_forward_quarter	Confirmed	Forward filled 256-B quarter via sub_B610
+0559F4	055A24	sub_559F4	img_push_finish	Confirmed	Final short block, preview request
+055A24	055A2C	sub_55A24	img_short_wait	Confirmed	Busy wait entry (into 055A2C loop)
+055A2C	055A42	sub_55A2C	img_busy_wait_20000	Confirmed	20000 x 5 nop busy loop
+055A42	055A70	sub_55A42	pic_save_camera	Confirmed	Camera picture save request (FFBC52=2)
+055A70	055A9E	sub_55A70	pic_save_received	Confirmed	Received picture save request (FFBC52=3)
+055A9E	055ABC	sub_55A9E	pic_dialog_close_cam	Inferred	Close picture dialog, sub_6A802
+055ABC	055ADE	sub_55ABC	pic_preview_cam	Inferred	Camera preview request, FFBC4E=2
+055ADE	055AFC	sub_55ADE	pic_dialog_close_rx	Inferred	Close dialog, sub_6A5C8
+055AFC	055B1E	sub_55AFC	pic_preview_rx	Inferred	Received preview request, FFBC4E=3
+055B1E	055B58	sub_55B1E	img_block_count	Confirmed	Block counters from size (entries FFB208 / FFB098)
+055B7A	055BF2	sub_55B7A	pic_xfer_tick	Confirmed	Picture transfer tick: three sub-state machines
+055C1E	055C7E	sub_55C1E	picsend_s0_open	Confirmed	Send state 0: open picture file, counts
+055C7E	055CEA	sub_55C7E	picsend_s1_read1k	Confirmed	Send state 1: read 1 KB into FF5006, checksum
+055CEA	055D6C	sub_55CEA	picsend_s2_push	Confirmed	Send state 2: push 256-B frames
+055D6C	055D8A	sub_55D6C	picsend_s3_done	Confirmed	Send state 3: done, sub_ADC0
+055D8A	055D8C	sub_55D8A	pic_state_idle	Confirmed	rts slot
+055D8C	055DC6	sub_55D8C	rdbk_s0_start	Confirmed	Read-back state 0: sizes, block counters
+055DC6	055DE8	sub_55DC6	rdbk_init	Confirmed	Read-back init: index 0, retries 4, src FF5806
+055DE8	055DFA	sub_55DE8	rdbk_s1_request	Confirmed	Send read-back request sub_B5CE
+055DFA	055DFC	sub_55DFA	pic_state_idle2	Confirmed	rts slot
+055DFC	055EAA	sub_55DFC	rdbk_s2_frame	Confirmed	Validate/copy reverse SCI-D frame FF9800 (split with 055EB2)
+055EB2	055F84	sub_55EB2	rdbk_s2_frame_tail	Confirmed	IDA-split tail: checksum, next/finish
+055F84	055F96	sub_55F84	rxpush_s0_arm	Confirmed	Rx-push state 0 arm
+055F96	055FF0	sub_55F96	rxpush_s1_push	Confirmed	Push received 1 KB block in 256-B frames
+055FF0	055FFE	sub_55FF0	rxpush_s2_done	Confirmed	Flag block delivered FFBC56=1
+055FFE	056036	sub_55FFE	usb_soft_reset	Confirmed	USB soft state reset (boot)
+056036	05603E	sub_56036	dsp_shutdown_if_8D20	Inferred	If FF8D20 != 0 call dsp shutdown
+056046	056056	sub_56046	dsp_shutdown	Confirmed	Retries=5, B0A4=0, power off
+056056	05615C	sub_56056	dsp_power_off	Confirmed	Clear DSP port lines, reset ring/state bytes
+05615C	0561C2	sub_5615C	isr_scic_rx	Confirmed	Vectors 148/149 SCI-C RX into ring FF23C8 (bridge to 0x07711E)
+0561C2	056236	sub_561C2	isr_irq2_dsp	Confirmed	Vector 66 DSP handshake line both edges
+056236	056272	sub_56236	dsp_tick_b	Confirmed	DSP tick entry (8 scheduler sites) with mode gates
+056272	05645C	sub_56272	dsp_tick	Confirmed	DSP driver tick (main loop 0x30B8)
+056490	0564B2	sub_56490	dsp_pwr_s0_enable	Confirmed	Power state 0: enable DSP
+0564B2	0564FA	sub_564B2	dsp_irq2_setup	Confirmed	IRQ2 edge/enable setup
+0564FA	056520	sub_564FA	dsp_pwr_s1_assert	Confirmed	Power state 1: assert reset
+056520	056574	sub_56520	dsp_pwr_s2_release	Confirmed	Power state 2: release reset, init SCI-C
+056574	0565BC	sub_56574	dsp_version_watchdog	Confirmed	Version watchdog with 5 retries
+0565BC	0565BE	sub_565BC	dsp_pwr_s3	Confirmed	rts (failed state)
+0565BE	0565C0	sub_565BE	dsp_pwr_s4	Confirmed	rts
+0565C0	0565EE	sub_565C0	dsp_link_idle	Confirmed	Link states 0/1 (line-high part at 056626 outside chunk)
+0565EE	056626	sub_565EE	dsp_link_timeout	Confirmed	3 s TPU timeout / abort to link state 3
+0566C2	0566C4	sub_566C2	dsp_link_s2	Confirmed	rts
+0566C4	0566E4	sub_566C4	dsp_link_s3	Confirmed	Link state 3: wait line, back to 1
+0566E4	056732	sub_566E4	dsp_link_tx_cmd	Confirmed	Link state 4: DMA TX command frame
+056732	05678E	sub_56732	dsp_link_to_rx	Confirmed	Link state 5: switch to receive
+05678E	0567DC	sub_5678E	dsp_link_tx_acknak	Confirmed	Link state 6: DMA TX ACK/NAK FFB1A0
+0567DC	05683E	sub_567DC	dsp_link_to_rx2	Confirmed	Link state 7: clear ACK owed, receive
+05683E	056A94	sub_5683E	dsp_rx_assemble	Confirmed	32-byte frame assembler, checksum, ACK/NAK, dispatch
+056A94	056B6E	sub_56A94	dsp_rx_frame	Confirmed	RX state dispatcher via table 0x056B8A (B102)
+056C2C	056C68	sub_56C2C	dsp_capture_id	Confirmed	Capture 16-byte ID rx+12 to FF4706
+056C68	056CB4	sub_56C68	dgid_expected	Confirmed	DG-ID filter active/value (copy of state-0 code)
+056CB4	056CBE	sub_56CB4	dgid_pair_a	Confirmed	r2 = FF8ED6/FF8ED7
+056CCA	056D16	sub_56CCA	idlist_find	Confirmed	Find 5-byte key in 24-entry ID list FF4576
+056D16	056D52	sub_56D16	idlist_add	Confirmed	Add FF46F6 entry to ID list, save, send to DSP
+056D52	056D7A	sub_56D52	idlist_find_free	Confirmed	Find free (0xFF) ID-list slot
+056D7A	056E52	sub_56D7A	idlist_candidate_ok	Confirmed	Validate captured ID FF4706 and check not duplicate
+056E52	056EE2	sub_56E52	idlist_sanitize	Confirmed	Blank malformed ID-list entries with ROM 0xF6D6
+056EE4	0572F2	sub_56EE4	rxst0_header	Confirmed	RX state 0: A6/B6 header, DG-ID, track select
+0572F2	057366	sub_572F2	rxst1_a7	Confirmed	State 1 (DT0 HC A7) -> 3
+057366	0573B6	sub_57366	rxst2_a8	Confirmed	State 2 (never stored)
+0573B6	05742A	sub_573B6	rxst13_a7	Confirmed	State 13 (DT1 HC A7) -> 15
+05742A	05747A	sub_5742A	rxst14_a8	Confirmed	State 14 (never stored)
+05747A	0574EE	sub_5747A	rxst7_a7	Confirmed	State 7 (DT2 HC A7) -> 9
+0574EE	05753E	sub_574EE	rxst8_a8	Confirmed	State 8 (never stored)
+05753E	0575B2	sub_5753E	rxst22_a7	Confirmed	State 22 (DT3 HC A7) -> 24
+0575B2	057602	sub_575B2	rxst23_a8	Confirmed	State 23 (never stored)
+057602	0576C0	sub_57602	rxst3_a6	Confirmed	State 3 (DT0 CC A6) -> 4
+0576C0	057772	sub_576C0	rxst4_a7	Confirmed	State 4 -> 5
+057772	057814	sub_57772	rxst5_a8	Confirmed	State 5: accumulator reset -> 6
+057814	0578D2	sub_57814	rxst15_a6	Confirmed	State 15 (DT1 CC A6) -> 16
+0578D2	057984	sub_578D2	rxst16_a7	Confirmed	State 16 -> 17
+057984	057A26	sub_57984	rxst17_a8	Confirmed	State 17: accumulator reset -> 18
+057A26	057A88	sub_57A26	rxst19_a6	Confirmed	State 19 inter-block resync -> 20
+057A88	057AE2	sub_57A88	rxst20_a7	Confirmed	State 20 -> 21
+057AE2	057B2C	sub_57AE2	rxst21_a8	Confirmed	State 21 -> 18
+057B2C	057C06	sub_57B2C	rxst9_a6	Confirmed	State 9 (DT2 CC A6, rx[6] gate) -> 10
+057C06	057CD4	sub_57C06	rxst10_a7	Confirmed	State 10 -> 11
+057CD4	057D92	sub_57CD4	rxst11_a8	Confirmed	State 11: accumulator reset -> 12
+057D92	057E5C	sub_57D92	rxst24_a6	Confirmed	State 24 (DT3 CC A6) -> 25
+057E5C	057F1A	sub_57E5C	rxst25_a7	Confirmed	State 25 -> 26
+057F1A	057FC0	sub_57F1A	rxst26_a8	Confirmed	State 26 -> 24, voice end sub_58E02
+057FC0	058060	sub_57FC0	msg_store_N	Confirmed	'N' class message check/store to FF07A4 (letters b/c/d/e)
+058060	05829A	sub_58060	msg_store_bracket	Confirmed	']' class message check/store to FF0BF4, caller registration
+05829A	0582F2	sub_5829A	msg_repack_pos	Inferred	Repack nibble fields, shift block, set letter
+0582F2	0582FA	sub_582F2	msg_repack_pos_tail	Confirmed	IDA-split tail of sub_5829A
+0582FA	058398	sub_582FA	msg_repack_D	Inferred	'D' letter: count entries, repack, letter 'F'
+0583F2	05841E	sub_583F2	msg_copy_G_to_bracket	Confirmed	Copy G store FF1440 to FF0BF4, clear FFB3FA
+058440	058538	sub_58440	msg_store_G	Confirmed	'G' class message check/store to FF1440
+058538	058616	sub_58538	msg_synth_G	Inferred	Synthesize canned G 'c'/'d' message with checksum
+058616	058678	sub_58616	msg_check_quote	Confirmed	'"' class check + registration (entry 05863A '^' class)
+058678	058874	sub_58678	rxst6_data_vd1	Confirmed	State 6: V/D-1 data accumulate, message dispatch
+058874	058C06	sub_58874	rxst18_data_fr	Confirmed	State 18: data-FR blocks, message dispatch

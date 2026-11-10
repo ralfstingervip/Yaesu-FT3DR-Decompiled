@@ -193,6 +193,9 @@ extern u8 pos_flag_A856;                    /* FFA856  node position valid */
 extern u8 pos_A857[15];                     /* FFA857  node position */
 extern u8 pos_A866[12];                     /* FFA866  node position 2 */
 extern u8 ram_BA32;                         /* FFBA32  gate for msg box */
+extern u8 msg_dest_kind_B3FD;               /* FFB3FD  recipient row / send kind (0 all, 0x21 room, 0x34 reply) */
+extern u8 msg_dest_B3FE[15];                /* FFB3FE  recipient ID(5)+name(10) */
+extern u8 ram_FF2EC9;                       /* FF2EC9  set 1 before queueing a message with file */
 extern u8 wx_B324_bytes[5];                /* FFB324  alias of wx_B324 as bytes */
 
 /* ==========================================================================
@@ -4118,202 +4121,217 @@ void msg_restore_editor_pos(void) { wx_sel = ed_pos_B283[0]; wx_cursor = ed_pos_
 /* (0652F0: byte_652F0 = {0,1,2,3,4,0}, the per-line-count first row.)   */
 
 /* ==========================================================================
- * Part 9: auto-extracted skeletons for the functions not hand-transcribed.
+ * Part 6: 0652F6-0656C6  message length/lines, the compose menus and the
+ * message send path (states 0x21/0x34/0x35/0x3C).
  * ========================================================================== */
 
 /* ---------------------------------------------------------------------------
- * 0652F6-065302 (12 B)  msg_0652F6  [sub_652F6]  Confirmed
- * Callers: 0649CC, 064B02, 06514A.
- * Body (complete):
- *   0652F6  mov.b   #0, r3l
- *   0652F8  mov.l   #0xFF061A, er5
- *   0652FE  mov.b   @er5+, r4l
- *   065300  cmp.b   #0xFF, r4l
+ * 0652F6-065302 (12 B)  msg_count_lines_652F6  [sub_652F6]  Confirmed
+ * 065302-06533C (58 B)  msg_set_len_6530A  [sub_65302]  Confirmed
+ * Callers: 0649CC, 064B02, 06514A (652F6); 064B38 (06530A entry).
+ * Length of the editor text FF061A (up to the first 0xFF, max 0x50) ->
+ * FF0618; line count (20 chars per line) -> FF0619: <0x15 -> 0,
+ * <0x29 -> 1, <0x3D -> 2, <0x51 -> 3, else 4.  IDA split the loop at
+ * 065302.
  * ------------------------------------------------------------------------- */
-void msg_0652F6(void) { /* see body above */ }
-
-/* ---------------------------------------------------------------------------
- * 065302-06533C (58 B)  msg_065302  [sub_65302]  Skeleton
- * Callers: table/indirect or fall-through (none by absolute reference).
- * writes ram_FF0618, ram_FF0619
- * ------------------------------------------------------------------------- */
-void msg_065302(void)
+void msg_count_lines_652F6(void)
 {
-    /* TODO(waveC): 25-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (065302..06533C). */
+    u8 n = 0; const u8 *p = wx_text_buf;
+    while (*p++ != 0xFF && ++n < 0x50) ;
+    msg_set_len_6530A(n);
+}
+void msg_set_len_6530A(u8 n /* r3l */)                   /* 06530A */
+{
+    ram_FF0618 = n;
+    ram_FF0619 = n < 0x15 ? 0 : n < 0x29 ? 1 : n < 0x3D ? 2 : n < 0x51 ? 3 : 4;
 }
 
 /* ---------------------------------------------------------------------------
- * 06533C-065350 (20 B)  msg_06533C  [sub_6533C]  Skeleton
- * Callers: table/indirect or fall-through (none by absolute reference).
- * reads wx_sel
+ * 06533C-065350 (20 B)  msg_key7_s34  [sub_6533C]  Confirmed
+ * 065350-06536E (30 B)  msg_compose_back  [sub_65350]  Confirmed
+ * 06536E-065374 (6 B)   msg_compose_edit  [sub_6536E]  Confirmed
+ * 065374-06537A (6 B)   msg_compose_templates  [sub_65374]  Confirmed
+ * 06537A-0653B8 (62 B)  msg_preview_6537A  [sub_6537A]  Confirmed
+ * 0653B8-0653D2 (26 B)  msg_after_copy_653B8  [sub_653B8]  Confirmed
+ * Callers: off_601F4[0x34]/02BF76/06533C etc.
+ * State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A),
+ * 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by
+ * purpose B41D: 2 -> options (64F76), 1 -> view (64B58), else empty
+ * list (647C6).  6537A: for reply/forward (B41D 1/2) B3FD = 0x34, the
+ * 15-byte destination at FF2FE3 -> B3FE, then send (654F8); otherwise
+ * state 0x35 (recipient picker, B410 = state).
  * ------------------------------------------------------------------------- */
-void msg_06533C(void)
+void msg_key7_s34(void)
 {
-    /* TODO(waveC): 9-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (06533C..065350). */
+    switch (wx_sel) {
+    case 0: consume_key(); return;
+    case 1: msg_preview_6537A(); return;
+    case 2: msg_goto_templates(); return;
+    case 3: msg_goto_editor(); return;
+    default: msg_compose_back(); return;
+    }
 }
-
-/* ---------------------------------------------------------------------------
- * 065350-06536E (30 B)  msg_065350  [sub_65350]  Skeleton
- * Callers: 02BF76.
- * calls sub_647C6, sub_64B58, sub_64F76
- * reads msg_B41D
- * ------------------------------------------------------------------------- */
-void msg_065350(void)
+void msg_compose_back(void)
 {
-    /* TODO(waveC): 11-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (065350..06536E). */
+    if (msg_B41D == 2) msg_goto_options_64F76();
+    else if (msg_B41D == 1) msg_goto_view_64B58();
+    else msg_list_empty_647C6();
 }
-
-/* ---------------------------------------------------------------------------
- * 06536E-065374 (6 B)  msg_06536E  [sub_6536E]  Confirmed
- * Callers: 02B622, 06533C.
- * calls sub_64B6A
- * Body (complete):
- *   06536E  jsr     sub_64B6A:24
- *   065372  bra     locret_653B6:8
- * ------------------------------------------------------------------------- */
-void msg_06536E(void) { /* see body above */ }
-
-/* ---------------------------------------------------------------------------
- * 065374-06537A (6 B)  msg_065374  [sub_65374]  Confirmed
- * Callers: 06533C.
- * calls sub_65202
- * Body (complete):
- *   065374  jsr     sub_65202:24
- *   065378  bra     locret_653B6:8
- * ------------------------------------------------------------------------- */
-void msg_065374(void) { /* see body above */ }
-
-/* ---------------------------------------------------------------------------
- * 06537A-0653B8 (62 B)  msg_06537A  [sub_6537A]  Skeleton
- * Callers: 06514A, 06533C.
- * calls sub_653B8, sub_654F8, sub_3FFA0
- * writes ram_FFB3FD
- * reads msg_B41D
- * ------------------------------------------------------------------------- */
-void msg_06537A(void)
+void msg_compose_edit(void) { msg_goto_editor(); }
+void msg_compose_templates(void) { msg_goto_templates(); }
+void msg_preview_6537A(void)
 {
-    /* TODO(waveC): 21-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (06537A..0653B8). */
+    if (msg_B41D == 1 || msg_B41D == 2) {
+        msg_dest_kind_B3FD = 0x34;
+        memcpy(msg_dest_B3FE, &msg_cur[0x19] /*FF2FE3*/, 0x0F);
+        msg_send_654F8();
+        return;
+    }
+    msg_after_copy_653B8();
 }
+void msg_after_copy_653B8(void) { msg_ret_B410 = wx_state; wx_sel = wx_cursor = 0; wx_state = 0x35; }
 
 /* ---------------------------------------------------------------------------
- * 0653B8-0653D2 (26 B)  msg_goto_s35_0653B8  [sub_653B8]  Skeleton
- * Callers: 064C5A, 06537A.
- * sets wx_state = 0x35
- * writes msg_ret_B410, wx_cursor, wx_sel, wx_state
+ * 0653D2-0653F8 (38 B)  msg_key7_s21  [sub_653D2]  Inferred
+ * 0653F8-0653FE (6 B)   msg_s21_tail  [sub_653F8]  Confirmed
+ * Callers: off_601F4[0x21]; 02BF60 (653F8).
+ * State 0x21 (send page F621): rows 0..lines+3 are the text lines
+ * (065434 region -> consume); row lines+4 -> send to room (65410); +5,
+ * +6, +7 -> 06540A/065404/0653FE (not in the function list); beyond ->
+ * sub_65E3E.
  * ------------------------------------------------------------------------- */
-void msg_goto_s35_0653B8(void)
+void msg_key7_s21(void)
 {
-    /* TODO(waveC): 8-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (0653B8..0653D2). */
+    u8 r = wx_sel, b = ram_FF0619 + 4;
+    if (r < b) { consume_key(); return; }
+    if (r == b) { msg_send_page_65410(); return; }
+    if (r == b + 1) { msg_s21_opt_6540A(); return; }
+    if (r == b + 2) { msg_s21_opt_65404(); return; }
+    if (r == b + 3) { msg_s21_opt_653FE(); return; }
+    msg_s21_tail();
 }
+void msg_s21_tail(void) { msg_s21_more_65E3E(); }
 
 /* ---------------------------------------------------------------------------
- * 0653D2-0653F8 (38 B)  msg_0653D2  [sub_653D2]  Skeleton
- * Callers: table/indirect or fall-through (none by absolute reference).
- * reads ram_FF0619, wx_sel
- * ------------------------------------------------------------------------- */
-void msg_0653D2(void)
-{
-    /* TODO(waveC): 16-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (0653D2..0653F8). */
-}
-
-/* ---------------------------------------------------------------------------
- * 0653F8-0653FE (6 B)  msg_0653F8  [sub_653F8]  Confirmed
- * Callers: 02BF60.
- * calls sub_65E3E
- * Body (complete):
- *   0653F8  jsr     sub_65E3E:24
- *   0653FC  bra     locret_65440:8
- * ------------------------------------------------------------------------- */
-void msg_0653F8(void) { /* see body above */ }
-
-/* ---------------------------------------------------------------------------
- * 065410-065442 (50 B)  msg_065410  [sub_65410]  Skeleton
+ * 065410-065442 (50 B)  msg_send_page_65410  [sub_65410]  Confirmed
+ * 065442-06545A (24 B)  msg_dest_room  [sub_65442]  Confirmed
  * Callers: 06514A, 0653D2.
- * calls sub_67B6A, sub_6F4C6, sub_65442, sub_6A1AE, sub_65E76, sub_3FFA0
- * writes ram_FFB3FD
- * reads home_app_mode
+ * Send the composed text to the current room (WIRES-X): B3FD = 0x21;
+ * sub_67B6A (send allowed?) else consume; sub_6F4C6 (build); type r3l =
+ * 0x15 (mode 9) / 0x17 (mode 10) with b6 clear; er5 = destination: room
+ * B2C9, or the opened record B34F when B26E == 2 (65442); queue via
+ * sub_6A1AE; then sub_65E76.
  * ------------------------------------------------------------------------- */
-void msg_065410(void)
+void msg_send_page_65410(void)
 {
-    /* TODO(waveC): 18-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (065410..065442). */
+    u8 type;
+    msg_dest_kind_B3FD = 0x21;
+    if (!msg_can_send_67B6A()) { consume_key(); return; }
+    msg_build_6F4C6();
+    type = (home_app_mode == 0x0A) ? 0x17 : 0x15;
+    type &= ~0x40;
+    msg_queue_6A1AE(type, msg_dest_room());
+    msg_sent_65E76();
 }
+const u8 *msg_dest_room(void) { return (wx_menu_origin == 2) ? &wx_open_rec[1] : wx_room_id; }
 
 /* ---------------------------------------------------------------------------
- * 065442-06545A (24 B)  msg_065442  [sub_65442]  Skeleton
- * Callers: 05F5D0, 065410, 065F5C.
- * reads wx_menu_origin
+ * 06545A-0654F8 (158 B)  msg_send_to_member  [sub_6545A]  Confirmed
+ * 0654F8-06558E (150 B)  msg_send_654F8  [sub_654F8]  Confirmed
+ * 06558E-0655A0 (18 B)   msg_goto_sending  [sub_6558E]  Confirmed
+ * Callers: 02B5E6 (6545A); 06537A, 06545A (654F8); 0654F8, 0655B0 (6558E).
+ * State 0x35 recipient picker.  Row 0 -> send to all (065532: B95E = 0,
+ * B3FD = 0, type 0x21/0x23 with b6 set, dest ROM 0655A0).  Row n -> the
+ * member at map FFB8C0[n-1]; it must exist and not be flagged (+0x0F
+ * b7); its ID (or ROM 059B3F when empty) -> B3FE, its 10-char name
+ * (bytes with b7 set -> ' ') -> B403.  654F8: B95E = 2 (TX-end
+ * countdown), sub_67B6A, build (6F4C6 from state 0x34 else 6F4E0), type
+ * 0x21/0x23 (mode 10) with b4 set, b6 clear, dest B3FE, queue
+ * (sub_6A1AE), state 0x3C (6558E).  065574: return path (651AA / 64B58).
  * ------------------------------------------------------------------------- */
-void msg_065442(void)
+void msg_send_to_member(void)
 {
-    /* TODO(waveC): 7-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (065442..06545A). */
+    u8 r = wx_sel, m; u8 *rec; const u8 *src; u8 i, c;
+    msg_dest_kind_B3FD = r;
+    if (r == 0) { msg_send_all_65532(); return; }
+    if ((s8)wx_B3EF < 0) { consume_key(); return; }
+    m = gm_row_map_B8C0[r - 1];
+    if (m == 0xFF || m >= 0x18) { consume_key(); return; }
+    rec = &wx_cat_list[m * 0x20];
+    if (rec[5] == 0xFF || (rec[0x0F] & 0x80)) { consume_key(); return; }
+    src = (rec[0] == 0xFF) ? rom_59B3F : rec;
+    memcpy(msg_dest_B3FE, src, 5);
+    for (i = 0; i < 10; i++) { c = rec[5 + i]; msg_dest_B3FE[5 + i] = (c & 0x80) ? ' ' : c; }
+    msg_send_654F8();
 }
+void msg_send_654F8(void)
+{
+    u8 type;
+    wx_B95E = 2;
+    if (!msg_can_send_67B6A()) { consume_key(); return; }
+    if (msg_ret_B410 == 0x34) msg_build_6F4C6(); else msg_build_6F4E0();
+    type = (home_app_mode == 0x0A) ? 0x23 : 0x21;
+    type = (type & ~0x40) | 0x10;
+    msg_queue_6A1AE(type, msg_dest_B3FE);
+    msg_goto_sending();
+}
+void msg_send_all_65532(void)                            /* 065532 */
+{
+    u8 type;
+    wx_B95E = 0; msg_dest_kind_B3FD = 0;
+    if (!msg_can_send_67B6A()) { consume_key(); return; }
+    if (msg_ret_B410 == 0x34) msg_build_6F4C6(); else msg_build_6F4E0();
+    type = ((home_app_mode == 0x0A) ? 0x23 : 0x21) | 0x40;
+    msg_queue_6A1AE(type, rom_655A0_all);
+    msg_goto_sending();
+}
+void msg_goto_sending(void) { wx_sel = wx_cursor = 0; wx_state = 0x3C; }
 
 /* ---------------------------------------------------------------------------
- * 06545A-0654F8 (158 B)  msg_06545A  [sub_6545A]  Skeleton
- * Callers: 02B5E6.
- * writes ram_FFB3FD
- * reads wx_B3EF, wx_sel
+ * 0655B0-0656BA (266 B)  msg_forward_to  [sub_655B0]  Confirmed
+ * 0656BA-0656BC (2 B)    msg_nop_656BA  [sub_656BA]  Confirmed (rts)
+ * Callers: 02B6CA (655B0); 065058/065064 (065668 = msg_forward_65668).
+ * Forward the open message (with its file) to a member or to all: same
+ * recipient selection as 6545A into B3FE/B403, B95E = 2, sub_5EE1A
+ * (busy check, nonzero -> return), type 0x23 b4 / 0x21|0x23 b6 for "all"
+ * (dest ROM 0655A0), FF2EC9 = 1, sub_6A628 (queue with attachment),
+ * B275 b2|b7, state 0x3C.
  * ------------------------------------------------------------------------- */
-void msg_06545A(void)
+void msg_forward_to(void)
 {
-    /* TODO(waveC): 55-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (06545A..0654F8). */
+    u8 r = wx_sel, m; u8 *rec; const u8 *src; u8 i, c;
+    msg_dest_kind_B3FD = r;
+    if (r == 0) { msg_forward_65668(); return; }
+    if ((s8)wx_B3EF < 0) { consume_key(); return; }
+    m = gm_row_map_B8C0[r - 1];
+    if (m == 0xFF || m >= 0x18) { consume_key(); return; }
+    rec = &wx_cat_list[m * 0x20];
+    if (rec[5] == 0xFF || (rec[0x0F] & 0x80)) { consume_key(); return; }
+    src = (rec[0] == 0xFF) ? rom_59B3F : rec;
+    memcpy(msg_dest_B3FE, src, 5);
+    for (i = 0; i < 10; i++) { c = rec[5 + i]; msg_dest_B3FE[5 + i] = (c & 0x80) ? ' ' : c; }
+    wx_B95E = 2;
+    if (msg_busy_5EE1A()) return;
+    msg_queue_file(0x23 | 0x10, msg_dest_B3FE);
 }
-
-/* ---------------------------------------------------------------------------
- * 0654F8-06558E (150 B)  msg_0654F8  [sub_654F8]  Skeleton
- * Callers: 06537A, 06545A.
- * calls sub_67B6A, sub_6F4C6, sub_6F4E0, sub_6A1AE, sub_6558E,
- *     sub_651AA, sub_64B58, sub_3FFA0
- * writes ram_FFB3FD, wx_B95E
- * reads home_app_mode, msg_ret_B410
- * ------------------------------------------------------------------------- */
-void msg_0654F8(void)
+void msg_forward_65668(void)                             /* 065668 */
 {
-    /* TODO(waveC): 52-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (0654F8..06558E). */
+    wx_B95E = 0; msg_dest_kind_B3FD = 0;
+    if (msg_busy_5EE1A()) return;
+    msg_queue_file(((home_app_mode == 0x0A) ? 0x23 : 0x21) | 0x40, rom_655A0_all);
 }
-
-/* ---------------------------------------------------------------------------
- * 06558E-0655A0 (18 B)  msg_goto_s3C_06558E  [sub_6558E]  Skeleton
- * Callers: 0654F8, 0655B0.
- * sets wx_state = 0x3C
- * writes wx_cursor, wx_sel, wx_state
- * ------------------------------------------------------------------------- */
-void msg_goto_s3C_06558E(void)
+static void msg_queue_file(u8 type, const u8 *dest)      /* 065690 */
 {
-    /* TODO(waveC): 6-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (06558E..0655A0). */
+    ram_FF2EC9 = 1;
+    msg_queue_file_6A628(type, dest);
+    wx_B275 |= 0x84;
+    msg_goto_sending();
 }
+void msg_nop_656BA(void) { }
 
-/* ---------------------------------------------------------------------------
- * 0655B0-0656BA (266 B)  msg_0655B0  [sub_655B0]  Skeleton
- * Callers: 02B6CA.
- * calls sub_5EE1A, sub_6A628, sub_6558E, sub_64F76, sub_3FFA0
- * writes ram_FF2EC9, ram_FFB3FD, wx_B275, wx_B95E
- * reads home_app_mode, wx_B3EF, wx_sel
- * ------------------------------------------------------------------------- */
-void msg_0655B0(void)
-{
-    /* TODO(waveC): 89-instruction body not hand-transcribed; the facts
-       above are extracted from the listing (0655B0..0656BA). */
-}
-
-/* ---------------------------------------------------------------------------
- * 0656BA-0656BC (2 B)  msg_nop_0656BA  [sub_656BA]  Confirmed
- * Callers: table/indirect or fall-through (none by absolute reference).
- * Body (complete):
- *   0656BA  rts
- * ------------------------------------------------------------------------- */
-void msg_nop_0656BA(void) { /* see body above */ }
+/* ==========================================================================
+ * Part 9: auto-extracted skeletons for the functions not hand-transcribed.
+ * ========================================================================== */
 
 /* ---------------------------------------------------------------------------
  * 0656BC-0656C6 (10 B)  msg_0656BC  [sub_656BC]  Confirmed

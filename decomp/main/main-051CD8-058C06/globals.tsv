@@ -1,0 +1,87 @@
+addr	name	width	meaning	evidence
+FFA50A	aprs_addr_status	u8	APRS address parse status: 0 ok, 1 bad SSID, 2 long (7-9 char) callsign	051CD8/051D6A/051ED4 writes
+FFA55A	aprs_path_hbit_done	u8	H bit already given to a path element	051E94
+FFA55B	aprs_path_count	u8	number of path elements encoded	051EA8
+FFB05A	stage	u8[22]	shared staging/text-line buffer (doc 50)	052B7C.., C7E4
+FFBC2C	frame_cur	u32	cursor into the MAIN->SUB IPC frame payload / post_line12 slot	052B82, C7E4
+FFBBE8	line_len	u8	current screen line length (19/20/22)	052B8A, 052DCA
+FFBBE9	screen_substate	u8	APRS detail screen sub-state (5 title, 8 rows)	052DF4, 052E22
+FFB050	row_ctx	u32	row index passed to row builder callbacks	05294C
+FFB288	row_painter	u32	function pointer of the active screen's row painter	052A7A (doc 41)
+FFB2A8	list_sel	u8	selection copied from FFB3F1/FFB3F5 for relative rows	052A3E
+FFB3F1	list_sel_src	u8	list selection index	052A3A
+FFB3F5	list_sel_src2	u8	alternate list selection index	053634
+FFAA33	fmt_flags	u8	b6 = nonzero digit emitted (leading-zero blanking)	05270A..
+FF9DFF	aprs_pkt_type	u8	selector for extent table 0x04ABE4	05221E
+FFA4BE	aprs_scan_beg	u32	extent scan window start	0521FE
+FFA4C2	aprs_scan_end	u32	extent scan window end	052214
+FFA4C6	aprs_old_len	u16	stored-packet payload length	052238
+FFA4CA	aprs_old_ptr	u32	stored-packet payload start	052244
+FFA4FE	aprs_skip	u8	payload skip count from classifier	05237E
+FF9E08	aprs_work_rec	u8[32]	work copy of an APRS station/message record	052C0C, 054812
+FF9E1F	aprs_rec_type	u8	record +0x17 station-type index (NOT destination; contradicts doc 12)	052C94
+FF9E22	aprs_rec_flags	u8	record flags: b0 outgoing, b2 ack owed, b5 Emergency, b6 auto-reply, b7 acked	052C8C, 052FA2
+FF9E23	aprs_rec_retries	u8	record retry counter	052FAE
+FFA9C4	today_date	u32	current date (compared with record date)	052D20
+FFA90C	beacon_mode	u8	0 off / 1 auto / 2 SmartBeaconing	054562
+FFA6EC	station_map	u8[]	station list display order -> slot (FEE000 records)	052BD0
+FFA764	msg_map	u8[]	message list display order -> slot (FEE780 records)	054804
+FFA7BE	own_pos	u8[10]	own position record	053798..
+FFA7C8	other_pos	u8[10]	other station position record	0544B0
+FFA7D8	rx_pos	u8[10]	last received position record	0542BC
+FFA7A0	dist_digits	u8[4]	distance digits (0xFFFFFFFF = out of range)	053ECE
+FFA7A4	bearing_sector	u8	16-point compass sector	053F3C
+FFA7A5	dist_flags	u8	b0 own S, b7 own W, b3 /10, b4 /20	0539E8, 053D42
+FF9D43	pos_src_tag	u8	0 GPS, 1 manual, 2 stored position	053792
+FFA50E	beacon_req	u8	beacon arm request (>=0 pending)	054594
+FFA50F	beacon_state	u8	beacon task state	0545F0
+FFA510	retry_req	u8	message retry request	0546AC
+FFA511	retry_slot	u8	current message retry slot	0546D4
+FFA512	retry_scan	u8	last scanned retry slot	054732
+FFA513	retry_state	u8	retry task state	0546E2
+FF95B6	retry_timer	u16	retry timer 10 ms (0x1770 60 s, 0x12C 3 s)	0546DC
+FFA514	ack_req	u8	ack request	0548CE
+FFA515	ack_slot	u8	slot owing an ack	0548FE
+FFA518	ack_scan	u8	last scanned ack slot	054A72
+FFA519	ack_state	u8	0 idle 1 timing 2 sent	05490C
+FF95B8	ack_timer	u16	ack delay 0x12C = 3 s	054906
+FFA51A	autoreply_slot	u8	auto-reply pending slot	0549F8
+FF95EC	beacon_timer	u16	beacon interval countdown (1 s tier)	054606
+FF8152	setup_rd	u32	USB SETUP ring read pointer (poll); L15 calls it the write pointer	05506E
+FF8156	setup_wr	u32	USB SETUP ring write pointer (ISR); FF8158 is its low word	054DCC
+FF8180	usb_ev	u8	USB event flags	054D8C..
+FF8182	usb_latch	u8	next FSM state after ZLP	05514E
+FF8183	usb_state	u8	control FSM state	054FEC
+FFB094	ep0in_cnt	u8	EP0-IN bytes remaining	055144
+FFB09E	ep0in_ptr	u32	EP0-IN source	055148
+FFBA6C	push_index	u16	EP1 write index into FF5806 window	055696
+FFBA6E	push_expect	u32	bytes still expected on EP1	05566A
+FFBA72	push_refuse	u8	refused transfer (drain)	055670
+FFB098	push_remain	u32	bytes still to forward	0559EA
+FFBC48	blk_src	u32	block source pointer	0559CC
+FFBC3E	blk_len	u16	block length	0559D6
+FFBC40	blk_no	u16	block number	055B4C
+FFBC42	blk_total	u16	total blocks	055B3C
+FFBC44	blk_csum	u32	running 32-bit checksum	055B46
+FFBA74	blk_left	u16	bytes left in current 1 KB block	055CA8
+FFB208	pic_size	u32	picture size (send path)	055C3A
+FFB25A	pic_blocks_1k	u8	1 KB block count	055C54
+FFBC50	picsend_state	u8	send state machine (table 0x055BF2)	055B8C
+FFBC54	rdbk_state	u8	read-back state machine (table 0x055C06)	055BB4
+FFBC57	rxpush_state	u8	rx-push state machine (table 0x055C12)	055BDC
+FFBC52	pic_source	u8	2 camera, 3 received	055A44
+FFBC53	rdbk_retries	u8	read-back retry budget	055DD0
+FFBBE4	ipc_busy	u8	IPC busy gate for block pushes	055CEA
+FFB0A6	dsp_pwr_state	u8	DSP power state (doc 52)	0564A4
+FFB0A7	dsp_link_state	u8	DSP link state (doc 52)	05656E
+FFB0A2	dsp_line	u8	b7 handshake level, b0 edge event	0561DC
+FFB0A4	dsp_flags	u8	DSP link flags (doc 52)	0565A0
+FFB0B3	dsp_rx_hunting	u8	0 = hunting start byte	0568E6
+FFB0E0	dsp_rx	u8[96]	DSP receive frame buffer	0568CA
+FFB102	dsp_rx_state	u8	RX state machine index (table 0x056B8A, doc 56)	056B58
+FF4576	idlist	u8[24*16]	24-entry ID list pushed to DSP	056CD0
+FF4706	id_candidate	u8[16]	ID captured from rx+12	056C50
+FF07A4	msg_store_N	u16+bytes	N class message store	05803E
+FF0BF4	msg_store_bracket	u16+bytes	] class message store	0581B0
+FF1440	msg_store_G	u16+bytes	G class message store	058516
+FFB116	msg_len	u16	assembled message length	057FE2

@@ -49,9 +49,9 @@ code here agrees (`FF959B`, `FF95E4` are slow-tier cells).
 
 ## Left undone
 
-- About 119 functions from `0x065302` onward are **Skeleton**. Their headers list callers, state
+- About 107 functions from `0x0656BC` onward are **Skeleton**. Their headers list callers, state
   stores, tones, calls and globals, extracted from the listing, with a `TODO(waveC)`. This covers the
-  message-editor tail, `0x0661C8`–`0x066966` (mode-10 PTT/keys, the upload TX), and the content-page
+  message-box confirm/delete handlers, `0x0661C8`–`0x066966` (mode-10 PTT/keys, the upload TX), and the content-page
   renderers `0x066966`–`0x0675EE`.
 - The dial descriptor bytes (`0x0601B0`, `0x064232`…) and ROM strings `0x067FA4`, `0x004C14`,
   `0x0631B8` are not in the listing, so their values are unknown.

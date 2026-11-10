@@ -314,23 +314,23 @@ start	end	ida_name	new_name	confidence	summary
 065202	0652B0	sub_65202	msg_goto_templates	Confirmed	Template picker (state 0x25).
 0652B0	0652D0	sub_652B0	msg_save_editor_pos	Confirmed	Template picker (state 0x25).
 0652D0	0652F0	sub_652D0	msg_restore_editor_pos	Confirmed	Template picker (state 0x25).
-0652F6	065302	sub_652F6	msg_0652F6	Confirmed	Body (complete):
-065302	06533C	sub_65302	msg_065302	Skeleton	writes ram_FF0618, ram_FF0619
-06533C	065350	sub_6533C	msg_06533C	Skeleton	reads wx_sel
-065350	06536E	sub_65350	msg_065350	Skeleton	calls sub_647C6, sub_64B58, sub_64F76 reads msg_B41D
-06536E	065374	sub_6536E	msg_06536E	Confirmed	calls sub_64B6A Body (complete):
-065374	06537A	sub_65374	msg_065374	Confirmed	calls sub_65202 Body (complete):
-06537A	0653B8	sub_6537A	msg_06537A	Skeleton	calls sub_653B8, sub_654F8, sub_3FFA0 writes ram_FFB3FD reads msg_B41D
-0653B8	0653D2	sub_653B8	msg_goto_s35_0653B8	Skeleton	sets wx_state = 0x35 writes msg_ret_B410, wx_cursor, wx_sel, wx_state
-0653D2	0653F8	sub_653D2	msg_0653D2	Skeleton	reads ram_FF0619, wx_sel
-0653F8	0653FE	sub_653F8	msg_0653F8	Confirmed	calls sub_65E3E Body (complete):
-065410	065442	sub_65410	msg_065410	Skeleton	calls sub_67B6A, sub_6F4C6, sub_65442, sub_6A1AE, sub_65E76, sub_3FFA0 writes ram_FFB3FD reads home_app_mode
-065442	06545A	sub_65442	msg_065442	Skeleton	reads wx_menu_origin
-06545A	0654F8	sub_6545A	msg_06545A	Skeleton	writes ram_FFB3FD reads wx_B3EF, wx_sel
-0654F8	06558E	sub_654F8	msg_0654F8	Skeleton	calls sub_67B6A, sub_6F4C6, sub_6F4E0, sub_6A1AE, sub_6558E, sub_651AA, sub_64B58, sub_3FFA0 writes ram_FFB3FD, wx_B95E reads home_app_mode, msg_ret_B410
-06558E	0655A0	sub_6558E	msg_goto_s3C_06558E	Skeleton	sets wx_state = 0x3C writes wx_cursor, wx_sel, wx_state
-0655B0	0656BA	sub_655B0	msg_0655B0	Skeleton	calls sub_5EE1A, sub_6A628, sub_6558E, sub_64F76, sub_3FFA0 writes ram_FF2EC9, ram_FFB3FD, wx_B275, wx_B95E reads home_app_mode, wx_B3EF, wx_sel
-0656BA	0656BC	sub_656BA	msg_nop_0656BA	Confirmed	Body (complete):
+0652F6	065302	sub_652F6	msg_count_lines_652F6	Confirmed	Length of the editor text FF061A (up to the first 0xFF, max 0x50) -> <0x29 -> 1, <0x3D -> 2, <0x51 -> 3, else 4.
+065302	06533C	sub_65302	msg_set_len_6530A	Confirmed	Length of the editor text FF061A (up to the first 0xFF, max 0x50) -> <0x29 -> 1, <0x3D -> 2, <0x51 -> 3, else 4.
+06533C	065350	sub_6533C	msg_key7_s34	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+065350	06536E	sub_65350	msg_compose_back	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+06536E	065374	sub_6536E	msg_compose_edit	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+065374	06537A	sub_65374	msg_compose_templates	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+06537A	0653B8	sub_6537A	msg_preview_6537A	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+0653B8	0653D2	sub_653B8	msg_after_copy_653B8	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+0653D2	0653F8	sub_653D2	msg_key7_s21	Confirmed	State 0x21 (send page F621): rows 0..lines+3 are the text lines (065434 region -> consume);
+0653F8	0653FE	sub_653F8	msg_s21_tail	Confirmed	State 0x21 (send page F621): rows 0..lines+3 are the text lines (065434 region -> consume);
+065410	065442	sub_65410	msg_send_page_65410	Confirmed	Send the composed text to the current room (WIRES-X): B3FD = 0x21;
+065442	06545A	sub_65442	msg_dest_room	Confirmed	Send the composed text to the current room (WIRES-X): B3FD = 0x21;
+06545A	0654F8	sub_6545A	msg_send_to_member	Confirmed	State 0x35 recipient picker.
+0654F8	06558E	sub_654F8	msg_send_654F8	Confirmed	State 0x35 recipient picker.
+06558E	0655A0	sub_6558E	msg_goto_sending	Confirmed	State 0x35 recipient picker.
+0655B0	0656BA	sub_655B0	msg_forward_to	Confirmed	Forward the open message (with its file) to a member or to all: same recipient selection as 6545A into B3FE/B403, B95E = 2, sub_5EE1A (busy check, nonzero -> return), typ
+0656BA	0656BC	sub_656BA	msg_nop_656BA	Confirmed	Forward the open message (with its file) to a member or to all: same recipient selection as 6545A into B3FE/B403, B95E = 2, sub_5EE1A (busy check, nonzero -> return), typ
 0656BC	0656C6	sub_656BC	msg_0656BC	Confirmed	reads ram_FFB3F6 Body (complete):
 0656C6	06579A	sub_656C6	msg_0656C6	Skeleton	calls sub_6F414, sub_1BF8E, sub_6475A, sub_65D84, nullsub_41, sub_64F06, sub_6F3F6, sub_64782, sub_65DAE, nullsub_40, sub_64A42 writes sd_job_BAA3, wx_state reads msg_ret
 06579A	0657AA	sub_6579A	msg_06579A	Skeleton	calls sub_3FFA0 writes wx_state reads msg_ret_B92C
