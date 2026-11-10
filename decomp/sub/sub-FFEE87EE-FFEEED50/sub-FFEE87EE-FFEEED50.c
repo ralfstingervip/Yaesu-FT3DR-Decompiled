@@ -1903,3 +1903,348 @@ u8 *ui_current_record(void)
     }
     return p;
 }
+
+/* ============================================================================
+ * ELEMENT LOCATORS  (FFEEC5AB..FFEEED50)
+ * Each returns where an operating-screen element sits in the current layout:
+ * x, y and (some) an RGB565 colour (white = active row, grey 0x7BEF =
+ * inactive row).  All outputs start at 0xFFFF (= "not shown", rejected by
+ * the OFFSCREEN test).  Inputs common to all:
+ *   rec = ui_current_record(); type = ui_screen_type();
+ *   op = shadow[0]; sub = shadow[1]; m = rec[0];
+ *   z  = (m == 0 || m == 2)        b4c = (shadow[9] & 0x10) == 0
+ * All Confirmed (decision trees transcribed from the listing; uimm8 operands
+ * resolved, e.g. 0x82, 0x84, 0xBD, 0xE4).
+ * ========================================================================== */
+
+#define LOC_PROLOGUE  u8 *rec = ui_current_record(); u8 type = ui_screen_type(); \
+                      u8 op = g_shadow[0], sub = g_shadow[1], m = rec[0];       \
+                      u8 z = (m == 0 || m == 2), b4c = (g_shadow[9] & 0x10) == 0; \
+                      (void)z; (void)b4c; (void)type
+#define SET3(X, Y, C) do { *x = (X); *y = (Y); *c = (C); return; } while (0)
+#define SET2(X, Y)    do { *x = (X); *y = (Y); return; } while (0)
+
+/* FFEEC5AB-FFEEC7E1  size 566  loc_elem0F  (sub_FFEEC5AB)  Confirmed. */
+void loc_elem0F(u16 *x, u16 *y, u16 *c)
+{
+    LOC_PROLOGUE;
+    *x = *y = *c = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0) {
+            if (b4c) { if (type == 2) SET3(0, 0x79, RGB_GREY); SET3(0, 0x15, RGB_WHITE); }
+            if (type == 1) SET3(0, 0x15, RGB_GREY);
+            if (type == 2) SET3(0, 0x55, RGB_WHITE);
+            SET3(0, 0x15, RGB_WHITE);
+        }
+        if (sub == 1 || sub == 6 || sub == 0x15 || sub == 0x14 || sub == 0x12 || sub == 0x0F) SET3(0, 0x15, RGB_WHITE);
+        if (sub == 3) {
+            if (type == 4) SET3(0, 0x14, RGB_WHITE);
+            if (type == 1) SET3(0, 0x4B, b4c ? RGB_WHITE : RGB_GREY);
+            if (type == 2) SET3(0, 0x82, b4c ? RGB_GREY : RGB_WHITE);
+            return;
+        }
+        if ((sub == 0x0B || sub == 0x13) && m != 2) SET3(0, 0x15, RGB_WHITE);
+    } else if (op == 0xF8) { if (sub == 0) SET3(1, 0x1F, RGB_WHITE); }
+    else if (op == 0xFD)   { if (sub == 0) SET3(0, 0x15, RGB_WHITE); }
+}
+
+/* FFEEC7E1-FFEECAE0  size 767  loc_elem10  (sub_FFEEC7E1)  Confirmed. */
+void loc_elem10(u16 *x, u16 *y, u16 *c)
+{
+    LOC_PROLOGUE;
+    *x = *y = *c = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0) {
+            if (z) {
+                if (b4c) { if (type == 1) SET3(0x29, 0x17, RGB_WHITE);
+                           if (type == 3) SET3(0, 0x2B, RGB_WHITE); SET3(0, 0x8F, RGB_GREY); }
+                if (type == 1) SET3(0, 0x2B, RGB_GREY);
+                if (type == 2) SET3(0x29, 0x57, RGB_WHITE);
+                SET3(0, 0x2B, RGB_WHITE);
+            }
+            if (b4c) { if (type == 1) SET3(0, 0x2B, RGB_WHITE);
+                       if (type == 3) SET3(0, 0x2B, RGB_WHITE); SET3(0, 0x8F, RGB_GREY); }
+            if (type == 1) SET3(0, 0x2B, RGB_GREY);
+            if (type == 2) SET3(0, 0x6B, RGB_WHITE);
+            SET3(0x29, 0x17, RGB_WHITE);
+        }
+        if (sub == 1) SET3(0x29, 0x17, RGB_WHITE);
+        if (sub == 0x14 || sub == 0x15) { if (z) SET3(0x29, 0x17, RGB_WHITE); SET3(0, 0x2B, RGB_WHITE); }
+        if (sub == 0x0B || sub == 0x13) { if (m != 2) SET3(0, 0x2B, RGB_WHITE); return; }
+        if (sub == 0x12) SET3(0, 0x2B, RGB_WHITE);
+        if (sub == 0x0F || sub == 6) SET3(0, 0x17, RGB_WHITE);
+        if (sub == 3 && type != 4) {
+            if (type == 1) SET3(0, 0x4D, b4c ? RGB_WHITE : RGB_GREY);
+            if (type == 2) SET3(0, 0x84, b4c ? RGB_GREY : RGB_WHITE);
+        }
+    } else if (op == 0xFD && sub == 0) SET3(0, 0x2B, RGB_WHITE);
+}
+
+/* Shared shape of the 2-output locators 11/12/13/16 (Confirmed per body):
+ *   F1 sub0: z: (b4c&&type1)->(XA,YA) (!b4c&&type2)->(XA,YA+0x40)
+ *           !z: (b4c&&type1)->(XB,YB) (!b4c&&type2)->(XB,YB+0x40)
+ *   sub1 -> (XA,YA); sub 0x14/0x15 -> z?(XA,YA):(XB,YB); sub 0x12 -> (XB,YB) [not elem16] */
+static void loc_two_row(u16 *x, u16 *y, u16 xa, u16 ya, u16 xb, u16 yb, u8 has12)
+{
+    LOC_PROLOGUE;
+    *x = *y = 0xFFFF;
+    if (op != 0xF1) return;
+    if (sub == 0) {
+        if (z) { if (b4c) { if (type == 1) SET2(xa, ya); return; } if (type == 2) SET2(xa, ya + 0x40); return; }
+        if (b4c) { if (type == 1) SET2(xb, yb); return; } if (type == 2) SET2(xb, yb + 0x40); return;
+    }
+    if (sub == 1) SET2(xa, ya);
+    if (sub == 0x14 || sub == 0x15) { if (z) SET2(xa, ya); SET2(xb, yb); }
+    if (has12 && sub == 0x12) SET2(xb, yb);
+}
+/* FFEECAE0-FFEECC17  size 311  loc_elem11  (sub_FFEECAE0)  (0x52,0x18)/(0,0x40).  Confirmed. */
+void loc_elem11(u16 *x, u16 *y) { loc_two_row(x, y, 0x52, 0x18, 0x00, 0x40, 1); }
+/* FFEECC17-FFEECD4E  size 311  loc_elem12  (sub_FFEECC17)  (0x73,0x18)/(0x1D,0x40).  Confirmed. */
+void loc_elem12(u16 *x, u16 *y) { loc_two_row(x, y, 0x73, 0x18, 0x1D, 0x40, 1); }
+/* FFEECD4E-FFEECE85  size 311  loc_elem13  (sub_FFEECD4E)  (0x64,0x18)/(0x10,0x40).  Confirmed. */
+void loc_elem13(u16 *x, u16 *y) { loc_two_row(x, y, 0x64, 0x18, 0x10, 0x40, 1); }
+/* FFEED16E-FFEED293  size 293  loc_elem16  (sub_FFEED16E)  (0x82,0x19)/(0,0x53), no sub 0x12. Confirmed. */
+void loc_elem16(u16 *x, u16 *y) { loc_two_row(x, y, 0x82, 0x19, 0x00, 0x53, 0); }
+
+/* FFEECE85-FFEED16E  size 745  loc_elem15  (sub_FFEECE85)  Confirmed. */
+void loc_elem15(u16 *x, u16 *y, u16 *c)
+{
+    LOC_PROLOGUE;
+    *x = *y = *c = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0) {
+            if (b4c) { if (type == 1) { if (z) SET3(0xD8, 0x1A, RGB_WHITE); SET3(0x102, 0x3A, RGB_WHITE); }
+                       if (type == 2) SET3(0x10B, 0x7C, RGB_GREY); return; }
+            if (type == 1) SET3(0x10B, 0x18, RGB_GREY);
+            if (type == 2) { if (z) SET3(0xD8, 0x5A, RGB_WHITE); SET3(0x102, 0x7A, RGB_WHITE); }
+            return;
+        }
+        if (sub == 1) SET3(0xD8, 0x1A, RGB_WHITE);
+        if (sub == 0x14 || sub == 0x15) { if (z) SET3(0xD8, 0x1A, RGB_WHITE); SET3(0x102, 0x3A, RGB_WHITE); }
+        if (sub == 6) SET3(0xEC, 0x17, RGB_WHITE);
+        if (sub == 0x0B || sub == 0x12) SET3(0x10B, 0x17, RGB_WHITE);
+        if (sub == 0x13) SET3(0x10B, 0x18, RGB_WHITE);
+        if (sub == 0x0F) SET3(0xEC, 0x18, RGB_WHITE);
+        if (sub == 3 && type != 4) {
+            if (type == 1) SET3(0xEC, 0x4D, b4c ? RGB_WHITE : RGB_GREY);
+            if (type == 2) SET3(0xEC, 0x84, b4c ? RGB_GREY : RGB_WHITE);
+        }
+    } else if (op == 0xF8) { if (sub == 0) SET3(0x10B, 0x17, RGB_WHITE); }
+    else if (op == 0xFD)   { if (sub == 0) SET3(0x10B, 0x18, RGB_WHITE); }
+}
+
+/* FFEED293-FFEED5A7  size 788  loc_elem17  (sub_FFEED293)
+ * Returns 1 for the "frequency row" placements (flag var_19), else 0.
+ * Confirmed. */
+u8 loc_elem17(u16 *x, u16 *y, u16 *c)
+{
+    LOC_PROLOGUE;
+    *x = *y = *c = 0xFFFF;
+#define SETF(X, Y, C, F) do { *x = (X); *y = (Y); *c = (C); return (F); } while (0)
+    if (op == 0xF1) {
+        if (sub == 0) {
+            if (b4c) { if (type == 1) { if (z) SETF(0xE7, 0x19, RGB_WHITE, 1); SETF(0x11A, 0x17, RGB_WHITE, 1); }
+                       if (type == 2) SETF(0x11A, 0x7B, RGB_GREY, 0); return 0; }
+            if (type == 1) SETF(0x11A, 0x17, RGB_GREY, 0);
+            if (type == 2) { if (z) SETF(0xE7, 0x59, RGB_WHITE, 1); SETF(0x11A, 0x57, RGB_WHITE, 1); }
+            return 0;
+        }
+        if (sub == 1) SETF(0xE7, 0x19, RGB_WHITE, 1);
+        if (sub == 0x14 || sub == 0x15) { if (z) SETF(0xE7, 0x19, RGB_WHITE, 1); SETF(0x11A, 0x17, RGB_WHITE, 1); }
+        if (sub == 0x0B || sub == 0x12 || sub == 0x13) SETF(0x11A, 0x17, RGB_WHITE, 0);
+        if (sub == 6)    SETF(0xFA, 0x17, RGB_WHITE, 0);
+        if (sub == 0x0F) SETF(0xFB, 0x17, RGB_WHITE, 0);
+        if (sub == 3 && type != 4) {
+            if (type == 1) SETF(0xFB, 0x4D, b4c ? RGB_WHITE : RGB_GREY, 0);
+            if (type == 2) SETF(0xFB, 0x84, b4c ? RGB_GREY : RGB_WHITE, 0);
+        }
+    } else if ((op == 0xF8 || op == 0xFD) && sub == 0) SETF(0x11A, 0x17, RGB_WHITE, 0);
+    return 0;
+#undef SETF
+}
+
+/* FFEED5A7-FFEED748  size 417  loc_elem1E  (sub_FFEED5A7)
+ * Lower-row only (type 2) for F100; sub3 x=0xEE.  Confirmed. */
+static void loc_1E_1F(u16 *x, u16 *y, u16 *c, u16 xr, u16 x3)
+{
+    LOC_PROLOGUE;
+    *x = *y = *c = 0xFFFF;
+    if (op != 0xF1) return;
+    if (sub == 0) { if (type == 2) SET3(xr, b4c ? 0x79 : 0x57, b4c ? RGB_GREY : RGB_WHITE); return; }
+    if (sub == 1 || sub == 0x12) SET3(xr, 0x17, RGB_WHITE);
+    if (sub == 0x14 || sub == 0x15) { if (z) SET3(xr, 0x17, RGB_WHITE); return; }
+    if (sub == 3 && type == 2) SET3(x3, 0x84, b4c ? RGB_GREY : RGB_WHITE);
+}
+void loc_elem1E(u16 *x, u16 *y, u16 *c) { loc_1E_1F(x, y, c, 0x10D, 0xEE); }
+/* FFEED748-FFEED8E9  size 417  loc_elem1F  (sub_FFEED748)  same with x 0x11A / 0xFB.  Confirmed. */
+void loc_elem1F(u16 *x, u16 *y, u16 *c) { loc_1E_1F(x, y, c, 0x11A, 0xFB); }
+
+/* FFEED8E9-FFEEDB0C  size 547  loc_elem19  (sub_FFEED8E9)  x always 0xBD.  Confirmed. */
+void loc_elem19(u16 *x, u16 *y)
+{
+    LOC_PROLOGUE;
+    *x = *y = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0) { if (type == 1) SET2(0xBD, b4c ? 0x66 : 0x42); if (type == 2) SET2(0xBD, 0xA6); return; }
+        if (sub == 1 || sub == 0x15 || sub == 0x14) SET2(0xBD, 0x66);
+        if (sub == 6 || sub == 0x0F) SET2(0xBD, 0x3B);
+        if (sub == 3) { if (type == 4) SET2(0xBD, 0x38); if (type == 1) SET2(0xBD, 0x6F); if (type == 2) SET2(0xBD, 0xA6); return; }
+        if (sub == 0x0B || sub == 0x13) SET2(0xBD, 0x42);
+        if (sub == 0x12) SET2(0xBD, 0x57);
+    } else if ((op == 0xF8 || op == 0xFD) && sub == 0) SET2(0xBD, 0x42);
+}
+
+/* FFEEDB0C-FFEEDD2E  size 546  loc_elem1A  (sub_FFEEDB0C)  Confirmed. */
+void loc_elem1A(u16 *x, u16 *y)
+{
+    LOC_PROLOGUE;
+    *x = *y = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0) { if (type == 1) SET2(0xE4, b4c ? 0x6F : 0x4B); if (type == 2) SET2(0xE4, 0xAF); return; }
+        if (sub == 1 || sub == 0x15 || sub == 0x14) SET2(0xE4, 0x6F);
+        if (sub == 6 || sub == 0x0F) SET2(0xE1, 0x44);
+        if (sub == 0x0B) SET2(0xE4, 0x4B);
+        if (sub == 0x12) SET2(0xE1, 0x60);
+        if (sub == 0x13) SET2(0xE1, 0x4B);
+        if (sub == 3) { if (type == 4) SET2(0xE4, 0x41); if (type == 1) SET2(0xE4, 0x78); if (type == 2) SET2(0xE4, 0xAF); }
+    } else if (op == 0xF8) { if (sub == 0) SET2(0xE4, 0x4B); }
+    else if (op == 0xFD)   { if (sub == 0) SET2(0xE1, 0x4B); }
+}
+
+/* FFEEDD2E-FFEEDF40  size 530  loc_elem1B  (sub_FFEEDD2E)  x always 0.  Confirmed. */
+void loc_elem1B(u16 *x, u16 *y)
+{
+    LOC_PROLOGUE;
+    *x = *y = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0) { if (type == 1) SET2(0, b4c ? 0x64 : 0x40); if (type == 2) SET2(0, 0xA4); return; }
+        if (sub == 1 || sub == 0x15 || sub == 0x14) SET2(0, 0x64);
+        if (sub == 6 || sub == 0x0F) SET2(0, 0x39);
+        if (sub == 0x0B || sub == 0x13) SET2(0, 0x40);
+        if (sub == 0x12) SET2(0, 0x55);
+        if (sub == 3 && type != 4) { if (type == 1) SET2(0, 0x6D); if (type == 2) SET2(0, 0xA4); }
+    } else if ((op == 0xF8 || op == 0xFD) && sub == 0) SET2(0, 0x40);
+}
+
+/* FFEEDF40-FFEEE179  size 569  loc_elem1C  (sub_FFEEDF40)  x 0x1C (F3B48: 0xA0).  Confirmed. */
+void loc_elem1C(u16 *x, u16 *y)
+{
+    LOC_PROLOGUE;
+    *x = *y = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0) { if (type == 1) SET2(0x1C, b4c ? 0x6C : 0x48); if (type == 2) SET2(0x1C, 0xAC); return; }
+        if (sub == 1 || sub == 0x15 || sub == 0x14) SET2(0x1C, 0x6C);
+        if (sub == 6 || sub == 0x0F) SET2(0x1C, 0x41);
+        if (sub == 0x0B || sub == 0x13) SET2(0x1C, 0x48);
+        if (sub == 0x12) SET2(0x1C, 0x5D);
+        if (sub == 3) { if (type == 4) SET2(0x1C, 0x3E); if (type == 1) SET2(0x1C, 0x75); if (type == 2) SET2(0x1C, 0xAC); }
+    } else if (op == 0xF3) { if (sub == 0x48) SET2(0xA0, 0x4D); }
+    else if ((op == 0xF8 || op == 0xFD) && sub == 0) SET2(0x1C, 0x48);
+}
+
+/* FFEEE179-FFEEE512  size 921  loc_main_area  (sub_FFEEE179)
+ * Operating-area rectangle: x=0, w=320, h = K - y.  Confirmed. */
+void loc_main_area(u16 *x, u16 *y, u16 *w, u16 *h)
+{
+    LOC_PROLOGUE;
+#define AREA(Y, K) do { *x = 0; *y = (Y); *w = 0x140; *h = (u16)((K) - *y); return; } while (0)
+    *x = *y = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0x14 || sub == 0x15 || sub == 1) AREA(0x14, 0x77);
+        if (sub == 3) { if (type == 4) AREA(0x14, 0x49); if (type == 1) AREA(0x4A, 0x80); if (type == 2) AREA(0x81, 0xB6); return; }
+        if (sub == 4 || sub == 5 || (sub >= 7 && sub <= 10)) AREA(0, 0x20);
+        if (sub == 6 || sub == 0x0F) AREA(0x14, 0x4B);
+        if (sub == 0x0B || sub == 0x12 || sub == 0x13) AREA(0x14, 0x53);
+        if (sub == 0) {                               /* z irrelevant: both arms equal */
+            if (b4c) { if (type == 1) AREA(0x14, 0x77); if (type == 2) AREA(0x78, 0xB6); }
+            else     { if (type == 1) AREA(0x14, 0x53); if (type == 2) AREA(0x54, 0xB6); }
+        }
+    } else if (op == 0xF8) { if (sub == 0) AREA(0x14, 0x53); }
+    else if (op == 0xF7)   { if (sub == 1) AREA(0x14, 0x4B); }
+    else if (op == 0xFD)   { if (sub == 0) AREA(0x14, 0x53); }
+#undef AREA
+}
+
+/* FFEEE512-FFEEE7AB  size 665  loc_multislot_layout  (sub_FFEEE512)
+ * Caller FFEF6E12 (inside FFEF6C42, doc 31 Routine B): position and the
+ * "sub-layout code 0..5" that selects one of the six draw blocks.  Here the
+ * record test is m == 0 (not m in {0,2}).  Confirmed. */
+void loc_multislot_layout(u16 *x, u16 *y, u8 *lay)
+{
+    LOC_PROLOGUE;
+#define LAY(X, Y, L) do { *x = (X); *y = (Y); *lay = (L); return; } while (0)
+    *x = *y = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0x14 || sub == 0x15) { if (m == 0) LAY(0, 0x2D, 0); LAY(0x29, 0x3B, 1); }
+        if (sub == 1) LAY(0, 0x2D, 0);
+        if (sub == 3) { if (type == 4) LAY(0x30, 0x16, 2); if (type == 1) LAY(0x30, 0x4D, b4c ? 2 : 4);
+                        if (type == 2) LAY(0x30, 0x84, b4c ? 4 : 2); return; }
+        if (sub == 6 || sub == 0x0F) LAY(0x30, 0x17, 2);
+        if (sub == 0x0B || sub == 0x13) LAY(0x29, 0x17, 1);
+        if (sub == 0x12) LAY(0x29, 0x32, 5);
+        if (sub == 0) {
+            if (m == 0) { if (b4c) { if (type == 1) LAY(0, 0x2D, 0);    if (type == 2) LAY(0x29, 0x7B, 3); }
+                          else     { if (type == 1) LAY(0x29, 0x17, 3); if (type == 2) LAY(0, 0x6C, 0); } }
+            else        { if (b4c) { if (type == 1) LAY(0x29, 0x3B, 1); if (type == 2) LAY(0x29, 0x7B, 3); }
+                          else     { if (type == 1) LAY(0x29, 0x17, 3); if (type == 2) LAY(0x29, 0x7B, 1); } }
+        }
+    } else if (op == 0xF7) { if (sub == 1) LAY(0x29, 0x2C, 5); }
+    else if ((op == 0xF8 || op == 0xFD) && sub == 0) LAY(0x29, 0x17, 1);
+#undef LAY
+}
+
+/* FFEEE7AB-FFEEE970  size 453  loc_FFEEE7AB  (sub_FFEEE7AB)
+ * Caller FFEF6B10 (multi-slot cluster); x always 0x10D.  Confirmed. */
+void loc_FFEEE7AB(u16 *x, u16 *y, u16 *c)
+{
+    LOC_PROLOGUE;
+    *x = *y = *c = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0) { if (type == 1) { if (b4c) SET3(0x10D, 0x17, RGB_WHITE); SET3(0x10D, 0x15, RGB_GREY); } return; }
+        if (sub == 0x0B || sub == 0x12 || sub == 0x13) SET3(0x10D, 0x15, RGB_WHITE);
+        if (sub == 1 || sub == 0x15 || sub == 0x14) SET3(0x10D, 0x17, RGB_WHITE);
+    } else if ((op == 0xF8 || op == 0xFD) && sub == 0) SET3(0x10D, 0x15, RGB_WHITE);
+}
+
+/* FFEEE970-FFEEED50  size 992  loc_elem18_pair  (sub_FFEEE970)
+ * Two points (x1,y1)-(x2,y2) + colour; callers ev_elem18_pair, FFEF568E.
+ * Several branches set only (x1,y1) and colour, leaving x2/y2 0xFFFF.
+ * Confirmed. */
+void loc_elem18_pair(u16 *x1, u16 *y1, u16 *x2, u16 *y2, u16 *c)
+{
+    LOC_PROLOGUE;
+#define P4(A, B, C2, D, K) do { *x1 = (A); *y1 = (B); *x2 = (C2); *y2 = (D); *c = (K); return; } while (0)
+#define P2(A, B, K)        do { *x1 = (A); *y1 = (B); *c = (K); return; } while (0)
+    *x1 = *y1 = *x2 = *y2 = *c = 0xFFFF;
+    if (op == 0xF1) {
+        if (sub == 0) {
+            if (z) {
+                if (b4c) { if (type == 1) P4(0xDD, 0x17, 0x110, 0x17, RGB_WHITE);
+                           if (type == 2 && m != 2) P2(0x110, 0x79, RGB_GREY); return; }
+                if (type == 1) { if (m != 2) P2(0x110, 0x15, RGB_GREY); return; }
+                if (type == 2) P4(0xDD, 0x57, 0x110, 0x57, RGB_WHITE);
+                return;
+            }
+            if (b4c) { if (type == 1) P4(0x110, 0x17, 0x110, 0x2D, RGB_WHITE);
+                       if (type == 2) P2(0x110, 0x79, RGB_GREY); return; }
+            if (type == 1) P2(0x110, 0x15, RGB_GREY);
+            if (type == 2) P4(0x110, 0x57, 0x110, 0x6D, RGB_WHITE);
+            return;
+        }
+        if (sub == 1) P4(0xDD, 0x17, 0x110, 0x17, RGB_WHITE);
+        if (sub == 0x14 || sub == 0x15) { if (z) P4(0xDD, 0x17, 0x110, 0x17, RGB_WHITE); P4(0x110, 0x17, 0x110, 0x2D, RGB_WHITE); }
+        if (sub == 6)    { if (m != 2) P2(0xF1, 0x17, RGB_WHITE); return; }
+        if (sub == 0x0B || sub == 0x13) { if (m != 2) P2(0x110, 0x16, RGB_WHITE); return; }
+        if (sub == 0x12) P4(0x110, 0x15, 0x110, 0x29, RGB_WHITE);
+        if (sub == 0x0F) P2(0xF1, 0x17, RGB_WHITE);
+        if (sub == 3 && m != 2 && type != 4) {
+            if (type == 1) P2(0xF1, 0x4D, b4c ? RGB_WHITE : RGB_GREY);
+            if (type == 2) P2(0xF1, 0x84, b4c ? RGB_GREY : RGB_WHITE);
+        }
+    } else if (op == 0xF7) { if (sub == 1) P4(0xDD, 0x17, 0x110, 0x17, RGB_WHITE); }
+    else if (op == 0xF8)   { if (sub == 0 && m != 2) P2(0x110, 0x15, RGB_WHITE); }
+    else if (op == 0xFD)   { if (sub == 0) P2(0x110, 0x16, RGB_WHITE); }
+#undef P4
+#undef P2
+}
+/* end of range 0xFFEEED50 */
