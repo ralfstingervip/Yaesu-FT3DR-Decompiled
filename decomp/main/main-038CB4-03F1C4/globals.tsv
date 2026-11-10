@@ -1,0 +1,85 @@
+addr	name	width	meaning	evidence
+FF8002	pwr_state_8002	8	byte mirrored at EEPROM 0xFFFE, saved from NMI path	0394B4/0394D2
+FF8006	boot_marker	32	EEPROM 0x10 boot marker ("TAIS"/"MARU"/"0000")	039504, 039A2C, doc 96
+FF800A	boot_marker2	32	EEPROM 0x10010 marker of the A2 device	03D74A..03D778
+FF800E	region_blk	64	EEPROM 0x20..0x27 block (market FF800F/10/11)	039534..039554, doc 96
+FF800F	market	8	destination code; predicates 3ECB8..3ECDE	doc 59
+FF8016	cfg_image	2048	EEPROM 0x40 0x100-byte alignment/cal image	039566, doc 137
+FF8184	usb_ep3_status0	8	USB EP3 report byte 0 (1 = audio free)	0393DC, doc 73
+FF8188	mem_attr	byte[0x540]	per-slot memory attribute bytes (EEPROM 0x2940); b0-1==3 valid, b6 bank, b7 skip	03A120, 03A810, 03F184
+FF816E	io_ddr_shadow	8	shadow of write-only DDR FFFBA8 (I2C SDA dir)	03AB80
+FF817E	ui_refresh_flags	8	b0 = edit side B, b1 = redraw request, b2 = S-meter restart	many
+FF812A	bandA_rec_ptr	32	pointer to live band-A operating record	03A40C, doc 35
+FF8920	settings_R1	byte[0x180]	settings region R1 (EEPROM 0x580)	doc 32
+FF8AA0	settings_R2	byte[0x280]	settings region R2 (EEPROM 0xC000); byte 0 = APRS/data on B (tested in 3EEEE)	doc 32
+FF8D20	settings_R3	byte[0x180]	settings region R3 (EEPROM 0xD000); FF8D20 band-A comm mode	doc 32
+FF8DD5	bandB_comm_mode	8	band-B digital comm mode	038D02
+FF8EA0	band_sel	8	b6 band B selected, b7 single-band view, b5/b3 pending flags; head of mirrored block 0	039650
+FF8EA6	band_slot_chk	8	b0 band-B record in use; b0/b1 dual receive	03A4B4, 0391C0
+FF8EB6	bandA_dig_mode	8	band-A digital mode (B: FF8EC5)	038D20
+FF8ED6	dgid_A	16	band-A DG-ID working word (B: FF8ED8)	03DEF2
+FF90F0	bandB_rec	byte[0x80]	band-B working record, mirrored block 3	doc 35
+FF86C8	u16tab_A	byte[0xC8]	u16 table cache side A (B: FF8790, C: FF8858)	03A172
+FF92C8	bandplan_ptr	32	pointer to band-plan table {count; lo,hi,id}	03A6BC
+FF92CC	def_ctcss	8	default CTCSS index for synthesised channels	03D2BC
+FF9544	dtmf_gap_timer	8	DTMF guard timer	038CB4
+FF9545	dtmf_tone_timer	8	DTMF on/off timer (6 or 10 ticks)	038DB4
+FF958F	dtmf_holdoff	8	DTMF end hold-off	038E2C
+FF953B	audio_sm_timer	8	audio state machine timer	039176
+FF953C	audio_sm_timer2	8	audio state 3 hold timer	039430
+FF956E	smeter_timer_A	8	S-meter update divider band A (B: FF9581)	03DFAE
+FF95F4	charge_timeout	16	charge loop total timeout 0x9AB0 (11 h)	03EB08
+FF95F6	charge_step_timer	16	0xE10 = 3600 s per charge-level step	03EB00
+FFA9AC	rxA_audio_active	8	band-A RX audio active flag	0391FE, doc 73
+FFA9AD	rxB_audio_active	8	band-B/dual RX audio active flag	03934E, doc 73
+FFA9C4	rtc_time	byte[7]	RTC time image (year,month,day,dow,hour,min,0)	03E828
+FFA9DC	rtc_int_hist	8	shift history of FFFF45.b3 (RTC INT) for edge detect	03E570
+FFA9DD	charge_level	8	charge display level 0..10	03EBF8
+FFA9E3	audio_req	8	audio route request byte (b4 force session, 0x2C TX bits)	doc 73
+FFA9E5	audio_sm_state	8	audio state machine state 0..8	doc 73
+FFAABA	dtmf_phase	32	two 16-bit DTMF phases	038D54
+FFAABE	dtmf_phase_inc	32	two DTMF phase increments	038D48
+FFAAD2	tone_flags	8	b2 DTMF active, b7 CTCSS	039030
+FFAAE1	audio_route_flags	8	b7 audio route held	039128
+FFAAEA	bt_list	byte[0x8E]	Bluetooth device list (EEPROM 0x1EA00)	03CD82, doc 124
+FFAC07	dtmf_count	8	digit counter (0xFF idle)	038D6E
+FFAC08	dtmf_cur	8	current DTMF code	038CDC
+FFAC09	dtmf_flags	8	b0 string, b1 manual key, b6 active	038FDA
+FFAC0A	dtmf_state	8	DTMF sender state	038D8A
+FFAC0B	dtmf_rd	8	ring read index	038CE8
+FFAC0C	dtmf_wr	8	ring write index	03902A
+FFAC0E	dtmf_queue	byte[20]	DTMF code ring (0xFF empty)	038CD4
+FFAC24	dtmf_mem_buf	byte[16]	DTMF memory buffer (EEPROM 0xA80+16n)	03CE42
+FFAC72	vfo_rec_ptr	32	record being loaded/saved	03A2A0
+FFAC76	pack_buf	byte[0x20]	packed 32-byte channel record buffer	doc 35
+FFAC9A	cmp_buf	byte[0x24]	EEPROM compare buffer	03A334
+FFACD4	attr_tmp	8	attribute byte staging	03A814
+FFACD7	scan_wrapped	8	0xFF when slot stepping wrapped to start	03F0CE
+FFACDA	alt_rx_freq	32	synthesised RX frequency (BCD)	03D24E
+FFACDE	alt_tx_freq	32	synthesised shift/TX frequency (BCD)	03CFA4
+FFACE2	area_tab	byte[0x40]	special-area tone tables (EEPROM 0xBC00/0xBBC0)	03CEBA
+FFAD22	oprec_scratch	byte[0x3A]	operating-record scratch	03A3DE
+FFAA96	name_buf	byte[0x12]	name attribute + name	03A7A0
+FFAA56	name_tmp	byte[0x12]	name/byte staging	03A906
+FFA557	msg_cmp_diff	8	message compare result	03DA06
+FFA558	msg_cmp_len	16	message compare length	03D9A6
+FFB0C0	dsp_dtmf_code	8	DTMF code mailbox for DSP (d+1, 0xFE off, 0xFF idle)	038D34
+FFB9F2	group_name	byte[16]	group name buffer (EEPROM 0x1B000)	03DAB2, doc 122
+FFBA12	group_items	byte[0x1E]	group item list (EEPROM 0x1B0A0)	03DAF6
+FFBCAA	vfo_bak_invalid	8	bit n = backup of block n invalid	0395CE
+FFBCB6	shadow0	byte[0x40]	last-saved copy of block 0 (also 1: BCF6, 2: BD76, 3: BDF6)	0395EC
+FF4726	dgid_hdr	byte[0x48]	DG-ID cache 0x1A000 (0x1200 set + band VFO A/B)	03DE20
+FF476E	dgid_mem	byte[0x898]	DG-ID cache per channel (0x1A080)	03DE20, doc 61
+FF2F4A	pic_state	byte[0x80]	picture state block (EEPROM 0x1FA00)	03DDB8, doc 74
+FFAA31	flags_AA31	8	b4 force regular area, b5 VFO shadows valid	039664, 03A6EE
+FFAA33	flags_AA33	8	b2 mem_same_band query in progress	03AAB0
+FFFBA0	P_PORT	8	I2C port input (b0 SDA)	03AC22, doc 82
+FFFBA4	P_DR	8	I2C port data: b0 SDA, b1 SCL	doc 82
+FFFBA8	P_DDR	8	I2C port direction (b0 SDA)	03ABF8
+FFFF59	P59_DR	8	b2 speaker/accessory audio mux	doc 73
+FFFF5A	P5A_DR	8	b1 RTC serial clock	03E864
+FFFF5D	P5D_DR	8	b4 RTC data out, b5 RTC chip enable	03E864
+FFFF4D	P4D_PORT	8	b4 RTC data in	03E8D0
+FFFF45	P45_PORT	8	b3 RTC INT1 input (Inferred)	03E576
+FFFF68	DA0_DADR0	8	DAC0 data (0x7F idle)	03903C
+FFFDC8	MSTPCRA	16	module stop control A/B/C (FDC8/CA/CC)	03EC94

@@ -2792,16 +2792,37 @@ refuse:
     key_consume();
 }
 
-/* @019158-019208 sub_19158 fn_19158 Skeleton: 50 insns; calls sub_15E42,sub_508B6; RAM 8EA0,8FE0,8FE2,90E8,90EA,AA30,AA32,AD68 */
-void fn_19158(rec_t *rec)
+/* --------------------------------------------------------------------------
+ * @019158-019208 sub_19158 setup_run_exit_handler Confirmed: if the value changed (AA30.6) runs exit handler 0x148A0+BE16[0x019A9E+2*(id-0x0E)] (ids 0xD8..0xDB use fixed slots 0xCA..0xCD); then resets the menu state, undoes the screen-0x42 pull-up and stops a running tone search
+ * Callers: 0x0152B0, 0x015B4E, 0x015B8E, sub_15948, sub_15A02, sub_15A96,
+ * sub_3FF3A (pop).  doc 49 sec.3 describes the table.
+ * -------------------------------------------------------------------------- */
+void setup_run_exit_handler(rec_t *rec)                   /* 019158 */
 {
-    /* TODO(waveC): body not transcribed (50 instructions). */
+    if (ui_flags & 0x40) {
+        u8 id = rec->screen;
+        u32 off;
+        if      (id == 0xD8) off = 0x194;                 /* fixed slots avoid the */
+        else if (id == 0xD9) off = 0x196;                 /* loc_14C90 side effect */
+        else if (id == 0xDA) off = 0x198;                 /* of sub_15E42          */
+        else if (id == 0xDB) off = 0x19A;
+        else off = (u32)setup_dial_index(rec) << 1;       /* 01918C */
+        ((handler_t)(0x148A0 + *(const u16 *)((const u8 *)exit_tbl_19A9E + off)))(rec);
+        ui_flags &= ~0x40;
+    }
+    menu_subpage = 0;  menu_level = 0;
+    edit_row_B054 = 0;  edit_col_B055 = 1;
+    sub_508B6();
+    if (ui_flags_AA32 & 0x08) { ui_flags_AA32 &= ~0x08; PORT_FBA5 &= 0xF0; }
+    if (band_sel & 0x40) { if (tsearch_b_active) tsearch_b_state = 3; }
+    else                 { if (tsearch_a_active) tsearch_a_state = 3; }
 }
 
-/* @019208-019250 sub_19208 fn_19208 Skeleton: 20 insns; calls sub_3CCBC,sub_3CCD0; RAM -; table slot x6B:SQL LEVEL */
-void fn_19208(rec_t *rec)
+/* @019208-019250 sub_19208 exit_6B_sql_level Confirmed: SQL LEVEL save: A records save the 2-byte pair FF8970 (FM) or FF8972 (AM, +0x19==2); the B-slot record saves R1 n=0x54 (FM) or 0x55 (AM) */
+void exit_6B_sql_level(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (20 instructions). */
+    if (rec == REC_B_SLOT) { eep_save_r1(rec->rxmode19 == 2 ? 0x55 : 0x54); return; }
+    eep_save_r1_block(rec->rxmode19 == 2 ? 0xFF8972 : 0xFF8970, 2);
 }
 
 /* @019250-019258 sub_19250 exit_19250 Confirmed: exit/save stub: eep_save_r1(0x73) [exit slot x0F:APO] */
@@ -2927,11 +2948,8 @@ void exit_193CA(rec_t *rec) { eep_save_r1(0xA4); }
 /* @0193D2-0193DA sub_193D2 exit_193D2 Confirmed: exit/save stub: eep_save_r1(0xA5) [exit slot x59:SCAN WIDTH x8E:TARGET LOCATION] */
 void exit_193D2(rec_t *rec) { eep_save_r1(0xA5); }
 
-/* @0193DA-0193DC sub_193DA fn_193DA Skeleton: 1 insns; calls -; RAM -; table slot x1D:DEVICE LIST x20:CLOCK TYPE x25 x27:DCS INVERSION x2F x31 x35:FM BANDWIDTH x3A x3B x3C x3D x42:HOME VFO x46 x47 x48 x5D:SQL S-METER x5E:RPT SHIFT x5F:RX MODE x63:RPT SHIFT FREQ x64:MEMORY SKIP x69 x6D:STEP x70:SENSOR INFO x74 x75 x7E x82:MEMORY INFO x83 x86:BACKUP x88:BACKUP x89:BACKUP x8A x9F:APRS DESTINATION xB6 xBA xBB xBF xC0:SOFTWARE VERSION xD8 xD9 xDA */
-void fn_193DA(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (1 instructions). */
-}
+/* @0193DA-0193DC sub_193DA exit_none Confirmed: rts - exit slot of the ~40 items that save nothing */
+void exit_none(rec_t *rec) { }
 
 /* @0193DC-0193EA sub_193DC exit_193DC Confirmed: exit/save stub: eep_save_r1_block(0xFF89BB, 2) [exit slot x7C:VOX] */
 void exit_193DC(rec_t *rec) { eep_save_r1_block(0xFF89BB, 2); }
@@ -2942,28 +2960,28 @@ void exit_193EA(rec_t *rec) { eep_save_r1_block(0xFF89D1, 2); }
 /* @0193F8-019406 sub_193F8 exit_193F8 Confirmed: exit/save stub: eep_save_r1_block(0xFF8A58, 2) */
 void exit_193F8(rec_t *rec) { eep_save_r1_block(0xFF8A58, 2); }
 
-/* @019406-019426 sub_19406 fn_19406 Skeleton: 11 insns; calls sub_3A9F6,sub_3AA66,sub_3F21A; RAM -; table slot x8C:TX POWER (title drawn directly by sub_FFF0878C, group 0; not from the setup-label table) */
-void fn_19406(rec_t *rec)
+/* @019406-019426 sub_19406 exit_8C_tx_power Inferred: TX POWER: memory mode -> store the channel (sub_3F21A + sub_3A9F6); rec[5]==5 -> sub_3AA66(rec[3]) */
+void exit_8C_tx_power(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (11 instructions). */
+    if (rec->vfo_mode == 2) { sub_3A9F6(sub_3F21A(rec)); return; }
+    if (rec->vfo_mode == 5) sub_3AA66(rec->band03);
 }
 
-/* @019426-019444 sub_19426 fn_19426 Skeleton: 9 insns; calls sub_3CCD0,sub_3F1DC; RAM -; table slot x13:ANTENNA ATT */
-void fn_19426(rec_t *rec)
+/* @019426-019444 sub_19426 exit_13_antenna_att Confirmed: memory mode with a channel (sub_3F1DC != 0): save the ATT bitmap FF8976 (2 bytes) */
+void exit_13_antenna_att(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (9 instructions). */
+    if (rec->vfo_mode == 2 && sub_3F1DC(rec)) eep_save_r1_block(0xFF8976, 2);
 }
 
-/* @019444-019454 sub_19444 fn_19444 Skeleton: 4 insns; calls -; RAM AA30; table slot x19 */
-void fn_19444(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (4 instructions). */
-}
+/* @019444-019454 sub_19444 exit_19 Confirmed: just clears AA30.6 */
+void exit_19(rec_t *rec) { if (ui_flags & 0x40) ui_flags &= ~0x40; }
 
-/* @019454-01946C sub_19454 fn_19454 Skeleton: 6 insns; calls sub_3CD5C; RAM AA30,AD6C; table slot x1B */
-void fn_19454(rec_t *rec)
+/* @019454-01946C sub_19454 exit_1B_bank Inferred: if changed: clear AA30.6 and save bank AD6C via sub_3CD5C */
+void exit_1B_bank(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (6 instructions). */
+    if (!(ui_flags & 0x40)) return;
+    ui_flags &= ~0x40;
+    sub_3CD5C(ui_AD6C);
 }
 
 /* @01946C-019474 sub_1946C exit_1946C Confirmed: exit/save stub: eep_save_r1(0x0) [exit slot x1E:Bluetooth x1F:Bluetooth Save] */
@@ -2981,19 +2999,23 @@ void exit_194AE(rec_t *rec) { eep_save_r1_block(0xFF89A1, 1); eep_save_r1_block(
 /* @0194D2-0194E8 sub_194D2 exit_194D2 Confirmed: exit/save stub: eep_save_r1_block(0xFF8956, 18) eep_save_r1(0x35) [exit slot x51] */
 void exit_194D2(rec_t *rec) { eep_save_r1_block(0xFF8956, 18); eep_save_r1(0x35); }
 
-/* @0194E8-01950E sub_194E8 fn_194E8 Skeleton: 9 insns; calls sub_3CCD0,sub_3CE5A; RAM 8936,AA30; table slot x2C */
-void fn_194E8(rec_t *rec)
+/* @0194E8-01950E sub_194E8 exit_2C_dtmf Confirmed: if changed: clear AA30.6, write DTMF memory FF8936 (sub_3CE5A) and save the slot byte */
+void exit_2C_dtmf(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (9 instructions). */
+    if (!(ui_flags & 0x40)) return;
+    ui_flags &= ~0x40;
+    sub_3CE5A(r1_set_8936);
+    eep_save_r1_block(0xFF8936, 1);
 }
 
 /* @01950E-019516 sub_1950E exit_1950E Confirmed: exit/save stub: eep_save_r1(0x9F) [exit slot x4C] */
 void exit_1950E(rec_t *rec) { eep_save_r1(0x9F); }
 
-/* @019516-01954A sub_19516 fn_19516 Skeleton: 17 insns; calls sub_3A8E2,sub_3A922,sub_3F21A; RAM -; table slot x4D */
-void fn_19516(rec_t *rec)
+/* @019516-01954A sub_19516 exit_4D Inferred: sets rec+0x12.7 and stores the record: rec[5]==5 -> sub_3A8E2(rec[3]); memory -> sub_3A922(sub_3F21A()) */
+void exit_4D(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (17 instructions). */
+    if (rec->vfo_mode == 2) { rec->flags12 |= 0x80; sub_3A922(sub_3F21A(rec)); return; }
+    if (rec->vfo_mode == 5) { rec->flags12 |= 0x80; sub_3A8E2(rec->band03); }
 }
 
 /* @01954A-01956E sub_1954A exit_1954A Confirmed: exit/save stub: eep_save_r1_block(0xFF8988, 2) eep_save_r1_block(0xFF898A, 2) eep_save_r1(0xA1) [exit slot x4F:TIMER] */
@@ -3005,43 +3027,52 @@ void exit_1956E(rec_t *rec) { eep_save_r1_block(0xFF898A, 2); eep_save_r1(0xA1);
 /* @019584-01959A sub_19584 exit_19584 Confirmed: exit/save stub: eep_save_r1_block(0xFF8968, 4) eep_save_r1(0xA3) [exit slot x52:PAGER x53 x54] */
 void exit_19584(rec_t *rec) { eep_save_r1_block(0xFF8968, 4); eep_save_r1(0xA3); }
 
-/* @01959A-0195D2 sub_1959A fn_1959A Skeleton: 13 insns; calls sub_16A44,sub_3CCBC,sub_3CCD0; RAM 896C,AA34,AD8A; table slot x55:PASSWORD */
-void fn_1959A(rec_t *rec)
+/* @01959A-0195D2 sub_1959A exit_55_password Confirmed: if edited (AA34.6): clear it; if all 4 digits set (sub_16A44), copy AD8A -> FF896C and save it (4 bytes) plus R1 n=0xA2 */
+void exit_55_password(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (13 instructions). */
+    if (!(ui_flags_AA34 & 0x40)) return;
+    ui_flags_AA34 &= ~0x40;
+    if (!pw_all_set()) return;
+    r1_pw_896C = *(u32 *)(pw_buf_AD88 + 2);
+    eep_save_r1_block(0xFF896C, 4);
+    eep_save_r1(0xA2);
 }
 
-/* @0195D2-01961E sub_195D2 fn_195D2 Skeleton: 22 insns; calls sub_3CE9A,sub_3CEAA,sub_3CECC,sub_3CEDC,sub_3F1DC,sub_3F21A; RAM -; table slot x6C:SQL TYPE */
-void fn_195D2(rec_t *rec)
+/* @0195D2-01961E sub_195D2 exit_6C_sql_type Inferred: special memory channels keep a per-channel SQL type: type 7 -> window ACE2 (sub_3CECC / sub_3CEDC), type 4 -> sub_3CE9A / sub_3CEAA; ACE2[ch] = rec+0x16 */
+void exit_6C_sql_type(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (22 instructions). */
+    if (rec->vfo_mode != 2) return;
+    u8 t = sub_3F1DC(rec);
+    if (t == 7) { sub_3CECC(); chx_ACE2[sub_3F21A(rec)] = rec->sqltype16; sub_3CEDC(); }
+    else if (t == 4) { sub_3CE9A(); chx_ACE2[sub_3F21A(rec)] = rec->sqltype16; sub_3CEAA(); }
 }
 
-/* @01961E-01962C sub_1961E fn_1961E Skeleton: 4 insns; calls sub_1963A; RAM -; table slot x72:TONE SQL FREQ */
-void fn_1961E(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (4 instructions). */
-}
+/* @01961E-01962C sub_1961E exit_72_tone_freq Confirmed: chan_extra_store(offset 0x14, rec+0x17) */
+void exit_72_tone_freq(rec_t *rec) { chan_extra_store(rec, 0x14, rec->f17); }
 
-/* @01962C-01963A sub_1962C fn_1962C Skeleton: 4 insns; calls sub_1963A; RAM -; table slot x26:DCS CODE */
-void fn_1962C(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (4 instructions). */
-}
+/* @01962C-01963A sub_1962C exit_26_dcs_code Confirmed: chan_extra_store(offset 0x28, rec+0x18) */
+void exit_26_dcs_code(rec_t *rec) { chan_extra_store(rec, 0x28, rec->f18); }
 
-/* @01963A-019664 sub_1963A fn_1963A Skeleton: 13 insns; calls sub_3CECC,sub_3CEDC,sub_3F1DC,sub_3F21A; RAM - */
-void fn_1963A(rec_t *rec)
+/* @01963A-019664 sub_1963A chan_extra_store Confirmed: for a type-7 memory channel: ACE2[ch + off] = v inside sub_3CECC / sub_3CEDC */
+void chan_extra_store(rec_t *rec, u32 off, u8 v)
 {
-    /* TODO(waveC): body not transcribed (13 instructions). */
+    if (rec->vfo_mode != 2 || sub_3F1DC(rec) != 7) return;
+    sub_3CECC();
+    chx_ACE2[sub_3F21A(rec) + off] = v;
+    sub_3CEDC();
 }
 
 /* @019664-019674 sub_19664 exit_19664 Confirmed: exit/save stub: eep_save_r1(0x9E) eep_save_r1(0x9F) [exit slot x76:TONE SEARCH] */
 void exit_19664(rec_t *rec) { eep_save_r1(0x9E); eep_save_r1(0x9F); }
 
-/* @019674-0196A0 sub_19674 fn_19674 Skeleton: 13 insns; calls sub_3CE9A,sub_3CEAA,sub_3F1DC,sub_3F21A; RAM -; table slot x7F:PR FREQUENCY */
-void fn_19674(rec_t *rec)
+/* @019674-0196A0 sub_19674 exit_7F_pr_frequency Confirmed: type-4 memory channel: ACF6[ch] = rec+0x34 inside sub_3CE9A / sub_3CEAA */
+void exit_7F_pr_frequency(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (13 instructions). */
+    if (rec->vfo_mode != 2 || sub_3F1DC(rec) != 4) return;
+    u16 ch = sub_3F21A(rec);
+    sub_3CE9A();
+    chx_ACF6[ch] = rec->pr34;
+    sub_3CEAA();
 }
 
 /* @0196A0-0196B0 sub_196A0 exit_196A0 Confirmed: exit/save stub: eep_save_r1_block(0xFF898C, 2) [exit slot x79] */
@@ -3053,35 +3084,43 @@ void exit_196B0(rec_t *rec) { eep_save_r1_block(0xFF898E, 2); eep_save_r1(0xA6);
 /* @0196C6-0196D6 sub_196C6 exit_196C6 Confirmed: exit/save stub: eep_save_r1_block(0xFF8A1C, 4) [exit slot x1A:BANK LINK xDB] */
 void exit_196C6(rec_t *rec) { eep_save_r1_block(0xFF8A1C, 4); }
 
-/* @0196D6-019702 sub_196D6 fn_196D6 Skeleton: 11 insns; calls sub_3CD00,sub_3D5BC; RAM 8ABB,A984,AA30; table slot x9B:BEACON STATUS TEXT */
-void fn_196D6(rec_t *rec)
+/* @0196D6-019702 sub_196D6 exit_9B_status_text Confirmed: if changed: write status text slot FF8ABB (sub_3D5BC), save R2 block FF8AB9 x3, A984 = 0 */
+void exit_9B_status_text(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (11 instructions). */
+    if (!(ui_flags & 0x40)) return;
+    ui_flags &= ~0x40;
+    sub_3D5BC(r2_8ABB);
+    eep_save_r2_block(0xFF8AB9, 3);
+    ui_A984 = 0;
 }
 
-/* @019702-01972C sub_19702 fn_19702 Skeleton: 10 insns; calls sub_18F22,sub_3CD00,sub_3D5F4; RAM 8CFB,AA30; table slot xAF */
-void fn_19702(rec_t *rec)
+/* @019702-01972C sub_19702 exit_AF_autoreply Confirmed: if changed: write auto-reply text slot FF8CFB (sub_3D5F4), save R2 block FF8CFA x0x0C, recompute A51C (sub_18F22) */
+void exit_AF_autoreply(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (10 instructions). */
+    if (!(ui_flags & 0x40)) return;
+    ui_flags &= ~0x40;
+    sub_3D5F4(r2_8CFB);
+    eep_save_r2_block(0xFF8CFA, 0x0C);
+    autoreply_call_changed();
 }
 
-/* @01972C-01973E sub_1972C fn_1972C Skeleton: 4 insns; calls -; RAM 8BCC,AA30; table slot xA8:SmartBeaconing */
-void fn_1972C(rec_t *rec)
+/* @01972C-01973E sub_1972C exit_A8_smartbeaconing Confirmed: if changed: clear AA30.6, then (sub_1973E) copy the edit block back when a type is selected and save */
+void exit_A8_smartbeaconing(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (4 instructions). */
+    if (!(ui_flags & 0x40)) return;
+    ui_flags &= ~0x40;
+    sb_store_params(r2_sb_type_8BCC);
 }
 
-/* @01973E-019762 sub_1973E fn_1973E Skeleton: 10 insns; calls sub_3CD00,sub_3F36E,sub_449A8; RAM - */
-void fn_1973E(rec_t *rec)
+/* @01973E-019762 sub_1973E sb_store_params Confirmed: if type != 0 copy A90E (7 bytes) to the type's parameter block (sub_449A8); save R2 block FF8BCC x0x16 */
+void sb_store_params(u8 type)
 {
-    /* TODO(waveC): body not transcribed (10 instructions). */
+    if (type) sub_3F36E(7, sb_edit_A90E, sub_449A8());
+    eep_save_r2_block(0xFF8BCC, 0x16);
 }
 
-/* @019762-019764 sub_19762 fn_19762 Skeleton: 1 insns; calls -; RAM -; table slot x8D:RADIO ID CHECK */
-void fn_19762(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (1 instructions). */
-}
+/* @019762-019764 sub_19762 exit_8D_none Confirmed: rts (RADIO ID CHECK exit) */
+void exit_8D_none(rec_t *rec) { }
 
 /* @019764-01976C sub_19764 exit_19764 Confirmed: exit/save stub: eep_save_r2(0xA) */
 void exit_19764(rec_t *rec) { eep_save_r2(0xA); }
@@ -3104,19 +3143,23 @@ void exit_19794(rec_t *rec) { eep_save_r2(0x18D); eep_save_r2(0x1); eep_save_r2_
 /* @0197C0-0197CE sub_197C0 exit_197C0 Confirmed: exit/save stub: eep_save_r2_block(0xFF8AFC, 130) [exit slot x94] */
 void exit_197C0(rec_t *rec) { eep_save_r2_block(0xFF8AFC, 130); }
 
-/* @0197CE-0197F0 sub_197CE fn_197CE Skeleton: 8 insns; calls sub_3CD00; RAM 8AC2; table slot x9D:DIGI PATH */
-void fn_197CE(rec_t *rec)
+/* @0197CE-0197F0 sub_197CE exit_9D_digi_path Confirmed: hop index FF8AC2 = 0, save R2 blocks FF8AC2 x0x3A and FF8BE5 x0x39 */
+void exit_9D_digi_path(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (8 instructions). */
+    r2_digi_hop_8AC2 = 0;
+    eep_save_r2_block(0xFF8AC2, 0x3A);
+    eep_save_r2_block(0xFF8BE5, 0x39);
 }
 
 /* @0197F0-0197FE sub_197F0 exit_197F0 Confirmed: exit/save stub: eep_save_r2_block(0xFF8B7E, 74) [exit slot xA2] */
 void exit_197F0(rec_t *rec) { eep_save_r2_block(0xFF8B7E, 74); }
 
-/* @0197FE-019816 sub_197FE fn_197FE Skeleton: 6 insns; calls sub_17D90,sub_3CD00,sub_50FE8; RAM -; table slot xA3:CALLSIGN (APRS) */
-void fn_197FE(rec_t *rec)
+/* @0197FE-019816 sub_197FE exit_A3_callsign Confirmed: save R2 FF8AA2 x7 (call + SSID), rebuild the display string (sub_17D90), sub_50FE8 */
+void exit_A3_callsign(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (6 instructions). */
+    eep_save_r2_block(0xFF8AA2, 7);
+    callsign_format();
+    sub_50FE8();
 }
 
 /* @019816-019824 sub_19816 exit_19816 Confirmed: exit/save stub: eep_save_r2_block(0xFF8AB0, 9) [exit slot xA4:MY POSITION] */
@@ -3155,11 +3198,8 @@ void exit_19890(rec_t *rec) { eep_save_r2_block(0xFF8C26, 5); }
 /* @01989E-0198AC sub_1989E exit_1989E Confirmed: exit/save stub: eep_save_r2_block(0xFF8C2E, 20) [exit slot xAC:APRS POPUP] */
 void exit_1989E(rec_t *rec) { eep_save_r2_block(0xFF8C2E, 20); }
 
-/* @0198AC-0198AE sub_198AC fn_198AC Skeleton: 1 insns; calls -; RAM -; table slot xAD */
-void fn_198AC(rec_t *rec)
-{
-    /* TODO(waveC): body not transcribed (1 instructions). */
-}
+/* @0198AC-0198AE sub_198AC exit_AD_none Confirmed: rts */
+void exit_AD_none(rec_t *rec) { }
 
 /* @0198AE-0198BC sub_198AE exit_198AE Confirmed: exit/save stub: eep_save_r2_block(0xFF8CF8, 2) [exit slot xAE:BEACON INFO] */
 void exit_198AE(rec_t *rec) { eep_save_r2_block(0xFF8CF8, 2); }
@@ -3203,10 +3243,12 @@ void exit_1993E(rec_t *rec) { eep_save_r3(0x10D); }
 /* @019946-019954 sub_19946 exit_19946 Confirmed: exit/save stub: eep_save_r3_block(0xFF8D22, 2) [exit slot xB1:DIGITAL POPUP] */
 void exit_19946(rec_t *rec) { eep_save_r3_block(0xFF8D22, 2); }
 
-/* @019954-01996E sub_19954 fn_19954 Skeleton: 6 insns; calls sub_3CD30,sub_5E0C0; RAM B0C9; table slot xB3 */
-void fn_19954(rec_t *rec)
+/* @019954-01996E sub_19954 exit_B3 Confirmed: save R3 block FF8D26 x0x0A, set B0C9.7, sub_5E0C0 */
+void exit_B3(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (6 instructions). */
+    eep_save_r3_block(0xFF8D26, 0x0A);
+    ui_B0C9 |= 0x80;
+    sub_5E0C0();
 }
 
 /* @01996E-019976 sub_1996E exit_1996E Confirmed: exit/save stub: eep_save_r3(0x4) [exit slot xB4:DG-ID] */
@@ -3293,10 +3335,12 @@ void exit_19A74(rec_t *rec) { eep_save_r3(0xC7); }
 /* @019A7C-019A8A sub_19A7C exit_19A7C Confirmed: exit/save stub: eep_save_r3_block(0xFF8E40, 15) */
 void exit_19A7C(rec_t *rec) { eep_save_r3_block(0xFF8E40, 15); }
 
-/* @019A8A-019A9E sub_19A8A fn_19A8A Skeleton: 5 insns; calls sub_3DD32; RAM AA30; table slot xBE */
-void fn_19A8A(rec_t *rec)
+/* @019A8A-019A9E sub_19A8A exit_BE Confirmed: if changed: clear AA30.6 and call sub_3DD32 */
+void exit_BE(rec_t *rec)
 {
-    /* TODO(waveC): body not transcribed (5 instructions). */
+    if (!(ui_flags & 0x40)) return;
+    ui_flags &= ~0x40;
+    sub_3DD32();
 }
 
 /* @019C3A-019C44 sub_19C3A fn_19C3A Skeleton: 2 insns; calls loc_15260; RAM - */

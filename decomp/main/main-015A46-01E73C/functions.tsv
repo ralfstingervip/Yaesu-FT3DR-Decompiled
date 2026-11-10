@@ -311,8 +311,8 @@ start	end	ida_name	new_name	confidence	summary
 0190E6	0190F2	sub_190E6	dial_D7	Confirmed	screen 0xD7 (hidden group 13): wrap-step record 0x0190F2 (R2 n=0x18B)
 0190F8	019100	sub_190F8	toggle_AFF4_b0	Confirmed	AFF4 ^= 0x01
 019100	019158	sub_19100	hidden_digit_sequence_ui10	Confirmed	in UI mode 0x10 (word FF8F2C) collects up to 4 typed digits in AD8E; 08030706 posts event 0x16 to AAE0 (doc 49 calls this "requests UI mode 0x16"; the code only writes AAE0)
-019158	019208	sub_19158	fn_19158	Skeleton	50 insns; calls sub_15E42,sub_508B6; RAM 8EA0,8FE0,8FE2,90E8,90EA,AA30,AA32,AD68
-019208	019250	sub_19208	fn_19208	Skeleton	20 insns; calls sub_3CCBC,sub_3CCD0; RAM -; table slot x6B:SQL LEVEL
+019158	019208	sub_19158	setup_run_exit_handler	Confirmed	if the value changed (AA30.6) runs exit handler 0x148A0+BE16[0x019A9E+2*(id-0x0E)] (ids 0xD8..0xDB use fixed slots 0xCA..0xCD); then resets the menu state, undoes the screen-0x42 pull-up and stops a running tone search
+019208	019250	sub_19208	exit_6B_sql_level	Confirmed	SQL LEVEL save: A records save the 2-byte pair FF8970 (FM) or FF8972 (AM, +0x19==2); the B-slot record saves R1 n=0x54 (FM) or 0x55 (AM)
 019250	019258	sub_19250	exit_19250	Confirmed	exit/save stub: eep_save_r1(0x73) [exit slot x0F:APO]
 019258	019260	sub_19258	exit_19258	Confirmed	exit/save stub: eep_save_r1(0x74) [exit slot x10]
 019260	019270	sub_19260	exit_19260	Confirmed	exit/save stub: eep_save_r1(0x77) eep_save_r1(0x9F) [exit slot x15:BEEP]
@@ -354,40 +354,40 @@ start	end	ida_name	new_name	confidence	summary
 0193C2	0193CA	sub_193C2	exit_193C2	Confirmed	exit/save stub: eep_save_r1(0xA3) [exit slot x0E x32 x33 x34 x37:HOME VFO x57:PRIORITY REVERT x6E]
 0193CA	0193D2	sub_193CA	exit_193CA	Confirmed	exit/save stub: eep_save_r1(0xA4) [exit slot x67]
 0193D2	0193DA	sub_193D2	exit_193D2	Confirmed	exit/save stub: eep_save_r1(0xA5) [exit slot x59:SCAN WIDTH x8E:TARGET LOCATION]
-0193DA	0193DC	sub_193DA	fn_193DA	Skeleton	1 insns; calls -; RAM -; table slot x1D:DEVICE LIST x20:CLOCK TYPE x25 x27:DCS INVERSION x2F x31 x35:FM BANDWIDTH x3A x3B x3C x3D x42:HOME VFO x46 x47 x48 x5D:SQL S-METER x5E:RPT SHIFT x5F:RX MODE x63:RPT SHIFT FREQ x64:MEMORY SKIP x69 x6D:STEP x70:SENSOR INFO x74 x75 x7E x82:MEMORY INFO x83 x86:BACKUP x88:BACKUP x89:BACKUP x8A x9F:APRS DESTINATION xB6 xBA xBB xBF xC0:SOFTWARE VERSION xD8 xD9 xDA
+0193DA	0193DC	sub_193DA	exit_none	Confirmed	rts - exit slot of the ~40 items that save nothing
 0193DC	0193EA	sub_193DC	exit_193DC	Confirmed	exit/save stub: eep_save_r1_block(0xFF89BB, 2) [exit slot x7C:VOX]
 0193EA	0193F8	sub_193EA	exit_193EA	Confirmed	exit/save stub: eep_save_r1_block(0xFF89D1, 2) [exit slot x7D:RECORDING]
 0193F8	019406	sub_193F8	exit_193F8	Confirmed	exit/save stub: eep_save_r1_block(0xFF8A58, 2)
-019406	019426	sub_19406	fn_19406	Skeleton	11 insns; calls sub_3A9F6,sub_3AA66,sub_3F21A; RAM -; table slot x8C:TX POWER (title drawn directly by sub_FFF0878C, group 0; not from the setup-label table)
-019426	019444	sub_19426	fn_19426	Skeleton	9 insns; calls sub_3CCD0,sub_3F1DC; RAM -; table slot x13:ANTENNA ATT
-019444	019454	sub_19444	fn_19444	Skeleton	4 insns; calls -; RAM AA30; table slot x19
-019454	01946C	sub_19454	fn_19454	Skeleton	6 insns; calls sub_3CD5C; RAM AA30,AD6C; table slot x1B
+019406	019426	sub_19406	exit_8C_tx_power	Inferred	TX POWER: memory mode -> store the channel (sub_3F21A + sub_3A9F6); rec[5]==5 -> sub_3AA66(rec[3])
+019426	019444	sub_19426	exit_13_antenna_att	Confirmed	memory mode with a channel (sub_3F1DC != 0): save the ATT bitmap FF8976 (2 bytes)
+019444	019454	sub_19444	exit_19	Confirmed	just clears AA30.6
+019454	01946C	sub_19454	exit_1B_bank	Inferred	if changed: clear AA30.6 and save bank AD6C via sub_3CD5C
 01946C	019474	sub_1946C	exit_1946C	Confirmed	exit/save stub: eep_save_r1(0x0) [exit slot x1E:Bluetooth x1F:Bluetooth Save]
 019474	01948A	sub_19474	exit_19474	Confirmed	exit/save stub: eep_save_r1_block(0xFF8926, 16) eep_save_r1(0x9E) [exit slot x21]
 01948A	0194AE	sub_1948A	exit_1948A	Confirmed	exit/save stub: eep_save_r1_block(0xFF8999, 7) eep_save_r1_block(0xFF89C1, 1) eep_save_r1(0xA0) [exit slot x23]
 0194AE	0194D2	sub_194AE	exit_194AE	Confirmed	exit/save stub: eep_save_r1_block(0xFF89A1, 1) eep_save_r1_block(0xFF89A2, 1) eep_save_r1(0xA0) [exit slot x24]
 0194D2	0194E8	sub_194D2	exit_194D2	Confirmed	exit/save stub: eep_save_r1_block(0xFF8956, 18) eep_save_r1(0x35) [exit slot x51]
-0194E8	01950E	sub_194E8	fn_194E8	Skeleton	9 insns; calls sub_3CCD0,sub_3CE5A; RAM 8936,AA30; table slot x2C
+0194E8	01950E	sub_194E8	exit_2C_dtmf	Confirmed	if changed: clear AA30.6, write DTMF memory FF8936 (sub_3CE5A) and save the slot byte
 01950E	019516	sub_1950E	exit_1950E	Confirmed	exit/save stub: eep_save_r1(0x9F) [exit slot x4C]
-019516	01954A	sub_19516	fn_19516	Skeleton	17 insns; calls sub_3A8E2,sub_3A922,sub_3F21A; RAM -; table slot x4D
+019516	01954A	sub_19516	exit_4D	Inferred	sets rec+0x12.7 and stores the record: rec[5]==5 -> sub_3A8E2(rec[3]); memory -> sub_3A922(sub_3F21A())
 01954A	01956E	sub_1954A	exit_1954A	Confirmed	exit/save stub: eep_save_r1_block(0xFF8988, 2) eep_save_r1_block(0xFF898A, 2) eep_save_r1(0xA1) [exit slot x4F:TIMER]
 01956E	019584	sub_1956E	exit_1956E	Confirmed	exit/save stub: eep_save_r1_block(0xFF898A, 2) eep_save_r1(0xA1) [exit slot x50]
 019584	01959A	sub_19584	exit_19584	Confirmed	exit/save stub: eep_save_r1_block(0xFF8968, 4) eep_save_r1(0xA3) [exit slot x52:PAGER x53 x54]
-01959A	0195D2	sub_1959A	fn_1959A	Skeleton	13 insns; calls sub_16A44,sub_3CCBC,sub_3CCD0; RAM 896C,AA34,AD8A; table slot x55:PASSWORD
-0195D2	01961E	sub_195D2	fn_195D2	Skeleton	22 insns; calls sub_3CE9A,sub_3CEAA,sub_3CECC,sub_3CEDC,sub_3F1DC,sub_3F21A; RAM -; table slot x6C:SQL TYPE
-01961E	01962C	sub_1961E	fn_1961E	Skeleton	4 insns; calls sub_1963A; RAM -; table slot x72:TONE SQL FREQ
-01962C	01963A	sub_1962C	fn_1962C	Skeleton	4 insns; calls sub_1963A; RAM -; table slot x26:DCS CODE
-01963A	019664	sub_1963A	fn_1963A	Skeleton	13 insns; calls sub_3CECC,sub_3CEDC,sub_3F1DC,sub_3F21A; RAM -
+01959A	0195D2	sub_1959A	exit_55_password	Confirmed	if edited (AA34.6): clear it; if all 4 digits set (sub_16A44), copy AD8A -> FF896C and save it (4 bytes) plus R1 n=0xA2
+0195D2	01961E	sub_195D2	exit_6C_sql_type	Inferred	special memory channels keep a per-channel SQL type: type 7 -> window ACE2 (sub_3CECC / sub_3CEDC), type 4 -> sub_3CE9A / sub_3CEAA; ACE2[ch] = rec+0x16
+01961E	01962C	sub_1961E	exit_72_tone_freq	Confirmed	chan_extra_store(offset 0x14, rec+0x17)
+01962C	01963A	sub_1962C	exit_26_dcs_code	Confirmed	chan_extra_store(offset 0x28, rec+0x18)
+01963A	019664	sub_1963A	chan_extra_store	Confirmed	for a type-7 memory channel: ACE2[ch + off] = v inside sub_3CECC / sub_3CEDC
 019664	019674	sub_19664	exit_19664	Confirmed	exit/save stub: eep_save_r1(0x9E) eep_save_r1(0x9F) [exit slot x76:TONE SEARCH]
-019674	0196A0	sub_19674	fn_19674	Skeleton	13 insns; calls sub_3CE9A,sub_3CEAA,sub_3F1DC,sub_3F21A; RAM -; table slot x7F:PR FREQUENCY
+019674	0196A0	sub_19674	exit_7F_pr_frequency	Confirmed	type-4 memory channel: ACF6[ch] = rec+0x34 inside sub_3CE9A / sub_3CEAA
 0196A0	0196B0	sub_196A0	exit_196A0	Confirmed	exit/save stub: eep_save_r1_block(0xFF898C, 2) [exit slot x79]
 0196B0	0196C6	sub_196B0	exit_196B0	Confirmed	exit/save stub: eep_save_r1_block(0xFF898E, 2) eep_save_r1(0xA6) [exit slot xD6]
 0196C6	0196D6	sub_196C6	exit_196C6	Confirmed	exit/save stub: eep_save_r1_block(0xFF8A1C, 4) [exit slot x1A:BANK LINK xDB]
-0196D6	019702	sub_196D6	fn_196D6	Skeleton	11 insns; calls sub_3CD00,sub_3D5BC; RAM 8ABB,A984,AA30; table slot x9B:BEACON STATUS TEXT
-019702	01972C	sub_19702	fn_19702	Skeleton	10 insns; calls sub_18F22,sub_3CD00,sub_3D5F4; RAM 8CFB,AA30; table slot xAF
-01972C	01973E	sub_1972C	fn_1972C	Skeleton	4 insns; calls -; RAM 8BCC,AA30; table slot xA8:SmartBeaconing
-01973E	019762	sub_1973E	fn_1973E	Skeleton	10 insns; calls sub_3CD00,sub_3F36E,sub_449A8; RAM -
-019762	019764	sub_19762	fn_19762	Skeleton	1 insns; calls -; RAM -; table slot x8D:RADIO ID CHECK
+0196D6	019702	sub_196D6	exit_9B_status_text	Confirmed	if changed: write status text slot FF8ABB (sub_3D5BC), save R2 block FF8AB9 x3, A984 = 0
+019702	01972C	sub_19702	exit_AF_autoreply	Confirmed	if changed: write auto-reply text slot FF8CFB (sub_3D5F4), save R2 block FF8CFA x0x0C, recompute A51C (sub_18F22)
+01972C	01973E	sub_1972C	exit_A8_smartbeaconing	Confirmed	if changed: clear AA30.6, then (sub_1973E) copy the edit block back when a type is selected and save
+01973E	019762	sub_1973E	sb_store_params	Confirmed	if type != 0 copy A90E (7 bytes) to the type's parameter block (sub_449A8); save R2 block FF8BCC x0x16
+019762	019764	sub_19762	exit_8D_none	Confirmed	rts (RADIO ID CHECK exit)
 019764	01976C	sub_19764	exit_19764	Confirmed	exit/save stub: eep_save_r2(0xA)
 01976C	019774	sub_1976C	exit_1976C	Confirmed	exit/save stub: eep_save_r2(0x0) [exit slot x92:APRS MODEM]
 019774	01977C	sub_19774	exit_19774	Confirmed	exit/save stub: eep_save_r2(0x1D) [exit slot x99:APRS TX DELAY]
@@ -395,9 +395,9 @@ start	end	ida_name	new_name	confidence	summary
 019784	019794	sub_19784	exit_19784	Confirmed	exit/save stub: eep_save_r2(0x128) eep_save_r2(0x12A) [exit slot x9E:GPS SETUP]
 019794	0197C0	sub_19794	exit_19794	Confirmed	exit/save stub: eep_save_r2(0x18D) eep_save_r2(0x1) eep_save_r2_block(0xFF8AC0, 2) eep_save_r2_block(0xFF8C1E, 4) [exit slot xA5:MY SYMBOL]
 0197C0	0197CE	sub_197C0	exit_197C0	Confirmed	exit/save stub: eep_save_r2_block(0xFF8AFC, 130) [exit slot x94]
-0197CE	0197F0	sub_197CE	fn_197CE	Skeleton	8 insns; calls sub_3CD00; RAM 8AC2; table slot x9D:DIGI PATH
+0197CE	0197F0	sub_197CE	exit_9D_digi_path	Confirmed	hop index FF8AC2 = 0, save R2 blocks FF8AC2 x0x3A and FF8BE5 x0x39
 0197F0	0197FE	sub_197F0	exit_197F0	Confirmed	exit/save stub: eep_save_r2_block(0xFF8B7E, 74) [exit slot xA2]
-0197FE	019816	sub_197FE	fn_197FE	Skeleton	6 insns; calls sub_17D90,sub_3CD00,sub_50FE8; RAM -; table slot xA3:CALLSIGN (APRS)
+0197FE	019816	sub_197FE	exit_A3_callsign	Confirmed	save R2 FF8AA2 x7 (call + SSID), rebuild the display string (sub_17D90), sub_50FE8
 019816	019824	sub_19816	exit_19816	Confirmed	exit/save stub: eep_save_r2_block(0xFF8AB0, 9) [exit slot xA4:MY POSITION]
 019824	01982C	sub_19824	exit_19824	Confirmed	exit/save stub: eep_save_r2(0x9) [exit slot xA6:POSITION COMMENT]
 01982C	019834	sub_1982C	exit_1982C	Confirmed	exit/save stub: eep_save_r2(0x129) [exit slot xA7:TIME ZONE]
@@ -410,7 +410,7 @@ start	end	ida_name	new_name	confidence	summary
 019882	019890	sub_19882	exit_19882	Confirmed	exit/save stub: eep_save_r2_block(0xFF8C22, 3) [exit slot xAA]
 019890	01989E	sub_19890	exit_19890	Confirmed	exit/save stub: eep_save_r2_block(0xFF8C26, 5) [exit slot xAB]
 01989E	0198AC	sub_1989E	exit_1989E	Confirmed	exit/save stub: eep_save_r2_block(0xFF8C2E, 20) [exit slot xAC:APRS POPUP]
-0198AC	0198AE	sub_198AC	fn_198AC	Skeleton	1 insns; calls -; RAM -; table slot xAD
+0198AC	0198AE	sub_198AC	exit_AD_none	Confirmed	rts
 0198AE	0198BC	sub_198AE	exit_198AE	Confirmed	exit/save stub: eep_save_r2_block(0xFF8CF8, 2) [exit slot xAE:BEACON INFO]
 0198BC	0198C4	sub_198BC	exit_198BC	Confirmed	exit/save stub: eep_save_r2(0x18B) [exit slot xD7]
 0198CC	0198D4	sub_198CC	exit_198CC	Confirmed	exit/save stub: eep_save_r3(0x0)
@@ -425,7 +425,7 @@ start	end	ida_name	new_name	confidence	summary
 019936	01993E	sub_19936	exit_19936	Confirmed	exit/save stub: eep_save_r3(0x10C) [exit slot xD0]
 01993E	019946	sub_1993E	exit_1993E	Confirmed	exit/save stub: eep_save_r3(0x10D) [exit slot xD1]
 019946	019954	sub_19946	exit_19946	Confirmed	exit/save stub: eep_save_r3_block(0xFF8D22, 2) [exit slot xB1:DIGITAL POPUP]
-019954	01996E	sub_19954	fn_19954	Skeleton	6 insns; calls sub_3CD30,sub_5E0C0; RAM B0C9; table slot xB3
+019954	01996E	sub_19954	exit_B3	Confirmed	save R3 block FF8D26 x0x0A, set B0C9.7, sub_5E0C0
 01996E	019976	sub_1996E	exit_1996E	Confirmed	exit/save stub: eep_save_r3(0x4) [exit slot xB4:DG-ID]
 019976	01997E	sub_19976	exit_19976	Confirmed	exit/save stub: eep_save_r3(0x62) [exit slot xB5:LOCATION SERVICE]
 01997E	01998C	sub_1997E	exit_1997E	Confirmed	exit/save stub: eep_save_r3_block(0xFF8E20, 2) [exit slot xC3]
@@ -454,7 +454,7 @@ start	end	ida_name	new_name	confidence	summary
 019A6C	019A74	sub_19A6C	exit_19A6C	Confirmed	exit/save stub: eep_save_r3(0xC2)
 019A74	019A7C	sub_19A74	exit_19A74	Confirmed	exit/save stub: eep_save_r3(0xC7)
 019A7C	019A8A	sub_19A7C	exit_19A7C	Confirmed	exit/save stub: eep_save_r3_block(0xFF8E40, 15)
-019A8A	019A9E	sub_19A8A	fn_19A8A	Skeleton	5 insns; calls sub_3DD32; RAM AA30; table slot xBE
+019A8A	019A9E	sub_19A8A	exit_BE	Confirmed	if changed: clear AA30.6 and call sub_3DD32
 019C3A	019C44	sub_19C3A	fn_19C3A	Skeleton	2 insns; calls loc_15260; RAM -
 019C50	019C76	sub_19C50	fn_19C50	Skeleton	9 insns; calls sub_3F628,sub_7348C; RAM 8920,B0AA
 019C76	019C82	sub_19C76	fn_19C76	Skeleton	3 insns; calls sub_3F628; RAM -

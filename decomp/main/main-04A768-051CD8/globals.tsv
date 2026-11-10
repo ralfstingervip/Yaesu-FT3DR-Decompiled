@@ -1,0 +1,128 @@
+addr	name	width	meaning	evidence
+FFB05A	disp_line	22	text line being built for the SUB display	every row callback writes here; copied to FF3D94.. frame
+FFBBE9	disp_col	1	label column of current row	set 5/7/8 before rows; all PUT_LBL use it
+FFBBE8	disp_len	1	row length (0x16)	sub_4F728/sub_52DB0
+FFB050	line_attr	2	row style word sent to SUB with the line	set 0/1/3/0x12 by rows; sub_5314A stores row index
+FFB411	disp_fmt_ok	1	1 if distance value printed	sub_4B378
+FF3D94	sub_frame	var	MAIN->SUB display frame	doc 108 (+0x20 phase); frame cells FF3DA4..
+FFBC2C	frame_wp	4	write pointer into sub_frame	sub_5314A, 4F564
+FF3DA4	sfr_mode	1	frame page kind 1/2	4F564, 4B8D4
+FF3DA6	sfr_sym_flags	1	symbol cell flags (b4 raw symbol)	4F30A, 4F46A
+FF3DA9	sfr_dir16	1	16-point bearing cell	sub_4F390
+FF3DAB	sfr_sym_a	1	symbol index cell	sub_4F4B0
+FF3DAC	sfr_sym_b	1	symbol overlay / code cell	sub_4F4B0
+FFAA33	fmt_flags_AA33	1	b6 digit already emitted (zero suppression)	sub_5270A..5282E
+FFAA34	sign_flags_AA34	1	b7 altitude negative	sub_4C8E4
+FF9DE8	rx_hdr	32	newest station record	doc 90 step 12; copied to FF9E08
+FF9DF0	rx_hdr_call	9	newest source callsign	sub_4A768
+FF9DFE	rx_dti	1	newest DTI char	sub_4D374, sub_50EA8
+FF9DFF	rx_type	1	newest packet type	table 0x04ABE4 selector (doc 70)
+FF9E04	rx_len	2	newest decoded frame length	sub_518AE writes
+FF9E08	cur_stn	32	displayed station/message record	sub_50570 copy
+FF9E1E	cur_dti	1	displayed DTI	sub_5015A
+FF9E1F	cur_type	1	displayed packet type 0..29, FF none	table 0x04AB70 selector
+FF9E20	cur_cmp	1	1 = compressed position	sub_4D9F2 offsets
+FF9E21	cur_msgno	1	message number 0..99	two_digit table 0x4004
+FF9E22	cur_flags	1	slot flags b0 sent,b1 grp,b3 bln,b4,b7 read	4F810, 5066E
+FF9E23	cur_retry	1	retry count (0 acked, FF stopped)	4FB4A, 50748
+FF9E24	cur_len	2	displayed frame length	4A768, 50570
+FF9E28	msg_tmp	32	scratch slot copy for save	5066E, 50782
+FF9E48	cur_frame	var	decoded frame shown (10-byte addresses, +0x28 ctl/PID, +0x2A info)	4A768
+FF9E52	cur_src	10	source address record	4B1F6
+FF9E72	cur_info	var	info field of shown frame	4A768
+FF9EF8	rx_frame	var	decoded newest frame	sub_518AE
+FF9F22	rx_info	var	info field newest frame	4D374
+FF1A18	own_frame	var	own-position frame (Inferred)	4BB46, 4D360
+FFA432	dec_addr	var	address decode scratch	sub_518AE
+FFA55B	rx_hops	1	digipeater count	sub_518AE (doc 90)
+FFA55A	thirdparty_kind	1	third-party header form	sub_51AC8
+FFA4B6	disp_info	4	pointer to info field of shown frame	4A768, 5015A
+FFA4BA	disp_end	4	pointer to end of shown frame	4A768, 50570
+FFA4BE	cmp_base	4	dup-check cursor	4D9E6
+FFA4C2	cmp_end	4	dup-check end	4C7DC
+FFA526	frame_start	4	frame being classified	sub_5017C
+FFA52A	dest_w0	4	dest chars 0..3	sub_502D2
+FFA52E	dest_w1	2	dest chars 4..5	sub_502D2
+FFA4F9	dti_compressed	1	1 = compressed form	sub_5017C
+FFA9F9	ui_mode	1	main screen mode	4A768 gate, 507AC writes 5
+FFA9FA	aprs_ui	1	b0 detail open, b1 compose, b3 alt layout	many
+FFAA3A	aprs_ui2	1	b0/b1 list view toggles	5148C, 514A2
+FF817E	ipc_req	1	b1 display update request	4A768; sub_3FFA0 clears
+FFA9ED	key_event	1	key code sink	doc 93
+FFAAE0	tone_ev	1	tone mailbox ('D' delete, 'I' refuse)	doc 93; 5043A
+FFA9FD	popup_kind	1	pop-up kind	4A768/4A91E
+FFA9FC	stn_popup_type	1	station pop-up type	4A768
+FFA9FE	msg_popup_type	1	message pop-up type	4A768
+FF95CE	popup_tmr_stn	2	station pop-up timer, 100 ms tier	doc 76 tiers
+FF95D0	popup_tmr_msg	2	message pop-up timer	4A768
+FFA4DE	popup_call	9	callsign in pop-up	4A768
+FFA4E7	popup_sym	1	type letter or 'M'	4A768
+FFA4F5	page_scroll	1	top row of detail page	sub_5314A
+FFA4F7	page_max	1	last scroll position	page openers
+FFA4F8	page_var	1	page variant, FF list	page openers
+FFA98A	page_tbl	1	course-callback selector (table 0x4F3E4)	sub_4F390
+FFA98B	page_step	1	scroll step	sub_531C8
+FFA4F2	hdr_sym_t	1	header symbol table char	page openers
+FFA4F3	hdr_sym_c	1	header symbol code char	page openers
+FF8EAB	stn_cursor	1	station list cursor	504CC
+FF8EAC	msg_cursor	1	message list cursor	505F4
+FFA6EC	stn_order	60	station list order	504CC
+FFA764	msg_order	60	message list order	505F4
+FEE000	stn_slots	32*n	station list slots	50570
+FEE780	msg_slots	32*n	message list slots	doc 90
+FFA50C	cur_stn_slot	1	current station slot	50536
+FFA50D	cur_msg_slot	1	current message slot	5066E
+FFA506	list_hit	1	b0 station / b1 message entry present	50402
+FFA7C8	lat_flags	1	b7 invalid b6 exact b4 south	position decoders
+FFA7C9	lat_deg	1	latitude degrees	decoders
+FFA7CA	lat_min	1	latitude minutes	decoders
+FFA7CB	lat_mfrac	2	thousandths of minute (BE)	decoders
+FFA7CD	lon_flags	1	b7 invalid b6 exact b4 west b0 +100	decoders
+FFA7CE	lon_deg	1	longitude degrees mod 100	decoders
+FFA7CF	lon_min	1	longitude minutes	decoders
+FFA7D0	lon_mfrac	2	thousandths of minute (BE)	decoders
+FFA51E	mice_ns	1	Mic-E dest char for N/S (or E/W for lon)	4BB92, 4C1DC
+FFA51F	mice_lonoff	1	Mic-E dest char for +100 lon offset	4C3D2
+FFA4FC	ambig_bits	1	Mic-E position-ambiguity digit mask	4BB92
+FFA7BE	rng_valid	2	FFFF = no own fix	4B378
+FFA7A0	dist_digits	4	unpacked distance digits, <0 invalid	4B378
+FFA7A5	dist_flags	1	b4 >=1000 b3 >=100	4B378
+FFA7D2	brg_digits	4	second distance record	4B4AA
+FFA4FA	cs_kind	1	compressed cs kind 0 alt 1 crs/spd 2 range	4CBDC
+FFA4FD	ext_off	1	offset into data extension	wx_parse, text_window
+FFA504	ext_adj	1	offset correction	4E60A
+FFA8B4	b91_val	4	base-91 degrees*1e4	sub_4D17E
+FFA8BA	b91_div1	4	base-91 divisor	4D06A/4D292
+FFA986	pos_src_ptr	4	alt-source info pointer	4D360
+FFA523	item_dti_A523	1	DTI of own-position frame	4D360
+FFA4FF	wx_found	1	slot-found bits, b7 '-' seen	4F234
+FFA500	wx_neg	1	b7 temperature negative	4F10C, 4E5A2
+FFA501	wx_lum	1	L/l/s field seen	4F10C
+FFA502	wx_res	1	weather field check result 0..4	4E60A
+FFA503	wx_res2	1	weather check result (classifier)	4F2CE
+FFA530	wx_dir	4	pointer to 'c' digits	4DC40
+FFA534	wx_spd	4	pointer to 's' digits	4DC40
+FFA538	wx_slot	28	pointers g t r p P h b	4F234
+FF8AAC	unit_bits	1	UNIT: b0 pos fmt b1 dist b3 alt b4 degF b5 inch b6 mph	doc 45 + use here
+FF8AAD	unit_speed	1	0 km/h 1 knot 2 mph	doc 45; 4C640
+FFA917	u_speed	1	copy of FF8AAD	4AAE8
+FFA918	u_alt_ft	1	copy of FF8AAC b3	4AAE8
+FFA919	u_pos_dms	1	copy of FF8AAC b0	4AAE8
+FFA91A	u_dist_mi	1	copy of FF8AAC b1	4AAE8
+FF8AAF	aprs_flt_AAF	1	b0 accept any destination (Inferred)	sub_5017C
+FFAD68	ed_pos	1	edit cursor	compose code
+FFAD99	ed_pos_ar	1	auto-reply edit cursor	50DE8
+FFA507	ed_state	1	1 CLR 2 INSERT 3 CLRALL 4 DELETE	labels 0x4FDB0; 50D7E
+FFA56C	msg_to_flag	1	addressee valid	5095A
+FFA56D	msg_to	7	addressee 6 chars + SSID	508CA
+FFA574	msg_text	67	message edit text	50828
+FFADDE	ar_text	67	auto-reply text	doc 90; 50D7E
+FFADA2	stat_text	60	status text edit buffer (Inferred)	4FF10, 50C9C
+FFA332	tx_buf	var	APRS TX buffer	doc 90
+FFA330	tx_len	2	TX length	doc 90
+FF8AA2	own_call	6	own APRS callsign	50FAA
+FF8AA8	own_ssid	1	own SSID index	50FE8
+FFA8D0	own_call_fmt	10	formatted own call	doc 90; 50FE8
+FFA5CD	out_msg	var	outgoing message record: call A5CD, ssid A5D3, text A5D4	50E1E
+FF95B6	msg_retry_tmr	2	60 s retry timer (0x1770, 10 ms tier)	50EA8; doc 90
+FFA91C	tx_preview	var	":ADDR:text{NN" preview	51840

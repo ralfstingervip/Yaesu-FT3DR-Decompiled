@@ -1562,7 +1562,7 @@ u8 sd_job_blocked(void)                                /* 073030 */
 void bt_link_fsm(void)                                 /* 073072 */
 {
     bt_sco_hold();
-    off_7308C[bt_bringup];                             /* BB90              */
+    off_7308C[bt_bringup]();                           /* BB90              */
 }
 
 /* ------------------------------------------------------------------------ *
@@ -3021,3 +3021,369 @@ void memory_restore_start(void)                        /* 074DCA */
  * 0 -> apply hooks sub_750C2/75160/nullsub_44, then sub_75EB6, "TAIS"
  * (sub_39504), jmp 0xDC4E.  Reply error -> 750BE. */
 void memory_restore_steps(void) { /* 074E38; see above */ }
+/* ************************************************************************** *
+ * PART 6  0750C2-078546 : restore apply hooks (per-destination channel
+ *         conversion, docs 59/96), edit-list helpers, the H8SX USB CDC-ACM
+ *         module (docs 36/42/119/131), the 3-wire device command helpers
+ *         (doc 82) and the service-window routines (doc 95).
+ * ************************************************************************** */
+
+/* 0750C2-075114 size 82  restore_reset_band_state (sub_750C2) Confirmed
+ * Apply hook 1: clear the conversion counters BCAC/BCAE and flags
+ * BCB0..BCB5, make band A record FF8EE0 current (8122 = 812A = FF8EE0),
+ * clear 817E.0 and 8EA0.6 (band A selected). */
+void restore_reset_band_state(void)                    /* 0750C2 */
+{
+    conv_cnt_BCAC = conv_cnt_BCAE = 0;
+    conv_flag_BCB0 = conv_flag_BCB2 = conv_flag_BCB1 = 0;
+    conv_flag_BCB3 = conv_flag_BCB4 = conv_flag_BCB5 = 0;
+    rec_bandA_8122 = rec_cur_812A = (struct rec *)0xFF8EE0;
+    redraw_flags_817E &= ~0x01;
+    band_sel_8EA0 &= ~0x40;
+}
+
+/* 075114-075160 size 76  vfo_set_default_channel (sub_75114) Confirmed
+ * Fill a VFO record er0 with a converted default: clear +0x39 b7,
+ * +0x1A = er1 (RX frequency long), +0x14 = r2h, +0x12 = r2l, +0x19 = 0,
+ * +0x15 = 0, +0x1E = 0 (offset), and copy the 18-byte blank name unit
+ * from ROM 00F6D4 to +0x22. */
+void vfo_set_default_channel(struct rec *r, u32 freq, u8 f14, u8 f12) /* 075114 */
+{
+    r->f39 &= ~0x80;  r->rxfreq_1A = freq;  r->f14 = f14;  r->f12 = f12;
+    r->f19 = 0;  r->f15 = 0;  r->txoff_1E = 0;
+    memcpy((u8 *)r + 0x22, ROM_00F6D4, 0x12);
+}
+
+/* ------------------------------------------------------------------------ *
+ * 075160-0753D4 size 628  restore_convert_memories (sub_75160) Inferred
+ * 0753D4-0754BC size 232  restore_convert_memories_tail (sub_753D4) Inferred
+ * Apply hook 2 after a BACKUP/MEMORY restore: sub_3A120, then switch on
+ * the destination FF800F (cases 1, 2/3, 4, 5, 7; others return) into one
+ * of five near-identical loops over the 1100 (0x44C) memory slots.  Each
+ * loop loads a slot (sub_3A632, skips empty ones), tests its frequency
+ * against the destination's band windows with sub_3F5EE (range check:
+ * C clear when lo <= f <= hi), rewrites out-of-plan fields, and stores it
+ * back (sub_3A838).  0753D4 is the tail of the last case (IDA split).
+ * TODO(waveC): per-case window tables and the exact field rewrites.
+ * ------------------------------------------------------------------------ */
+void restore_convert_memories(void)                    /* 075160 */
+{
+    sub_3A120();
+    switch (market_800F) {
+    case 1: case 2: case 3: case 4: case 5: case 7:
+        for (u16 slot = 0; slot < 0x44C; slot++) {
+            if (mem_load_3A632(slot) != 0) continue;   /* empty / invalid  */
+            /* range checks sub_3F5EE against per-case windows, rewrite */
+            mem_store_3A838(slot);
+        }
+        break;
+    default: return;
+    }
+}
+void restore_convert_memories_tail(void) { /* 0753D4: case-1 loop tail */ }
+
+/* 0754BC-075554 size 152  restore_fix_band_flags (sub_754BC) Inferred
+ * Apply hook 3: sub_395CA (load band state), keep 8EA0; if any of the
+ * slot-check bytes 8EA6/8EA7/8EA8 is set, clear all three; re-apply the
+ * band records; restore 8EA0 and save with sub_39CE0. */
+void restore_fix_band_flags(void)                      /* 0754BC */
+{
+    sub_395CA();
+    u8 keep = band_sel_8EA0;
+    if (slot_chk_8EA6 || cell_8EA7 || cell_8EA8) {
+        slot_chk_8EA6 = cell_8EA7 = cell_8EA8 = 0;
+    }
+    /* TODO(waveC): 0754EC-075548 per-band record re-application */
+    band_sel_8EA0 = keep;
+    sub_39CE0();
+}
+
+/* ------------------------------------------------------------------------ *
+ * 075554-075EB4 size 2400  restore_convert_vfos (sub_75554) Skeleton
+ * Per-destination conversion of the VFO / home records (doc 59/96): switch
+ * on FF800F (1, 2/3, 4, 5, 7) into five unrolled bodies of identical shape.
+ * Each body, for band A then band B (and their home channels): reads the
+ * record (sub_3A474 / sub_3A29C / sub_3A35E), range-checks frequencies with
+ * sub_3F5EE against the destination plan, and if out of plan replaces the
+ * record with a default (vfo_set_default_channel 075114) and stores it back
+ * (sub_3A2D0 / sub_3A390), recording which ones changed in BCB0..BCB5;
+ * finally sub_3A480 reloads the working record.  Case 7 writes 6 at +4 of
+ * the record (0x075592, doc 96).
+ * TODO(waveC): decode the five case bodies and their constant windows.
+ * ------------------------------------------------------------------------ */
+void restore_convert_vfos(void)                        /* 075554 */
+{
+    switch (market_800F) {
+    case 1: case 2: case 3: case 4: case 5: case 7:
+        /* see header */ vfo_reload_3A480(); break;
+    default: return;
+    }
+}
+
+/* 075EB4 nullsub_55: rts (apply hook 4 slot; doc 96 "0x75EB4"). */
+void nullsub_55(void) { }                              /* 075EB4 */
+
+/* 075EB6-075F36 size 128  restore_refresh_both_bands (sub_75EB6) Confirmed
+ * Apply hook 5 (also after a clone): sub_395CA, save 8EA0, sub_3A120,
+ * set dual (8EA0.7); select band A (8122 = FF8EE0, 8EA0.6 = 0) and run
+ * sub_21E14; select band B (8126 = FF8FE8, 817E.0 = 1, 8EA0.6 = 1) and run
+ * sub_21E14; restore 8EA0; sub_39F5A. */
+void restore_refresh_both_bands(void)                  /* 075EB6 */
+{
+    sub_395CA();
+    u8 keep = band_sel_8EA0;
+    sub_3A120();
+    band_sel_8EA0 |= 0x80;
+    rec_bandA_8122 = rec_cur_812A = (struct rec *)0xFF8EE0;
+    redraw_flags_817E &= ~1;  band_sel_8EA0 &= ~0x40;  sub_21E14();
+    rec_bandB_8126 = rec_cur_812A = (struct rec *)0xFF8FE8;
+    redraw_flags_817E |= 1;   band_sel_8EA0 |= 0x40;   sub_21E14();
+    band_sel_8EA0 = keep;
+    sub_39F5A();
+}
+
+/* ------------------------------------------------------------------------ *
+ * 075F36-076256  edit-list helpers (callers 029Cxx-02A1xx, the text/item
+ * editors of doc 119-touch "scroll via sub_75F36/76080").  Edit context:
+ * BC7C = buffer pointer, BC80 = 16-bit per-position flag mask,
+ * BC82 = cursor, BC83 = length.  H8SX-compiled (stm/rts/l frames).
+ * ------------------------------------------------------------------------ */
+/* 075F36-075FC6 size 144  editbuf_delete_char (sub_75F36) Confirmed:
+ * shift buf[cur+1..len-1] down one, put 0xFF in the last cell, and (if
+ * len <= 16) shift the BC80 mask bits above the cursor down to match. */
+void editbuf_delete_char(void)                         /* 075F36 */
+{
+    u8 cur = edit_cur_BC82, last = edit_len_BC83 - 1;
+    u8 *p = edit_buf_BC7C + cur;
+    for (u8 i = cur; i < last; i++, p++) p[0] = p[1];
+    *p = 0xFF;
+    if (edit_len_BC83 > 0x10) return;
+    u16 m = edit_mask_BC80;
+    u16 lo = m & ((1u << cur) - 1);                    /* bits below cursor */
+    u16 hi = (m >> 1) & ~((1u << cur) - 1) & ((1u << last) - 1);
+    edit_mask_BC80 = lo | hi;
+}
+/* 075FC6-076080 size 186  editbuf_delete_pair (sub_75FC6) Confirmed:
+ * the two-byte-character variant: shifts by 2, writes 0xFF 0xFF at the
+ * end, shifts the mask by 2. */
+void editbuf_delete_pair(void) { /* as 075F36 with stride 2 */ }  /* 075FC6 */
+/* 076080-076148 size 200  editbuf_insert_char (sub_76080) Inferred:
+ * opens a gap at the cursor (shift up), updates the BC80 mask (writes it
+ * back at 076128); two exits. */
+void editbuf_insert_char(void) { /* TODO(waveC): body */ }        /* 076080 */
+/* 07615E-0761C8 size 106  editbuf_set_mode (sub_7615E) Inferred:
+ * reads BC70 and stores the argument into BC71 (edit character-set mode). */
+void editbuf_set_mode(u8 m) { edit_mode_BC71 = m; }   /* 07615E (abridged) */
+/* 0761C8-076256 size 142  editbuf_commit_word (sub_761C8) Inferred:
+ * reads BC72, computes and stores BC74 (edit value / position word). */
+void editbuf_commit_word(void) { /* TODO(waveC) */ }  /* 0761C8 */
+/* 0762DC-0767BE size 1250  editbuf_input_char (sub_762DC) Skeleton:
+ * the character-entry engine of the editors (caller 02A198): reads the
+ * character table index BC76, state BC77/BC79, updates BC74.  Contains the
+ * one real "bra rN.w" of doc 142 (0x076308 59 06).
+ * TODO(waveC): decode the character-class tables and state machine. */
+void editbuf_input_char(void) { /* Skeleton */ }       /* 0762DC */
+
+/* 0768A8-0768C8 size 32  cdc_bulk_in_service (sub_768A8) Confirmed
+ * (doc 95/119) handler b4: if FFEE00.4 (EP 0x82 IN ready) drain the IN ring
+ * FF62C8 into the FIFO (ring_drain_7837C with er0 = FF6354) and store the
+ * count in FF63F8. */
+void cdc_bulk_in_service(void)                         /* 0768A8 */
+{
+    if (USB_IFR0 & 0x10)
+        cdc_in_count_63F8 = ring_drain_7837C((void *)0xFF6354, (void *)0xFF62C8);
+}
+
+/* 076C0A-076EF8 size 750  cdc_setup_dispatch (sub_76C0A) Confirmed (doc 119)
+ * Parses the SETUP packet at FEE000: standard requests (GET_STATUS,
+ * CLEAR/SET_FEATURE, SET_ADDRESS, GET_DESCRIPTOR from the copied descriptor
+ * set FF637C/FF6382/FF6388, GET/SET_CONFIGURATION, interface requests) and
+ * class requests 0x20-0x23 / 0xA0-0xA3 -> cdc_class_request (076EF8);
+ * vendor -> cdc_vendor_stub (076FC4).  Sets ep0_state FF6314 to 1 (data
+ * IN), 2 (status/ZLP) or 3 (stall).  Multi-byte fields via le16 (078442).
+ * TODO(waveC): per-request bodies. */
+void cdc_setup_dispatch(void) { /* see doc 119 sec.2 */ } /* 076C0A */
+
+/* 076EF8-076FC4 size 204  cdc_class_request (sub_76EF8) Confirmed (doc 119)
+ * 0x20 SET_LINE_CODING (arm EP0-OUT into FF63DE, record FF63E6),
+ * 0x21 GET_LINE_CODING (return up to 8 bytes), 0x22 SET_CONTROL_LINE_STATE
+ * (re-init the data queue, cdc_queue_init 078508), 0x23 SEND_BREAK;
+ * stores the EP0 transfer pointer/length FF62FC/FF6300. */
+void cdc_class_request(void) { /* see doc 119 sec.3 */ } /* 076EF8 */
+
+/* 076FC4 size 4  cdc_vendor_stub (sub_76FC4) Confirmed: rts. */
+void cdc_vendor_stub(void) { }                         /* 076FC4 */
+
+/* 076FC8-07711E size 342  cdc_out_to_scic_pump (sub_76FC8) Confirmed (doc 42)
+ * er0 = channel ring block.  Sends up to 0x40 pending bytes of the USB-OUT
+ * queue (FF6288 engine) to SCI-C TDR FFFF8B, polling TDRE (FFFF8C.7); then,
+ * when the queue has room again and FF6240 says the endpoint was held,
+ * re-enables USB IER0.6 and rebuilds the enable word FF62F8. */
+void cdc_out_to_scic_pump(struct ring *ch)             /* 076FC8 */
+{
+    u16 n = ring_pending(&usbq_6288);  if (n > 0x40) n = 0x40;
+    while (n--) {
+        u8 c = *ch->rd;
+        while (!(SCIC_SSR & 0x80)) ;
+        SCIC_TDR = c;  SCIC_SSR &= ~0x80;
+        ring_advance(ch);
+    }
+    if (usb_held_6240 && ring_free(&usbq_6288) >= low_water_637A) {
+        usb_held_6240 = 1;  USB_IER0 |= 0x40;
+        usb_en_62F8 = (USB_IER0 << 24) | (USB_IER1 << 16) | (USB_IER2 << 8) | 0x82000;
+    }
+}
+
+/* 07711E-0771AE size 144  cdc_scic_rx_bridge (sub_7711E) Confirmed (doc 42)
+ * Bridge branch of the SCI-C ISR (0561B0): reads SSR/RDR; on errors clears
+ * the flags and reprograms (FFFD62/FFFD54 = 0x70/6 or 0x60/7, toggles
+ * SCR.4); a received byte goes into the IN ring FF62C8. */
+void cdc_scic_rx_bridge(void) { /* see header */ }     /* 07711E */
+
+/* ------------------------------------------------------------------------ *
+ * 0771E2-077D6A  3-wire (microwire-style) device command layer (doc 82:
+ * sub_33532 read / sub_334CA write is a separate serial device).  Command
+ * block FF6000 (cmd at +0, reply at +0x0C/+0x0E), results stored to
+ * FFAFF6..FFB02C, mode bytes BC6A/BC6B/BC6C, pointer BC62.  Callers are the
+ * device driver at 0x0332xx-0x0337xx (some of them dead, doc 101).  All
+ * Inferred: each routine fills FF6000 and calls dev_xfer (077F26).
+ * ------------------------------------------------------------------------ */
+void dev_cmd_7771E2(void) { dev_xfer((void *)0xFF6000, (void *)0xFF600C); } /* 0771E2 */
+void dev_query_status(void) { /* 07720E: reads FF600E, stores B006/B008/B016-B020, AFF6=1 */ }
+void dev_cmd_77_77745A(void) { dev_cmd_AFFC = 0x77; /* uses BC62 */ dev_xfer((void *)0xFF6000, (void *)0xFF600C); } /* 07745A */
+void dev_cmd_07_7774E8(void) { dev_cmd_AFFC = 0x07; dev_xfer((void *)0xFF6000, (void *)0xFF600C); } /* 0774E8 */
+void dev_setup_channel_a(void) { /* 07757C: 077F4A/0780D8, B02C, AFFD, fills FF601D..FF6025, FF6008 */ }
+void dev_setup_channel_b(void) { /* 077692: FF601B..FF6025, BC6A/BC6B, B026/B028/B02A */ }
+void dev_read_pair_a(void)   { /* 07778C: two 078086 queries -> B01E/B020, AFF7 = 2 */ }
+void dev_cmd_7777E0(void) { dev_xfer((void *)0xFF6000, (void *)0xFF600C); } /* 0777E0 */
+void dev_query_status_b(void) { /* 07780C: like 07720E, mode BC6C */ }
+void dev_cmd_11(void) { *(u8 *)0xFF6000 = 0x11; dev_xfer((void *)0xFF6000, (void *)0xFF600C); } /* 077900 */
+void dev_status_pair(void) { /* 077A1C: two 077FC6 calls, two entries */ }
+void dev_cmd_bc62(void) { /* 077A36: uses BC62, dev_xfer */ }
+void dev_setup_channel_c(void) { /* 077ADA: like 07757C */ }
+void dev_cmd_2300(void) { *(u16 *)0xFF6000 = 0x2300; /* 077BD0 then like 077692 */ }
+void dev_status_1(void) { /* 077CAC: dev_status (077FC6) */ }
+void dev_status_2(void) { /* 077CB8: dev_status (077FC6) */ }
+void dev_read_pair_b(void) { /* 077CC2: as 07778C */ }
+void dev_read_pair_c(void) { /* 077D16: as 07778C */ }
+
+/* 077DB8-077E28 size 112  dev_word_read (sub_77DB8) Confirmed:
+ * BC66 = address word (e0), sub_33532 (3-wire READ), returns BC68. */
+u16 dev_word_read(u16 addr) { dev_addr_BC66 = addr; dev_read_33532(); return dev_data_BC68; }
+/* 077E28-077EF0 size 200  dev_word_write (sub_77E28) Confirmed:
+ * BC66 = address, BC68 = data, sub_334CA (3-wire WRITE); a second write to
+ * address 0x140 follows with the saved word (commit/latch). */
+void dev_word_write(u16 addr, u16 val)
+{
+    dev_addr_BC66 = addr; dev_data_BC68 = val; dev_write_334CA();
+    dev_addr_BC66 = 0x140; /* data from stack */ dev_write_334CA();
+}
+/* 077EF0 size 16 dev_read_thunk (sub_77EF0): dev_word_read.  Confirmed */
+void dev_read_thunk(void) { dev_word_read(dev_addr_BC66); }
+/* 077F00 size 38 dev_read_check (sub_77F00): dev_word_read + dev_wait (0780D8). */
+void dev_read_check(void) { dev_word_read(dev_addr_BC66); dev_wait(); }
+/* 077F26 size 36 dev_xfer (sub_77F26): dev_word_write then dev_word_read
+ * (command out, reply in) over the FF6000 block.  Confirmed */
+void dev_xfer(void *cmd, void *reply) { dev_word_write(0, 0); dev_word_read(0); }
+/* 077F4A size 124 dev_sequence (sub_77F4A): calls a callback (jsr @er6),
+ * dev_wait, dev_word_write, repeat - Inferred. */
+void dev_sequence(void (*cb)(void)) { cb(); dev_wait(); cb(); dev_wait(); cb(); }
+/* 077FC6 size 86 dev_status (sub_77FC6): FF6000 block, read-check, write,
+ * read, wait (doc 42: endpoint/status selectors 0x4000/0x4001). */
+void dev_status(void) { dev_read_check(); dev_xfer(0, 0); dev_wait(); }
+/* 078086 size 56 dev_query (sub_78086): read-check, write, read-check,
+ * read reply FF600C. */
+void dev_query(void) { dev_read_check(); dev_xfer(0, 0); }
+/* 0780BE size 26 nullfunc_0780BE: rts (orphan, doc 72). */
+void dev_stub_0780BE(void) { }
+/* 0780D8-078102 size 42 dev_wait (sub_780D8): bounded busy-wait with
+ * three exits to nullsub_76 (078102). */
+void dev_wait(void) { /* TODO(waveC): poll loop */ }
+void nullsub_76(void) { }                              /* 078102 */
+
+/* ------------------------------------------------------------------------ *
+ * 078106-078545  service window (doc 95; gated CDC personality, entered
+ * only with the boot strap FFFF4C&0x7F == 0x7D or in DSP-WRITE MODE).
+ * ------------------------------------------------------------------------ */
+/* 078106-07815C size 86  cdc_init (sub_78106) Confirmed: clear FEE010-
+ * FEE20F (128 longs), rebuild the enable word FF62F8 = IER0<<24|IER1<<16|
+ * IER2<<8|0x82000, usb_arm (07845A), set FFEE2D.2. */
+void cdc_init(void)                                    /* 078106 */
+{
+    for (u32 *p = (u32 *)0xFEE010; p <= (u32 *)0xFEE20C; p++) *p = 0;
+    usb_en_62F8 = (USB_IER0 << 24) | (USB_IER1 << 16) | (USB_IER2 << 8) | 0x82000;
+    usb_arm();  USB_EE2D |= 0x04;
+}
+/* 07815C-0781C6 size 106  cdc_poll (sub_7815C) Confirmed: if the IN ring
+ * (+0x40/+0x44 of FF6288) has data, cdc_bulk_in_service; else when the
+ * last count matches and FFEE00.4, write TRG FFEE2C from FF6360 and clear
+ * FF63F8; then the OUT pump on FF62D8 (cdc_out_to_scic_pump). */
+void cdc_poll(void)                                    /* 07815C */
+{
+    if (usbq_6288.in_wr != usbq_6288.in_rd) cdc_bulk_in_service();
+    else if (cdc_in_count_63F8 == *usb_ptr_6358 && (USB_IFR0 & 0x10)) {
+        USB_TRG = usb_trg_6360;  cdc_in_count_63F8 = 0;
+    }
+    cdc_out_to_scic_pump((struct ring *)0xFF62D8);
+}
+/* 0781C6 size 24  svc_stub_0781C6: rts-only tail (doc 95). */
+void svc_stub_0781C6(void) { }
+/* 0781DE-07821E size 64  cdc_rearm (sub_781DE) Confirmed: rebuild FF62F8,
+ * usb_arm, FFEE2D.2 (second copy of the 078106 tail). */
+void cdc_rearm(void)
+{ usb_en_62F8 = (USB_IER0 << 24) | (USB_IER1 << 16) | (USB_IER2 << 8) | 0x82000; usb_arm(); USB_EE2D |= 0x04; }
+/* 07821E size 4  svc_stub_07821E: rts. */
+void svc_stub_07821E(void) { }
+/* 078222 / 07823C size 26 each  scic_async_setup (sub_78222 / sub_7823C)
+ * Confirmed (identical bytes): SCR=0, SMR=0x08 (async 8N2), BRR=0x0C,
+ * spin 0..0xFF, SCR=0x70 (TE|RE|RIE). */
+void scic_async_setup(void)                            /* 078222 */
+{ SCIC_SCR = 0; SCIC_SMR = 0x08; SCIC_BRR = 0x0C; for (u8 i = 0; i < 0xFF; i++) ; SCIC_SCR = 0x70; }
+void scic_async_setup_dup(void) { scic_async_setup(); } /* 07823C */
+/* 078256 size 10  scic_set_mode (sub_78256): SMR/BRR only. Confirmed */
+void scic_set_mode(u8 smr, u8 brr) { SCIC_SMR = smr; SCIC_BRR = brr; }
+/* 078260 size 28  usb_burst_ee32 (sub_78260): write r0 bytes from FF63AC
+ * to FFEE32 (endpoint configuration burst). Confirmed */
+void usb_burst_ee32(u16 n) { for (u16 i = 0; i < n; i++) USB_EE32 = usb_cfg_63AC[i]; }
+/* 07827C-078334 size 184  cdc_isr_demux (sub_7827C) Confirmed (doc 95):
+ * pending = (IFR0<<24|IFR1<<16|IFR2<<8) & FF62F8; walk the 10-byte records
+ * at FF6242 {mask, idx, handler} until idx 0xFF, calling each handler whose
+ * mask is pending (0784BE, 0769AA, 0768C8, 0767BE, 0768A8). */
+void cdc_isr_demux(void) { /* see header */ }          /* 07827C */
+/* 078334 size 72  ring_fill_7834 (sub_78334): copy [st+4] bytes from
+ * [st+8] into ring er1 with wrap, then TRG FFEE2C = [st+0x0D]. Confirmed */
+void ring_fill(void *st, void *ring) { /* see header */ }
+/* 07837C size 94  ring_drain_7837C (sub_7837C): reverse copy, TRG =
+ * [st+0x0C], returns bytes moved. Confirmed */
+u16 ring_drain_7837C(void *st, void *ring) { return 0; /* see header */ }
+/* 0783DA size 84  ring_move (sub_783DA): returns 1 at once if *[FF6330]
+ * is set, else moves between rings and returns 0. Confirmed */
+u8 ring_move(void) { return 0; }
+/* 07842E size 20  be16 (sub_7842E): (p[0]<<8)|p[1]. Confirmed */
+u16 be16(const u8 *p) { return (u16)(p[0] << 8) | p[1]; }
+/* 078442 size 24  le16 (sub_78442): (p[1]<<8)|p[0]. Confirmed */
+u16 le16(const u8 *p) { return (u16)(p[1] << 8) | p[0]; }
+/* 07845A-0784BE size 100  usb_arm (sub_7845A) Confirmed: 50-byte config
+ * burst, IER0 = 0xCD, IER1 = IER2 = 0, FFEE2D &= 0xFC, FFEE2F.1, rebuild
+ * FF62F8, ISR FFEE08/09 = 0, FFEE0A = 4. */
+void usb_arm(void)
+{
+    usb_burst_ee32(0x32);
+    USB_IER0 = 0xCD; USB_IER1 = 0; USB_IER2 = 0;
+    USB_EE2D &= 0xFC; USB_EE2F |= 0x02;
+    usb_en_62F8 = (USB_IER0 << 24) | (USB_IER1 << 16) | (USB_IER2 << 8) | 0x82000;
+    USB_ISR0 = 0; USB_ISR1 = 0; USB_ISR2 = 4;
+}
+/* 0784BE-078508 size 74  cdc_bus_reset (sub_784BE) Confirmed: queue init
+ * (FF6288 rings: +0/+4 = FEE008, +0x50/+0x54 = FEE010, +0x40/+0x44 =
+ * FEE110), FF6240 = 1, FF63F8 = 0, IFR0 = 0x7F, FFEE28 = 0x73. */
+void cdc_bus_reset(void) { cdc_queue_init(); USB_IFR0 = 0x7F; USB_EE28 = 0x73; }
+/* 078508-078546 size 62  cdc_queue_init (sub_78508) Confirmed: the queue
+ * init part of 0784BE. */
+void cdc_queue_init(void)
+{
+    usbq_6288.a0 = usbq_6288.a4 = (u8 *)0xFEE008;
+    usbq_6288.out_rd = usbq_6288.out_wr = (u8 *)0xFEE010;
+    usbq_6288.in_rd = usbq_6288.in_wr = (u8 *)0xFEE110;
+    usb_held_6240 = 1;  cdc_in_count_63F8 = 0;
+}
