@@ -1,0 +1,159 @@
+addr	name	width	meaning	evidence
+FFA9EE	key_flags	u8	b0 DIAL direction, b7 long press	doc 123, 0601B6
+FFA9ED	key_code	u8	raw key code sink (0xFF = consumed)	sub_3FFA0
+FFAAE0	tone_ev	u8	tone mailbox; 0x1D refuse, 0x54-0x5B WIRES-X result tones	doc 93, 05FD14
+FF9599	popup_tmr	u8	slow-tier popup / reply timeout (0x78 = 12 s)	0631C4, 061D8C
+FFA9F9	home_app_mode	u8	home application mode (9 WIRES-X, 10 GM cand., 8)	doc 103, 05FD0E
+FF8DDE	node_mode	u8	<0 = WIRES-X PDN mode	doc 14
+FF8D90	rpt_wires_freq_mode	u8	RPT/WIRES FREQ 0 manual 1 preset	doc 44, 05FC18
+FF8D24	wires_dgid_8D24	u8	WIRES DG-ID setting (0 = auto)	05FC66
+FF8ED6	pdn_dgid_8ED6	u8	PDN required DG-ID (0 any)	05FC44
+FF8ED7	pdn_dgid_8ED7	u8	PDN DG-ID	doc 92
+FF8DD7	dsq_8DD7	u8	setting tested ==1 by GM keys (Inferred DSQ)	063DCE
+FF8D8F	wx_cat_mode_8D8F	u8	category request format selector	063082
+FF8997	cfg_8997	u8	beep-on-send setting (Inferred)	0631C4
+FF8EA0	band_8EA0	u8	b7/b6 band display flags	0617D4
+FF8DE0	flags_8DE0	u8	b7 node-keyed	doc 93
+FF94C0	tx_state	u8	0 idle 1 keyed 2 blocked	doc 93
+FFA9EA	ptt_state	u8	PTT debounce state (2 = held)	doc 93
+FFAAD4	aad4_flags	u8	b0 msg queued, b1 request rides voice, b2/b3/b4 TX attachments, b7 beep	doc 86, 062ACA
+FFAA3D	band_flags_AA3D	u8	b1 band moved to DN	05FCBA, doc 86 T6
+FFAA34	flags_AA34	u8	b5 result window active	0636A0
+FF817E	flags_817E	u8	b1 display/beep refresh request	0632E8
+FFB0AA	flags_B0AA	u8	b7 re-send 0x12 / refresh request	doc 86
+FFB3D9	flags_B3D9	u8	PDN flags (b0 set by sub_6D04A, b1 PTT lock)	06105A
+FFB0B9	dsp_msg_type	u8	DSP message type (0x0D-0x15,0x1D WIRES-X)	doc 86
+FF0C3D	dsp_msg_body	u8[]	`]` message body	doc 86
+FFB1C3	dsp_msg_len_B1C3	u8	message length	0631FE
+FFB1D0	dsp_msg_ptr_B1D0	u32	message body pointer	063208
+FF0BF8	dsp_rx_0BF8	u8	received frame byte (b3-5 tested)	0634BC
+FF0C5B	dsp_rx_0C5B	u8[16]	received name field	063B14
+FFB3EA	wx_state	u8	WIRES-X/GM/message UI state (doc 103 page map)	doc 103
+FFB3EB	wx_sel	u8	selected item (latched by row renderers, 0xFF before render)	061C0E, 061D6E
+FFB3F1	wx_cursor	u8	cursor position moved by DIAL	06003A
+FFB40E	wx_prev_state	u8	state before popup/list	060780, 062112
+FFB2A5	wx_app_kind	u8	1 mode 10, 2 WIRES-X	05FD06, 063C0A
+FFB26B	wx_req_flags	u8	b0 search sent, b2 name search, b4 DNEWS, b5, b6 skip poll, b7 deferred search	05FCD6
+FFB26C	wx_busy	u8	outstanding request bits: b0 ]c b1 ]l b2 ]# b3 ]r b4 ]f b5 ]g b6 PTT-connect	062ACA..063040
+FFB26D	wx_flags26D	u8	b1 connect by number, b7 same room	062F4C, 06140E
+FFB39F	wx_link	u8	b0 WIRES-X view, b1 page drawn, b2 VFO view, b3 ID entry, b4 key handled	061ABC
+FFB2A4	wx_popup	u8	popup open (key -> close)	062112
+FFB2C8	wx_conn_stage	u8[0x31]	room block: kind/stage char ('3'+ linked), ID at +1	06081C, 063720
+FFB2C9	wx_room_id	u8[5]	current room ID	060554
+FFB2CE	wx_room_name_B2CE	u8[16]	room name	063B3E
+FFB2AA	wx_node_id	u8[5]	node ID (start of 0x66-byte node record)	062B46, 0634A4
+FF8D9E	wx_target_rec	u8[0x31]	target record (EEPROM 0xD07E)	sub_3D6B0
+FF8D9F	wx_target_id	u8[5]	target node/room ID	0603E0
+FFB314	wx_req_id	u8[10]	request ID + suffix	060354
+FFB349	wx_pend_id	u8[5]	ID asked for in last connect	062E5E
+FFB334	wx_list_req	u8[0x15]	`]f` request block (kind, "nnn" start, text)	060AF0
+FFB34E	wx_open_rec	u8[0x31]	opened list record	060BBA
+FF1044	wx_list_total	u16	total list entries	060988
+FF1046	wx_list_top	u16	first index of page (1-based)	060936
+FF1048	wx_list_prev_top	u16	previous page top	060940
+FF104C	wx_list_rows	u8[n*0x32]	list page rows	06087E
+FFB269	wx_page	u8	page counter	060780
+FFB26A	wx_rows	u8	rows on page	06003A
+FFB2A2	wx_sel_row	u8	row selected for connect	06087E
+FFB27B	wx_saved_pos	u8[4]	saved list position	060CB8
+FFB26E	wx_menu_origin	u8	return mode 0/1/2	06038C
+FFB27F	wx_menu6_sel	u8	search menu selection	0603A8
+FFB280	wx_menu12_sel	u8	state 0x12 selection	060C5E
+FFB281	wx_menu13_sel	u8	state 0x13 selection	0646C2
+FFB282	wx_menu2B_sel	u8	state 0x2B selection	060C78
+FFB270	wx_cat_bank	u8	category bank index	060656
+FFB272	wx_cat_count	u8	used entries in category	sub_69AB6
+FFB3F3	wx_cat_open	u8	category opened	06011A
+FFB3F4	wx_cat_item	u8	category item / bank	060E08
+FFB3F5	wx_cat_cursor	u8	category entry cursor	06011A
+FFB5B8	wx_cat_list	u8[0x300]	category list (20x0x18) / GM members (24x0x20)	sub_3DD50, 063C94
+FFAE22	wx_settings_AE22	u8[0x50]	category names (5x16) from EEPROM 0x1E000	sub_3DD14
+FF061A	wx_text_buf	u8[80]	text / message editor buffer	0607B6, 06514A
+FF0618	ram_FF0618	u8	text length	06530A
+FF0619	ram_FF0619	u8	text line count	06530A
+FFAD99	edit_cursor	u8	text edit cursor	sub_1A006
+FFAD9A	wx_AD9A	u8	pending edit cursor (0xFF none)	061BE8
+FFB3A0	wx_id_cursor	u8	ID entry cursor (1-based)	060A9E
+FFB3A1	wx_id_char_save	u8	char before dial	05FE8E
+FFB3A2	wx_id_entry_m1	u8[7]	ID entry buffer (chars at +1..+5)	061B4C
+FF95E4	wx_search_tmr	u16	search timeout (slow tier)	doc 86
+FF95E6	wx_tx_tmr_95E6	u16	upload TX 60 s timer	061630
+FF959B	hold_tmr_959B	u8	3.5 s hold-PTT timer	doc 86 T7
+FF959A	tmr_959A	u8	state 0x3C timer	0616AE
+FF959C	tmr_959C	u8	0.7 s timer	06333C
+FF9538	tmr_9538	u8	2.5 s fast-tier result timer	0616E6
+FF9567	tmr_9567	u8	message busy-indicator timer	06492E
+FFBBE1	popup_id	u8	popup id for SUB	061D92
+FF3D87	sub_popup_sent	u8	popup id last sent	061D9C
+FF4174	frame_len_saved	u16	frame length for re-send	061DAC
+FF3D72	sub_frame_len	u16	frame length to SUB	doc
+FF3DE0	sub_frame	u8[]	page frame payload to SUB	061E94
+FFBBEA	touch_reject	u8	touch probe result (1 reject)	06030E
+FFBC59	disp_flags_BC59	u8	b6/b7 redraw flags	062B6C
+FFB05A	line_buf_B05A	u8[0x17]	text line buffer	0621DE
+FFB050	draw_attr_B050	u32	draw attributes	062220
+FFBBE8	line_len_BBE8	u8	line width	062136
+FFBC2C	list_dst_BC2C	u32	list output pointer	06212A
+FFB288	row_cb_B288	u32	row callback	06213C
+FFBBFB	list_sel_BBFB	u8	list selected row	062158
+FFB311	wx_B311	u8	node answer code (0 none)	0635EE
+FFB312	wx_B312	u8	tone for send beep	0631D2
+FFB324	wx_B324	u8[5]	item key	063720
+FFB329	wx_B329	u8[5]	saved item key	063720
+FFB32E	wx_B32E	u8[5]	alternate key	062954
+FFB31E	wx_B31E	u8[5]	news item key	062C32
+FFB299	wx_B299	u8[9]	`]l` argument	062C04
+FFB296	wx_B296	u16	list count shown "[nnn]"	0622B0
+FFB2A7	wx_B2A7	u8	use target instead of room (Inferred)	060554
+FFB3E4	pdn_state	u8	PDN state (4 = ready)	doc 86
+FFB3E7	pdn_B3E7	u8	PDN flag	060E40
+FFB12F	wx_B12F	u8	search sent	062DE0
+FFB130	wx_addr_mode	u8	0 preset freq, 1 DG-ID, 2 auto	05FC28
+FFB131	wx_addr_dgid	u8	DG-ID used	05FC60
+FFB132	wx_B132	u8	WIRES-X request in voice TX	061216
+FFB267	wx_rx_letter	u8	received node message letter	063266
+FFB3FA	wx_B3FA	u8	PDN/GM rx pending	063250
+FFB273	wx_sent_state	u8	state at send	0631E4
+FFB266	wx_B266	u8	misc flags b1-b3, b7	063304
+FFB275	wx_B275	u8	b4 timeout tone done, b5	063382
+FFB3EF	wx_B3EF	u8	GM member count / beacon index	063D6E, doc 86
+FFB95E	wx_B95E	s8	TX-end countdown	06163E
+FFBC5B	wx_hold_ret_state	u8	state before hold	0615CC
+FFB3EC	gm_group	u8	GM group index	063C16
+FFB3EE	gm_n_groups	u8	group count	063D4A
+FFB4A8	gm_name_B4A8	u8[0x110]	group names (17x16)	063C94
+FFB414	gm_n_sel	u8	selected members	063DC0
+FFB420	gm_B420	u8	GM flags b0 VFO view, b1	061A36
+FFB963	gm_B963	u8	b0 alt table set	063C74
+FFB8C0	gm_row_map_B8C0	u8[]	row -> member map	064510
+FFB928	gm_msg_B928	u16	message paging	063BE8
+FFB92A	gm_msg_B92A	u8	last message index (0xFF none)	064846
+FFB92B	msg_slot_B92B	u8	open message slot	06494E
+FFB92C	msg_ret_B92C	u8	return state of confirm	064BD4
+FFB92D	gm_folder_B92D	u8	message folder 0/1/2	06475A
+FFB961	msg_saved_sel	u8	saved list sel	064938
+FFB962	msg_saved_cur	u8	saved list cursor	064940
+FEEF20	msg_store_FEEF20	u8[20*0x80]	message records page	064846
+FF2FCA	msg_cur	u8[0x80]	open message record	0648FE
+FF2F4A	msg_prev_2F4A	u8[0x80]	copy of record	064E3E
+FF300A	msg_text_300A	u8[16]	message name field	065090
+FF301A	msg_file_size_301A	u32	attachment size	doc 63
+FF301E	msg_file_name_301E	u8[16]	attachment file name	doc 63
+FF074E	msg_text_074E	u8[80]	message text	0649E4
+FF509E	msg_text_509E	u8[80]	text from SD	0649E8
+FFBAA3	sd_job_BAA3	u8	pending SD job code	0649A6
+FFBA93	msg_flags_BA93	u8	b6 busy	064928
+FFB41D	msg_B41D	u8	editor purpose 1 reply 2 fwd 3 view	064C38
+FFB40F	msg_ret_B40F	u8	editor return state	0651EC
+FFB410	msg_ret_B410	u8	forward return state	06507A
+FFB283	ed_pos_B283	u8[3]	saved editor pos	0652B0
+FFB286	wx_B286	u8	secondary cursor	064212
+FFBBED	edit_mode_BBED	u8	editor mode	064AFC
+FEFDC8	news_index_FEFDC8	u8[n*0x2F]	news index records	062C32
+FFA856	pos_flag_A856	u8	node position valid	063514
+FFA857	pos_A857	u8[15]	node position	063514
+FFA866	pos_A866	u8[12]	node position 2	063514
+FFBA32	ram_BA32	u8	gate for msg box	06080A
+FFB3FD	msg_dest_kind_B3FD	u8	recipient row / send kind (0 all, 0x21 room, 0x34 reply)	065410
+FFB3FE	msg_dest_B3FE	u8[15]	recipient ID(5)+name(10)	0654C6
+FF2EC9	ram_FF2EC9	u8	set 1 before queueing a message with file	065692

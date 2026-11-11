@@ -1,0 +1,297 @@
+start	end	ida_name	new_name	confidence	summary
+06F48C	06F4A6	sub_6F48C	wavmng_load_defaults	Confirmed	copy 16-byte WAVMNG.dat default (all FF) to FF304A
+06F4C6	06F4E0	sub_6F4C6	qso_dirrec_load_default	Confirmed	copy 128-byte default QSO DIR record 06F534 to FF2ECA
+06F4E0	06F512	sub_6F4E0	qso_dirrec_load_default_split	Confirmed	default DIR record in two parts to FF2ECA/FF2F0A
+06F512	06F534	sub_6F512	pct_dirrec_begin	Confirmed	picture op busy (FF2EC9=1), default record to FF2F4A
+06F586	06F6A4	sub_6F586	key14_open_last_picture	Confirmed	key 0x14 handler (real entry 06F5B4/06F5D0): stat \PHOTO\<stem>.jpg; step 0x25 entry 06F656 starts picture send
+06F6E2	06F6EC	sub_6F6E2	qso_fat_window_ptr	Confirmed	returns er5/r6l = last FAT entry pointer and count in reply payload (tail 06F786)
+06F6EC	06F786	sub_6F6EC	qso_fat_read_window	Confirmed	request QSO*FAT.dat slice ending at the current record (<=30 entries)
+06F796	06F816	sub_6F796	qso_list_open_page	Confirmed	clear visible table, seed index from mng block, read FAT, SD step 0x0E
+06F816	06F89C	sub_6F816	qso_list_collect_step	Confirmed	SD step 0x0E: collect up to 20 used record numbers newest first
+06F89C	06F8F6	sub_6F89C	qso_dir_read_batch	Confirmed	read 0x80-byte DIR records for the collected numbers, step 0x0F
+06F8F6	06F942	sub_6F8F6	qso_dir_store_step	Confirmed	SD step 0x0F: store DIR record, loop, redraw at end
+06F942	06F970	sub_6F942	qso_list_scroll_back_begin	Confirmed	start backward paging, SD step 0x26
+06F970	06F9E4	sub_6F970	qso_list_step_prev	Confirmed	SD step 0x26: find previous used entry, dispatch off_6F9E4/off_6F9FC
+06FA08	06FAC2	sub_6FA08	qso_list_scroll_fwd_begin	Confirmed	start forward paging window, SD step 0x27
+06FAC2	06FB42	sub_6FAC2	qso_list_step_next	Confirmed	SD step 0x27: scan forward, dispatch off_6F9E4/off_6F9F0
+06FB42	06FB66	sub_6FB42	sdmenu_reset_item1	Confirmed	BACKUP/MEMORY SD menu reset, item 1
+06FB66	06FB8A	sub_6FB66	sdmenu_reset_item2	Confirmed	SD menu reset, item 2
+06FB8A	06FB90	sub_6FB8A	sdmenu_enter_confirm_thunk	Confirmed	jsr sdmenu_enter_confirm
+06FB90	06FBBC	sub_6FB90	sdmenu_dial_backup	Confirmed	dial cycles cursor B3F5 1..2 (menu or confirm stage)
+06FBC8	06FBE2	sub_6FBC8	sdmenu_dial_simple	Confirmed	dial cycle + popup 0x40+cursor when SD job allowed
+06FBE2	06FBE6	sub_6FBE2	sdmenu_popup_D0	Confirmed	popup BBE1 = 0xD0 + cursor
+06FBE6	06FC04	sub_6FBE6	sdmenu_popup_select	Confirmed	popup 0x40+cursor; entry 06FBEA = confirm popup 0xB0/0xC0+cursor
+06FC04	06FC38	sub_6FC04	sdmenu_enter_backup	Confirmed	ENTER on BACKUP: card ready, BA41 for restore, enter confirm
+06FC38	06FC4A	sub_6FC38	sdmenu_cancel	Confirmed	error tone, clear popup, reset menu
+06FC4A	06FC7E	sub_6FC4A	sdmenu_enter_memory	Confirmed	ENTER on MEMORY-CH: as backup but gated on BA42
+06FC7E	06FC90	sub_6FC7E	sdmenu_enter_confirm	Confirmed	B3F4=B3F5=2, B3F3=1
+06FC90	06FC92	nullsub_70	nullsub_70	Confirmed	rts
+06FC94	06FCBA	sub_6FC94	sd_begin_stat_card	Confirmed	post op 0x50, SD step 1; entry 06FCA0 = step 1 reply
+06FCBA	06FCF8	sub_6FCBA	sdmenu_send_screen_cursor	Confirmed	send F3C0/F3C1 item frame with highlighted line
+06FCF8	06FD0C	sub_6FCF8	sd_send_busy_frame	Confirmed	popup 3 if job, send F301 frame
+06FD0C	06FD56	sub_6FD0C	sdmenu_screen_back	Inferred	leave sub-screen: restore previous screen id, reset menu
+06FD56	06FD82	sub_6FD56	sdmenu_popup_back	Inferred	close popup, restore screen id
+06FD82	06FDA2	sub_6FD82	sd_task	Confirmed	SD client tick: BT FSM, then off_6FDAA[FFBA30] unless request pending
+06FDA2	06FDA4	nullsub_75	nullsub_75	Confirmed	rts
+06FDA4	06FDAA	sub_6FDA4	sd_reset_thunk	Confirmed	jsr sd_reset
+06FDC2	06FDD6	sub_6FDC2	sd_state_reset_start	Confirmed	state 0: init flags/timer, fall into sd_reset
+06FDD6	06FE02	sub_6FDD6	sd_reset	Confirmed	clear file caches, card state; state 1
+06FE02	06FECE	sub_6FE02	sd_state_mount_wait	Confirmed	state 1: handle C8/C9 card replies, set BA32, poll with op 0x64
+06FECE	06FEF2	sub_6FECE	sd_state_card_info	Confirmed	state 2: reply -> substate sequence
+06FEF2	06FF00	sub_6FEF2	sd_state_idle	Confirmed	state 3: step dispatcher, voice recorder, GPS log
+06FF00	06FF16	sub_6FF00	sd_state_init_probe	Confirmed	state 4: off_70118[BAA2]
+06FF16	06FF30	sub_6FF16	sd_init_probe_start	Confirmed	start file probes (retries 3), state 4
+06FF30	06FF88	sub_6FF30	sd_probe0_stat_backup	Confirmed	probe 0: stat BACKUP.dat
+06FF88	070118	sub_6FF88	sd_probe1_backup_reply	Confirmed	probes 1-5 (entries 06FFD4/070018/07005C/0700A8): BACKUP/QSOMNG/MEMORY/WAVMNG sizes and loads, retry path
+070130	070146	sub_70130	sd_state_substate	Confirmed	state 5: off_7031E[BAA1]
+070146	070158	sub_70146	sd_substate_start	Confirmed	substate 0, state 5
+07015A	070170	sub_7015A	sd_sub0_stat_qsomng	Confirmed	substate 0: stat QSOMNG.dat
+070170	0701C6	sub_70170	sd_sub1_create_qsomsg	Confirmed	substate 1: post QSOMSG.dat template (store init)
+0701C6	0701F2	sub_701C6	sd_sub3_create_qsomsgfat	Confirmed	post QSOMSGFAT.dat template
+0701F2	07021E	sub_701F2	sd_sub5_create_qsopctfat	Confirmed	post QSOPCTFAT.dat template
+07021E	07024A	sub_7021E	sd_sub7_create_qsowavfat	Confirmed	post QSOWAVFAT.dat template
+07024A	070264	sub_7024A	sd_sub9_create_wavmng	Confirmed	post WAVMNG.dat write
+070264	07027A	sub_70264	sd_sub11_create_qsomng	Confirmed	post QSOMNG.dat write (070AFE)
+07027A	07029C	sub_7027A	sd_sub13_done	Confirmed	end store init, restart probes
+07029C	0702C4	sub_7029C	sd_job_end_if_screen85	Inferred	on screen 0x85: redraw, AD68=0, sub_1BF8E
+0702C4	070302	sub_702C4	sd_sub_wait_ok	Confirmed	even substates: wait reply, advance or error
+070302	07031E	sub_70302	sd_card_error_popup	Confirmed	clear job, error screen, sd_reset
+070356	0703C4	sub_70356	sd_step_dispatch	Confirmed	state 3: reply -> off_703E6[BAA3]; timeout -> dword_704A2[BAA3]
+0703C4	0703E6	sub_703C4	sd_step0_idle	Confirmed	step 0: event 0xCD (card removed) -> sd_reset
+07055E	07075A	sub_7055E	voicerec_fsm	Inferred	voice recorder state machine on BAD6 and EA frames
+07075A	0707CC	sub_7075A	voicerec_audio_route_toggle	Inferred	toggle recorder audio routing bits of latch 817B
+0707CC	0707D8	sub_707CC	gpslog_watch	Confirmed	GPS LOG setting watcher (89D0 vs BADA)
+0707D8	070800	sub_707D8	gpslog_watch_tail	Confirmed	tail of gpslog_watch (create/append, store BADA)
+070800	07082A	sub_70800	sd_post_poll_64	Confirmed	state 1 only: post op 0x64 status poll
+07082A	070870	sub_7082A	sd_post_stat_qsomng	Confirmed	op 0x14 stat QSOMNG.dat dir 4
+070870	0708B6	sub_70870	sd_post_stat_memory	Confirmed	op 0x14 stat MEMORY.dat dir 3
+0708B6	0708FC	sub_708B6	sd_post_photo_stat	Confirmed	op 0x14 stat \PHOTO\<FFBA5A>
+0708FC	07092A	sub_708FC	sd_post_op50	Confirmed	mark SD job, post op 0x50
+07092A	070952	sub_7092A	sd_post_backup_0	Confirmed	BACKUP.dat first chunk (0x398, template 071794)
+070952	07096E	sub_70952	sd_post_backup_1	Confirmed	BACKUP chunk 0x358 (07182A)
+07096E	07098A	sub_7096E	sd_post_backup_2	Confirmed	BACKUP chunk 0x398 (0718C0)
+07098A	0709A6	sub_7098A	sd_post_backup_3	Confirmed	BACKUP last chunk 0x398 (071956)
+0709A6	0709CE	sub_709A6	sd_post_backup_4	Confirmed	BACKUP read ID (0719EC), SD job
+0709CE	0709EA	sub_709CE	sd_post_backup_5	Confirmed	BACKUP read (071A82)
+0709EA	070A06	sub_709EA	sd_post_backup_6	Confirmed	BACKUP read (071B18)
+070A06	070A22	sub_70A06	sd_post_backup_7	Confirmed	BACKUP read next (071BAE)
+070A22	070A3E	sub_70A22	sd_post_backup_8	Confirmed	BACKUP read last (071C44)
+070A3E	070A66	sub_70A3E	sd_post_memory_0	Confirmed	MEMORY.dat first chunk (071CDA), job
+070A66	070A82	sub_70A66	sd_post_memory_1	Confirmed	MEMORY chunk (071D70)
+070A82	070A9E	sub_70A82	sd_post_memory_2	Confirmed	MEMORY last chunk 0x218 (071E06)
+070A9E	070AC6	sub_70A9E	sd_post_memory_3	Confirmed	MEMORY read start (071E9C), job
+070AC6	070AE2	sub_70AC6	sd_post_memory_4	Confirmed	MEMORY read next (071F32)
+070AE2	070AFE	sub_70AE2	sd_post_memory_5	Confirmed	MEMORY read last (071FC8)
+070B1A	070B42	sub_70B1A	sd_post_qsomng_rewrite	Confirmed	QSOMNG.dat rewrite offset 0 (0720F4)
+070B42	070B5E	sub_70B42	sd_post_qsopctdir_append	Confirmed	QSOPCTDIR.dat 0x118 (07218A)
+070B5E	070B7A	sub_70B5E	sd_post_qsopctdir_update	Confirmed	QSOPCTDIR.dat 0x118 (072220)
+070B7A	070B96	sub_70B7A	sd_post_qsopctfat_append	Confirmed	QSOPCTFAT.dat 0x9C (0722B6)
+070B96	070BB2	sub_70B96	sd_post_qsopctfat_update	Confirmed	QSOPCTFAT.dat 0x9C (07234C)
+070BB2	070BD4	sub_70BB2	sd_post_qsopctdir_read	Confirmed	card-gated QSOPCTDIR read (0723E2)
+070BD4	070BF6	sub_70BD4	sd_post_qsopctfat_read	Confirmed	card-gated QSOPCTFAT read (072478)
+070BF6	070C18	sub_70BF6	sd_post_qsopct_07250E	Confirmed	card-gated request template 07250E
+070C18	070C34	sub_70C18	sd_post_wavmng_write	Confirmed	WAVMNG.dat write (0725A4)
+070C34	070C5C	sub_70C34	sd_post_wavmng_rewrite	Confirmed	WAVMNG.dat rewrite offset 0 (07263A)
+070C5C	070C78	sub_70C5C	sd_post_qsowavdir_append	Confirmed	QSOWAVDIR.dat 0x118 (0726D0)
+070C78	070C94	sub_70C78	sd_post_qsowavfat_append	Confirmed	QSOWAVFAT.dat 0x9C (072766)
+070C94	070CB0	sub_70C94	sd_post_qsowavfat_update	Confirmed	QSOWAVFAT.dat 0x9C (0727FC)
+070CB0	070CD2	sub_70CB0	sd_post_qsowavdir_read	Confirmed	card-gated QSOWAVDIR read (072892)
+070CD2	070CF4	sub_70CD2	sd_post_qsowavfat_read	Confirmed	card-gated QSOWAVFAT read (072928)
+070CF4	070D10	sub_70CF4	sd_post_qsomsg_append	Confirmed	QSOMSG.dat 0xE8 (0729BE)
+070D10	070D2C	sub_70D10	sd_post_qsomsgdir_append	Confirmed	QSOMSGDIR.dat 0x118 (072A54)
+070D2C	070D48	sub_70D2C	sd_post_qsomsgdir_update	Confirmed	QSOMSGDIR.dat 0x118 (072AEA)
+070D48	070D64	sub_70D48	sd_post_qsomsgfat_append	Confirmed	QSOMSGFAT.dat 0x9C (072B80)
+070D64	070D80	sub_70D64	sd_post_qsomsgfat_update	Confirmed	QSOMSGFAT.dat 0x9C (072C16)
+070D80	070DA2	sub_70D80	sd_post_qsomsg_read	Confirmed	card-gated QSOMSG read (072CAC)
+070DA2	070E2A	sub_70DA2	sd_post_qsomsgdir_read	Confirmed	card-gated QSOMSGDIR read (072D42); dead template-choice code 070DAA
+070E2A	070E4C	sub_70E2A	sd_post_qsomsgfat_read	Confirmed	card-gated QSOMSGFAT read (072F9A)
+070E4C	070EF4	sub_70E4C	voicerec_key	Inferred	voice record key: start (name YYMMDDHHMMnn.wav) or stop
+070EF4	070FA2	sub_70EF4	voicerec_file_create	Inferred	create \VOICE file (op 1 param 5 dir 6); tails 070F6E stop
+070FAE	071040	sub_70FAE	gpslog_create	Confirmed	create \FT3D\GPSLOG\<date>.log; entry 070FE8 append
+071044	071046	nullsub_14	nullsub_14	Confirmed	rts
+071046	071066	sub_71046	sd_req_wavmng_read	Confirmed	read WAVMNG.dat 0x20 (op 0x0A dir 4)
+071066	0710C4	sub_71066	sd_req_qsomng_read	Confirmed	read QSOMNG.dat 0x20 (op 0x0A dir 4)
+0710C4	0710D2	sub_710C4	photo_save_rx	Confirmed	save received picture: length B208
+0710D2	07111E	sub_710D2	photo_save_camera	Confirmed	save camera picture: length BA46, op 1 param 4 dir 5
+07111E	071150	sub_7111E	photo_save_name_tail	Confirmed	copy 16-char photo name to request, BA3D++
+071150	071196	sub_71150	sd_post_photo_open	Confirmed	op 0x0B open \PHOTO\<FF301E>
+071196	07131E	sub_71196	sd_request_build	Confirmed	fill SD request frame FF3D7A.. from template and request cells
+073030	073072	sub_73030	sd_job_blocked	Confirmed	0 if SD job may start, else invalid key / no-card popup and 1
+073072	07308C	sub_73072	bt_link_fsm	Confirmed	Bluetooth bring-up FSM off_7308C[BB90] after SCO hold
+07309C	0730D0	sub_7309C	bt_boot	Confirmed	BB90=0: BT on/off start
+0730D0	0730E8	sub_730D0	bt_set_idle	Confirmed	BB70=1, BB8E=0, BB90=3 (also link-failure action)
+0730E8	07310C	sub_730E8	bt_wait_hello	Confirmed	BB90=1: E4 code 1 -> BB90=2
+07310C	07312A	sub_7310C	bt_autoconnect	Confirmed	BB90=2: send F3D6, connect
+07312A	073162	sub_7312A	bt_running	Confirmed	BB90=3: delete ack / unpair watch / off_73162[BB8E]
+073172	0731C0	sub_73172	bt_search	Confirmed	BB8E=1: E4 0x12 add device, 0x11 timeout
+0731C0	073268	sub_731C0	bt_add_device	Confirmed	add/select device in 5-slot list AAEC, save EEPROM
+073268	073274	sub_73268	bt_cursor_from_sel	Confirmed	AD68 = 8EB0+1
+073274	073280	sub_73274	bt_sel_from_cursor	Confirmed	8EB0 = AD68-1
+073280	0732A4	sub_73280	bt_connect	Confirmed	BB8E=2: E4 3 LINK
+0732A4	0732C8	sub_732A4	bt_resend_link_unless_screen1E	Confirmed	redraw on screen 0x1E else resend F3D6
+0732C8	073310	sub_732C8	bt_await_connected	Confirmed	BB8E=3: E4 0 linked, E4 5 failure popup 6
+073310	07333A	sub_73310	bt_watch_unpair	Confirmed	linked: E4 2 remote unpair
+07333A	073358	sub_7333A	bt_relink_unless_screen1E	Confirmed	off screen 0x1E: BB90=2
+073358	0733E0	sub_73358	bt_wait_delete_ack	Confirmed	E4 9: compact device list, save
+073412	0734B0	sub_73412	bt_sco_hold	Confirmed	BT save mode SCO hold flag BB8F.7 with 95A1 timer
+0734B0	0734BE	sub_734B0	bt_sco_force	Confirmed	95A1=200, clear BB8F.7
+0734BE	0734C2	sub_734BE	clone_version_byte	Confirmed	returns 2
+0734C2	0734F4	sub_734C2	extport_restore	Confirmed	re-init ring, SCI_4 BRR 0x0C
+0734F4	07351E	sub_734F4	extport_ring_init	Confirmed	RX ring FF95F8, latch 817B.5
+07351E	073540	sub_7351E	extport_boot_mode	Confirmed	FF8004 1/3 -> clone port setup (+remote mode)
+073540	07357A	sub_73540	extport_clone_setup	Confirmed	SCI_4 19200 8N1, FF8004=1, parser phase 4
+07357A	07358E	sub_7357A	region_code_get	Confirmed	er4 = 00:800F:8010:8011
+07358E	0735DE	sub_7358E	clone_receive	Confirmed	cable clone receive: header, ID check, EEPROM stream, 8-bit sum, reboot
+0735F0	073686	sub_735F0	clone_receive_tail	Confirmed	second half of clone_receive (region B, trailer)
+073686	0736A2	sub_73686	clone_progress_a	Confirmed	progress segment 1-5 for region A
+0736A2	0736B6	sub_736A2	clone_redraw	Confirmed	redraw + refresh
+0736B6	0736D2	sub_736B6	clone_progress_b	Confirmed	progress segment 6-10 for region B
+0736D2	0736E6	sub_736D2	clone_redraw2	Confirmed	redraw + refresh (copy)
+0736E6	07374A	sub_736E6	clone_rx_header	Confirmed	wait for 'A' then 9 header bytes
+07374A	0737A8	sub_7374A	ext_rx_block	Confirmed	read n ring bytes with 0x4B0-tick timeout, clone sum
+0737A8	0737C8	sub_737A8	clone_send_header_wait_ack	Confirmed	send header, wait for 0x06
+0737C8	0737FC	sub_737C8	clone_id_check	Confirmed	AH72M / version 2 / region check
+0737FC	07382A	sub_737FC	clone_send	Confirmed	cable clone send
+07382A	0738A2	sub_7382A	clone_send_body	Confirmed	EEPROM stream part of clone_send
+0738AC	0738CC	sub_738AC	clone_send_block	Confirmed	send 64 bytes + 5-tick gap
+0738CC	073908	sub_738CC	ext_tx_block	Confirmed	polled SCI_4 transmit, clone sum
+07390A	073930	sub_7390A	clone_build_header	Confirmed	AH72M, 2, region
+073930	073974	sub_73930	node_rx_poll	Confirmed	one ring byte -> node parser phase off_73974[97FE]
+073990	073992	nullsub_96	nullsub_96	Confirmed	phase 0 idle
+073992	0739C4	sub_73992	node_ph1_len	Confirmed	phase 1: argument count vs byte_74532
+0739C4	0739DA	sub_739C4	node_store	Confirmed	FF96F8[97FB++] = byte
+0739DA	0739FA	sub_739DA	node_ph2_data	Confirmed	phase 2: collect argument bytes
+0739FA	073A54	sub_739FA	node_ph3_dispatch	Confirmed	phase 3: checksum then off_74472[cmd]
+073A54	073A86	sub_73A54	node_ph4_cmd	Confirmed	phase 4: accept '0'..'_' (remote mode gate)
+073A86	073A98	sub_73A86	node_ph5_err	Confirmed	phase 5: error hold
+073A98	073AB4	sub_73A98	node_ph6_resync	Confirmed	phase 6: resync then NAK
+073AB4	073AEC	sub_73AB4	ext_send_ack	Confirmed	send 0x06; entries 073AC2 NAK 0x15, 073AD0 reply
+073AEC	073AFE	sub_73AEC	node_checksum_append	Confirmed	append additive checksum
+073AFE	073B62	sub_73AFE	node_cmd_0_enter_remote	Confirmed	'0': enter remote mode FF8004=2
+073B6C	073BB4	sub_73B6C	node_cmd_2_identity	Confirmed	'2': identity reply
+073BB4	073BE2	sub_73BB4	node_cmd_3_ptt	Confirmed	'3': inject PTT key 0x0E/0x0F (arg 1 press, 0 release)
+073BE2	073C02	sub_73BE2	node_cmd_4_ram_peek	Confirmed	'4': read n bytes at FF0000|addr (host-chosen RAM/IO)
+073C02	073C24	sub_73C02	node_len_check	Confirmed	length 1..0x80 check
+073C24	073C3E	sub_73C24	node_cmd_5_ram_poke	Confirmed	'5': write n bytes to FF0000|addr (host-chosen RAM/IO)
+073C3E	073C48	sub_73C3E	node_cmd_6_eeprom_read	Confirmed	'6': EEPROM read at host address
+073C48	073C66	sub_73C48	node_eeprom_read_reply	Confirmed	sub_3AB80 read + reply
+073C66	073C6C	sub_73C66	node_cmd_7_eeprom_write	Confirmed	'7': EEPROM write at host address
+073C6C	073C8A	sub_73C6C	node_eeprom_write_ack	Confirmed	sub_3AD20 write + ACK
+073C8A	073CB0	sub_73C8A	node_cmd_8_read_8016	Confirmed	'8': 128 B FF8016
+073CB0	073CBA	sub_73CB0	node_cmd_9_action	Confirmed	'9': sub_39576
+073CBA	073CE0	sub_73CBA	node_cmd_colon_read_A98C	Confirmed	':': 12 B FFA98C
+073CE0	073CFC	sub_73CE0	node_cmd_semicolon_status	Confirmed	';': record +0x84
+073CFC	073D4C	sub_73CFC	node_cmd_lt_set_mode	Inferred	'<': switch record mode 1/2
+073D4C	073D7E	sub_73D4C	node_cmd_eq_set_AE8C	Confirmed	'=': 4 bytes to FFAE8C, validate
+073D7E	073E20	sub_73D7E	node_cmd_gt_set_channel_fields	Confirmed	'>': tone/DCS/mode fields of current record
+073E20	073E58	sub_73E20	node_cmd_q_set_channel_no	Confirmed	'?': memory slot number < 0x44B
+073E58	073EB4	sub_73E58	node_cmd_at_tx_control	Confirmed	'@': TX start/stop/subtype while keyed
+073EB4	073EE2	sub_73EB4	node_cmd_A_key_or_channel	Confirmed	'A': remote key/digit press
+073EE2	073F08	sub_73EE2	node_cmd_B_read_8096	Confirmed	'B': 128 B FF8096
+073F08	073F1E	sub_73F08	node_cmd_C_restart	Confirmed	'C': restart DBD8 / DBC4
+073F1E	073FC4	sub_73F1E	node_cmd_D_set_flag	Confirmed	'D': flag arrays A9A8/A9A0 + side effects
+073FC4	073FEA	sub_73FC4	node_cmd_E_set_8970	Confirmed	'E': FF8970/8971 per band
+073FEA	074010	sub_73FEA	node_cmd_M_set_8974	Confirmed	'M': FF8974/8975
+074010	07402A	sub_74010	node_cmd_F_set_89B1	Confirmed	'F': FF89B1 + sub_16C36
+07402A	074050	sub_7402A	node_cmd_G_tx_aux	Confirmed	'G': TX aux while keyed
+074050	07405A	sub_74050	node_cmd_H_action	Confirmed	'H': sub_395A8
+07405A	074060	sub_7405A	node_cmd_I_halt	Confirmed	'I': mask IRQ, jmp 25AC
+074060	074070	sub_74060	node_cmd_J_port52	Confirmed	'J': AA35.2, port FF52.7
+074070	074076	sub_74070	node_cmd_K_nak	Confirmed	'K': NAK
+074076	0740D8	sub_74076	node_cmd_L_set_offset	Confirmed	'L': signed trims 8024/34/44 or 80A4/B4/C4
+0740D8	0740E2	sub_740D8	node_cmd_N_market	Confirmed	'N': market_set_restart
+0740E2	07410C	sub_740E2	market_set_restart	Confirmed	set FF800F/8010, save, restart
+07410C	074134	sub_7410C	node_cmd_O_band_b	Confirmed	'O': 8EA0.7 toggle
+074134	074150	sub_74134	node_cmd_P_band_a	Confirmed	'P': 8EA0.6 toggle
+074150	07415C	sub_74150	node_ack_or_nak_tail	Confirmed	ACK/NAK tail of 074134
+07415C	074162	sub_7415C	node_cmd_Q_nak	Confirmed	'Q': NAK
+074162	0741F6	sub_74162	node_cmd_R_digital_mode	Confirmed	'R': digital mode per band
+0741F6	07421E	sub_741F6	node_cmd_S_digital_ready	Confirmed	'S': digital + DSP ready
+07421E	07424E	sub_7421E	node_cmd_T_set_89C9	Confirmed	'T': FF89C9
+07424E	074286	sub_7424E	node_cmd_U_tx_level	Confirmed	'U': A99E/A99F while keyed
+074286	07429E	sub_74286	node_cmd_V_reload_defaults	Confirmed	'V': sub_DE20 when idle
+07429E	0742BC	sub_7429E	node_cmd_W_set_radio_id	Confirmed	'W': write radio ID FF8060
+0742BC	0742E8	sub_742BC	node_cmd_X_read_radio_id	Confirmed	'X': read radio ID
+0742E8	074310	sub_742E8	node_cmd_Y_load_8956	Confirmed	'Y': ROM block to FF8956
+074322	074364	sub_74322	node_cmd_Z_read_B0DC	Confirmed	'Z': DSP word B0DC
+074364	074390	sub_74364	node_cmd_lbracket_read_813F	Confirmed	'[': FF813F triple
+074390	074396	sub_74390	node_cmd_backslash_nak	Confirmed	'\': NAK
+074396	0743E0	sub_74396	node_cmd_rbracket_dsp15	Confirmed	']': arm/disarm DSP session 0x15
+0743E0	07445A	sub_743E0	node_cmd_caret_rf_status	Confirmed	'^': RF status line per band
+07445A	074472	sub_7445A	node_cmd_underscore_link_state	Confirmed	'_': FF94FE 1..2
+074562	0745EE	sub_74562	backup_write_start	Confirmed	BACKUP.dat writer start
+0745EE	0747DE	sub_745EE	backup_write_steps	Confirmed	BACKUP writer steps 3/4/5 (entries 07469E, 074702)
+0747DE	07481A	sub_747DE	backup_read_start	Confirmed	BACKUP restore: read ID block at 0x220
+07481A	074B08	sub_7481A	backup_restore_steps	Inferred	BACKUP restore steps 6-9: ID check, MARU, stream, sum, apply hooks, restart
+074B08	074B2A	sub_74B08	sd_quiesce	Confirmed	stop subsystems before bulk EEPROM work
+074B2A	074B90	sub_74B2A	memory_write_start	Confirmed	MEMORY.dat writer start
+074B90	074DCA	sub_74B90	memory_write_steps	Inferred	MEMORY writer steps (entries 074C58/074CBC/074D92)
+074DCA	074E38	sub_74DCA	memory_restore_start	Confirmed	MEMORY restore start (no ID check)
+074E38	0750C2	sub_74E38	memory_restore_steps	Inferred	MEMORY restore steps, sum compare, apply hooks, restart
+0750C2	075114	sub_750C2	restore_reset_band_state	Confirmed	apply hook: clear conversion flags, band A current
+075114	075160	sub_75114	vfo_set_default_channel	Confirmed	fill VFO record with default frequency and blank name
+075160	0753D4	sub_75160	restore_convert_memories	Inferred	per-destination conversion of the 1100 memory slots
+0753D4	0754BC	sub_753D4	restore_convert_memories_tail	Inferred	tail of 075160 (IDA split)
+0754BC	075554	sub_754BC	restore_fix_band_flags	Inferred	clear 8EA6-8EA8, re-apply bands
+075554	075EB4	sub_75554	restore_convert_vfos	Skeleton	per-destination VFO/home record conversion (5 unrolled cases)
+075EB4	075EB6	nullsub_55	nullsub_55	Confirmed	rts (apply hook slot)
+075EB6	075F36	sub_75EB6	restore_refresh_both_bands	Confirmed	re-tune band A then B, restore 8EA0
+075F36	075FC6	sub_75F36	editbuf_delete_char	Confirmed	edit buffer delete at cursor + mask fix
+075FC6	076080	sub_75FC6	editbuf_delete_pair	Skeleton	2-byte-character delete (body summarised; see header/doc)
+076080	076148	sub_76080	editbuf_insert_char	Skeleton	edit buffer insert at cursor (body summarised; see header/doc)
+07615E	0761C8	sub_7615E	editbuf_set_mode	Inferred	edit character mode BC71
+0761C8	076256	sub_761C8	editbuf_commit_word	Skeleton	edit value word BC74 (body summarised; see header/doc)
+0762DC	0767BE	sub_762DC	editbuf_input_char	Skeleton	character entry engine (1250 B)
+0768A8	0768C8	sub_768A8	cdc_bulk_in_service	Confirmed	EP 0x82 IN drain (ISR b4)
+076C0A	076EF8	sub_76C0A	cdc_setup_dispatch	Skeleton	USB SETUP request parser (doc 119) (body summarised; see header/doc)
+076EF8	076FC4	sub_76EF8	cdc_class_request	Skeleton	CDC class requests 0x20-0x23 (body summarised; see header/doc)
+076FC4	076FC8	sub_76FC4	cdc_vendor_stub	Confirmed	rts
+076FC8	07711E	sub_76FC8	cdc_out_to_scic_pump	Confirmed	USB OUT queue -> SCI-C (<=64 B), re-arm EP
+07711E	0771AE	sub_7711E	cdc_scic_rx_bridge	Skeleton	SCI-C RX bridge -> IN ring (body summarised; see header/doc)
+0771E2	07720E	sub_771E2	dev_cmd_7771E2	Inferred	3-wire device command
+07720E	077320	sub_7720E	dev_query_status	Inferred	3-wire device status query -> B006..B020
+07745A	0774E8	sub_7745A	dev_cmd_77_77745A	Inferred	device command 0x77
+0774E8	07757C	sub_774E8	dev_cmd_07_7774E8	Inferred	device command 0x07
+07757C	077692	sub_7757C	dev_setup_channel_a	Inferred	device channel setup (FF601D..)
+077692	07778C	sub_77692	dev_setup_channel_b	Inferred	device channel setup (FF601B..)
+07778C	0777E0	sub_7778C	dev_read_pair_a	Inferred	two device queries -> B01E/B020
+0777E0	07780C	sub_777E0	dev_cmd_7777E0	Inferred	device command
+07780C	077900	sub_7780C	dev_query_status_b	Inferred	device status query variant
+077900	077924	sub_77900	dev_cmd_11	Inferred	device command 0x11
+077A1C	077A36	sub_77A1C	dev_status_pair	Inferred	two dev_status calls
+077A36	077ADA	sub_77A36	dev_cmd_bc62	Inferred	device command using BC62
+077ADA	077BD0	sub_77ADA	dev_setup_channel_c	Inferred	device channel setup variant
+077BD0	077CAC	sub_77BD0	dev_cmd_2300	Inferred	device command 0x2300
+077CAC	077CB8	sub_77CAC	dev_status_1	Inferred	dev_status wrapper
+077CB8	077CC2	sub_77CB8	dev_status_2	Inferred	dev_status wrapper
+077CC2	077D16	sub_77CC2	dev_read_pair_b	Inferred	as 07778C
+077D16	077D6A	sub_77D16	dev_read_pair_c	Inferred	as 07778C
+077DB8	077E28	sub_77DB8	dev_word_read	Confirmed	3-wire READ via sub_33532 (BC66 -> BC68)
+077E28	077EF0	sub_77E28	dev_word_write	Confirmed	3-wire WRITE via sub_334CA + latch at 0x140
+077EF0	077F00	sub_77EF0	dev_read_thunk	Confirmed	dev_word_read
+077F00	077F26	sub_77F00	dev_read_check	Confirmed	read + wait
+077F26	077F4A	sub_77F26	dev_xfer	Confirmed	write then read
+077F4A	077FC6	sub_77F4A	dev_sequence	Inferred	callback / wait sequence
+077FC6	07801C	sub_77FC6	dev_status	Confirmed	status transaction
+078086	0780BE	sub_78086	dev_query	Confirmed	query transaction
+0780BE	0780D8	sub_780BE	dev_stub_0780BE	Confirmed	rts (orphan)
+0780D8	078102	sub_780D8	dev_wait	Inferred	bounded wait
+078102	078104	nullsub_76	nullsub_76	Confirmed	rts
+078106	07815C	sub_78106	cdc_init	Confirmed	service window: clear FEE010-FEE20F, arm USB
+07815C	0781C6	sub_7815C	cdc_poll	Confirmed	service window poll: IN service, OUT pump
+0781C6	0781DE	sub_781C6	svc_stub_0781C6	Confirmed	rts-only
+0781DE	07821E	sub_781DE	cdc_rearm	Confirmed	rebuild enable word, arm USB
+07821E	078222	sub_7821E	svc_stub_07821E	Confirmed	rts
+078222	07823C	sub_78222	scic_async_setup	Confirmed	SCI-C async 8N2 BRR 0x0C
+07823C	078256	sub_7823C	scic_async_setup_dup	Confirmed	identical copy of 078222
+078256	078260	sub_78256	scic_set_mode	Confirmed	SMR/BRR only
+078260	07827C	sub_78260	usb_burst_ee32	Confirmed	config burst to FFEE32
+07827C	078334	sub_7827C	cdc_isr_demux	Skeleton	USB ISR demux over handler records FF6242 (body summarised; see header/doc)
+078334	07837C	sub_78334	ring_fill	Skeleton	fill ring, TRG FFEE2C (body summarised; see header/doc)
+07837C	0783DA	sub_7837C	ring_drain_7837C	Skeleton	drain ring, TRG, return count (body summarised; see header/doc)
+0783DA	07842E	sub_783DA	ring_move	Skeleton	move between rings (body summarised; see header/doc)
+07842E	078442	sub_7842E	be16	Confirmed	big-endian u16
+078442	07845A	sub_78442	le16	Confirmed	little-endian u16
+07845A	0784BE	sub_7845A	usb_arm	Confirmed	USB IER/ISR setup and config burst
+0784BE	078508	sub_784BE	cdc_bus_reset	Confirmed	queue init + IFR0/EE28
+078508	078546	sub_78508	cdc_queue_init	Confirmed	USB queue init

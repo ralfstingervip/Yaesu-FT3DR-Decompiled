@@ -1,0 +1,99 @@
+addr	name	width	meaning	evidence
+FFBA30	sd_task_state	u8	SD client state 0..5; bit7 = request pending (cleared by sender sub_D53A)	06FD82 dispatch off_6FDAA; posters bset #7
+FFBA32	sd_card_state	u8	SD card state from reply +0x0C (2/3 = ready, 0 = none); gates all SD menus	06FE5E store; tests at 06F5E6, 06FC16, 070BB2..; contradicts doc 74 "picture on-screen"
+FFBA41	backup_dat_ok	u8	BACKUP.dat present with size 0x1FDC0	06FFAC cmp.l #0x1FDC0; 06FC20
+FFBA42	memory_dat_ok	u8	MEMORY.dat present with size 0xAC80	070080; 06FC66
+FFBA45	qso_store_kind	s8	QSO store selector: 0 message, >0 picture, <0 voice	06F710, 06F7C2 three-way branch
+FFBA4A	sd_scratch_BA4A	u8[16]	name scratch (photo stem / generated photo name)	06F608, 07110A
+FFBA5A	sd_photo_name_BA5A	u8[16]	"<stem>.jpg" for the photo stat	06F632, 0708E6
+FFBA7A	sd_sum_BA7A	u32	running additive sum of BACKUP/MEMORY bytes	074566.., 074AA2 compare
+FFBA86	sd_req_len_BA86	u16	SD request total length (0x98 + data)	posters; sub_D53A
+FFBA88	sd_req_tmpl	ptr	SD request template (ROM 071326..073030)	posters; 0711AA
+FFBA8C	sd_req_seq	u16	request sequence, wraps 1..0xFF via record 07131E	071196, 06FDC8
+FFBA92	sd_rx_flags_BA92	u8	SUB frame arrival flags b0 FE(SD reply) b1 EA b2 E4 b3 E6	doc 108 sec.4; consumers here
+FFBA93	qso_flags_BA93	u8	b0 status polling, b1/b2 SD job running, b6 QSO list busy	06FE3A, 0708FC, 06F942
+FFBA96	sd_req_length	u32	request length field (+0x76)	071256..
+FFBA9A	sd_req_offset	u32	request offset field (+0x7A)	071264..
+FFBA9E	sd_req_op	u8	request op code (+0x10) for generic template	071288
+FFBA9F	sd_req_param	u8	request param (+0x12)	0712DC
+FFBAA0	sd_req_dir	u8	directory index (+0x14): 1 BACKUP 2 GPSLOG 3 MEMORY-CH 4 QSOLOG 5 PHOTO 6 VOICE	0712F6; pc-02
+FFBAA1	sd_substate	u8	QSOLOG store-init substate (off_7031E)	070130
+FFBAA2	sd_probe_step	u8	file-probe step (off_70118)	06FF00
+FFBAA3	sd_next_step	u8	SD continuation step (off_703E6, 47 entries)	070356
+FFBAA4	sd_last_step	u8	copy of BAA3 on reply	07036E
+FFBAA5	qso_fat_window	u8	1 = 30-entry FAT window	06F6E2
+FFBAA7	sd_probe_retries	u8	probe retries (3)	06FF16, 0700FC
+FFBAB2	ctx_er1	u32	saved er1 across async SD step	06F7F8
+FFBAB6	ctx_er2	u32	saved er2	06F7FE
+FFBABA	ctx_er3	u32	saved er3	06F804
+FFBAC2	sd_req_name	u8[]	request file name (+0x56)	071302
+FFBAD4	sd_req_namelen	u8	name length	071302
+FFBAD5	voicerec_flags_BAD5	u8	b0 audio-route toggle	07075A
+FFBAD6	voicerec_state	u8	voice recorder state 0/1/2/0x80/0x90/0x81/0x82/0xC2	07055E, 070E4C
+FFBAD7	ea_payload	u8	EA frame payload	doc 108; 0705AA
+FFBADA	gpslog_last_BADA	u8	last GPS LOG setting seen	0707CC
+FFBADE	voicerec_name_BADE	u8[16]	voice file name	070EA4
+FFBAF0	gpslog_name_BAF0	u8[16]	GPS log file name	070FBA
+FFBA3D	file_seq_BA3D	u8	file-name sequence digits	06F040, 070EDE
+FFBB02	sd_chunks_BB02	u16	remaining chunk count	0745A8
+FFBB04	sd_eep_addr_BB04	u32	current EEPROM address in BACKUP/MEMORY stream	07459E
+FFB928	qso_page_no	u16	QSO list page number	06F7AE
+FFB92A	qso_vis_count	u8	visible records (0xFF none)	06F892
+FFB92D	qso_list_kind_B92D	u8	list screen index for off_6F9E4/F0/FC	06F9A8
+FFB92E	qso_vis_tab	u16[20]	visible record numbers	06F79E
+FFB956	qso_cur_index	u16	current FAT record index	06F6EC
+FFB958	qso_first_rec	u16	newest record on page	06F83E
+FFB95A	qso_page_top	u16	start record of page	06F7E2
+FFB95D	qso_more	u8	more pages flag	06F868
+FFB3F3	sdmenu_confirm	u8	SD menu confirm stage	06FB60
+FFB3F4	sdmenu_sel	u8	selected item	06FB44
+FFB3F5	sdmenu_cursor	u8	cursor 1..2 (records 06FBBC/06FBC2)	06FBF8
+FFB3F6	sdmenu_op	u8	confirmed op 1 write / 2 read	06FC26
+FF2EC9	picture_busy	u8	picture operation in progress	06F512; doc 64
+FF304A	wavmng_img	u8[0x20]	WAVMNG.dat image	0700C8
+FEEF00	qsomng_img_EF00	u8[0x20]	QSOMNG.dat image (+0 msg idx, +0x10 pct idx)	07003C
+FF5006	sd_reply	struct	SD reply block (FE frame): +0x0C card state, +0x0E status, +0x18 event C8/C9/CD, +0x7E file size, +0x98 payload	06FE18, 06FFA6
+FF3D7A	ipc_req	u8[]	outgoing SD request frame (seq, then template header)	071196
+FFBB70	bt_status	u8	copy of last E4 Bluetooth code	doc 124; 0730B2
+FFBB71	e4_code_BB71	u8	E4 frame code	0730FC
+FFBB72	e4_record_BB72	u8[28]	E4 device record (name+address)	0731CE
+FFBB8E	bt_userop	u8	BT user operation 1 search 2 connect 3 await	doc 124
+FFBB8F	bt_flags_BB8F	u8	b1 delete pending, b6, b7 SCO not needed	073370, 073412
+FFBB90	bt_bringup	u8	BT bring-up state 0..3	073076
+FFAAEA	bt_devcount_AAEA	u8	paired device count	0731FE
+FFAAEB	bt_unseen_AAEB	u8	per-slot bitmap	0731E8
+FFAAEC	bt_devlist	u8[5][28]	paired device list	0731C0
+FF8EB0	bt_sel_8EB0	u8	selected device slot	0731E4
+FF8EAF	bt_subop_8EAF	u8	F3D2 sub-op	doc 124
+FF95A1	bt_hold_95A1	u8	SCO hold timer	07348E
+FF8004	remote_mode_8004	u8	0 normal, 1 clone port, 2 remote (node), 3 after reset	073A62; doc 104
+FF8130	ext_tx_len_8130	u8	node reply length	073AB6
+FF812E	clone_sum_812E	u8	8-bit clone sum	doc 24
+FF812F	clone_trailer_812F	u8	received clone trailer	073652
+FF8131	clone_state_8131	u8	clone state 0..4	doc 24
+FF8132	ext_rx_head	ptr	DATA-jack RX ring read pointer	0736EE
+FF8136	ext_rx_tail	ptr	RX ring write pointer	0736F4
+FF96F8	node_buf_96F8	u8[]	node frame / clone header buffer	073A0A
+FF97FB	node_cnt_97FB	u8	node byte counter	0739C4
+FF97FC	node_cmd_97FC	u8	node command index	doc 104
+FF97FD	node_left_97FD	u8	args remaining	0739B0
+FF97FE	node_phase_97FE	u8	node parser phase	doc 104
+FF9547	timer_9547	u8	node inter-byte gap timer	0739EE
+FF9562	sd_timeout_9562	u8	probe reply timeout (250)	06FF7A
+FF9563	sd_delay_9563	u8	SD step delay (5)	06FF1E
+FF9555	sd_poll_timer_9555	u8	card poll timer	06FDD0
+FF9567	timer_9567	u8	QSO list busy timer	06F88C
+FF95A5	voicerec_hold_95A5	u8	recorder hold-off (30)	0705D8
+FF95DE	sd_timer_95DE	u16	SD step timeout word (12, set by sub_D53A)	07038E
+FFA9DD	progress_A9DD	u8	clone progress segment 1..10	07369E
+FFBC7C	edit_buf_BC7C	ptr	edit buffer pointer	075F56
+FFBC80	edit_mask_BC80	u16	edit per-position mask	075F48
+FFBC82	edit_cur_BC82	u8	edit cursor	075F3A
+FFBC83	edit_len_BC83	u8	edit length	075F40
+FFBCB0	conv_flag_BCB0	u8	restore-conversion flags BCB0..BCB5	0750CE
+FF6288	usbq_6288	struct	CDC queue engine block (rings at +0/+0x40/+0x50)	doc 95/119
+FF6240	usb_held_6240	u8	endpoint held / queue flag	078508
+FF62F8	usb_en_62F8	u32	USB interrupt enable word	078106
+FF63F8	cdc_in_count_63F8	u16	last IN transfer count	0768C0
+FFBC66	dev_addr_BC66	u16	3-wire device address word	077DB8
+FFBC68	dev_data_BC68	u16	3-wire device data word	077DB8

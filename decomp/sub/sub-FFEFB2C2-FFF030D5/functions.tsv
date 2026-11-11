@@ -1,0 +1,124 @@
+start	end	ida_name	new_name	confidence	summary
+FFEFB2C2	FFEFB2E2	sub_FFEFB2C2	bit_mask	Confirmed	1<<n from ROM table 0xFFED71A8, 0 for n>31
+FFEFB2E2	FFEFB369	dead_FFEFB2E2	msb_index	Confirmed	index of highest set bit, 0xFF for 0 (dead)
+FFEFB369	FFEFB3E3	sub_FFEFB369	lsb_index	Confirmed	index of lowest set bit, 0xFF for 0; picks the next UI event
+FFEFB3E3	FFEFB3FC	dead_FFEFB3E3	bcd8_to_bin	Confirmed	packed BCD byte to binary (dead)
+FFEFB3FC	FFEFB430	dead_FFEFB3FC	bcd16_to_bin	Confirmed	packed BCD word to binary (dead)
+FFEFB430	FFEFB4AA	sub_FFEFB430	bcd_byte_to_ascii	Confirmed	one BCD byte to 2 chars; mode 1 expands -/space markers
+FFEFB4AA	FFEFB54C	sub_FFEFB4AA	bcd_string_to_ascii	Confirmed	n packed-BCD digits to ASCII with leading -/space markers
+FFEFB54C	FFEFB58E	dead_FFEFB54C	ascii2_to_bin	Confirmed	two ASCII digits to binary (dead)
+FFEFB58E	FFEFB623	dead_FFEFB58E	u8_to_dec_buggy	Confirmed	u8 to decimal, buggy v%div (dead)
+FFEFB623	FFEFB645	dead_FFEFB623	bin8_to_bcd	Confirmed	binary byte to BCD (dead)
+FFEFB645	FFEFB6B0	dead_FFEFB645	bin16_to_bcd	Confirmed	binary word to 4-digit BCD (dead)
+FFEFB6B0	FFEFB6DF	dead_FFEFB6B0	bcd8_inc	Confirmed	BCD increment, wraps 0x99, adds 6 not 7 (dead)
+FFEFB6DF	FFEFB707	dead_FFEFB6DF	bcd8_dec	Confirmed	BCD decrement, wraps to 0x99 (dead)
+FFEFB707	FFEFB729	dead_FFEFB707	load_be16	Confirmed	big-endian u16 load (dead)
+FFEFB729	FFEFB76A	dead_FFEFB729	load_be32	Confirmed	big-endian u32 load (dead)
+FFEFB76A	FFEFB78C	dead_FFEFB76A	load_le16	Confirmed	little-endian u16 load (dead)
+FFEFB78C	FFEFB7CD	dead_FFEFB78C	load_le32	Confirmed	little-endian u32 load (dead)
+FFEFB7CD	FFEFB7F8	dead_FFEFB7CD	popcount32	Confirmed	population count (dead)
+FFEFB7F8	FFEFB822	sub_FFEFB7F8	scr29_handler	Confirmed	screen 0x29 (msg folder list F600/F610): phase dispatch
+FFEFB822	FFEFB834	sub_FFEFB822	scr29_phase0_init	Confirmed	screen 0x29 (msg folder list F600/F610): latch frame, phase++
+FFEFB834	FFEFBAEF	sub_FFEFB834	scr29_phase1_frame	Confirmed	screen 0x29 (msg folder list F600/F610): draw static frame/title, phase++
+FFEFBAEF	FFEFBB1C	sub_FFEFBAEF	scr29_phase2_body	Confirmed	screen 0x29 (msg folder list F600/F610): full-screen layer draw
+FFEFBB1C	FFEFBB52	sub_FFEFBB1C	scr29_ev15_list	Confirmed	screen 0x29 (msg folder list F600/F610): ev15 list
+FFEFBB52	FFEFBBC4	sub_FFEFBB52	scr29_ev_softkey	Confirmed	screen 0x29 (msg folder list F600/F610): redraw one soft key
+FFEFBBC4	FFEFBC4A	sub_FFEFBBC4	scr29_phase3_events	Confirmed	screen 0x29 (msg folder list F600/F610): event loop
+FFEFBC4A	FFEFBC66	sub_FFEFBC4A	scr29_latch	Confirmed	screen 0x29 (msg folder list F600/F610): latch wrapper
+FFEFBC66	FFEFBD58	sub_FFEFBC66	scr29_latch_body	Confirmed	screen 0x29 (msg folder list F600/F610): latch frame bytes, post events
+FFEFBD58	FFEFBD82	sub_FFEFBD58	scr29_draw_all	Confirmed	screen 0x29 (msg folder list F600/F610): full redraw
+FFEFBD82	FFEFBE3A	sub_FFEFBD82	scr29_draw_list	Confirmed	screen 0x29 (msg folder list F600/F610): draw list
+FFEFBE3A	FFEFBE55	sub_FFEFBE3A	scr29_draw_softkeys	Confirmed	screen 0x29 (msg folder list F600/F610): draw all soft keys
+FFEFBE55	FFEFBE81	sub_FFEFBE55	scr29_list_height	Confirmed	screen 0x29 (msg folder list F600/F610): list height
+FFEFBE81	FFEFBFF6	sub_FFEFBE81	scr29_draw_rows	Confirmed	screen 0x29 (msg folder list F600/F610): draw rows
+FFEFBFF6	FFEFC0F7	sub_FFEFBFF6	scr29_draw_category_menu	Confirmed	screen 0x29 (msg folder list F600/F610): draw category menu
+FFEFC0F7	FFEFC121	sub_FFEFC0F7	scr2A_handler	Confirmed	screen 0x2A (msg header/body F620/F621): phase dispatch
+FFEFC121	FFEFC133	sub_FFEFC121	scr2A_phase0_init	Confirmed	screen 0x2A (msg header/body F620/F621): latch frame, phase++
+FFEFC133	FFEFC15D	sub_FFEFC133	scr2A_phase1_frame	Confirmed	screen 0x2A (msg header/body F620/F621): draw static frame/title, phase++
+FFEFC15D	FFEFC18A	sub_FFEFC15D	scr2A_phase2_body	Confirmed	screen 0x2A (msg header/body F620/F621): full-screen layer draw
+FFEFC18A	FFEFC1BC	sub_FFEFC18A	scr2A_ev15_header	Confirmed	screen 0x2A (msg header/body F620/F621): ev15 header
+FFEFC1BC	FFEFC1F0	sub_FFEFC1BC	scr2A_ev16_body	Confirmed	screen 0x2A (msg header/body F620/F621): ev16 body
+FFEFC1F0	FFEFC262	sub_FFEFC1F0	scr2A_ev_softkey	Confirmed	screen 0x2A (msg header/body F620/F621): redraw one soft key
+FFEFC262	FFEFC2E8	sub_FFEFC262	scr2A_phase3_events	Confirmed	screen 0x2A (msg header/body F620/F621): event loop
+FFEFC2E8	FFEFC304	sub_FFEFC2E8	scr2A_latch	Confirmed	screen 0x2A (msg header/body F620/F621): latch wrapper
+FFEFC304	FFEFC4D3	sub_FFEFC304	scr2A_latch_body	Confirmed	screen 0x2A (msg header/body F620/F621): latch frame bytes, post events
+FFEFC4D3	FFEFC4F7	sub_FFEFC4D3	scr2A_draw_all	Confirmed	screen 0x2A (msg header/body F620/F621): full redraw
+FFEFC4F7	FFEFC60F	sub_FFEFC4F7	scr2A_draw_header	Confirmed	screen 0x2A (msg header/body F620/F621): draw header
+FFEFC60F	FFEFC637	sub_FFEFC60F	scr2A_draw_body	Confirmed	screen 0x2A (msg header/body F620/F621): draw body
+FFEFC637	FFEFC652	sub_FFEFC637	scr2A_draw_softkeys	Confirmed	screen 0x2A (msg header/body F620/F621): draw all soft keys
+FFEFC652	FFEFC909	sub_FFEFC652	scr2A_draw_msg_page	Confirmed	screen 0x2A (msg header/body F620/F621): draw msg page
+FFEFC909	FFEFC987	sub_FFEFC909	scr2A_draw_text_lines	Confirmed	screen 0x2A (msg header/body F620/F621): draw text lines
+FFEFC987	FFEFC9B1	sub_FFEFC987	scr2B_handler	Confirmed	screen 0x2B (edit line + pick list F622): phase dispatch
+FFEFC9B1	FFEFC9C3	sub_FFEFC9B1	scr2B_phase0_init	Confirmed	screen 0x2B (edit line + pick list F622): latch frame, phase++
+FFEFC9C3	FFEFCA04	sub_FFEFC9C3	scr2B_phase1_frame	Confirmed	screen 0x2B (edit line + pick list F622): draw static frame/title, phase++
+FFEFCA04	FFEFCA31	sub_FFEFCA04	scr2B_phase2_body	Confirmed	screen 0x2B (edit line + pick list F622): full-screen layer draw
+FFEFCA31	FFEFCA72	sub_FFEFCA31	scr2B_ev15_edit	Confirmed	screen 0x2B (edit line + pick list F622): ev15 edit
+FFEFCA72	FFEFCAB6	sub_FFEFCA72	scr2B_ev16_list	Confirmed	screen 0x2B (edit line + pick list F622): ev16 list
+FFEFCAB6	FFEFCB28	sub_FFEFCAB6	scr2B_ev_softkey	Confirmed	screen 0x2B (edit line + pick list F622): redraw one soft key
+FFEFCB28	FFEFCBAE	sub_FFEFCB28	scr2B_phase3_events	Confirmed	screen 0x2B (edit line + pick list F622): event loop
+FFEFCBAE	FFEFCBCA	sub_FFEFCBAE	scr2B_latch	Confirmed	screen 0x2B (edit line + pick list F622): latch wrapper
+FFEFCBCA	FFEFCCCC	sub_FFEFCBCA	scr2B_latch_body	Confirmed	screen 0x2B (edit line + pick list F622): latch frame bytes, post events
+FFEFCCCC	FFEFCCF3	sub_FFEFCCCC	scr2B_draw_all	Confirmed	screen 0x2B (edit line + pick list F622): full redraw
+FFEFCCF3	FFEFCD87	sub_FFEFCCF3	scr2B_draw_edit_line	Confirmed	screen 0x2B (edit line + pick list F622): draw edit line
+FFEFCD87	FFEFCE16	sub_FFEFCD87	scr2B_draw_list	Confirmed	screen 0x2B (edit line + pick list F622): draw list
+FFEFCE16	FFEFCE40	sub_FFEFCE16	scr2C_handler	Confirmed	screen 0x2C (picture/msg viewer F630-F632): phase dispatch
+FFEFCE40	FFEFCE52	sub_FFEFCE40	scr2C_phase0_init	Confirmed	screen 0x2C (picture/msg viewer F630-F632): latch frame, phase++
+FFEFCE52	FFEFCEC0	sub_FFEFCE52	scr2C_phase1_frame	Confirmed	screen 0x2C (picture/msg viewer F630-F632): draw static frame/title, phase++
+FFEFCEC0	FFEFCEED	sub_FFEFCEC0	scr2C_phase2_body	Confirmed	screen 0x2C (picture/msg viewer F630-F632): full-screen layer draw
+FFEFCEED	FFEFCF37	sub_FFEFCEED	scr2C_ev15_info	Confirmed	screen 0x2C (picture/msg viewer F630-F632): ev15 info
+FFEFCF37	FFEFCFA9	sub_FFEFCF37	scr2C_ev_softkey	Confirmed	screen 0x2C (picture/msg viewer F630-F632): redraw one soft key
+FFEFCFA9	FFEFD02F	sub_FFEFCFA9	scr2C_phase3_events	Confirmed	screen 0x2C (picture/msg viewer F630-F632): event loop
+FFEFD02F	FFEFD04B	sub_FFEFD02F	scr2C_latch	Confirmed	screen 0x2C (picture/msg viewer F630-F632): latch wrapper
+FFEFD04B	FFEFD2CA	sub_FFEFD04B	scr2C_latch_body	Confirmed	screen 0x2C (picture/msg viewer F630-F632): latch frame bytes, post events
+FFEFD2CA	FFEFD300	sub_FFEFD2CA	scr2C_draw_all	Confirmed	screen 0x2C (picture/msg viewer F630-F632): full redraw
+FFEFD300	FFEFD33A	sub_FFEFD300	scr2C_draw_info	Confirmed	screen 0x2C (picture/msg viewer F630-F632): draw info
+FFEFD33A	FFEFD355	sub_FFEFD33A	scr2C_draw_softkeys	Confirmed	screen 0x2C (picture/msg viewer F630-F632): draw all soft keys
+FFEFD355	FFEFD518	sub_FFEFD355	scr2C_info_F630	Confirmed	screen 0x2C (picture/msg viewer F630-F632): info F630
+FFEFD518	FFEFD69B	sub_FFEFD518	scr2C_info_F631	Confirmed	screen 0x2C (picture/msg viewer F630-F632): info F631
+FFEFD69B	FFEFD6E9	sub_FFEFD69B	scr2C_info_F632	Confirmed	screen 0x2C (picture/msg viewer F630-F632): info F632
+FFEFD6E9	FFEFD713	sub_FFEFD6E9	scr20_kbd_handler	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): kbd handler
+FFEFD713	FFEFD725	sub_FFEFD713	scr20_phase0_init	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): latch frame, phase++
+FFEFD725	FFEFD740	sub_FFEFD725	scr20_phase1_frame	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): draw static frame/title, phase++
+FFEFD740	FFEFD76D	sub_FFEFD740	scr20_phase2_body	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): full-screen layer draw
+FFEFD76D	FFEFD7BA	sub_FFEFD76D	scr20_ev35_field	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): ev35 field
+FFEFD7BA	FFEFD7E8	sub_FFEFD7BA	scr20_ev34_keys	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): ev34 keys
+FFEFD7E8	FFEFD830	sub_FFEFD7E8	scr20_ev_key	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): ev key
+FFEFD830	FFEFD8B6	sub_FFEFD830	scr20_phase3_events	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): event loop
+FFEFD8B6	FFEFD8D2	sub_FFEFD8B6	scr20_latch	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): latch wrapper
+FFEFD8D2	FFEFDDD4	sub_FFEFD8D2	scr20_latch_body	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): latch frame bytes, post events
+FFEFDDD4	FFEFDE04	sub_FFEFDDD4	scr20_draw_all	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): full redraw
+FFEFDE04	FFEFE19E	sub_FFEFDE04	scr20_draw_field	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): draw field
+FFEFE19E	FFEFE1BA	sub_FFEFE19E	scr20_draw_keys	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): draw keys
+FFEFE1BA	FFEFE223	sub_FFEFE1BA	scr20_kbd_type	Confirmed	screen 0x20 (shared keyboard F3B8/F513-F515/F623): kbd type
+FFEFE223	FFEFE28F	sub_FFEFE223	scr1F_item_handler	Confirmed	screen 0x1F (SET-MODE item page): item handler
+FFEFE28F	FFEFE2A1	sub_FFEFE28F	scr1F_phase0_init	Confirmed	screen 0x1F (SET-MODE item page): latch frame, phase++
+FFEFE2A1	FFEFE438	sub_FFEFE2A1	scr1F_phase1_title	Confirmed	screen 0x1F (SET-MODE item page): draw static frame/title, phase++
+FFEFE438	FFEFE465	sub_FFEFE438	scr1F_phase2_body	Confirmed	screen 0x1F (SET-MODE item page): full-screen layer draw
+FFEFE465	FFEFE50C	sub_FFEFE465	scr1F_ev15_value	Confirmed	screen 0x1F (SET-MODE item page): ev15 value
+FFEFE50C	FFEFE54B	sub_FFEFE50C	scr1F_ev16_softkeys	Confirmed	screen 0x1F (SET-MODE item page): ev16 softkeys
+FFEFE54B	FFEFE5BD	sub_FFEFE54B	scr1F_ev_softkey	Confirmed	screen 0x1F (SET-MODE item page): redraw one soft key
+FFEFE5BD	FFEFE649	sub_FFEFE5BD	scr1F_phase3_events	Confirmed	screen 0x1F (SET-MODE item page): event loop
+FFEFE649	FFEFE664	sub_FFEFE649	scr1F_latch	Confirmed	screen 0x1F (SET-MODE item page): latch wrapper
+FFEFE664	FFEFE6AF	sub_FFEFE664	scr1F_latch_header	Confirmed	screen 0x1F (SET-MODE item page): latch bytes 0/1
+FFEFE6AF	FFEFE727	sub_FFEFE6AF	item_store_dispatch	Confirmed	screen 0x1F: per-group store handler dispatch (doc 38)
+FFEFE727	FFEFEA4B	sub_FFEFE727	item_store_display	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) display
+FFEFEA4B	FFEFECA4	sub_FFEFEA4B	item_store_txrx	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) txrx
+FFEFECA4	FFEFF034	sub_FFEFECA4	item_store_memory	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) memory
+FFEFF034	FFEFF4E5	sub_FFEFF034	item_store_signaling	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) signaling
+FFEFF4E5	FFEFF68A	sub_FFEFF4E5	item_store_scan	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) scan
+FFEFF68A	FFEFF710	sub_FFEFF68A	item_store_dpid	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) dpid
+FFEFF710	FFEFF906	sub_FFEFF710	item_store_wiresx	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) wiresx
+FFEFF906	FFEFFEB8	sub_FFEFF906	item_store_config	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) config
+FFEFFEB8	FFF000AC	sub_FFEFFEB8	item_store_aprs	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) aprs
+FFF000AC	FFF00220	sub_FFF000AC	item_store_grpA	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) grpA
+FFF00220	FFF00462	sub_FFF00220	item_store_grpB	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) grpB
+FFF00462	FFF0049D	sub_FFF00462	item_store_g0	Confirmed	screen 0x1F store handler (compare-copy latched vs pending, post value event) g0
+FFF0049D	FFF004C2	sub_FFF0049D	item_draw_page	Confirmed	screen 0x1F phase-2 body: value page below title
+FFF004C2	FFF005A9	sub_FFF004C2	item_draw_value	Confirmed	per-group value drawer + row label walker + divider
+FFF005A9	FFF00684	sub_FFF005A9	item_draw_softkeys	Confirmed	soft-key icons for the item page by item code
+FFF00684	FFF0104F	sub_FFF00684	draw_value_display	Confirmed	group 1 DISPLAY value pages (doc 44 F2)
+FFF0104F	FFF01C0B	sub_FFF0104F	draw_value_txrx	Confirmed	group 2 TX/RX value pages; 0x23 digital SQL page
+FFF01C0B	FFF01D02	sub_FFF01C0B	draw_bank_list	Confirmed	5-row bank/name list renderer with optional link checkbox
+FFF01D02	FFF01EFB	sub_FFF01D02	draw_value_memory	Confirmed	group 3 MEMORY value pages incl. ownerless chunk FFF01F0C
+FFF01EFB	FFF01F0C	sub_FFF01EFB	draw_value_memory_tail	Confirmed	not a function: shared cursor+divider tail of draw_value_memory
+FFF01F70	FFF030D5	sub_FFF01F70	draw_value_signaling	Confirmed	group 4 SIGNALING value pages (BELL..WX ALERT)

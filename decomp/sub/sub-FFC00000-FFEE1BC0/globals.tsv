@@ -1,0 +1,120 @@
+addr	name	width	meaning	evidence
+0x00012CD8	sci_chan[3]	0x18 each	SCI ring descriptors: flags(b0 TX,b8 RX), rx_buf, tx_buf, rx_size, tx_size, tx_head/tail, rx_head/tail	sci_init_all FFEDAB93; sci_write/sci_read index use
+0x00012D20	sci_cb[3]	0x0C each	per-SCI callback block {tx_cb, rx_cb, tx_id, rx_id}	sci0_tx_open FFEDB653; ISRs FFEDB82A/FFEDB860
+0x00008A84	sci0_scr_shadow	u8	RAM copy of SCI0 SCR	sci0_rx_open FFEDB6CB
+0x00012D44	link_rx_state	u32	deframer state 0..9 (9 = frame ready)	link_deframe FFEDC63B
+0x00012D48	link_rx_byte	u8	one-byte SCI0 read buffer	link_deframe FFEDC620
+0x00012D49	link_frame[]	u8[]	frame being assembled (op hi at [0])	link_deframe FFEDC665
+0x0001AD4A	link_frame_cnt	u16	bytes stored (+0x8006)	FFEDC7DB
+0x0001AD4C	link_frame_len	u16	length field +2 (+0x8008)	FFEDC6CB
+0x0001AD4E	link_sum_calc	u16	running byte sum (+0x800A)	FFEDC671
+0x0001AD50	link_sum_recv	u16	received checksum (+0x800C)	FFEDC767
+0x0001AD52	link_q_len[4]	u16[4]	queued frame lengths (+0x800E)	link_enqueue FFEDD170
+0x0001AD5A	link_q_slot[4]	300 B each	queued frames (+0x8016)	link_enqueue FFEDD13C
+0x0001B20A	link_q_wr	u8	queue write index (+0x84C6)	FFEDD0E1
+0x0001B20B	link_q_rd	u8	queue read index (+0x84C7)	FFEDC201
+0x0001B20C	link_echo[2]	u8[2]	opcode of last MAIN frame dequeued/acked, echoed in every SUB->MAIN frame	FFEDC292, FFEDCECD, FFEDD227
+0x0001B20E	link_payload	u8[0x12C]	payload staging for sub2main_frame_a (+0x84CA)	FFEDC306
+0x0001B33A	link_txbuf_a	u8[0x800]	TX frame buffer (+0x85F6)	sub2main_frame_a
+0x0001BB3A	link_txbuf_b	u8[0x800]	TX frame buffer (+0x8DF6)	sub2main_frame_b
+0x0001C33A	link_txbuf_c	u8[0x80]	TX frame buffer (+0x95F6); doc 109 table says 0x2433A	sub2main_frame_c
+0x0001C3BA	link_txbuf_d	u8[0x80]	TX frame buffer (+0x9676); doc 109 says 0x243BA	sub2main_frame_d
+0x0001C43A	link_txbuf_fe	u8[]	FE record buffer (+0x96F6)	sub2main_send_fe_record
+0x0001CC3A	blk_cur	u16	current FFFF block number	FFEDCAB5
+0x0001CC3C	blk_total	u16	total block count	FFEDCADD
+0x0001CC40	blk_bytes	u32	bytes received so far ((blk-1)*256+n)	FFEDCB50
+0x0001CC44	blk_sum	u32	running 32-bit data sum	FFEDCB80
+0x0001CC48	blk_expect	u32	sum sent by MAIN on last block	FFEDCBB2
+0x0001CC4C	blk_state	u32	block transfer 0 idle,1 receiving,2 ok,3 error	FFEDCACD, FFEDE4B1
+0x0001CC50	link_timer_grp	u32	swtimer group of the inter-byte timer	link_init FFEDC1E8
+0x0001230A	link_byte_timer	u16	inter-byte timeout counter	link_rx_poll FFEDC5FA
+0x0001217E	gpslog_g_seen	u8	GPS log epoch started (GGA seen)	FFEDC372
+0x0001217F	blk_last_lo	u8	low byte of last notified FF frame	FFEDCC92, FFEDCD1E
+0x00012180	tpu3_slow_mode	u8	TPU3 reprogrammed to slow rate	FFEDCE8C
+0x00012181	last_waiting_state	u8	previous sub_FFEF02F2 result	picture_update_waiting_banner
+0x00008A86	gps_relay_block	u8	blocks E1 GPS relay while TPU3 slow mode	FFEDCE95, FFEDC318
+0x00010C65	gpslog_state	u8	SD GPS log state (1 active, 2 epoch done)	FFEDC358
+0x00008E46	pending_frame	u8[300]	latest dequeued MAIN frame (docs 51/pc-04)	sub_FFEF0385
+0x00008C4D	frame_shadow	u8[300]	applied shadow of the frame (doc pc-04)	align_apply_frame_fields
+0x00008C4C	screen_step	u8	per-screen sub-state	picture/align steps
+0x00008A87	lcd_seq[3]	u8[3]	LCD power sequencer {state, done, substep}	FFEDDED5..FFEDE1A2
+0x00008A8A	lcd_display_on	u8	display on flag	FFEDE259, FFEDE161
+0x00008A8B	picture_state	s8	0 none,1 transfer done,2 decoded	FFEDE4C9, FFEDE553
+0x00008A8C	screen_id	u8	current screen (table 0xFFED4050)	ui_phase2_run FFEDF040
+0x00008A8D	screen_id_prev	u8	previous screen id	FFEDF696
+0x00008A8E	screen_valid	u8	classifier produced a screen	FFEDF248
+0x00008A8F	ui_wake_req	u8	wake request	ui_request_wake
+0x00008A90	mode_byte_saved	u8	saved frame byte +0x13	FFEDF108
+0x00008A91	gps_cold_req	u8	request $PMTK103 cold start	FFEE0F33
+0x00008A92	gps_warm_req	u8	no-fix timeout -> $PMTK102 warm start	FFEDFB26
+0x00008A93	nmea_line	char[256]	raw NMEA sentence incl '$'	gps_rx_assemble
+0x00008B93	nmea_xor	u8	running checksum	FFEDFD66
+0x00008B94	nmea_rx_cksum	u8	received checksum	FFEDFDCB
+0x00008B95	nmea_cksum_digits	u8	hex digits seen	FFEDFDD5
+0x00008B96	nmea_field	char[32]	current NMEA field (not terminated)	nmea_next_field
+0x00008BB6	pmtk_txbuf	char[]	$PMTK TX staging	gps_send_pmtk
+0x00008BF6	touch_state	u8	1 detect, 2 X, 3 Y	touch_step (doc 84)
+0x00008BF7	touch_ring_idx	u8	ring index (mod 4)	FFEE14D6
+0x00008BF8	touch_press_cnt	u8	samples until pen-down report	FFEE1515
+0x00008BF9	touch_release_cnt	u8	detects until pen-up report	FFEE156E
+0x00008BFA	touch_pair_ok	u8	X/Y pair valid	FFEE1680
+0x00008BFB	rt_fd_mode[3]	u8[3]	lowsrc open mode per stdio fd	rt_open
+0x00008D79	ui_8D79	u8	UI flag (screen active)	FFEDF07C
+0x00008D7A	ui_8D7A	u8	mode-change pending state	FFEDF0BC, sub_FFEF40BA
+0x00008D7B	ui_8D7B	u8	UI value (init 3)	FFEDEF85
+0x00008F72	ui_8F72	u8	frame +7 bit0	FFEDF092
+0x00008F73	ui_event	u8	touch/key event code (0xFF none)	FFEDE6F7
+0x0001CC58	jpeg_len	u32	JPEG bytes consumed	jpeg_decode_to_framebuffer
+0x0001230C	jpeg_wh[2]	u16[2]	decoded image width,height	FFEDE61E
+0x0001CC60	ui_phase	u32	0 power-up,1 wait,2 run,3 idle	ui_phase_dispatch
+0x0001CC64	gps_power	u32	0 off,1 on,2 off(commanded)	gps_set_power
+0x0001CC68	gps_init_step	u32	$PMTK init list index (4 = done)	gps_command_sequencer
+0x0001CC6C	gps_datum_step	u32	0 send,1 done	gps_command_sequencer
+0x0001CC70	gps_datum_cur	u32	datum index (5 none)	gps_reset_state
+0x0001CC74	gps_datum_req	u32	requested datum	gps_request_datum
+0x0001CC78	gps_nav_step	u32	static-nav step	gps_command_sequencer
+0x0001CC7C	gps_nav_cur	u32	static-nav index (2 none)	gps_reset_state
+0x0001CC80	gps_nav_req	u32	requested static-nav	gps_request_static_nav
+0x0001CC84	gps_dgps_step	u32	DGPS step	gps_command_sequencer
+0x0001CC88	gps_dgps_cur	u32	DGPS index (3 none)	gps_reset_state
+0x0001CC8C	gps_dgps_req	u32	requested DGPS	gps_request_dgps
+0x0001CC90	gps_fix	0x10C	GPS fix struct (date,time,pos,course,GGA,GSA,36 sats); default ROM 0xFFED417C	nmea_process_sentence, accessors
+0x0001CD9C	rmc_work	0x1C	RMC parse scratch	nmea_process_sentence
+0x0001CDB8	gga_work	0x18	GGA parse scratch	nmea_process_sentence
+0x0001CDD0	nmea_rx_state	u32	0 hunt,1 body,2 cksum,3 complete	gps_rx_assemble
+0x0001CDD4	gps_valid[3]	u32[3]	RMC/GGA/GSV data fresh	gps_tick
+0x0001CDE0	gps_timer_grp	u32	GPS swtimer group	gps_init
+0x000123E2	gsv_work	0xDE	GSV work table {total,msgno,n,pad,sat block}	nmea_parse_gsv
+0x000124C0	nmea_len	u16	sentence length	gps_rx_assemble
+0x000124C2	nmea_cursor	u16	field cursor	nmea_next_field
+0x000124C4	gps_valid_ttl[3]	u16[3]	freshness countdowns	gps_tick
+0x000124CA	gps_timer[3]	u16[3]	GPS timer counters (0 freshness,1 retry,2 no-fix)	gps_tick
+0x000124D0	gps_nofix_cnt	u16	warm-restart countdown	gps_tick
+0x000124D2	gps_nofix_reload	u16	60 after fix, 180 at start	nmea_process_sentence
+0x000124D4	tick_pending	u16	TPU0 ticks not yet serviced	tpu0_tgi0a_isr
+0x000124D6	touch_ring[4]	u16[4][2]	X/Y sample ring	touch_step
+0x000124E6	touch_cur[2]	u16[2]	current X,Y sample	touch_step
+0x000124EA	touch_last[2]	u16[2]	last reported X (0x124EA), Y (0x124EC)	touch_report
+0x00012182	align_labels	16x16	RAM copy of alignment labels FFED8E74 (doc 137)	align_draw_item
+0x0001D3A0	render_state	u8[16]	renderer state ([0]==2 frame push)	lcd_seq_step
+0x0001D3B8	fb_surface	struct	320x240 surface descriptor (doc 51)	surface_open calls
+0x0001CDE4	swtimer[4]	0xC each	software timer groups {count, ctr*, reload*}	swtimer_group_create
+0x0001CE14	rt_iob_ptr[3]	ptr[3]	stdin/stdout/stderr FILE pointers (0x696B0/0x696F8/0x69740)	rt_init_iolib
+0x00068758	rt_heap_ptr	ptr	sbrk break	rt_sbrk
+0x0001CE64	rt_heap	u8[0x400]	sbrk heap	rt_sbrk
+0x0008A000	SCI0	IO	MAIN link UART	sci_hw_init
+0x0008A040	SCI2	IO	GPS UART	sci_hw_init
+0x0008A060	SCI3	IO	Bluetooth UART	sci_hw_init
+0x00087388	IPR136	IO	TPU3 (UI pump) priority, toggled 1/2 by link_dispatch_frame	FFEDC9C8
+0x00088110	TPU0	IO	5.46 ms tick timer	tick_timer_start
+0x00088130	TPU2	IO	1 ms delay timer	tpu2_delay_init
+0x00089100	S12AD1	IO	touch ADC	touch_init
+0x0008C021	P1_PODR	IO	b5 GPS power, b7 frame+7 b2	gps_set_power, FFEDCF95
+0x0008C025	P5_PODR	IO	touch drive P54/P55/P56	touch_step
+0x0008C027	P7_PODR	IO	b3 LCD RESX	lcd_hw_reset_pulse
+0x0008C028	P8_PODR	IO	b2 LCD D/CX strobe, b3 touch P83, b7 cleared on F00F	lcd_write_cmd
+0x0008281E	EXDMAC_STAT	IO	b7 busy blocks FFFF reception; b4 tested by sub_FFEF1E63	FFEDCA97
+0x06000000	LCD	ext	LCD controller port (CS5)	lcd_write_cmd
+0x070E1000	JPEG_IN_BUF	ext	image staging buffer 0x14000	link_dispatch_frame
+0x070BB800	FRAMEBUF_DEC	ext	decode target 320x240 RGB565	jpeg_decode_to_framebuffer
+0x070F5000	JPEG_WORK	ext	decoder work 0x69C	jpeg_decode_to_framebuffer

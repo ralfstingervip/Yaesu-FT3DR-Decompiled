@@ -1,0 +1,477 @@
+start	end	ida_name	new_name	confidence	summary
+05FBA6	05FBE4	sub_5FBA6	parse_dec3	Confirmed	Parses three ASCII digits at *er5 (post-incrementing er5) into d0*100 + d1*10 + d2.
+05FC0E	05FD1C	sub_5FC0E	wx_enter	Confirmed	and the internal label 05FC82 (wx_enter_common) from wx_key6 and the PDN path.
+05FD1C	05FD2C	sub_5FD1C	wx_session_reset	Confirmed	5FD1C has no rts: it clears the 5-byte key B324..B328 and falls into 5FD2C, which clears the per-session WIRES-X UI cells and resets the "connected" text fields (FF8DB4..
+05FD2C	05FDA6	sub_5FD2C	wx_session_reset_tail	Confirmed	5FD1C has no rts: it clears the 5-byte key B324..B328 and falls into 5FD2C, which clears the per-session WIRES-X UI cells and resets the "connected" text fields (FF8DB4..
+05FDA6	05FDAE	sub_5FDA6	wx_key6	Confirmed	Key 6 (the X key) while in WIRES-X.
+05FDAE	05FE38	sub_5FDAE	wx_exit	Confirmed	Key 6 (the X key) while in WIRES-X.
+05FE38	05FEA2	sub_5FE38	wx_dial	Confirmed	DIAL in WIRES-X. Popup -> close;
+05FFB6	060002	sub_5FFB6	wx_dial_s4	Confirmed	DIAL in state 4 (the "connected" screen).
+060002	06001E	sub_60002	wx_dial_s4_tail	Confirmed	DIAL in state 4 (the "connected" screen).
+06001E	06003A	sub_6001E	wx_dial_s6	Confirmed	State 6 (search menu, three items): steps B27F through desc 060192.
+06003A	060074	sub_6003A	wx_dial_s7	Confirmed	List states (7 = list, 0xB = list B, 0x10 = list C): moves the list cursor B3F1 within 0..B26A-1 (B26A = rows on the page).
+060074	0600A4	sub_60074	wx_dial_sB	Confirmed	List states (7 = list, 0xB = list B, 0x10 = list C): moves the list cursor B3F1 within 0..B26A-1 (B26A = rows on the page).
+0600A4	0600D2	sub_600A4	wx_dial_s9	Confirmed	State 9 (text entry, 16 chars at FF061A): steps the character at the edit cursor AD99 (sub_5E160, limit 0x0F).
+0600D2	0600E0	sub_600D2	wx_dial_sA	Confirmed	State 0xA: steps the selector at desc 060198 (no gate).
+0600E0	06011A	sub_600E0	wx_dial_s10	Confirmed	List states (7 = list, 0xB = list B, 0x10 = list C): moves the list cursor B3F1 within 0..B26A-1 (B26A = rows on the page).
+06011A	060146	sub_6011A	wx_dial_s11	Confirmed	State 0x11 (category screen).
+060146	06015E	sub_60146	wx_dial_s12	Confirmed	State 0x12: B280 = dial_step(060A4).
+06015E	06018C	sub_6015E	wx_dial_s13_common	Confirmed	State 0x12: B280 = dial_step(060A4).
+0601B6	0601F4	sub_601B6	wx_key7	Confirmed	Key 7 (the "select/enter" role in every WIRES-X screen).
+060308	06030E	sub_60308	wx_reject	Confirmed	off_601F4[0,1,5,8]: reject beep (sub_3FF9C: tone 0x1D + consume).
+06030E	060334	sub_6030E	wx_touch_s2_probe	Confirmed	State 2 = "SEARCH & DIRECT" (F800).
+060334	060354	sub_60334	wx_key7_s2	Confirmed	State 2 = "SEARCH & DIRECT" (F800).
+060354	06038C	sub_60354	wx_connect_target	Confirmed	State 2 = "SEARCH & DIRECT" (F800).
+06038C	0603A8	sub_6038C	wx_goto_search_menu	Confirmed	State 2 = "SEARCH & DIRECT" (F800).
+0603A8	0603AE	sub_603A8	wx_enter_search_menu	Confirmed	State 6 (the SEARCH menu): cursor = B27F (603A8 first resets it to 0).
+0603AE	0603C8	sub_603AE	wx_enter_search_menu_keep	Confirmed	State 6 (the SEARCH menu): cursor = B27F (603A8 first resets it to 0).
+0603C8	0603CE	sub_603C8	wx_set_linked_goto2	Confirmed	603C8 sets B39F.b0 ("link up") and falls into 603CE: clear busy and flags26D, wx_state = 2 (SEARCH & DIRECT).
+0603CE	0603E0	sub_603CE	wx_goto_state2	Confirmed	603C8 sets B39F.b0 ("link up") and falls into 603CE: clear busy and flags26D, wx_state = 2 (SEARCH & DIRECT).
+0603E0	06044E	sub_603E0	wx_check_target_id	Confirmed	Validates a 5-char WIRES-X ID (FF8D9F, resp.
+06044E	0604BC	sub_6044E	wx_check_room_id	Confirmed	Validates a 5-char WIRES-X ID (FF8D9F, resp.
+0604BC	0604CE	sub_604BC	wx_key7_s3	Confirmed	State 3 short press -> link up, B2A7 = 0, wx_state = 4 (connected).
+0604CE	0604DA	sub_604CE	wx_set_linked_goto4	Confirmed	State 3 short press -> link up, B2A7 = 0, wx_state = 4 (connected).
+0604DA	0604EC	sub_604DA	wx_goto_state4	Confirmed	State 3 short press -> link up, B2A7 = 0, wx_state = 4 (connected).
+0604EC	060522	sub_604EC	wx_touch_s4_probe	Confirmed	State 4 (connected to a node).
+060522	060554	sub_60522	wx_key7_s4	Confirmed	State 4 (connected to a node).
+060554	0605D8	sub_60554	wx_connect_or_room	Confirmed	State 4 (connected to a node).
+0605D8	0605F6	sub_605D8	wx_goto_search_menu_s4	Confirmed	State 4 (connected to a node).
+0605F6	060614	sub_605F6	wx_touch_s6_probe	Confirmed	60614 (IDA split it at the cmp #0xC).
+060614	060656	sub_60614	wx_key7_s6	Confirmed	60614 (IDA split it at the cmp #0xC).
+060656	06073C	sub_60656	wx_search_menu_action	Confirmed	60614 (IDA split it at the cmp #0xC).
+06073C	060780	sub_6073C	wx_connect_dnews	Confirmed	Request B314 = "DNEWS" + 067FA4 and send `]c` (sub_62ACA).
+060780	060792	sub_60780	wx_goto_list	Confirmed	State 7 = list of nodes/rooms.
+060792	0607B6	sub_60792	wx_goto_list_tail	Confirmed	State 7 = list of nodes/rooms.
+0607B6	0607D8	sub_607B6	wx_goto_text_entry	Confirmed	State 9 = free-text search entry (16 chars, FF061A).
+0607D8	0607E0	sub_607D8	wx_set_state9	Confirmed	State 9 = free-text search entry (16 chars, FF061A).
+0607E0	06080A	sub_607E0	wx_goto_list_C	Confirmed	State 0x10 = category result list (same bookkeeping as wx_goto_list).
+06080A	06081C	sub_6080A	wx_open_upload	Inferred	doc 103 shows for F-menu mode 8, "else popup 0xA7"), then sub_64660.
+06081C	060830	sub_6081C	wx_back	Confirmed	state 2 if B2C8 < '3' (not yet linked to a room), else state 4.
+060846	06087E	sub_60846	wx_touch_s7_probe	Confirmed	State 7 list: pick row B3EB of the page buffer FF104C (0x32-byte rows: [0] kind, [1..5] ID, then name...).
+06087E	060936	sub_6087E	wx_key7_s7	Confirmed	State 7 list: pick row B3EB of the page buffer FF104C (0x32-byte rows: [0] kind, [1..5] ID, then name...).
+060936	0609EE	sub_60936	wx_list_paging	Confirmed	Three entry points for the "ALL" list page request: Common tail 060994: clamp 1..999, write it as 3 ASCII digits into the request block (B336, sub_609EE), clear B334.b7 a
+0609EE	060A2C	sub_609EE	fmt_dec3	Confirmed	Writes r5 (0..999) as 3 ASCII digits at er6[0..2];
+060A2C	060A8C	sub_60A2C	wx_touch_s9_probe	Confirmed	State 9 text entry. Key 7 short press advances the edit cursor (sub_1A006, max 15: next char if not 0xFF, else wrap to 0);
+060A8C	060A9E	sub_60A8C	wx_goto_state_A	Confirmed	State 9 text entry. Key 7 short press advances the edit cursor (sub_1A006, max 15: next char if not 0xFF, else wrap to 0);
+060A9E	060ADA	sub_60A9E	wx_id_entry_enter	Confirmed	B3A0): short press -> next position (sub_1A028, max 5, wraps to 1);
+060ADA	060AF0	sub_60ADA	wx_key7_sA	Confirmed	State 0xA (text-entry confirm: 3 = SEARCH, 4 = edit again, 5 = cancel).
+060AF0	060B6A	sub_60AF0	wx_text_search_send	Confirmed	State 0xA (text-entry confirm: 3 = SEARCH, 4 = edit again, 5 = cancel).
+060B6A	060B98	sub_60B6A	wx_touch_sB_probe	Confirmed	State 0xB = LOCAL NEWS list (page F810, doc 103).
+060B98	060BBA	sub_60B98	wx_key7_sB	Confirmed	State 0xB = LOCAL NEWS list (page F810, doc 103).
+060BBA	060C34	sub_60BBA	wx_list_open_row	Confirmed	State 0xB = LOCAL NEWS list (page F810, doc 103).
+060C34	060C5E	sub_60C34	wx_list_paging_stubs	Confirmed	State 0xB = LOCAL NEWS list (page F810, doc 103).
+060C5E	060C78	sub_60C5E	wx_goto_state12	Confirmed	State 0x12 with menu selection B280 = 1.
+060C78	060C98	sub_60C78	wx_goto_state2B	Confirmed	[sub_60C78, sub_60C98] Confirmed.
+060C98	060CB8	sub_60C98	wx_goto_state2B_twin	Confirmed	[sub_60C78, sub_60C98] Confirmed.
+060CB8	060CDA	sub_60CB8	wx_save_list_pos	Confirmed	Save / restore {B269 page, B26A rows, B3EB, B3F1} in B27B..B27E.
+060CDA	060CFC	sub_60CDA	wx_restore_list_pos	Confirmed	Save / restore {B269 page, B26A rows, B3EB, B3F1} in B27B..B27E.
+060CFC	060E08	sub_60CFC	wx_touch_s10_probe	Confirmed	Confirmed. Callers: 02B250, 02BDC6 (probe);
+060E08	060E3A	sub_60E08	wx_key7_s11	Confirmed	State 0x11 = category screen (EDIT CATEGORY / ADD TO CATEGORY).
+060E3A	060E52	sub_60E3A	wx_cat_add_or_back	Confirmed	State 0x11 = category screen (EDIT CATEGORY / ADD TO CATEGORY).
+060E52	060E5E	sub_60E52	wx_cat_add_target	Confirmed	State 0x11 = category screen (EDIT CATEGORY / ADD TO CATEGORY).
+060E5E	060E78	sub_60E5E	wx_key7_s12	Confirmed	State 0x12 (F811 news menu).
+060E78	060EA4	sub_60E78	wx_back_to_news_list	Confirmed	State 0x12 (F811 news menu).
+060EA4	060EBE	sub_60EA4	wx_key7_s2B	Confirmed	State 0x2B (F814). Item 0 -> sub_65854;
+060EBE	060ED4	sub_60EBE	wx_leave_item	Confirmed	State 0x2B (F814). Item 0 -> sub_65854;
+060ED4	060F2C	sub_60ED4	wx_return_60ED4	Confirmed	State 0x2B (F814). Item 0 -> sub_65854;
+060F2C	060FE0	sub_60F2C	wx_touch_s13_probe	Confirmed	Confirmed. Callers: 02B2C6/02B2F8/02BDD6/02BDE6 (probe);
+060FE0	06101E	sub_60FE0	wx_request_news	Confirmed	LOCAL NEWS: FF1046 = 0, B334 <- template 060830, kind 'A', send `]f`;
+06101E	061040	sub_6101E	wx_goto_news_list	Confirmed	LOCAL NEWS: FF1046 = 0, B334 <- template 060830, kind 'A', send `]f`;
+061040	06104E	sub_61040	wx_goto_news_list_61040	Confirmed	LOCAL NEWS: FF1046 = 0, B334 <- template 060830, kind 'A', send `]f`;
+06104E	06105A	sub_6104E	wx_goto_category	Confirmed	LOCAL NEWS: FF1046 = 0, B334 <- template 060830, kind 'A', send `]f`;
+06105A	0610BA	sub_6105A	wx_ptt	Confirmed	table #4 slot 14. PTT pressed while WIRES-X is up.
+0611CE	0611D4	sub_611CE	wx_consume	Confirmed	Default slot of off_610BA and off_661C8.
+0611D4	061252	sub_611D4	wx_ptt_connect_target	Confirmed	PTT on SEARCH & DIRECT: validate the target ID, start TX (sub_2244C, nonzero = refused), then put the connect request into the TX: B314 = target + 067FA4, B132 = 1, AAD4.
+061252	06127A	sub_61252	wx_ptt_talk	Confirmed	PTT while linked to a room (B2C8 >= '3'): validate the room ID, start TX, then AAD4.b4 and .b1, B132 = 1 (the room ID rides the voice header).
+06127A	06130E	sub_6127A	wx_ptt_s4	Confirmed	PTT on the connected screen: same choice as wx_connect_or_room (060554): a valid target different from the room with B2A7 set -> connect to the target (wx_ptt_connect_tar
+06130E	061314	sub_6130E	wx_ptt_back	Confirmed	
+061314	06140E	sub_61314	wx_ptt_list_row	Confirmed	PTT on a list row connects to it while keying up.
+06140E	061442	sub_6140E	wx_mark_same_room	Confirmed	PTT on a list row connects to it while keying up.
+061442	0614E4	sub_61442	wx_ptt_cat_row	Confirmed	PTT on a category-list row (state 0x10).
+0614E4	061562	sub_614E4	wx_ptt_cat_row_tail	Confirmed	PTT on a category-list row (state 0x10).
+061562	061590	sub_61562	wx_row_selectable	Confirmed	B2AA; equal -> tone 0x1D and r4l = 0 (Z: not selectable).
+061590	0615AA	sub_61590	wx_ptt_s12	Confirmed	States 0x12/0x13 (news content menus F811/F812).
+0615AA	0615E4	sub_615AA	wx_arm_hold_tx	Confirmed	States 0x12/0x13 (news content menus F811/F812).
+0615E4	0615FE	sub_615E4	wx_ptt_s13	Confirmed	States 0x12/0x13 (news content menus F811/F812).
+0615FE	06160C	sub_615FE	wx_ptt_s16	Confirmed	States 0x16/0x1E: talk unless busy.b1.
+06160C	06161C	sub_6160C	wx_ptt_s1B	Confirmed	State 0x1B (UPLOAD, F816): item 0 with B326 == '0' starts the upload transmission at once: popup timer FF9599 = 0x78 (12 s), B275.b4 clear, tx_request).
+06161C	061624	sub_6161C	wx_ptt_upload_check	Confirmed	State 0x1B (UPLOAD, F816): item 0 with B326 == '0' starts the upload transmission at once: popup timer FF9599 = 0x78 (12 s), B275.b4 clear, tx_request).
+061624	06163E	sub_61624	wx_hold_tx_fire	Confirmed	State 0x1B (UPLOAD, F816): item 0 with B326 == '0' starts the upload transmission at once: popup timer FF9599 = 0x78 (12 s), B275.b4 clear, tx_request).
+06163E	0616A4	sub_6163E	wx_tx_end	Confirmed	Runs after a WIRES-X transmission.
+0616A4	0616BA	sub_616A4	wx_tx_end_3C_a	Confirmed	Runs after a WIRES-X transmission.
+0616BA	0616F2	sub_616BA	wx_tx_end_3C_b	Confirmed	Runs after a WIRES-X transmission.
+0616F2	061724	sub_616F2	wx_ptt_up	Confirmed	Releasing PTT during the 3.5 s hold (state 0x29) cancels it: tone 0xFF and return by B26E (0 -> sub_64690, 1 -> sub_646C8, else 060C64 = state 0x12 keeping B280).
+061724	0617D4	sub_61724	wx_key8	Confirmed	Key 8 toggles between the WIRES-X screen (B39F.b0) and the normal display.
+0617D4	0617EA	sub_617D4	wx_vfo_refresh	Confirmed	Key 8 toggles between the WIRES-X screen (B39F.b0) and the normal display.
+06194E	061A26	sub_6194E	wx_key8_cases	Confirmed	Each case first checks its busy bits (refuse -> consume, r4l = 1), then: 6194E/61964 (states 2/4): if B39F.b4 -> r4l = 0, else toggle B39F.b0 (WIRES-X screen on/off).
+061A26	061A2E	sub_61A26	wx_key8_refuse	Confirmed	Each case first checks its busy bits (refuse -> consume, r4l = 1), then: 6194E/61964 (states 2/4): if B39F.b4 -> r4l = 0, else toggle B39F.b0 (WIRES-X screen on/off).
+061A2E	061A88	sub_61A2E	gm_key8	Confirmed	off_618FE case bodies (busy.b0 -> refuse, else r4l = 0).
+061A88	061ABC	sub_61A88	gm_key8_short	Confirmed	off_618FE case bodies (busy.b0 -> refuse, else r4l = 0).
+061ABC	061B36	sub_61ABC	wx_key5	Confirmed	Key 5: B2A3 = 0; long press -> consume.
+061B36	061B4C	sub_61B36	wx_id_entry_leave	Confirmed	Key 5: B2A3 = 0; long press -> consume.
+061B4C	061B88	sub_61B4C	wx_id_entry_done	Confirmed	DIRECT entry: the 5 chars at B3A3..
+061B88	061BDC	sub_61B88	gm_key5	Confirmed	B39F.b4, off_618FE / off_617EA probe;
+061BDC	061BE2	sub_61BDC	gm_key5_refuse	Confirmed	B39F.b4, off_618FE / off_617EA probe;
+061BE2	061C54	sub_61BE2	wx_render	Confirmed	Builds the mode-9 page for SUB.
+061C58	061C5A	nullsub_74	nullsub_74	Confirmed	rts-only stub.
+061D6E	061D7C	sub_61D6E	wx_row_mark_sel	Confirmed	[sub_61D6E, sub_61D7C] Confirmed.
+061D7C	061D8A	sub_61D7C	wx_row_mark_sel_twin	Confirmed	[sub_61D6E, sub_61D7C] Confirmed.
+061D8A	061D8C	nullsub_38	nullsub_38	Confirmed	rts-only stub.
+061D8C	061DBC	sub_61D8C	wx_busy_popup	Confirmed	label 061D8C), 06764C/067786 (61DD2), 067054/0677EA (61E4A).
+061DBC	061DD2	sub_61DBC	wx_busy_popup_expired	Confirmed	label 061D8C), 06764C/067786 (61DD2), 067054/0677EA (61E4A).
+061DD2	061E06	sub_61DD2	wx_busy_popup_gm	Confirmed	label 061D8C), 06764C/067786 (61DD2), 067054/0677EA (61E4A).
+061E06	061E4A	sub_61E06	wx_result_popup	Confirmed	label 061D8C), 06764C/067786 (61DD2), 067054/0677EA (61E4A).
+061E4A	061E58	sub_61E4A	wx_popup_active	Confirmed	label 061D8C), 06764C/067786 (61DD2), 067054/0677EA (61E4A).
+061E58	061E5E	sub_61E58	wx_render_home	Confirmed	States 0/1: the normal home display (sub_6A32).
+061E5E	061EEA	sub_61E5E	wx_render_s2	Confirmed	SEARCH & DIRECT page (F800).
+061EEA	061F2C	sub_61EEA	wx_target_line_icon	Inferred	A9F7.b0 is set, B050 = 0x00010003 and draw the target record's icon (062004 with er1 = FF8D9E: kind '3'/'4' -> sub_627CC else sub_6277E).
+061F2C	061FFE	sub_61F2C	wx_render_s3	Confirmed	shared with 061EEA. Connected-to-node page (state 3/4 body).
+061FFE	06201A	sub_61FFE	wx_draw_kind_icon	Confirmed	shared with 061EEA. Connected-to-node page (state 3/4 body).
+06201A	0620A6	sub_6201A	wx_render_s4	Confirmed	Connected page. busy.b0 (`]c` room connect outstanding): the in-flight popup with the callback 0620A6 (vestigial er5 argument, doc 101);
+0620B8	0620E2	sub_620B8	wx_render_s5	Confirmed	State 5 = a transient "result" state.
+0620E2	0620EE	sub_620E2	wx_goto2_render	Confirmed	State 5 = a transient "result" state.
+0620EE	062122	sub_620EE	wx_render_popup	Confirmed	Confirmed. Callers: wx_render (620EE);
+062122	062178	sub_62122	wx_render_s6	Confirmed	SEARCH menu page (F813).
+062186	0621A6	sub_62186	wx_row_s6	Confirmed	Row callback for the SEARCH menu: mark the selected row (061D6E, er5 = 0-4 -> 621DE: category bank name = 16 chars at FFAE22 + 16*row (stops at 0xFF) into B05A;
+0621DE	062220	sub_621DE	wx_row_cat_name	Confirmed	Row callback for the SEARCH menu: mark the selected row (061D6E, er5 = 0-4 -> 621DE: category bank name = 16 chars at FFAE22 + 16*row (stops at 0xFF) into B05A;
+062220	062236	sub_62220	wx_row_attr_on	Confirmed	Row callback for the SEARCH menu: mark the selected row (061D6E, er5 = 0-4 -> 621DE: category bank name = 16 chars at FFAE22 + 16*row (stops at 0xFF) into B05A;
+062236	062240	sub_62236	wx_row_attr1	Confirmed	Row callback for the SEARCH menu: mark the selected row (061D6E, er5 = 0-4 -> 621DE: category bank name = 16 chars at FFAE22 + 16*row (stops at 0xFF) into B05A;
+062282	0623C6	sub_62282	wx_render_s7	Confirmed	caller in the listings (calls 06244E, inside 62434).
+0623C6	0623DC	sub_623C6	wx_row_list_attr	Confirmed	caller in the listings (calls 06244E, inside 62434).
+0623DC	062434	sub_623DC	wx_list_title	Confirmed	caller in the listings (calls 06244E, inside 62434).
+062434	062488	sub_62434	wx_row_s7	Confirmed	caller in the listings (calls 06244E, inside 62434).
+062488	0624BE	sub_62488	wx_render_s8	Confirmed	(624CA, which 624BE falls into).
+0624BE	0624CA	sub_624BE	wx_no_data_popup	Confirmed	(624CA, which 624BE falls into).
+0624CA	062514	sub_624CA	wx_no_data_return	Confirmed	(624CA, which 624BE falls into).
+062514	062568	sub_62514	wx_render_s9	Confirmed	Text-entry page: busy b2/b4 -> in-flight popup, then clear b2, b4 and flags26D.b1;
+062568	06256A	nullsub_57	nullsub_57	Confirmed	rts-only stub.
+06256A	062574	sub_6256A	wx_attr7	Confirmed	Text-entry page: busy b2/b4 -> in-flight popup, then clear b2, b4 and flags26D.b1;
+062598	0625F6	sub_62598	wx_text_line	Inferred	then B050 = 0, then 0x13.
+06262A	06267E	sub_6262A	wx_render_id_entry	Confirmed	ID-entry page: busy b2/b4 -> in-flight popup, then clear b2, b4, flags26D.b1;
+06267E	062690	sub_6267E	wx_render_sA	Confirmed	State 0xA (search confirm): row callback B288 = nullsub_46, draw with sub_52AE8 (the SEARCH / EDIT / CANCEL button page).
+062690	062692	nullsub_17	nullsub_17	Confirmed	rts-only stub.
+062692	062722	sub_62692	wx_render_sB	Confirmed	LOCAL NEWS list page (F810): no rows -> waiting popup, then "no data";
+062730	06277E	sub_62730	wx_row_sB	Confirmed	(061FFE, 062434, 062990, 062A5A, 066F26);
+06277E	0627BE	sub_6277E	draw_node_icon	Confirmed	(061FFE, 062434, 062990, 062A5A, 066F26);
+0627BE	0627CC	sub_627BE	wx_row_sB_first	Confirmed	(061FFE, 062434, 062990, 062A5A, 066F26);
+0627CC	062820	sub_627CC	draw_room_icon	Confirmed	(061FFE, 062434, 062990, 062A5A, 066F26);
+062820	062850	sub_62820	fmt_count3	Confirmed	Copies a 3-digit ASCII count from *er5 to er6[0..2], blanking leading '0's (only the first two positions).
+062850	0628C2	sub_62850	wx_render_s10	Confirmed	Category list page (F823): no rows -> popup (callback 628C2) then "no data";
+0628C2	0628DA	sub_628C2	wx_cat_title	Confirmed	Category list page (F823): no rows -> popup (callback 628C2) then "no data";
+0628DA	062904	sub_628DA	wx_row_s10	Confirmed	Category list page (F823): no rows -> popup (callback 628C2) then "no data";
+062904	062916	sub_62904	wx_render_s11	Confirmed	Category screen: open category -> sub_6EAC4, else bank list sub_6EA54.
+062916	062938	sub_62916	wx_row_cat	Confirmed	off_62938[row]: 0-4 -> 621DE (bank name), 5 -> 66CD0, 6 -> 66FAA.
+062954	062990	sub_62954	wx_render_s12	Confirmed	News content menu (F811): while busy.b0 popup;
+062990	0629B4	sub_62990	wx_draw_open_rec	Confirmed	News content menu (F811): while busy.b0 popup;
+0629EA	0629FC	sub_629EA	wx_render_upload_page	Confirmed	
+062A32	062A5A	sub_62A32	wx_render_s13	Confirmed	on clear sub_646DA and clear busy.b0;
+062A5A	062A80	sub_62A5A	wx_result_line	Confirmed	current room record (B2C8) as node row if B26F.b0 else as room row.
+062ACA	062B46	sub_62ACA	wx_send_room_c	Confirmed	`]c` (B0B9 = 0x0D): connect to a room / open an item.
+062B46	062B7A	sub_62B46	wx_send_room_c_tail	Confirmed	`]c` (B0B9 = 0x0D): connect to a room / open an item.
+062B7A	062C32	sub_62B7A	wx_send_list_l	Confirmed	`]l` (B0B9 = 0x0E): dest + the 9-byte argument B299, busy.b1.
+062C32	062DA4	sub_62C32	wx_send_read_r	Confirmed	"] 'r' (incl. DNEWS)").
+062DA4	062E14	sub_62DA4	wx_send_search_q	Confirmed	`]q` (B0B9 = 0x12): "who is the node" query sent on entry.
+062E14	062EAC	sub_62E14	wx_send_connect_hash	Confirmed	`]#` (B0B9 = 0x13): connect to node/room B314.
+062EAC	062F64	sub_62EAC	wx_send_connect_num	Confirmed	`]#` (0x13) with the typed 5-digit number B3A3 + ROM 0x004C14[0..4];
+062F64	062FC6	sub_62F64	wx_send_star	Confirmed	no busy bit, no redraw (doc 86: disconnect-type request, Inferred).
+062FC6	063040	sub_62FC6	wx_send_list_f	Confirmed	`]f` (B0B9 = 0x14): list/search request.
+063040	0630E8	sub_63040	wx_send_cat_g	Confirmed	`]g` (B0B9 = 0x15): ask the node for the status of every ID in the opened category bank.
+0630E8	0631B8	sub_630E8	wx_send_cat_g_tail	Confirmed	`]g` (B0B9 = 0x15): ask the node for the status of every ID in the opened category bank.
+0631C4	063216	sub_631C4	wx_msg_commit	Confirmed	If FF8997 != 0 (a beep-on-send setting, Inferred) AAD4.b7 and tone B312.
+063216	0632F4	sub_63216	wx_poll	Confirmed	WIRES-X background poll.
+0632F4	063304	sub_632F4	wx_keep_popup_on_ptt	Confirmed	
+063304	063360	sub_63304	wx_timers	Confirmed	State 0x29 with PTT held (A9EA == 2) and FF959B expired -> fire the held transmission (sub_61624).
+063360	063390	sub_63360	wx_upload_timeout_tone	Confirmed	60 s FF95E6 runs out, once (B275.b4) play tone 0x5B.
+06345E	0634A4	sub_6345E	wx_rx_node_info	Confirmed	634A4 from 06345E; 63514 from 0634A4 and 063552.
+0634A4	063514	sub_634A4	wx_store_node_info	Confirmed	634A4 from 06345E; 63514 from 0634A4 and 063552.
+063514	063552	sub_63514	wx_store_node_pos	Confirmed	634A4 from 06345E; 63514 from 0634A4 and 063552.
+063552	063582	sub_63552	wx_rx_node_update	Confirmed	er1 = node ID in the message, er2 = room block.
+0635EE	06363C	sub_635EE	wx_rx_conn_fail	Confirmed	A failed connect (busy b2/b6 outstanding, or a name search from states 7/9 with busy.b4 and B26B.b2): B2C8 = '2', B311 = r3l (answer code), tone 0x58, 817E.b1, popup time
+06363C	0636B2	sub_6363C	wx_room_lost	Confirmed	A failed connect (busy b2/b6 outstanding, or a name search from states 7/9 with busy.b4 and B26B.b2): B2C8 = '2', B311 = r3l (answer code), tone 0x58, 817E.b1, popup time
+0636B2	063720	sub_636B2	wx_rx_room_status	Confirmed	Confirmed. Callers: node-answer code (not listed).
+063720	063768	sub_63720	wx_store_room	Confirmed	Copies 0x4F bytes er1 -> B2AA (node + room block), the 5-byte key at room+0x31 -> B324 and B324 -> B329.
+063768	063858	sub_63768	wx_connected	Confirmed	The node confirmed the link to the room we asked for.
+063858	06387A	sub_63858	wx_answer_is_other	Confirmed	r3l = 0 when room+1[0..4] equals the asked ID B349, else 1.
+06387A	06389E	sub_6387A	wx_search_hit	Confirmed	With a name search outstanding (busy.b4 and B26B.b2): if the room name B2CE[16] equals the search text B339 (63B3E) clear B26B.b2, return 1.
+06389E	0638C6	sub_6389E	wx_connected_notice	Confirmed	B40E = state, tone 0x56, AA34.b5, FF9538 = 2.5 s, 817E.b1, popup 5.
+0638C6	063904	sub_638C6	wx_connected_other	Confirmed	The node linked us to a different room than asked: in the content states keep the page (B26E = 2, B26B.b5 clear);
+063AAA	063AF6	sub_63AAA	wx_rx_no_data	Confirmed	"No data / not found" answer: cursor 0, tone 0x54, AA34.b5, 2.5 s, 817E.b1, popup 0x0C, BC59.b6.
+063AF6	063B3E	sub_63AF6	wx_search_text_in_answer	Confirmed	Length n of the search text B339 (up to the first ' ', max 16);
+063B3E	063B5A	sub_63B3E	wx_name_eq_search	Confirmed	Z set when the 16-char room name B2CE equals the search text B339.
+063B5A	063B74	sub_63B5A	wx_defaults_settings	Confirmed	63B5A: 16 bytes of ROM 0x00F6D6 -> FFAE22 (first category name), then shares the tail at 063B8C: 0x100 bytes of 0xFF after it, then 0x300 bytes of 0xFF at FFB5B8 (categor
+063B74	063BB8	sub_63B74	gm_defaults_tables	Confirmed	63B5A: 16 bytes of ROM 0x00F6D6 -> FFAE22 (first category name), then shares the tail at 063B8C: 0x100 bytes of 0xFF after it, then 0x300 bytes of 0xFF at FFB5B8 (categor
+063BB8	063BFC	sub_63BB8	gm_init_cold	Confirmed	B92A = 0xFF, B928 = 0, B95C = B95D = 0, then gm_reset (063C16).
+063C04	063C16	sub_63C04	gm_enter	Confirmed	Enter mode 10: B2A3 = 0, B2A5 = 1, home_app_mode = 10, then reset: group index B3EC = 0, load the group table from EEPROM (sub_3DA80), count groups (63D2C), load the memb
+063C16	063C8E	sub_63C16	gm_reset	Confirmed	Enter mode 10: B2A3 = 0, B2A5 = 1, home_app_mode = 10, then reset: group index B3EC = 0, load the group table from EEPROM (sub_3DA80), count groups (63D2C), load the memb
+063C94	063CEC	sub_63C94	gm_load_members	Confirmed	Group name: 16 B ROM 05DDEC -> FFB4A8 (default "ALL"-style name), load group B3EC's member table (sub_3DBB2, r3l = 0 -> failed -> defaults: 24 x 32 B from ROM 06981E into
+063CEC	063D2C	sub_63CEC	gm_members_default	Confirmed	Group name: 16 B ROM 05DDEC -> FFB4A8 (default "ALL"-style name), load group B3EC's member table (sub_3DBB2, r3l = 0 -> failed -> defaults: 24 x 32 B from ROM 06981E into
+063D2C	063D50	sub_63D2C	gm_count_groups	Confirmed	B3EE = number of the 17 16-byte names at FFB4A8 that are not 0xFF.
+063D50	063D74	sub_63D50	gm_count_members	Confirmed	among the 24 32-byte records at FFB5B8 (doc 86 reuses B3EF as the GM beacon interval index: word_5DFD0[B3EF]).
+063D74	063DA2	sub_63D74	gm_select_new_group	Confirmed	capped at 16) -> B3EC and B3EB;
+063DA2	063DC6	sub_63DA2	gm_count_selected	Confirmed	B414 = members whose byte +0x12 has bit 0 set (selected).
+063DC6	063E0E	sub_63DC6	gm_key1	Confirmed	Key 1 in mode 10: long press with FF8DD7 == 1 -> sub_1CEC4.
+063E0E	063E36	sub_63E0E	gm_dial	Confirmed	consume; else B092 = 0 and off_63E36[wx_state]: 7/8 -> 63F4C, 0x13 -> 64134, 0x14..
+063F4A	063F4C	sub_63F4A	content_dial_nop	Confirmed	
+063F4C	063F76	sub_63F4C	gm_dial_members	Confirmed	GM states 7/8: busy.b0 -> consume;
+063F76	063F84	sub_63F76	content_dial_s32	Confirmed	dial_step(desc 064252).
+063F84	063F9C	sub_63F84	content_dial_text	Confirmed	States 0x20/0x33: dial the character at FF061A[AD99] (sub_1B992).
+063F9C	063FA0	sub_63F9C	content_dial_ret	Confirmed	States 0x20/0x33: dial the character at FF061A[AD99] (sub_1B992).
+063FA0	063FDA	sub_63FA0	content_dial_s35	Confirmed	States 0x35/0x36: B3EF < 0 -> consume.
+063FDA	063FFE	sub_63FDA	content_dial_s37	Confirmed	State 0x37 (message list): B92A (count-1?) < 0 -> consume;
+06400C	064050	sub_6400C	content_dial_s38	Confirmed	State 0x38: chooses the descriptor by the open message's type byte
+064050	06406C	sub_64050	content_dial_s39	Confirmed	State 0x39: range 0..B92A-1 on the cursor (B92A < 0 -> consume).
+06407A	064082	sub_6407A	content_dial_s3A	Confirmed	State 0x3A (message options).
+064082	0640E6	sub_64082	content_dial_s3A_body	Confirmed	State 0x3A (message options).
+0640E6	064106	sub_640E6	content_dial_s3B	Confirmed	State 0x3B: dial the character FF300A[AD99];
+064106	06410A	sub_64106	content_dial_s3C	Confirmed	dial_step(desc 06965A).
+06410A	064118	sub_6410A	content_dial_s3D	Confirmed	dial_step(desc 06965A).
+064118	064134	sub_64118	content_dial_s3E	Confirmed	Same body as content_dial_s39.
+064134	064150	sub_64134	gm_dial_s13	Confirmed	GM state 0x13: B281 = dial_step(06424C) unless busy.b0.
+064150	06415E	sub_64150	content_dial_s14	Confirmed	sub_6415E] Confirmed: dial_step(0642A0) / dial_step(0642A6).
+06415E	06416C	sub_6415E	content_dial_s15	Confirmed	sub_6415E] Confirmed: dial_step(0642A0) / dial_step(0642A6).
+06416C	064192	sub_6416C	content_dial_list	Confirmed	States 0x16/0x1E: busy.b1 or no rows -> consume;
+064192	064196	sub_64192	content_dial_s17	Confirmed	content_dial_s18 [sub_64196]: dial_step(0642AC).
+064196	0641A4	sub_64196	content_dial_s18	Confirmed	content_dial_s18 [sub_64196]: dial_step(0642AC).
+0641A4	0641AC	sub_641A4	content_dial_s19	Confirmed	content_dial_s18 [sub_64196]: dial_step(0642AC).
+0641AC	0641BA	sub_641AC	content_dial_s1B	Confirmed	content_dial_s18 [sub_64196]: dial_step(0642AC).
+0641BA	0641BC	sub_641BA	content_dial_s1C	Confirmed	content_dial_s18 [sub_64196]: dial_step(0642AC).
+0641BC	0641BE	sub_641BC	content_dial_s1D	Confirmed	content_dial_s18 [sub_64196]: dial_step(0642AC).
+0641BE	0641C2	sub_641BE	content_dial_s1F	Confirmed	content_dial_s18 [sub_64196]: dial_step(0642AC).
+0641C2	0641C6	sub_641C2	content_dial_s22	Confirmed	content_dial_s18 [sub_64196]: dial_step(0642AC).
+0641C6	0641D2	sub_641C6	content_dial_s23	Confirmed	content_dial_s18 [sub_64196]: dial_step(0642AC).
+0641D2	0641F2	sub_641D2	content_dial_s24	Confirmed	sub_641F2] Confirmed.
+0641F2	064212	sub_641F2	content_dial_s25	Confirmed	sub_641F2] Confirmed.
+064212	064232	sub_64212	gm_set_cursor	Confirmed	Cursor B3F1 = byte_64232[r3l] (per-state initial cursor), B286 = 0.
+0642DC	064300	sub_642DC	content_dial_s34	Confirmed	State 0x34: range 0..byte_64300[FF0619] (= {3,4,5,6,7,0}) on B286.
+064306	06430C	sub_64306	content_consume	Confirmed	
+064444	064446	nullsub_93	nullsub_93	Confirmed	rts-only stub.
+064446	064492	sub_64446	gm_key_enter_group	Confirmed	(644A0); 061A2E, 064446, 06470C, 0657DC (644B8).
+0644A0	0644B8	sub_644A0	gm_goto_state3	Confirmed	(644A0); 061A2E, 064446, 06470C, 0657DC (644B8).
+0644B8	0644DC	sub_644B8	gm_goto_state7	Confirmed	(644A0); 061A2E, 064446, 06470C, 0657DC (644B8).
+0644DC	0644FA	sub_644DC	gm_touch_s7_probe	Confirmed	GM member list (state 7, page F701).
+0644FA	064504	sub_644FA	gm_key_s7	Confirmed	GM member list (state 7, page F701).
+064504	06457C	sub_64504	gm_member_toggle	Confirmed	GM member list (state 7, page F701).
+064634	064640	sub_64634	msg_box_sel3	Confirmed	doc 103); 06080A, 064640, 06685C (64660).
+064640	064648	sub_64640	msg_box_from_fmenu	Confirmed	doc 103); 06080A, 064640, 06685C (64660).
+064648	064654	sub_64648	msg_box_sel1	Confirmed	doc 103); 06080A, 064640, 06685C (64660).
+064654	064660	sub_64654	msg_box_sel2	Confirmed	doc 103); 06080A, 064640, 06685C (64660).
+064660	064678	sub_64660	wx_open_msgbox	Confirmed	doc 103); 06080A, 064640, 06685C (64660).
+064678	06468A	sub_64678	gm_goto_state2	Confirmed	cursor 0, state 2.
+06468A	0646C2	sub_6468A	wx_news_menu_enter	Confirmed	State 0x13 (F812, the room/news item menu): cursor = B281 (6468A sets it to 1, 646C2 too), B26E = 0 (6468A, "from list") or 1 (646C8, "from connected room"), restore the 
+0646C2	0646C8	sub_646C2	wx_show_msg	Confirmed	State 0x13 (F812, the room/news item menu): cursor = B281 (6468A sets it to 1, 646C2 too), B26E = 0 (6468A, "from list") or 1 (646C8, "from connected room"), restore the 
+0646C8	0646DA	sub_646C8	wx_msgbox	Confirmed	State 0x13 (F812, the room/news item menu): cursor = B281 (6468A sets it to 1, 646C2 too), B26E = 0 (6468A, "from list") or 1 (646C8, "from connected room"), restore the 
+0646DA	0646FA	sub_646DA	wx_news_got	Confirmed	State 0x13 (F812, the room/news item menu): cursor = B281 (6468A sets it to 1, 646C2 too), B26E = 0 (6468A, "from list") or 1 (646C8, "from connected room"), restore the 
+0646FA	064706	sub_646FA	msgbox_touch_sel	Confirmed	State 0x32 = message box menu (F600).
+064706	06470C	sub_64706	msgbox_key7	Confirmed	State 0x32 = message box menu (F600).
+06470C	0647B4	sub_6470C	msgbox_action	Confirmed	State 0x32 = message box menu (F600).
+0647B4	0647C6	sub_647B4	msg_list_restore_37	Confirmed	Message-list states: 0x37 (folder 1), 0x39, 0x3E (inbox).
+0647C6	0647D8	sub_647C6	msg_list_empty	Confirmed	Message-list states: 0x37 (folder 1), 0x39, 0x3E (inbox).
+0647D8	0647EA	sub_647D8	msg_list_restore_39	Confirmed	Message-list states: 0x37 (folder 1), 0x39, 0x3E (inbox).
+0647EA	0647FC	sub_647EA	msg_list_39	Confirmed	Message-list states: 0x37 (folder 1), 0x39, 0x3E (inbox).
+0647FC	06481E	sub_647FC	msg_open_inbox	Confirmed	Message-list states: 0x37 (folder 1), 0x39, 0x3E (inbox).
+06481E	064822	sub_6481E	msg_list_3E_stub	Confirmed	Message-list states: 0x37 (folder 1), 0x39, 0x3E (inbox).
+064822	064846	sub_64822	msg_list_restore_3E	Confirmed	Message-list states: 0x37 (folder 1), 0x39, 0x3E (inbox).
+064846	064874	sub_64846	msg_store_clear	Confirmed	B92A = 0xFF (empty); 20 x 0x80-byte message slots at FEEF20 are filled from the blank record ROM 064874.
+0648F4	0648FE	sub_648F4	msg_key7_s37	Confirmed	Message list (state 0x37).
+0648FE	0649CC	sub_648FE	msg_open_selected	Confirmed	Message list (state 0x37).
+0649CC	064A3A	sub_649CC	msg_loaded	Confirmed	BAA3 = 0, 817E.b1, BA93.b6 off (FF9567 = 1 s), copy the 80-byte text Else: length/lines (sub_652F6), header line (sub_539A0, er2 = FF302E), and state 0x38 (message view) 
+064A42	064A58	sub_64A42	msg_page_first	Confirmed	Paging inside the message list: first page (B928 = B95C = B95D = 0, then the reload at 064A70), previous page (B928 != 0 -> 06FA08), next page (B95D != 0 -> sub_6F942);
+064A58	064A5E	sub_64A58	msg_page_prev	Confirmed	Paging inside the message list: first page (B928 = B95C = B95D = 0, then the reload at 064A70), previous page (B928 != 0 -> 06FA08), next page (B95D != 0 -> sub_6F942);
+064A5E	064A64	sub_64A5E	msg_page_prev_go	Confirmed	Paging inside the message list: first page (B928 = B95C = B95D = 0, then the reload at 064A70), previous page (B928 != 0 -> 06FA08), next page (B95D != 0 -> sub_6F942);
+064A64	064A70	sub_64A64	msg_page_next	Confirmed	Paging inside the message list: first page (B928 = B95C = B95D = 0, then the reload at 064A70), previous page (B928 != 0 -> 06FA08), next page (B95D != 0 -> sub_6F942);
+064A94	064A9A	sub_64A94	msg_back_stub	Confirmed	Paging inside the message list: first page (B928 = B95C = B95D = 0, then the reload at 064A70), previous page (B928 != 0 -> 06FA08), next page (B95D != 0 -> sub_6F942);
+064AD4	064B02	sub_64AD4	msg_editor_clear	Confirmed	editor block ROM 0x00F6D6 -> FF061A, BBED = 0.
+064B02	064B38	sub_64B02	msg_text_to_editor	Confirmed	backwards) become 0xFF;
+064B38	064B58	sub_64B38	msg_text_to_editor_raw	Confirmed	the 06530A entry.
+064B58	064B6A	sub_64B58	msg_goto_view	Confirmed	cursor 0, state 0x38 (message view, F640 "VOICE PLAY" page family).
+064B6A	064B8C	sub_64B6A	msg_goto_editor	Confirmed	Editor: AD99 = text length (max 0x4F), cursor 0, B286 = 0, state 0x33;
+064B8C	064B96	sub_64B8C	msg_goto_editor_20	Confirmed	Editor: AD99 = text length (max 0x4F), cursor 0, B286 = 0, state 0x33;
+064B96	064BD0	sub_64B96	msgbox_back	Confirmed	Back from a message list: in mode 9/10 from states 0x1F/0x22 -> 065940;
+064BD0	064BE6	sub_64BD0	msg_goto_confirm	Confirmed	B92C = state, B3F6 = 0, state 0x3D (delete/confirm dialog, Inferred).
+064BE6	064BEE	sub_64BE6	msg_opt_A	Confirmed	sub_64BEE] Confirmed (touch: preset B3EB = 0xA / 0xB).
+064BEE	064BF6	sub_64BEE	msg_opt_B	Confirmed	sub_64BEE] Confirmed (touch: preset B3EB = 0xA / 0xB).
+064BF6	064C4A	sub_64BF6	msg_key7_s38	Confirmed	sub_64BEE] Confirmed (touch: preset B3EB = 0xA / 0xB).
+064C5A	064C82	sub_64C5A	msg_view_back	Confirmed	sub_64BEE] Confirmed (touch: preset B3EB = 0xA / 0xB).
+064C82	064C8C	sub_64C82	msg_key7_s3E	Confirmed	Inbox list (state 0x3E): long press -> box menu.
+064C8C	064D80	sub_64C8C	msg_open_inbox_row	Confirmed	Inbox list (state 0x3E): long press -> box menu.
+064DA8	064DB2	sub_64DA8	msg_key7_s39	Confirmed	Folder-2 list (state 0x39;
+064DB2	064F76	sub_64DB2	msg_open_outbox_row	Confirmed	Folder-2 list (state 0x39;
+064F76	064F9E	sub_64F76	msg_goto_options	Confirmed	with cursor 0 for a typed record, 3 for an empty-type one.
+064F9E	064FB0	sub_64F9E	msg_set_reply	Confirmed	cursor 2, state 0x23.
+064FB0	065024	sub_64FB0	msg_key7_s3A	Confirmed	[0x3A] -> 064FC0; 02B85E/02BA26/064FB0 (65024).
+065024	06502A	sub_65024	msg_opt_confirm	Confirmed	[0x3A] -> 064FC0; 02B85E/02BA26/064FB0 (65024).
+06502E	065030	j_nullsub_61	j_nullsub_61	Confirmed	rts-only stub.
+065058	065064	sub_65058	msg_forward_or_mode8	Confirmed	Mode 8 -> sub_65668; else the forward list (65076).
+065064	06506A	sub_65064	msg_mode8_forward	Confirmed	Mode 8 -> sub_65668; else the forward list (65076).
+065074	065076	nullsub_61	nullsub_61	Confirmed	rts-only stub.
+065076	065090	sub_65076	msg_goto_forward	Confirmed	
+065090	0650A4	sub_65090	msg_goto_rename	Confirmed	AD99 = length of the 16-char name FF300A (max 0x0F), state 0x3B.
+0650A4	065138	sub_650A4	msg_key7_s3B	Confirmed	State 0x3B (rename, 16 chars FF300A).
+065138	06514A	sub_65138	pad_ff_to_space	Confirmed	State 0x3B (rename, 16 chars FF300A).
+06514A	06519E	sub_6514A	msg_editor_key7	Confirmed	Message editor (80 chars at FF061A, cursor AD99).
+06519E	0651E8	sub_6519E	msg_editor_done	Confirmed	Message editor (80 chars at FF061A, cursor AD99).
+0651E8	065202	sub_651E8	msg_goto_symbols	Confirmed	Message editor (80 chars at FF061A, cursor AD99).
+065202	0652B0	sub_65202	msg_goto_templates	Confirmed	Template picker (state 0x25).
+0652B0	0652D0	sub_652B0	msg_save_editor_pos	Confirmed	Template picker (state 0x25).
+0652D0	0652F0	sub_652D0	msg_restore_editor_pos	Confirmed	Template picker (state 0x25).
+0652F6	065302	sub_652F6	msg_count_lines_652F6	Confirmed	Length of the editor text FF061A (up to the first 0xFF, max 0x50) -> <0x29 -> 1, <0x3D -> 2, <0x51 -> 3, else 4.
+065302	06533C	sub_65302	msg_set_len_6530A	Confirmed	Length of the editor text FF061A (up to the first 0xFF, max 0x50) -> <0x29 -> 1, <0x3D -> 2, <0x51 -> 3, else 4.
+06533C	065350	sub_6533C	msg_key7_s34	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+065350	06536E	sub_65350	msg_compose_back	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+06536E	065374	sub_6536E	msg_compose_edit	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+065374	06537A	sub_65374	msg_compose_templates	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+06537A	0653B8	sub_6537A	msg_preview_6537A	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+0653B8	0653D2	sub_653B8	msg_after_copy_653B8	Confirmed	State 0x34 (compose menu): item 0 consume, 1 -> send/preview (6537A), 2 -> templates (65202), 3 -> edit again (64B6A), others -> back by purpose B41D: 2 -> options (64F76
+0653D2	0653F8	sub_653D2	msg_key7_s21	Confirmed	State 0x21 (send page F621): rows 0..lines+3 are the text lines (065434 region -> consume);
+0653F8	0653FE	sub_653F8	msg_s21_tail	Confirmed	State 0x21 (send page F621): rows 0..lines+3 are the text lines (065434 region -> consume);
+065410	065442	sub_65410	msg_send_page_65410	Confirmed	Send the composed text to the current room (WIRES-X): B3FD = 0x21;
+065442	06545A	sub_65442	msg_dest_room	Confirmed	Send the composed text to the current room (WIRES-X): B3FD = 0x21;
+06545A	0654F8	sub_6545A	msg_send_to_member	Confirmed	State 0x35 recipient picker.
+0654F8	06558E	sub_654F8	msg_send_654F8	Confirmed	State 0x35 recipient picker.
+06558E	0655A0	sub_6558E	msg_goto_sending	Confirmed	State 0x35 recipient picker.
+0655B0	0656BA	sub_655B0	msg_forward_to	Confirmed	Forward the open message (with its file) to a member or to all: same recipient selection as 6545A into B3FE/B403, B95E = 2, sub_5EE1A (busy check, nonzero -> return), typ
+0656BA	0656BC	sub_656BA	msg_nop_656BA	Confirmed	Forward the open message (with its file) to a member or to all: same recipient selection as 6545A into B3FE/B403, B95E = 2, sub_5EE1A (busy check, nonzero -> return), typ
+0656BC	0656C6	sub_656BC	msg_0656BC	Confirmed	reads ram_FFB3F6 Body (complete):
+0656C6	06579A	sub_656C6	msg_0656C6	Skeleton	calls sub_6F414, sub_1BF8E, sub_6475A, sub_65D84, nullsub_41, sub_64F06, sub_6F3F6, sub_64782, sub_65DAE, nullsub_40, sub_64A42 writes sd_job_BAA3, wx_state reads msg_ret
+06579A	0657AA	sub_6579A	msg_06579A	Skeleton	calls sub_3FFA0 writes wx_state reads msg_ret_B92C
+0657CC	0657DC	sub_657CC	msg_0657CC	Skeleton	calls sub_1BF8E, sub_647FC writes sd_job_BAA3
+0657DC	065854	sub_657DC	msg_0657DC	Skeleton	calls sub_6080A, sub_6073C, sub_658A4, sub_65854, sub_644B8, sub_3FFA0 writes gm_B420, popup_tmr, tone_ev, wx_req_flags reads key_flags, wx_busy, wx_sel
+065854	06587C	sub_65854	msg_065854	Skeleton	calls sub_659AE, sub_62B7A, sub_6587C, sub_3FFA0 writes ram_FFB47B reads ram_FFB328
+06587C	065890	sub_6587C	msg_06587C	Skeleton	writes wx_cursor, wx_page, wx_rows, wx_sel
+065890	065898	sub_65890	msg_goto_s1E_065890	Confirmed	sets wx_state = 0x1E writes wx_state Body (complete):
+065898	0658A4	sub_65898	msg_065898	Confirmed	writes wx_cursor, wx_sel Body (complete):
+0658A4	0658B6	sub_658A4	msg_goto_s14_0658A4	Skeleton	sets wx_state = 0x14 writes wx_cursor, wx_sel, wx_state
+0658B6	0658CE	sub_658B6	msg_0658B6	Skeleton	reads key_flags, wx_sel
+0658CE	065920	sub_658CE	msg_0658CE	Skeleton	calls sub_60C64, sub_646C8, sub_64690, sub_6592E, sub_6594E, sub_3FF9C, sub_3FFA0 writes ram_FFB328 reads ram_FFB326, wx_B324, wx_menu_origin
+065920	065940	sub_65920	msg_goto_s15_065920	Skeleton	sets wx_state = 0x15 writes wx_cursor, wx_sel, wx_state reads ram_FFB47B
+065940	06594E	sub_65940	msg_065940	Confirmed	writes wx_cursor, wx_sel reads ram_FFB47B Body (complete):
+06594E	065950	sub_6594E	msg_06594E	Confirmed	Body (complete):
+065950	065960	sub_65950	msg_goto_s1B_065950	Skeleton	sets wx_state = 0x1B writes wx_cursor, wx_sel, wx_state
+065960	065974	sub_65960	msg_065960	Skeleton	reads key_flags, wx_sel
+065974	0659AE	sub_65974	msg_065974	Skeleton	calls sub_659AE, sub_62B7A, sub_65A6C, sub_65898, sub_60C7E, sub_3FFA0 writes ram_FFB47B reads wx_req_flags
+0659AE	065A6C	sub_659AE	msg_0659AE	Skeleton	writes ram_FFB29A, ram_FFB2A1, wx_B299 reads wx_menu_origin, wx_req_flags
+065A6C	065A80	sub_65A6C	msg_065A6C	Skeleton	writes wx_cursor, wx_page, wx_rows, wx_sel
+065A80	065A88	sub_65A80	msg_goto_s16_065A80	Confirmed	sets wx_state = 0x16 writes wx_state Body (complete):
+065A8C	065AAE	sub_65A8C	msg_065A8C	Skeleton	writes ram_FFB277, ram_FFB278, ram_FFB279, ram_FFB27A reads wx_cursor, wx_page, wx_rows, wx_sel
+065AAE	065AD0	sub_65AAE	msg_065AAE	Skeleton	writes wx_cursor, wx_page, wx_rows, wx_sel reads ram_FFB277, ram_FFB278, ram_FFB279, ram_FFB27A
+065AD0	065AF0	sub_65AD0	msg_065AD0	Skeleton	writes touch_reject reads wx_busy, wx_rows
+065AF0	065B66	sub_65AF0	msg_065AF0	Skeleton	calls sub_65A8C, sub_65BF8, sub_62C32, sub_65E62, sub_65C84 writes ram_FFB47C reads key_flags, ram_FFB47B, wx_busy, wx_rows, wx_sel
+065B66	065B86	sub_65B66	msg_065B66	Skeleton	writes ram_FFB2A1
+065B86	065BA6	sub_65B86	msg_065B86	Skeleton	writes ram_FFB2A1
+065BA6	065BF8	sub_65BA6	msg_065BA6	Skeleton	calls sub_62B7A, sub_65920, sub_3FFA0 writes popup_tmr, ram_FFB2A1, tone_ev, wx_cursor, wx_sel reads ram_FF1434
+065BF8	065C50	sub_65BF8	msg_065BF8	Skeleton	sets wx_state = 0x19 calls sub_2B42C writes ram_FFBBE2, wx_state reads ram_FFB47C
+065C50	065C84	sub_65C50	msg_goto_s18_065C50	Skeleton	sets wx_state = 0x18 tone_ev = 0x59 calls sub_673C6 writes ram_FF071A, tone_ev, wx_cursor, wx_sel, wx_state
+065C84	065CA4	sub_65C84	msg_goto_s17_065C84	Skeleton	sets wx_state = 0x17 writes wx_B266, wx_B275, wx_state
+065CA4	065CCE	sub_65CA4	msg_goto_s28_065CA4	Skeleton	sets wx_state = 0x28 writes wx_B266, wx_B275, wx_cursor, wx_sel, wx_state
+065CCE	065CD6	sub_65CCE	msg_065CCE	Confirmed	reads key_flags Body (complete):
+065CD6	065CEE	sub_65CD6	msg_065CD6	Skeleton	calls sub_3FFA0 writes popup_tmr, tone_ev, wx_B266
+065CEE	065D06	sub_65CEE	msg_065CEE	Skeleton	calls sub_65AAE, sub_65A80, sub_3FFA0 reads key_flags
+065D06	065D1C	sub_65D06	msg_065D06	Skeleton	reads key_flags, wx_sel
+065D1C	065D3C	sub_65D1C	msg_065D1C	Skeleton	calls sub_65AAE, sub_65A80, sub_62C32, sub_65E62, sub_3FFA0 reads ram_FFB47C
+065D3C	065D44	sub_65D3C	msg_065D3C	Confirmed	reads key_flags Body (complete):
+065D44	065D5E	sub_65D44	msg_065D44	Skeleton	calls sub_3FFA0 writes popup_tmr, wx_B266, wx_B275
+065D5E	065DD8	sub_65D5E	msg_065D5E	Skeleton	calls sub_658A4, sub_65E2C, sub_6F076, sub_65E50, sub_6F07E, sub_3FFA0 writes gm_msg_B928, ram_FFB47B, ram_FFB95C, ram_FFB95D reads key_flags, ram_BA32, wx_sel
+065DD8	065DF6	sub_65DD8	msg_goto_s1C_065DD8	Skeleton	sets wx_state = 0x1C writes wx_B266, wx_B275, wx_cursor, wx_sel, wx_state
+065DF6	065E1A	sub_65DF6	msg_goto_s1D_065DF6	Skeleton	sets wx_state = 0x1D writes disp_flags_BC59, wx_B266, wx_B275, wx_cursor, wx_sel, wx_state
+065E1A	065E2C	sub_65E1A	msg_065E1A	Skeleton	writes wx_cursor, wx_sel reads msg_saved_cur, msg_saved_sel
+065E2C	065E3E	sub_65E2C	msg_goto_s22_065E2C	Skeleton	sets wx_state = 0x22 writes wx_cursor, wx_sel, wx_state
+065E3E	065E62	sub_65E3E	msg_goto_s1F_065E3E	Skeleton	sets wx_state = 0x1F writes wx_cursor, wx_sel, wx_state reads msg_saved_cur, msg_saved_sel
+065E62	065E76	sub_65E62	msg_goto_s1A_065E62	Skeleton	sets wx_state = 0x1A writes wx_B266, wx_B275, wx_state
+065E76	065E9A	sub_65E76	msg_goto_s26_065E76	Skeleton	sets wx_state = 0x26 writes disp_flags_BC59, wx_B266, wx_B275, wx_cursor, wx_sel, wx_state
+065E9A	065EA0	sub_65E9A	msg_nop_065E9A	Confirmed	calls sub_66146 Body (complete):
+065EA0	065EA6	sub_65EA0	msg_nop_065EA0	Confirmed	calls sub_66146 Body (complete):
+065EA6	065EC2	sub_65EA6	msg_065EA6	Skeleton	writes touch_reject reads wx_busy, wx_rows
+065EC2	065EFA	sub_65EC2	msg_065EC2	Skeleton	calls sub_62C32, sub_65A8C, sub_65CA4 writes ram_FFB47C reads key_flags, wx_busy, wx_rows, wx_sel
+065EFA	065F00	sub_65EFA	msg_065EFA	Confirmed	calls sub_65B66 Body (complete):
+065F00	065F06	sub_65F00	msg_065F00	Confirmed	calls sub_65B86 Body (complete):
+065F06	065F0A	sub_65F06	msg_065F06	Confirmed	calls sub_65BA6 Body (complete):
+065F0A	065F0C	j_nullsub_62	j_nullsub_62	Confirmed	Body (complete):
+065F0C	065F20	sub_65F0C	msg_065F0C	Skeleton	calls sub_658CE, sub_60C7E reads wx_req_flags
+065F20	065F2C	sub_65F20	msg_065F20	Confirmed	writes popup_tmr, tone_ev Body (complete):
+065F30	065F32	nullsub_62	nullsub_62	Confirmed	Body (complete):
+065F32	065F36	sub_65F32	msg_065F32	Confirmed	Body (complete):
+065F36	065F42	sub_65F36	msg_065F36	Confirmed	writes ram_FFB47C reads wx_sel Body (complete):
+065F42	065F5C	sub_65F42	msg_065F42	Skeleton	reads key_flags, wx_sel
+065F5C	065FA6	sub_65F5C	msg_065F5C	Skeleton	calls sub_65E1A, sub_64BD0, sub_5EE1A, sub_65442, sub_6A628, sub_65E76, sub_3FFA0 writes ram_FF2EC9, ram_FFB3FD, wx_B275 reads home_app_mode
+065FA6	065FB0	sub_65FA6	msg_065FA6	Confirmed	reads key_flags Body (complete):
+065FB0	066028	sub_65FB0	msg_065FB0	Skeleton	reads edit_cursor, gm_B963, wx_sel
+066028	06609E	sub_66028	msg_066028	Skeleton	calls sub_3DC7A writes edit_cursor reads gm_B963, wx_sel
+06609E	0660B4	sub_6609E	msg_06609E	Skeleton	reads edit_cursor
+0660B4	0660CE	sub_660B4	msg_0660B4	Skeleton	calls sub_64B6A, sub_64B8C, sub_3FFA0 reads msg_ret_B40F
+0660CE	0660D6	sub_660CE	msg_0660CE	Confirmed	reads key_flags Body (complete):
+0660D6	066146	sub_660D6	msg_0660D6	Skeleton	calls sub_3DC8A, sub_660B4, sub_6519E, sub_652D0, sub_3FFA0 writes wx_state reads gm_B963, msg_ret_B40F, wx_sel
+066146	06616E	sub_66146	msg_066146	Skeleton	calls sub_3FFA0 writes popup_tmr, wx_B266, wx_B275, wx_flags26D reads key_flags
+06616E	06618E	sub_6616E	msg_06616E	Skeleton	calls sub_3FFA0 writes popup_tmr, tone_ev, wx_B266 reads key_flags
+06618E	0661C8	sub_6618E	msg_06618E	Skeleton	dispatches through off_661C8 calls sub_2244C writes wx_B132 reads band_8EA0, gm_B420, wx_state
+0662DC	0662E8	sub_662DC	wx_0662DC	Confirmed	calls sub_6631E reads wx_busy Body (complete):
+0662E8	066302	sub_662E8	wx_0662E8	Skeleton	calls sub_6631E, sub_615AA reads wx_busy, wx_sel
+066302	06630E	sub_66302	wx_066302	Confirmed	calls sub_6631E reads wx_busy Body (complete):
+06630E	06631E	sub_6630E	wx_06630E	Skeleton	calls sub_6631E, sub_6161C reads wx_sel
+06631E	066398	sub_6631E	wx_06631E	Skeleton	calls sub_2244C, sub_65DF6, sub_65DD8, sub_66398 writes aad4_flags, ram_FFB47B, wx_B132, wx_B266 reads wx_sel, wx_state
+066398	0663CA	sub_66398	wx_066398	Skeleton	
+0663CA	066428	sub_663CA	wx_0663CA	Skeleton	calls sub_62112, sub_66428, sub_62F64, sub_3FFA0 reads key_flags, wx_link, wx_popup, wx_state
+066428	0664B6	sub_66428	wx_066428	Skeleton	calls sub_66500, sub_6652A, sub_19F54, sub_19F62, sub_3FFA0 reads wx_busy, wx_link, wx_state
+0664C2	066500	sub_664C2	wx_0664C2	Skeleton	calls sub_67FB6 reads gm_B420, wx_state
+066500	06652A	sub_66500	wx_066500	Skeleton	calls sub_19F54
+06652A	0665BA	sub_6652A	wx_06652A	Skeleton	calls sub_19F54, sub_3FFA0 reads gm_group, ram_FFB3ED
+0665D2	066666	sub_665D2	wx_0665D2	Skeleton	calls loc_62112, sub_66688, sub_666A2, sub_1A924, sub_3FFA0 writes wx_id_cursor reads edit_cursor, ram_FFA9F0, wx_busy, wx_link, wx_popup, wx_state
+066666	066688	sub_66666	wx_066666	Skeleton	reads gm_B420, wx_state
+066688	0666A2	sub_66688	wx_066688	Skeleton	calls sub_1A8CE reads edit_cursor
+0666A2	06670C	sub_666A2	wx_0666A2	Skeleton	calls sub_1A8CE, sub_1A924, sub_3FFA0 reads edit_cursor, gm_group, ram_FFB3ED
+06670C	0667A0	sub_6670C	wx_06670C	Skeleton	calls sub_62112, sub_667D0, sub_667EA, sub_1A04A, sub_1F26A, sub_1A062, sub_3FFA0 reads edit_cursor, flags_8DE0, node_mode, wx_id_cursor, wx_link, wx_popup, wx_state
+0667A0	0667D0	sub_667A0	wx_0667A0	Skeleton	calls sub_1F26A reads gm_B420, wx_state
+0667D0	0667EA	sub_667D0	wx_0667D0	Skeleton	calls sub_1A04A reads edit_cursor
+0667EA	06685C	sub_667EA	wx_0667EA	Skeleton	calls sub_1A04A, sub_1F26A, sub_3FFA0 reads edit_cursor, gm_group, ram_FFB3ED
+06685C	0668E2	sub_6685C	wx_06685C	Skeleton	calls sub_1F2B6, sub_64660, sub_1FA26, sub_1FA22, sub_1F386, sub_1F340 writes gm_B420 reads ram_BA32, ram_FFA9F0, wx_state
+0668E2	066924	sub_668E2	wx_0668E2	Skeleton	calls sub_1FA26, sub_1FA22 writes wx_busy, wx_flags26D, wx_id_cursor, wx_id_entry_m1, wx_link
+066966	0669D4	sub_66966	wx_content_066966	Skeleton	dispatches through off_669E0 writes edit_cursor, ram_FFA917, ram_FFA918, ram_FFA919, ram_FFA91A, ram_FFB08D, wx_AD9A, wx_sel reads gm_B420, ram_FF8AAC, ram_FF8ABE, wx_sta
+0669D4	0669E0	sub_669D4	wx_content_0669D4	Confirmed	calls sub_6A32 Body (complete):
+066AF4	066AF6	nullsub_94	nullsub_94	Confirmed	Body (complete):
+066B06	066B2C	sub_66B06	wx_content_066B06	Skeleton	calls sub_6DC2E, loc_61D8B+1 writes wx_busy
+066B36	066B4A	sub_66B36	wx_content_066B36	Skeleton	calls sub_ABC8 reads wx_cursor
+066B4A	066B50	sub_66B4A	wx_content_nop_066B4A	Confirmed	calls sub_6E18A Body (complete):
+066B60	066B66	sub_66B60	wx_content_066B60	Confirmed	Body (complete):
+066B66	066B6C	sub_66B66	wx_content_066B66	Confirmed	Body (complete):
+066B6C	066B72	sub_66B6C	wx_content_066B6C	Confirmed	Body (complete):
+066B72	066BE8	sub_66B72	wx_content_066B72	Skeleton	calls sub_5E468 writes draw_attr_B050 reads edit_cursor, wx_state
+066C20	066C22	nullsub_95	nullsub_95	Confirmed	Body (complete):
+066C22	066C56	sub_66C22	wx_content_066C22	Skeleton	calls sub_6E326, sub_6E2EA, sub_6E31E writes ram_FFBC04 reads home_app_mode, wx_state
+066C56	066C8E	sub_66C56	wx_content_066C56	Skeleton	calls sub_66DD6, sub_52A3A, loc_61D8B+1, sub_646A2 writes wx_busy reads row_cb_B288
+066C8E	066CAC	sub_66C8E	wx_content_066C8E	Skeleton	dispatches through off_66CAC calls loc_61D6D+1
+066CD0	066CD2	sub_66CD0	wx_content_nop_066CD0	Confirmed	Body (complete):
+066CD2	066CFE	sub_66CD2	wx_content_066CD2	Skeleton	writes draw_attr_B050, line_buf_B05A, ram_FFA9F7 reads ram_FFB328
+066CFE	066D10	sub_66CFE	wx_content_066CFE	Skeleton	writes draw_attr_B050, line_buf_B05A
+066D10	066D22	sub_66D10	wx_content_066D10	Skeleton	writes draw_attr_B050, line_buf_B05A
+066D22	066D34	sub_66D22	wx_content_066D22	Skeleton	writes draw_attr_B050, line_buf_B05A
+066D34	066D46	sub_66D34	wx_content_066D34	Skeleton	writes draw_attr_B050, line_buf_B05A
+066D58	066D6A	sub_66D58	wx_content_066D58	Skeleton	writes draw_attr_B050, line_buf_B05A
+066DD6	066ED0	sub_66DD6	wx_content_066DD6	Skeleton	calls sub_702C, sub_6B7E reads draw_attr_B050, ram_FFB26F, wx_menu_origin, wx_open_rec, wx_req_flags
+066ED0	066ED6	sub_66ED0	wx_content_nop_066ED0	Confirmed	calls sub_6E062 Body (complete):
+066F26	066F6E	sub_66F26	wx_content_066F26	Skeleton	calls sub_6277E, sub_627CC reads ram_FFB26F, wx_menu_origin, wx_open_rec
+066F6E	066F8C	sub_66F6E	wx_content_066F6E	Skeleton	writes draw_attr_B050, line_buf_B05A reads ram_FFB326
+066F8C	066FAA	sub_66F8C	wx_content_066F8C	Skeleton	writes draw_attr_B050, line_buf_B05A reads wx_B324
+066FAA	066FB4	sub_66FAA	wx_content_066FAA	Confirmed	writes draw_attr_B050 Body (complete):
+066FB4	066FBE	sub_66FB4	wx_content_066FB4	Confirmed	writes draw_attr_B050 Body (complete):
+066FBE	066FC8	sub_66FBE	wx_content_066FBE	Confirmed	writes draw_attr_B050 Body (complete):
+06703A	06704E	sub_6703A	wx_content_06703A	Skeleton	calls sub_6E0D8 reads wx_req_flags
+06704E	067054	sub_6704E	wx_content_06704E	Confirmed	reads wx_busy Body (complete):
+067054	067128	sub_67054	wx_content_067054	Skeleton	calls sub_66F26, sub_5363A, sub_9B5A, sub_B40A, loc_61D8B+1, sub_61E4A, sub_67A0E writes line_len_BBE8, wx_B275, wx_busy reads list_dst_BC2C, ram_FFB47B, row_cb_B288, wx_
+06712A	067194	sub_6712A	wx_content_06712A	Skeleton	calls loc_61D7B+1 writes line_buf_B05A reads ram_FFB47B, wx_req_flags, wx_rows
+067194	067250	sub_67194	wx_content_067194	Skeleton	calls sub_67284, sub_672B2, sub_66FB4, sub_67250, sub_6726A, sub_66FAA writes draw_attr_B050, line_buf_B05A reads wx_req_flags
+067250	06726A	sub_67250	wx_content_067250	Skeleton	writes line_buf_B05A
+06726A	067284	sub_6726A	wx_content_06726A	Skeleton	writes line_buf_B05A
+067284	06729C	sub_67284	wx_content_067284	Skeleton	reads wx_req_flags
+06729C	0672B2	sub_6729C	wx_content_06729C	Skeleton	calls sub_5E468
+0672B2	06732E	sub_672B2	wx_content_0672B2	Skeleton	calls sub_67502, sub_674C4
+067370	067394	sub_67370	wx_content_067370	Skeleton	calls sub_66DD6 reads ram_FFB111, tmr_959C, wx_B266
+067394	0673C4	sub_67394	wx_content_067394	Skeleton	calls sub_6704E, sub_67A18, loc_61D8B+1, sub_6754C writes disp_flags_BC59, popup_id
+0673C6	0673CC	sub_673C6	wx_content_nop_0673C6	Confirmed	calls sub_6E4B0 Body (complete):
+0673CC	067432	sub_673CC	wx_content_0673CC	Skeleton	calls sub_66DFA, sub_66E30 reads ram_FF071A, ram_FFB26F
+067472	06748C	sub_67472	wx_content_067472	Skeleton	
+06748C	0674C4	sub_6748C	wx_content_06748C	Skeleton	writes draw_attr_B050 reads ram_FF071A
+0674C4	0674E4	sub_674C4	wx_content_0674C4	Skeleton	
+0674E4	067502	sub_674E4	wx_content_0674E4	Skeleton	writes draw_attr_B050 reads ram_FF071A
+067502	067522	sub_67502	wx_content_067502	Skeleton	
+067524	06752A	sub_67524	wx_content_nop_067524	Confirmed	calls sub_6704E Body (complete):
+06752A	06754C	sub_6752A	wx_content_06752A	Skeleton	calls loc_61D8B+1 reads wx_B275, wx_busy
+06754C	0675EE	sub_6754C	wx_content_06754C	Skeleton	calls sub_65D44, sub_65C50, sub_67A18, sub_65D1C, sub_1BF84, sub_1BF98 writes disp_flags_BC59, popup_id, sub_frame_len, sub_popup_sent, tmr_9538, wx_prev_state, wx_state 
